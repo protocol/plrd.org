@@ -80,11 +80,11 @@
     },
     {
       "id": "whole-organism-emulation",
-      "title": "Whole Organism Emulation (WBE)",
+      "title": "Whole Organism Emulation (WOE)",
       "tagline": "Simulating minds and bodies to pave a path to digital humans",
       "image": "/images/opportunity-spaces/whole-organism-emulation.jpg",
-      "description": "Whole brain emulation—simulating complete nervous systems in silico—offers the most direct path to understanding intelligence at the systems level and, eventually, to digital continuation of human minds. Progress requires connectomics at scale, precise biophysical neuron models, and in-silico simulations that can exhibit the behavioral and memory properties of the organisms they model.",
-      "inflectionPoint": "A reconstructed mouse connectome simulated in silico with neuromechanically realistic bodies exhibits idiosyncratic behaviors learned by the specific mouse prior to connectome harvesting—demonstrating memory retrieval in simulation and validating WBE as a viable engineering discipline.",
+      "description": "Whole organism emulation—simulating complete nervous systems in silico—offers the most direct path to understanding intelligence at the systems level and, eventually, to digital continuation of human minds. Progress requires connectomics at scale, precise biophysical neuron models, and in-silico simulations that can exhibit the behavioral and memory properties of the organisms they model.",
+      "inflectionPoint": "A reconstructed mouse connectome simulated in silico with neuromechanically realistic bodies exhibits idiosyncratic behaviors learned by the specific mouse prior to connectome harvesting—demonstrating memory retrieval in simulation and validating WOE as a viable engineering discipline.",
       "tippingSignals": [
         "Completion of a full reconstructed mouse connectome",
         "In-silico mouse simulation exhibiting specific learned behaviors from in-vivo experience",
@@ -93,25 +93,25 @@
         "Formation of connectomics-as-a-service companies supporting broad demand"
       ],
       "shift": "The scientific and commercial communities accept that behavioral repertoire and memory can be digitally simulated. Serious academic and policy engagement begins regarding the rights of digital entities and ethical frameworks for emulation.",
-      "subfields": ["Connectomics", "Biophysical Neuron Models", "Whole Brain Emulation", "Digital Ethics"],
+      "subfields": ["Connectomics", "Biophysical Neuron Models", "Whole Organism Emulation", "Digital Ethics"],
       "keyAssumptions": [
         "Clear benchmarks are the missing coordination mechanism. The field lacks agreed milestones for what constitutes successful emulation at each level—fly, mouse, human. Without clear targets, capital cannot be directed efficiently and progress cannot be verified.",
         "Memory retrieval is the key validation milestone. Demonstrating that in-silico simulation of a specific organism can exhibit memories and learned behaviors from its in-vivo experience would represent an irreversible paradigm shift in how the field is perceived.",
         "Connectomics throughput must improve dramatically. Current methods for electron microscopy, sectioning, and 3D reconstruction cannot scale to complete mouse brains in reasonable time or cost. Throughput improvements are the primary technical bottleneck.",
-        "Social and ethical frameworks lag technical capability. The 'ick factor' surrounding human whole brain emulation is a real risk factor. Building ethical frameworks, legal recognition for digital entities, and public understanding in parallel with technical progress is not optional."
+        "Social and ethical frameworks lag technical capability. The 'ick factor' surrounding human whole organism emulation is a real risk factor. Building ethical frameworks, legal recognition for digital entities, and public understanding in parallel with technical progress is not optional."
       ],
       "observations": [
-        "Connectomics data alone may be insufficient for WBE. Molecular labeling, functional data, and biophysical modeling may be necessary complements to connectomics for full behavioral emulation—expanding both the technical scope and the cost of the problem.",
-        "The field lacks clear proof that WBE accelerates neuroscience. Without a compelling demonstration that in-silico emulation generates discoveries inaccessible to conventional experimental methods, large-scale capital investment remains hard to justify.",
-        "Human WBE is deeply socially unsettling. While fly and mouse emulation attracts scientific interest, human emulation faces acute social, religious, and philosophical friction that must be addressed proactively rather than reactively.",
-        "The business model for WBE is unclear. Unlike BCI or NeuroAI, whole brain emulation lacks an obvious near-term commercial application that can fund the underlying research infrastructure."
+        "Connectomics data alone may be insufficient for WOE. Molecular labeling, functional data, and biophysical modeling may be necessary complements to connectomics for full behavioral emulation—expanding both the technical scope and the cost of the problem.",
+        "The field lacks clear proof that WOE accelerates neuroscience. Without a compelling demonstration that in-silico emulation generates discoveries inaccessible to conventional experimental methods, large-scale capital investment remains hard to justify.",
+        "Human WOE is deeply socially unsettling. While fly and mouse emulation attracts scientific interest, human emulation faces acute social, religious, and philosophical friction that must be addressed proactively rather than reactively.",
+        "The business model for WOE is unclear. Unlike BCI or NeuroAI, whole organism emulation lacks an obvious near-term commercial application that can fund the underlying research infrastructure."
       ],
-      "theOpportunity": "PL defines levels-based milestones for whole organism emulation, creating clear engineering targets that direct capital and talent efficiently. Early demos—a nematode, then a fly, then a mouse—build credibility incrementally. The memory retrieval milestone in a mouse triggers a surge of interest from AI labs and pharmaceutical sectors. A connectomics-as-a-service industry emerges, supporting demand from basic research, medical applications, and WBE simultaneously.",
+      "theOpportunity": "PL defines levels-based milestones for whole organism emulation, creating clear engineering targets that direct capital and talent efficiently. Early demos—a nematode, then a fly, then a mouse—build credibility incrementally. The memory retrieval milestone in a mouse triggers a surge of interest from AI labs and pharmaceutical sectors. A connectomics-as-a-service industry emerges, supporting demand from basic research, medical applications, and WOE simultaneously.",
       "fieldSignals": [
         { "kpi": "Connectomics Throughput", "measurement": "Time and cost to complete a full mouse brain connectome reconstruction" },
         { "kpi": "Emulation Milestones", "measurement": "Levels-based progress: C. elegans → fly → mouse behavioral emulation benchmarks" },
         { "kpi": "Memory Retrieval Demonstrations", "measurement": "# of documented cases of learned behavior exhibited by in-silico simulations" },
-        { "kpi": "WBE Capital Investment", "measurement": "Venture and grant capital directed toward connectomics, biophysical modeling, and WBE" },
+        { "kpi": "WOE Capital Investment", "measurement": "Venture and grant capital directed toward connectomics, biophysical modeling, and WOE" },
         { "kpi": "Ethical Framework Adoption", "measurement": "# of institutions with policy frameworks addressing digital entity rights and emulation ethics" }
       ]
     }

@@ -1,7 +1,7 @@
 ---
 title: "Neurotech"
 date: 2024-03-15
-summary: "Accelerating brain-computer interfaces (BCI), whole-brain emulation (WBE), & NeuroAI to expand human cognition."
+summary: "Accelerating brain-computer interfaces (BCI), whole-organism emulation (WOE), & NeuroAI to expand human cognition."
 leads:
   - sean-escola
 advisors:
