@@ -111,7 +111,7 @@ These files are edited directly as JSON and consumed by hardcoded FA2 sub-pages 
 | `COOKIE_SECRET` | Yes | 32+ character secret for encrypting session cookies |
 | `PUBLIC_URL` | No | Production URL (empty defaults to localhost) |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (empty disables analytics) |
-| `NEXT_PUBLIC_COOKIE_CONSENT` | No | `off` hides the analytics consent banner + footer link and loads analytics directly; anything else (default) shows the consent banner |
+| `NEXT_PUBLIC_COOKIE_CONSENT` | No | `on` shows the analytics consent banner + footer link and gates analytics on consent; anything else (default) hides the banner and loads analytics directly (cookies still set) |
 
 ## Deployment
 
