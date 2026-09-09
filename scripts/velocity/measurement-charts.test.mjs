@@ -69,6 +69,7 @@ test('only compatible within-track implant histories are connected, with qualifi
   const html = render(series)
   assert.equal((html.match(/<polyline/g) ?? []).length, 2, 'one line per compatible track, never one across cohorts')
   assert.match(html, /data-line="test-track"/)
+  assert.match(html, /<text[^>]*>0<\/text>/, 'linear baseline is labeled zero, not scientific notation')
   assert.match(html, /data-line="different-cohort"/)
   assert.equal((html.match(/data-point=/g) ?? []).length, 4)
   assert.match(html, /≥ 2 participants/)

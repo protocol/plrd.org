@@ -8,7 +8,7 @@ const COLORS = ['var(--color-blue)', 'var(--color-pink)', 'var(--impact-field)',
 const valueLabel = (point: MeasurementPoint) => `${point.qualifier === 'approximate' ? '≈ ' : point.qualifier === 'at-least' ? '≥ ' : point.qualifier === 'greater-than' ? '> ' : ''}${point.value.toLocaleString('en-US', { maximumSignificantDigits: 15 })}`
 const dateLabel = (point: MeasurementPoint) => point.datePrecision === 'year' ? point.date.slice(0, 4) :
   new Date(point.date).toLocaleDateString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'short', ...(point.datePrecision === 'day' ? { day: 'numeric' as const } : {}) })
-const axisValue = (value: number) => value < 0.01 ? value.toExponential(0) : value.toLocaleString('en-US', { notation: 'compact', maximumSignificantDigits: 3 })
+const axisValue = (value: number) => value > 0 && value < 0.01 ? value.toExponential(0) : value.toLocaleString('en-US', { notation: 'compact', maximumSignificantDigits: 3 })
 
 /** Native, source-linked small multiples. Tracks remain distinct; no aggregate is computed. */
 export default function MeasurementSeriesCharts({ series }: { series: MeasurementSeries[] }) {
