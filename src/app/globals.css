@@ -326,6 +326,7 @@
 }
 
 .measurement-figure { position: relative; }
+.measurement-figure figcaption { font-size: .6875rem; font-style: normal; line-height: 1.35; }
 .measurement-legend { display: flex; flex-wrap: wrap; gap: .3rem .85rem; }
 .measurement-legend li { display: flex; align-items: flex-start; gap: .35rem; }
 .measurement-tooltip {

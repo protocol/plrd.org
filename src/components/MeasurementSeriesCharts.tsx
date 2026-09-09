@@ -96,7 +96,6 @@ export function MeasurementChart({ measure, face = 'complete' }: { measure: Meas
           <p className="font-semibold text-black">{activePoint.label}</p>
           <p className="font-medium text-black">{valueLabel(activePoint)} {measure.unit} · {dateLabel(activePoint)}</p>
           <p>{activeTrack.label} · {activeTrack.definition}</p>
-          <p>{measure.coverage}</p>
           <p className="text-gray-500">{activePoint.datePrecision} precision · {activePoint.dateBasis} · {activePoint.sourceLabel}</p>
         </div>}
         <figcaption className="text-xs leading-relaxed text-gray-600">
