@@ -22,6 +22,13 @@ test('every instrument counts actual charts, including secondary, patent, exampl
   assert.equal(readout.items.length, 1, 'retain sourced non-probability readouts')
 })
 
+test('a current-area example is only deduplicated when the primary chart actually renders', () => {
+  const record = { instrument: 'idea_vintage', state: 'reading', series: [line[0]] }
+  const examples = [{ label: 'Current', series: line, scale: 'linear' }]
+  assert.equal(gallery(record, [], [], examples, 'Current').chartCount, 1)
+  assert.equal(gallery({ ...record, series: line }, [], [], examples, 'Current').chartCount, 1)
+})
+
 const line = [{ x: 2023, y: 1 }, { x: 2024, y: 2 }]
 
 const gallery = (...args) => {
