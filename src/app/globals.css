@@ -114,8 +114,7 @@
   .field-velocity-dashboard { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 1.25rem; }
 }
 
-/* Instrument previews keep the five-card overview compact. Back layers indicate
-   real additional charts, never placeholders or an invented combined value. */
+/* Compact covers expand into individually selectable, real chart previews. */
 .instrument-previews {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -127,7 +126,8 @@
 }
 .instrument-preview {
   position: relative;
-  isolation: isolate;
+  width: 100%;
+  height: 100%;
   min-width: 0;
   text-align: left;
   cursor: pointer;
@@ -145,23 +145,6 @@
   border-radius: .75rem;
   background: var(--color-white);
   transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
-}
-.instrument-stack-layer {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: 1px solid color-mix(in srgb, var(--color-gray-500) 30%, transparent);
-  border-radius: .75rem;
-  background: var(--color-white);
-  pointer-events: none;
-  transform-origin: 50% 85%;
-  transform: translate(calc(var(--layer) * 3px), calc(var(--layer) * 4px));
-  transition: transform 320ms cubic-bezier(.22,.68,0,1.05), border-color 240ms ease;
-}
-.instrument-preview:is(:hover, :focus-visible) { z-index: 2; }
-.instrument-preview:is(:hover, :focus-visible) .instrument-stack-layer {
-  transform: translate(calc((var(--layer) * 2 - 3) * 7px), 1px) rotate(calc((var(--layer) * 2 - 3) * 3deg));
-  border-color: color-mix(in srgb, var(--color-blue) 60%, transparent);
 }
 .instrument-preview:is(:hover, :focus-visible) .instrument-preview-face {
   transform: translateY(-4px);
@@ -189,6 +172,75 @@
 .instrument-preview-plot svg { width: 100%; height: 2.75rem; }
 @container velocity (min-width: 40rem) { .instrument-previews { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @container velocity (min-width: 66rem) { .instrument-previews { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+/* Absolutely positioned spread: the chart inventory never reflows the page.
+   One continuous hit region includes headings, gaps and all three targets. */
+.chart-deck { position: relative; min-width: 0; }
+.chart-deck[data-expanded="true"] { z-index: 30; }
+.chart-fan {
+  position: absolute;
+  top: var(--fan-top);
+  left: var(--fan-left);
+  width: var(--fan-width);
+  max-width: calc(100vw - 24px);
+  max-height: min(72dvh, 36rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: .75rem;
+  border: 1px solid var(--color-blue);
+  border-radius: 1rem;
+  background: var(--color-gray-200);
+  box-shadow: 0 16px 40px #0003;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease, visibility 180ms;
+}
+.chart-deck[data-expanded="true"] .chart-fan { visibility: visible; pointer-events: auto; opacity: 1; }
+.chart-fan-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; font-size: .875rem; color: var(--color-black); }
+.chart-fan-heading button, .chart-fan-pages button { min-height: 2.75rem; padding: .4rem; font-size: .75rem; color: var(--color-blue); cursor: pointer; }
+.chart-fan-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+.chart-fan-cards[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+.chart-fan-cards[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chart-fan-card {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  min-width: 0;
+  padding: .875rem;
+  border: 1px solid color-mix(in srgb, var(--color-blue) 35%, transparent);
+  border-radius: .75rem;
+  background: var(--color-white);
+  color: var(--color-black);
+  text-align: left;
+  overflow-wrap: anywhere;
+  transform: translateX(calc(var(--fan-index) * -70%)) rotate(calc(var(--fan-index) * -5deg)) scale(.9);
+  transform-origin: 50% 90%;
+  transition: transform 360ms cubic-bezier(.22,.68,0,1.05), border-color 180ms, box-shadow 180ms;
+}
+.chart-fan-card[hidden] { display: none; }
+.chart-deck[data-expanded="true"] .chart-fan-card { transform: none; }
+.chart-fan-card:is(:hover, :focus-visible) { border-color: var(--color-blue); box-shadow: 0 5px 15px #1982f428; }
+.chart-fan-card [data-preview-title] { font-size: .9rem; font-weight: 600; line-height: 1.35; }
+.chart-fan-plot { display: flex; flex-direction: column; gap: .5rem; margin-top: auto; min-width: 0; }
+.chart-fan-plot > span { display: block; width: 100%; }
+.chart-fan-plot svg { display: block; width: 100%; height: 7rem; }
+.chart-fan-plot meter { width: 100%; height: 2rem; }
+.chart-preview-caption { font-size: .6875rem; line-height: 1.4; color: var(--color-gray-600); }
+.chart-preview-reading { padding-block: 1rem; font-size: 1.25rem; }
+.chart-fan-pages { display: flex; justify-content: space-between; align-items: center; font-size: .75rem; }
+.chart-fan-pages button:disabled { color: var(--color-gray-500); opacity: .5; cursor: default; }
+.chart-share-controls { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; }
+.chart-share-controls :is(a, button) { padding: .5rem .65rem; min-height: 2.75rem; color: var(--color-blue); background: var(--color-gray-200); border-radius: .5rem; font-size: .8rem; cursor: pointer; }
+.chart-deck :is(a, button):focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
+@media (max-width: 639px) {
+  .chart-fan-cards, .chart-fan-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
+  .chart-fan-card { gap: .35rem; padding: .75rem; }
+  .chart-fan-plot svg { height: 5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-fan, .chart-fan-card { transition: none; }
+  .chart-fan-card { transform: none; }
+}
 .instrument-gallery-backdrop {
   position: fixed;
   inset: 0;
@@ -331,11 +383,9 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .instrument-gallery-dialog, .instrument-gallery-item, .gallery-card-face { animation: none; }
-  .instrument-preview-face, .instrument-stack-layer, .gallery-card-rotator { transition: none; }
+  .instrument-preview-face, .gallery-card-rotator { transition: none; }
   .instrument-preview:is(:hover, :focus-visible) .instrument-preview-face { transform: none; }
-  .instrument-preview:is(:hover, :focus-visible) .instrument-stack-layer {
-    transform: translate(calc(var(--layer) * 3px), calc(var(--layer) * 4px));
-  }
+
 }
 
 .measurement-figure { position: relative; }

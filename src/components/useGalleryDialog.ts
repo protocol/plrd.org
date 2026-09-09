@@ -2,22 +2,41 @@
 
 import { useEffect, useRef } from 'react'
 
-/** A focused, single-level portal dialog. Definitions use native details inside
- * this dialog, so there is no competing nested-modal focus/scroll lifecycle. */
-export function useGalleryDialog(onClose: () => void) {
+// Reference-count ownership so replacing a URL-addressed modal cannot restore
+// scrolling/inert state owned by another mounted dialog.
+const bodyLocks = new WeakMap<HTMLElement, { count: number; overflow: string; paddingRight: string }>()
+const inertLocks = new WeakMap<Element, { count: number; value: string | null }>()
+
+/** One portal focus boundary; definitions remain visible within it. */
+export function useGalleryDialog(onClose: () => void, restoreTarget?: () => HTMLElement | null) {
   const dialog = useRef<HTMLElement>(null)
   const close = useRef(onClose)
   close.current = onClose
+  const fallbackFocus = useRef(restoreTarget)
+  fallbackFocus.current = restoreTarget
   useEffect(() => {
     const panel = dialog.current
     if (!panel) return
     const previousFocus = document.activeElement as HTMLElement | null
-    const previousOverflow = document.body.style.overflow
+    const body = document.body
+    let lock = bodyLocks.get(body)
+    if (!lock) {
+      lock = { count: 0, overflow: body.style.overflow, paddingRight: body.style.paddingRight }
+      bodyLocks.set(body, lock)
+      const gutter = document.documentElement.clientWidth > 0 ? Math.max(0, window.innerWidth - document.documentElement.clientWidth) : 0
+      const padding = parseFloat(window.getComputedStyle(body).paddingRight) || 0
+      if (gutter) body.style.paddingRight = `${padding + gutter}px`
+      body.style.overflow = 'hidden'
+    }
+    lock.count++
     const backdrop = panel.parentElement!
     const siblings = Array.from(document.body.children).filter(el => el !== backdrop)
-    const inertStates = siblings.map(el => el.getAttribute('inert'))
-    document.body.style.overflow = 'hidden'
-    siblings.forEach(el => el.setAttribute('inert', ''))
+    siblings.forEach(el => {
+      const state = inertLocks.get(el) ?? { count: 0, value: el.getAttribute('inert') }
+      state.count++
+      inertLocks.set(el, state)
+      el.setAttribute('inert', '')
+    })
 
     const focusable = () => Array.from(panel.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, summary, [tabindex]')).filter(el => {
       if (el.tabIndex < 0 || el.matches(':disabled') || el.closest('[hidden], [inert]')) return false
@@ -54,13 +73,25 @@ export function useGalleryDialog(onClose: () => void) {
     return () => {
       document.removeEventListener('keydown', onKey, true)
       document.removeEventListener('focusin', onFocus)
-      document.body.style.overflow = previousOverflow
-      siblings.forEach((el, index) => {
-        const value = inertStates[index]
-        if (value === null) el.removeAttribute('inert')
-        else el.setAttribute('inert', value)
+      lock.count--
+      if (!lock.count) {
+        body.style.overflow = lock.overflow
+        body.style.paddingRight = lock.paddingRight
+        bodyLocks.delete(body)
+      }
+      siblings.forEach(el => {
+        const state = inertLocks.get(el)!
+        state.count--
+        if (!state.count) {
+          if (state.value === null) el.removeAttribute('inert')
+          else el.setAttribute('inert', state.value)
+          inertLocks.delete(el)
+        }
       })
-      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true })
+      if (!document.querySelector('.instrument-gallery-dialog')) {
+        const target = previousFocus?.isConnected && previousFocus !== body && !previousFocus.closest('[inert]') ? previousFocus : fallbackFocus.current?.()
+        target?.focus({ preventScroll: true })
+      }
     }
   }, [])
   return dialog

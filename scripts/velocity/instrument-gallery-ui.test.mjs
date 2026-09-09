@@ -10,29 +10,28 @@ for (const key of ['window', 'document', 'HTMLElement', 'Element', 'Node', 'Keyb
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const { createRoot } = await import('react-dom/client')
 const Dashboard = source('components/ImpactDashboardV2.tsx').default
+const historyTasks = async () => { for (let i = 0; i < 4; i++) await new Promise(resolve => setTimeout(resolve, 0)) }
 
-test('commitments opens a two-view sheet and a two-card deck while counting only the real cohort chart', async () => {
+test('commitments keeps two selectable views, but only the cohort view is a chart', async () => {
   const data = await load()
   const unmount = await mount({ ...data, fixedArea: 'neurotech' })
   try {
-    const trigger = document.querySelector('[data-instrument="revealed_commitments"]')
-    assert.equal(trigger.dataset.viewCount, '2')
-    assert.equal(trigger.dataset.chartCount, '1')
-    assert.equal(trigger.querySelectorAll('[data-stack-layer]').length, 1)
-    assert.match(trigger.getAttribute('aria-label'), /2 views/)
-    await click(trigger)
+    const cover = document.querySelector('[data-instrument="revealed_commitments"]')
+    assert.equal(cover.dataset.viewCount, '2')
+    assert.equal(cover.dataset.chartCount, '1')
+    const target = await open(cover)
     const dialog = document.querySelector('[role="dialog"]')
-    assert.equal(dialog.querySelectorAll('[data-gallery-item]').length, 2)
-    assert.equal(dialog.querySelectorAll('[data-is-chart="true"]').length, 1)
-    assert.equal(dialog.querySelector('[data-gallery-item="reading"]').dataset.isChart, 'false')
+    assert.equal(dialog.querySelectorAll('[data-gallery-item]').length, 1)
     const reading = dialog.querySelector('[data-gallery-item="reading"]')
+    assert.equal(reading.dataset.isChart, 'false')
     assert.ok(reading.textContent.includes('67 participants'))
     const sourceNote = data.recordsByArea.neurotech.find(r => r.instrument === 'revealed_commitments').trend
-    assert.ok(!reading.querySelector('[data-face="chart"]').textContent.includes(sourceNote), 'front stays a compact historical reading')
-    assert.ok(reading.querySelector('[data-face="data"]').textContent.includes(sourceNote), 'full source scope remains on the reverse')
-    assert.equal(dialog.querySelector('.instrument-gallery-grid').dataset.columns, '2')
+    assert.ok(!reading.querySelector('[data-face="chart"]').textContent.includes(sourceNote))
+    assert.ok(reading.querySelector('[data-face="data"]').textContent.includes(sourceNote))
     await click(dialog.querySelector('[aria-label="Close gallery"]'))
-    assert.equal(document.activeElement, trigger)
+    assert.ok(document.activeElement === target, 'focus returns to selected target')
+    await click(cover.closest('[data-chart-deck]').querySelector('[data-chart-target="bci-implants"]'))
+    assert.equal(document.querySelector('[data-gallery-item]').dataset.isChart, 'true')
   } finally { await unmount() }
 })
 
@@ -42,7 +41,7 @@ test('wide gallery plots fill the card and position hover details in scaled coor
   const data = await load()
   const unmount = await mount({ ...data, fixedArea: 'ai-robotics' })
   try {
-    await click(document.querySelector('[data-instrument="markets"]'))
+    await open(document.querySelector('[data-instrument="markets"]'))
     const svg = document.querySelector('.gallery-plot svg')
     assert.ok(svg.closest('.gallery-plot').nextElementSibling.classList.contains('gallery-plot-axis'), 'endpoint labels share the plot’s bounded frame')
     svg.getBoundingClientRect = () => ({ left: 0, top: 0, width: 720, height: 320 })
@@ -53,47 +52,64 @@ test('wide gallery plots fill the card and position hover details in scaled coor
   } finally { await unmount() }
 })
 const load = () => source('lib/field-velocity-data.ts').loadFieldVelocity(async () => ({}))
-const click = async node => { assert.ok(node, 'click target exists'); await act(() => node.click()) }
+const click = async node => { assert.ok(node, 'click target exists'); await act(async () => { node.click(); await historyTasks() }) }
+const open = async cover => {
+  await click(cover)
+  const target = cover.closest('[data-chart-deck]').querySelector('[data-chart-target]:not([hidden])')
+  if (target) await click(target)
+  return target ?? cover
+}
 const mount = async props => {
   const root = createRoot(document.getElementById('app'))
   await act(() => root.render(React.createElement(Dashboard, props)))
-  return async () => act(() => root.unmount())
+  return async () => { await act(() => root.unmount()); window.history.replaceState(null, '', '/') }
 }
 
-test('shared previews open only the selected instrument’s real charts, never inline detailed charts', async () => {
+test('all four overview tabs and Neuro detail select every real view once with exact measurement attribution', async () => {
   const data = await load()
-  for (const fixedArea of ['neurotech', 'ai-robotics', 'economies-governance', 'digital-human-rights', undefined]) {
+  for (const fixedArea of ['neurotech', undefined]) {
     const unmount = await mount({ ...data, fixedArea, initialArea: 'neurotech' })
     try {
-      const triggers = [...document.querySelectorAll('button[data-instrument]')]
-      assert.equal(triggers.length, 5, 'each instrument has its own accessible trigger')
-      assert.equal(document.querySelectorAll('[data-measurement]').length, 0, 'no extra inline measurements')
-      assert.equal(document.querySelectorAll('button button').length, 0)
-      for (const trigger of triggers) {
-        assert.equal(trigger.getAttribute('aria-haspopup'), 'dialog')
-        const count = Number(trigger.dataset.chartCount)
-        const views = Number(trigger.dataset.viewCount)
-        assert.equal(trigger.querySelectorAll('[data-stack-layer]').length, views > 1 ? Math.min(views - 1, 2) : 0)
-        await click(trigger)
-        const dialog = document.querySelector('[role="dialog"]')
-        assert.ok(dialog, 'opens focused gallery')
-        assert.ok(document.getElementById(dialog.getAttribute('aria-labelledby'))?.textContent)
-        assert.equal(dialog.querySelectorAll('[data-gallery-item][data-is-chart="true"]').length, count)
-        for (const node of dialog.querySelectorAll('[data-measurement]')) {
-          const measure = data.measurementSeriesByArea[fixedArea ?? 'neurotech'].find(s => s.id === node.dataset.measurement)
-          assert.equal(measure.instrument, trigger.dataset.instrument)
-          assert.ok(node.textContent.includes(measure.coverage))
-          assert.ok(node.textContent.includes(measure.caveat))
-          for (const point of measure.tracks.flatMap(t => t.points)) assert.ok([...node.closest('[data-gallery-item]').querySelectorAll('a')].some(a => a.href === point.sourceUrl))
+      for (const area of fixedArea ? ['neurotech'] : ['neurotech', 'ai-robotics', 'economies-governance', 'digital-human-rights']) {
+        if (!fixedArea) {
+          const label = source('lib/field-velocity.ts').FOCUS_AREAS.find(a => a.key === area).label
+          await click([...document.querySelectorAll('[role="tab"]')].find(tab => tab.textContent.includes(label)))
         }
-        await click(dialog.querySelector('button[aria-label="Close gallery"]'))
-        assert.equal(document.querySelector('[role="dialog"]'), null)
-        assert.ok(document.activeElement === trigger, 'even browsers without pointer autofocus return to the clicked metric')
+        assert.equal(document.querySelectorAll('[data-measurement]').length, 0)
+        const covers = [...document.querySelectorAll('button[data-instrument]')]
+        assert.equal(covers.length, 5)
+        for (const cover of covers) {
+          const deck = cover.closest('[data-chart-deck]')
+          const targets = [...deck.querySelectorAll('[data-chart-target]')]
+          assert.equal(targets.length, Number(cover.dataset.viewCount))
+          let chartCount = 0
+          const seen = new Set()
+          if (targets.length) await click(cover)
+          for (const target of targets.length ? targets : [cover]) {
+            await click(target)
+            const dialog = document.querySelector('[role="dialog"]')
+            assert.ok(dialog)
+            assert.equal(dialog.querySelectorAll('[data-gallery-item]').length, targets.length ? 1 : 0)
+            const item = dialog.querySelector('[data-gallery-item]')
+            if (item) { assert.equal(item.dataset.galleryItem, target.dataset.chartTarget); seen.add(item.dataset.galleryItem); chartCount += Number(item.dataset.isChart === 'true') }
+            for (const node of dialog.querySelectorAll('[data-measurement]')) {
+              const measure = data.measurementSeriesByArea[area].find(s => s.id === node.dataset.measurement)
+              assert.equal(measure.instrument, cover.dataset.instrument)
+              assert.ok(node.textContent.includes(measure.coverage))
+              assert.ok(node.textContent.includes(measure.caveat))
+              for (const point of measure.tracks.flatMap(t => t.points)) assert.ok([...node.closest('[data-gallery-item]').querySelectorAll('a')].some(a => a.href === point.sourceUrl))
+            }
+            await click(dialog.querySelector('[aria-label="Close gallery"]'))
+            assert.ok(document.activeElement === target, 'focus returns to selected target')
+            assert.ok(!document.querySelector('[role="dialog"]'), 'dialog must be closed')
+          }
+          assert.equal(seen.size, targets.length)
+          assert.equal(chartCount, Number(cover.dataset.chartCount))
+        }
       }
     } finally { await unmount() }
   }
 })
-
 
 test('definitions and methodology are immediately visible and non-collapsible in every instrument modal', async () => {
   const data = await load()
@@ -102,7 +118,7 @@ test('definitions and methodology are immediately visible and non-collapsible in
     const unmount = await mount({ ...data, fixedArea, initialArea: 'neurotech' })
     try {
       for (const trigger of document.querySelectorAll('button[data-instrument]')) {
-        await click(trigger)
+        await open(trigger)
         const methodology = document.querySelector('[role="dialog"] .gallery-methodology')
         assert.ok(methodology, 'every instrument retains its methodology')
         assert.ok(!methodology.closest('details, [hidden], [inert], [aria-hidden="true"]'), 'methodology must be visible without opening a disclosure')
@@ -127,8 +143,9 @@ test('every gallery kind flips to locally contained data and back with only the 
   const unmount = await mount({ ...data, marketSignals, recordsByArea: { neurotech: records }, fixedArea: 'neurotech' })
   try {
     for (const trigger of document.querySelectorAll('button[data-instrument]')) {
-      trigger.focus()
       await click(trigger)
+      for (const target of trigger.closest('[data-chart-deck]').querySelectorAll('[data-chart-target]')) {
+      await click(target)
       for (const card of document.querySelectorAll('[data-gallery-item]')) {
         const toggle = card.querySelector('button[data-flip-action]')
         assert.ok(toggle, `flip action missing on ${card.dataset.galleryItem}`)
@@ -159,6 +176,7 @@ test('every gallery kind flips to locally contained data and back with only the 
         assert.equal(card.querySelector('.gallery-card-rotator').dataset.flipped, 'false')
       }
       await click(document.querySelector('[aria-label="Close gallery"]'))
+      }
     }
   } finally { await unmount() }
 })
@@ -170,6 +188,7 @@ test('performance measurement dots reveal project, value, date and context on ho
   try {
     await click(document.querySelector('[data-instrument="performance_curves"]'))
     for (const measure of data.measurementSeriesByArea.neurotech.filter(m => m.instrument === 'performance_curves')) {
+      await click(document.querySelector(`[data-chart-target="${measure.id}"]`))
       const article = document.querySelector(`[data-measurement="${measure.id}"]`)
       assert.equal(article.querySelectorAll('figcaption button').length, 0, 'legend cannot hide evidence')
       const links = [...article.querySelectorAll('svg a')]
@@ -205,6 +224,7 @@ test('performance measurement dots reveal project, value, date and context on ho
         await act(() => link.blur())
         assert.equal(article.querySelector('[role="tooltip"]'), null)
       }
+      await click(document.querySelector('[aria-label="Close gallery"]'))
     }
   } finally { await unmount() }
 })
@@ -219,7 +239,7 @@ test('idea vintage is scoped to the current detail area or selected overview tab
         if (!fixedArea) await click([...document.querySelectorAll('[role="tab"]')].find(tab => tab.textContent.includes(area.label)))
         const trigger = document.querySelector('[data-instrument="idea_vintage"]')
         assert.equal(trigger.dataset.chartCount, '1')
-        await click(trigger)
+        await open(trigger)
         const dialog = document.querySelector('[role="dialog"]')
         assert.equal(dialog.querySelectorAll('[data-gallery-item]').length, 1)
         assert.ok(dialog.querySelector('[data-face="chart"] h3').textContent.includes(area.label))
@@ -238,6 +258,7 @@ test('adoption preview uses its real chart without dumping historical prose or a
     assert.ok(trigger.querySelector('[data-measurement-preview="bci-implants"]'), 'chart-backed reading previews an actual measurement when no record series exists')
     assert.ok(!trigger.textContent.includes('The review identified participants'), 'historical prose belongs on the data face/context, not preview')
     await click(trigger)
+    await click(trigger.closest('[data-chart-deck]').querySelector('[data-chart-target="bci-implants"]'))
     const dialog = document.querySelector('[role="dialog"]')
     assert.ok(!dialog.textContent.includes('This reads the research side of the field.'), 'implant adoption is not a research-only signal')
     assert.equal(dialog.querySelectorAll('[data-measurement="bci-implants"]').length, 1)
@@ -276,33 +297,22 @@ test('gallery styling uses a physical two-faced 3D rotation with reduced-motion 
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.gallery-card-face[^}]*animation: none/)
 })
 
-test('gallery columns balance four cards as two pairs and fit three at wide container widths', async () => {
+test('large inventories page at most three titled previews, while every modal stays single-chart', async () => {
   const data = await load()
-  const { INFLECTION_POINTS } = source('lib/field-velocity.ts')
-  const areaPoints = INFLECTION_POINTS.filter(p => p.area === 'ai-robotics')
+  const areaPoints = source('lib/field-velocity.ts').INFLECTION_POINTS.filter(p => p.area === 'ai-robotics')
   const marketSignals = Object.fromEntries(areaPoints.slice(0, 2).map((p, i) => [p.title, { prob: 0.4, platform: 'polymarket', question: `Question ${i}?`, resolutionDate: '2027-01-01', url: `https://polymarket.com/${i}` }]))
   const unmount = await mount({ ...data, marketSignals, initialArea: 'ai-robotics' })
   try {
-    await click(document.querySelector('[data-instrument="markets"]'))
-    let grid = document.querySelector('.instrument-gallery-grid')
-    assert.equal(grid.children.length, 4)
-    assert.equal(grid.dataset.columns, '2', 'no lonely fourth card at desktop widths')
-    await click(document.querySelector('[aria-label="Close gallery"]'))
-    await click([...document.querySelectorAll('[role="tab"]')].find(t => t.textContent.includes('Neurotech')))
-    await click(document.querySelector('[data-instrument="performance_curves"]'))
-    grid = document.querySelector('.instrument-gallery-grid')
-    assert.equal(grid.children.length, 3)
-    assert.equal(grid.dataset.columns, '3')
-    const css = readFileSync('src/app/globals.css', 'utf8')
-    assert.match(css, /@container gallery \(min-width: 42rem\)/)
-    assert.match(css, /@container gallery \(min-width: 68rem\)/)
-    assert.match(css, /\.instrument-gallery-grid\[data-columns="3"\]/)
-    assert.match(css, /\.measurement-figure figcaption\s*\{[^}]*font-size: \.6875rem;[^}]*font-style: normal;[^}]*line-height: 1\.35/, 'override global large italic figcaption styling')
-    assert.match(css, /\.instrument-gallery-dialog\[data-columns="1"\]\s*\{[^}]*max-width: 52rem/, 'one chart does not fill a three-chart dialog')
-    assert.match(css, /\.instrument-previews\s*\{[^}]*gap: \.875rem/)
-    assert.match(css, /@container velocity \(min-width: 66rem\)/, 'five previews only when the actual panel has room')
-    assert.match(css, /\.field-velocity-overview\s*\{[^}]*max-width: 96rem/)
-    assert.match(css, /\.field-velocity-dashboard\s*\{[^}]*gap: 1\.25rem/)
+    const deck = document.querySelector('[data-chart-deck="markets"]')
+    await click(deck.querySelector('[data-instrument]'))
+    assert.equal(deck.querySelectorAll('[data-chart-target]:not([hidden])').length, 3)
+    await click([...deck.querySelectorAll('button')].find(button => button.textContent === 'More previews'))
+    assert.equal(deck.querySelectorAll('[data-chart-target]:not([hidden])').length, 1)
+    const target = deck.querySelector('[data-chart-target]:not([hidden])')
+    await click(target)
+    assert.equal(document.querySelectorAll('[data-gallery-item]').length, 1)
+    assert.equal(document.querySelector('.instrument-gallery-grid').dataset.columns, '1')
+    assert.equal(document.querySelector('[data-gallery-item]').dataset.galleryItem, target.dataset.chartTarget)
   } finally { await unmount() }
 })
 
@@ -313,21 +323,20 @@ test('gallery traps focus, excludes closed evidence, restores trigger and body s
   try {
     for (const closeWith of ['Escape', 'backdrop', 'button']) {
       const trigger = document.querySelector('[data-instrument="performance_curves"]')
-      trigger.focus()
-      await click(trigger)
+      const target = await open(trigger)
       const dialog = document.querySelector('[role="dialog"]')
       const close = dialog.querySelector('[aria-label="Close gallery"]')
       assert.ok(document.activeElement === close, 'initial focus moves into dialog')
       assert.equal(document.body.style.overflow, 'hidden')
       assert.ok(document.getElementById('app').hasAttribute('inert'), 'background cannot be reached')
-      const key = async (key, shiftKey = false) => act(() => document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, bubbles: true, cancelable: true })))
+      const key = async (key, shiftKey = false) => act(async () => { document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, bubbles: true, cancelable: true })); await historyTasks() })
       await key('Tab', true)
       assert.ok(dialog.contains(document.activeElement), 'reverse Tab wraps inside')
       assert.notEqual(document.activeElement, close)
       assert.ok(document.activeElement.matches('[data-flip-action]'), 'inactive face source links excluded; last stop is the card flip action')
       await key('Tab')
       assert.ok(document.activeElement === close, 'forward Tab wraps to close')
-      trigger.focus()
+      await act(() => target.focus())
       assert.ok(dialog.contains(document.activeElement), 'programmatic outside focus is contained')
       const definition = dialog.querySelector('.gallery-methodology h3')
       assert.equal(definition.textContent, 'Definition & methodology')
@@ -336,10 +345,11 @@ test('gallery traps focus, excludes closed evidence, restores trigger and body s
       if (closeWith === 'Escape') await key('Escape')
       if (closeWith === 'backdrop') await click(document.querySelector('.instrument-gallery-backdrop'))
       if (closeWith === 'button') await click(close)
-      assert.equal(document.querySelector('[role="dialog"]'), null)
-      assert.ok(document.activeElement === trigger, 'focus restores to original trigger')
+      assert.ok(!document.querySelector('[role="dialog"]'), 'dialog must be closed')
+      assert.ok(document.activeElement === target, 'focus restores to selected chart')
       assert.equal(document.body.style.overflow, 'auto')
       assert.equal(document.getElementById('app').hasAttribute('inert'), false)
     }
   } finally { await unmount() }
+
 })

@@ -6,10 +6,11 @@
 // laid out as four cards in two rows with their live signals. The inflection
 // cards mirror the PR #29 design; shared primitives are imported, never forked.
 
-import { useEffect, useId, useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useGalleryDialog } from '@/components/useGalleryDialog'
 import { useGalleryFan } from '@/components/useGalleryFan'
+import { chartHash, parseChartHash } from '@/lib/chart-selection'
 import { instrumentGallery, type GalleryItem } from '@/lib/instrument-gallery'
 import {
   ROLE_META,
@@ -92,7 +93,8 @@ export default function ImpactDashboardV2({
   const [selectedArea, setFilter] = useState<FocusAreaKey>(initialArea)
   const filter = fixedArea ?? selectedArea
   const [active, setActive] = useState<InflectionPoint | null>(null)
-  const [velocityInstrument, setVelocityInstrument] = useState<InstrumentId | null>(null)
+  const [chartSelection, setChartSelection] = useState<{ instrument: InstrumentId; itemId: string } | null>(null)
+  const velocityInstrument = chartSelection?.instrument
 
   const visible = useMemo(() => INFLECTION_POINTS.filter((p) => p.area === filter), [filter])
   const records = recordsByArea?.[filter] ?? instrumentsForArea(filter)
@@ -107,6 +109,62 @@ export default function ImpactDashboardV2({
         .filter((s): s is MarketSignal => !!s && isRenderableMarket(s) && (s.prob != null || !!s.readout)),
     [visible, marketSignals],
   )
+
+  // Fragments are deliberately not DOM ids: opening a chart never scrolls the
+  // background. History retains Next's own state and the origin/path/query.
+  const ownedChart = useRef<string | null>(null)
+  const navigationData = useRef({ recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples })
+  navigationData.current = { recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples }
+  useEffect(() => {
+    const restore = () => {
+      const route = parseChartHash(window.location.hash)
+      if (route?.instrument) setActive(null)
+      setChartSelection(null)
+      if (!route || (fixedArea && route.area !== fixedArea)) {
+        if (!fixedArea) setFilter(initialArea)
+        return
+      }
+      setFilter(route.area)
+      if (!route.instrument || !route.itemId) return
+      const data = navigationData.current
+      const record = (data.recordsByArea?.[route.area] ?? instrumentsForArea(route.area)).find(r => r.instrument === route.instrument)
+      if (!record) return
+      const markets = INFLECTION_POINTS.filter(p => p.area === route.area).map(p => data.marketSignals[p.title]).filter((market): market is MarketSignal => !!market)
+      const label = FOCUS_AREAS.find(area => area.key === route.area)!.label
+      const { items } = instrumentGallery(record, data.measurementSeriesByArea[route.area] ?? [], markets, data.ideaVintageExamples, label)
+      if (items.some(item => item.id === route.itemId) || (!items.length && route.itemId === 'evidence')) setChartSelection({ instrument: route.instrument, itemId: route.itemId })
+    }
+    const previousScrollRestoration = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+    restore()
+    window.addEventListener('popstate', restore)
+    window.addEventListener('hashchange', restore)
+    return () => {
+      window.removeEventListener('popstate', restore)
+      window.removeEventListener('hashchange', restore)
+      window.history.scrollRestoration = previousScrollRestoration
+    }
+  }, [fixedArea, initialArea])
+  const selectArea = (area: FocusAreaKey) => {
+    window.history.pushState(window.history.state, '', chartHash(area))
+    setFilter(area)
+    setChartSelection(null)
+    ownedChart.current = null
+  }
+  const openChart = (instrument: InstrumentId, itemId: string) => {
+    setActive(null)
+    window.history.pushState(window.history.state, '', chartHash(filter, instrument, itemId))
+    ownedChart.current = window.location.href
+    setChartSelection({ instrument, itemId })
+  }
+  const closeChart = () => {
+    if (ownedChart.current === window.location.href) window.history.back()
+    else {
+      window.history.replaceState(window.history.state, '', chartHash(filter))
+      setChartSelection(null)
+    }
+    ownedChart.current = null
+  }
 
   return (
     <>
@@ -128,7 +186,7 @@ export default function ImpactDashboardV2({
                 forthcoming={fa.forthcoming}
                 icon={FA_ICON[fa.key]}
                 active={filter === fa.key}
-                onClick={() => setFilter(fa.key)}
+                onClick={() => selectArea(fa.key)}
               />
             ))}
           </div>
@@ -143,7 +201,7 @@ export default function ImpactDashboardV2({
             </span>
             <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
           </div>
-          <FieldVelocityBox records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={setVelocityInstrument} />
+          <FieldVelocityBox records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} />
 
           {/* Inflection points — four cards in two rows, with live signals. */}
           <div className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
@@ -177,13 +235,14 @@ export default function ImpactDashboardV2({
       )}
       {velocityInstrument && records.find(r => r.instrument === velocityInstrument) && (
         <VelocityModal
-          key={`${filter}-${velocityInstrument}`}
+          key={`${filter}-${velocityInstrument}-${chartSelection?.itemId}`}
+          itemId={chartSelection!.itemId}
           area={filter}
           record={records.find(r => r.instrument === velocityInstrument)!}
           markets={fieldMarkets}
           measurements={measurementSeriesByArea[filter] ?? []}
           examples={ideaVintageExamples}
-          onClose={() => setVelocityInstrument(null)}
+          onClose={closeChart}
         />
       )}
     </>
@@ -269,53 +328,118 @@ function StaleMarker({ size = 'sm' }: { size?: 'sm' | 'lg' }) {
   )
 }
 
+function chartTitle(item: GalleryItem, record: InstrumentRecord, areaLabel: string) {
+  if (item.kind === 'measurement') return item.measure.title
+  if (item.kind === 'market') return item.market.question ?? 'Forecast'
+  if (item.kind === 'reading') return 'Historical reading'
+  if (item.kind === 'patent') return 'Patent vintage · invention side'
+  if (item.kind === 'example') return `${item.example.label} · paper vintage`
+  if (item.kind === 'secondary') return record.series2Label ?? 'Secondary series / normalizer'
+  return record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : record.metric ?? INSTRUMENT_BY_ID[record.instrument].label
+}
+
+function ChartPreview({ item, record }: { item: GalleryItem; record: InstrumentRecord }) {
+  if (item.kind === 'measurement') return <><MeasurementChart measure={item.measure} face="preview" /><span className="chart-preview-caption">{item.measure.unit} · {item.measure.scale} scale</span></>
+  if (item.kind === 'reading') return <><strong className="chart-preview-reading">{record.value}</strong><span className="chart-preview-caption">Single historical observation · not a time series</span></>
+  if (item.kind === 'market') return <>{item.market.prob != null ? <meter min={0} max={1} value={item.market.prob} aria-label={item.market.question ?? 'Forecast probability'} /> : <strong>{item.market.readout}</strong>}<span className="chart-preview-caption">{item.market.prob != null ? `${Math.round(item.market.prob * 100)}% · ` : ''}{item.market.platform} · resolves {item.market.resolutionDate}</span></>
+  const series: SeriesPoint[] = item.kind === 'secondary' ? record.series2! : item.kind === 'patent' ? record.patentVintage!.series! : item.kind === 'example' ? item.example.series : record.series!
+  const scale = item.kind === 'example' ? item.example.scale : item.kind === 'primary' ? record.seriesScale : 'linear'
+  return <><Sparkline series={series} scale={scale} band={series.some(p => p.lo != null)} width={280} height={112} /><span className="chart-preview-caption">{series[0].x}–{series[series.length - 1].x} · {scale ?? 'linear'} scale</span></>
+}
+
+function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen }: {
+  record: InstrumentRecord; items: GalleryItem[]; chartCount: number; areaLabel: string; area: FocusAreaKey
+  onOpen: (id: InstrumentId, itemId: string) => void
+}) {
+  const [expanded, setExpanded] = useState(false)
+  const [page, setPage] = useState(0)
+  const [placement, setPlacement] = useState({ left: 0, top: 0, width: 0 })
+  const deck = useRef<HTMLDivElement>(null)
+  const cover = useRef<HTMLButtonElement>(null)
+  const suppressFocus = useRef(false)
+  const pinned = useRef(false)
+  const fanId = useId()
+  const inst = INSTRUMENT_BY_ID[record.instrument]
+  const previewMeasure = items.find(item => item.kind === 'measurement')
+  const place = () => {
+    const node = deck.current
+    if (!node) return
+    const rect = node.getBoundingClientRect()
+    const bounds = node.parentElement!.getBoundingClientRect()
+    const width = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
+    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
+    const fan = node.querySelector<HTMLElement>('[data-chart-fan]')
+    // Measure after applying its real width, not the compact cover's width.
+    fan?.style.setProperty('--fan-width', `${width}px`)
+    const height = Math.min((fan?.scrollHeight ?? 0) + 2, window.innerHeight * .72, 36 * (parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16))
+    const top = Math.max(12 - rect.top, Math.min(0, window.innerHeight - 12 - rect.top - height))
+    setPlacement({ left: left - rect.left, top, width })
+  }
+  const expand = () => { if (items.length) { place(); setExpanded(true) } }
+  const dismiss = () => {
+    pinned.current = false
+    setExpanded(false)
+    suppressFocus.current = true
+    cover.current?.focus({ preventScroll: true })
+    suppressFocus.current = false
+  }
+  useEffect(() => {
+    if (!expanded) return
+    const outside = (event: PointerEvent) => { if (!(event.target instanceof Element && event.target.closest('.instrument-gallery-backdrop')) && !deck.current?.contains(event.target as Node)) { pinned.current = false; setExpanded(false) } }
+    document.addEventListener('pointerdown', outside)
+    window.addEventListener('resize', place)
+    return () => { document.removeEventListener('pointerdown', outside); window.removeEventListener('resize', place) }
+  }, [expanded])
+  return <div ref={deck} className="chart-deck" data-chart-deck={record.instrument} data-expanded={expanded}
+    onPointerEnter={event => { if (event.pointerType === 'mouse') expand() }}
+    onPointerLeave={() => { if (!pinned.current && !deck.current?.contains(document.activeElement)) setExpanded(false) }}
+    onFocus={() => { if (!suppressFocus.current) expand() }}
+    onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest('.instrument-gallery-backdrop')) && !event.currentTarget.contains(event.relatedTarget)) { pinned.current = false; setExpanded(false) } }}
+    onKeyDown={event => { if (event.key === 'Escape' && expanded) { event.preventDefault(); event.stopPropagation(); dismiss() } }}>
+    <button ref={cover} type="button" data-instrument={record.instrument} data-chart-count={chartCount} data-view-count={items.length}
+      aria-expanded={items.length ? expanded : undefined} aria-controls={items.length ? fanId : undefined} aria-haspopup={items.length ? undefined : 'dialog'}
+      aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. ${items.length ? 'Choose a chart' : 'View evidence and status'}`}
+      onClick={event => { event.currentTarget.focus({ preventScroll: true }); if (items.length) { pinned.current = true; expand() } else onOpen(record.instrument, 'evidence') }} className="instrument-preview">
+      <span className="instrument-preview-face">
+        <span className="text-sm font-semibold leading-snug text-black">{inst.label}</span>
+        <span className="instrument-chart-badge">{items.length > chartCount ? `${items.length} views` : `${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}`} <span aria-hidden="true">↗</span></span>
+        {record.state === 'reading' ? <>
+          {record.series && record.series.length > 1 && <span className="instrument-preview-plot" aria-hidden="true"><Sparkline series={record.series} scale={record.seriesScale} band={record.series.some(p => p.lo != null)} /></span>}
+          {!(record.series && record.series.length > 1) && previewMeasure?.kind === 'measurement' && <MeasurementChart measure={previewMeasure.measure} face="preview" />}
+          <span className="line-clamp-3 text-xs font-medium leading-relaxed text-black">{record.value}</span>
+          <span className="mt-auto flex flex-wrap items-center gap-1.5">
+            {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}{isStaleReading(record) && <StaleMarker />}
+            {record.measuredAt && <span className="text-[10px] text-gray-500">measured {shortDate(record.measuredAt)}</span>}
+          </span>
+        </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Not yet wired' : 'Not applicable to this field'}</span></>}
+        <span className="mt-auto text-[11px] font-medium text-blue">{items.length ? 'Hover or tap to choose a chart' : 'View evidence & status'}</span>
+      </span>
+    </button>
+    {items.length > 0 && <div id={fanId} className="chart-fan" data-chart-fan inert={!expanded} aria-hidden={!expanded}
+      style={{ '--fan-left': `${placement.left}px`, '--fan-top': `${placement.top}px`, '--fan-width': placement.width ? `${placement.width}px` : '100%' } as CSSProperties}>
+      <div className="chart-fan-heading"><strong>{inst.label}</strong><button type="button" onClick={dismiss} aria-label={`Collapse ${inst.label} previews`}>Close previews ×</button></div>
+      <div className="chart-fan-cards" data-count={Math.min(items.length, 3)}>
+        {items.map((item, index) => <a key={item.id} href={chartHash(area, record.instrument, item.id)} hidden={Math.floor(index / 3) !== page}
+          className="chart-fan-card" data-chart-target={item.id} aria-haspopup="dialog" style={{ '--fan-index': index % 3 } as CSSProperties}
+          onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); pinned.current = true; event.currentTarget.focus({ preventScroll: true }); onOpen(record.instrument, item.id) }}>
+          <span data-preview-title>{chartTitle(item, record, areaLabel)}</span>
+          <span className="chart-fan-plot"><ChartPreview item={item} record={record} /></span>
+          <span className="chart-preview-caption">Open {item.kind === 'reading' ? 'reading' : 'chart'} ↗</span>
+        </a>)}
+      </div>
+      {items.length > 3 && <div className="chart-fan-pages"><button type="button" disabled={page === 0} onClick={() => setPage(value => value - 1)}>Previous previews</button><span>{page + 1} / {Math.ceil(items.length / 3)}</span><button type="button" disabled={(page + 1) * 3 >= items.length} onClick={() => setPage(value => value + 1)}>More previews</button></div>}
+    </div>}
+  </div>
+}
+
 function FieldVelocityBox({ records, markets, measurements, examples, area, onOpen }: {
-  records: InstrumentRecord[]
-  markets: MarketSignal[]
-  measurements: MeasurementSeries[]
-  examples: IdeaVintageExample[]
-  area: FocusAreaKey
-  onOpen: (id: InstrumentId) => void
+  records: InstrumentRecord[]; markets: MarketSignal[]; measurements: MeasurementSeries[]; examples: IdeaVintageExample[]; area: FocusAreaKey
+  onOpen: (id: InstrumentId, itemId: string) => void
 }) {
   const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
-  return (
-    <div className="instrument-previews" aria-label="Field velocity instruments">
-      {records.map(record => {
-        const { chartCount, items } = instrumentGallery(record, measurements, markets, examples, areaLabel)
-        const previewMeasure = items.find(item => item.kind === 'measurement')
-        const inst = INSTRUMENT_BY_ID[record.instrument]
-        return (
-          <button key={record.instrument} type="button" data-instrument={record.instrument} data-chart-count={chartCount} data-view-count={items.length}
-            aria-haspopup="dialog" aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. Open gallery and evidence`}
-            onClick={event => { event.currentTarget.focus({ preventScroll: true }); onOpen(record.instrument) }} className="instrument-preview">
-            {Array.from({ length: items.length > 1 ? Math.min(items.length - 1, 2) : 0 }, (_, index) => (
-              <span key={index} aria-hidden="true" data-stack-layer={index + 1} className="instrument-stack-layer" style={{ '--layer': index + 1 } as CSSProperties} />
-            ))}
-            <span className="instrument-preview-face">
-              <span className="text-sm font-semibold leading-snug text-black">{inst.label}</span>
-              <span className="instrument-chart-badge">{items.length > chartCount ? `${items.length} views` : `${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}`} <span aria-hidden="true">↗</span></span>
-              {record.state === 'reading' ? <>
-                {record.series && record.series.length > 1 && <span className="instrument-preview-plot" aria-hidden="true">
-                  <Sparkline series={record.series} scale={record.seriesScale} band={record.series.some(p => p.lo != null)} />
-                </span>}
-                {!(record.series && record.series.length > 1) && previewMeasure?.kind === 'measurement' && <MeasurementChart measure={previewMeasure.measure} face="preview" />}
-                <span className="line-clamp-3 text-xs font-medium leading-relaxed text-black">{record.value}</span>
-                <span className="mt-auto flex flex-wrap items-center gap-1.5">
-                  {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}
-                  {isStaleReading(record) && <StaleMarker />}
-                  {record.measuredAt && <span className="text-[10px] text-gray-500">measured {shortDate(record.measuredAt)}</span>}
-                </span>
-              </> : <>
-                {record.state === 'unwired' && <GhostChart />}
-                <span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Not yet wired' : 'Not applicable to this field'}</span>
-              </>}
-              <span className="mt-auto text-[11px] font-medium text-blue">{chartCount ? 'Explore charts & evidence' : 'View evidence & status'}</span>
-            </span>
-          </button>
-        )
-      })}
-    </div>
-  )
+  return <div className="instrument-previews" aria-label="Field velocity charts">
+    {records.map(record => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...instrumentGallery(record, measurements, markets, examples, areaLabel)} areaLabel={areaLabel} area={area} onOpen={onOpen} />)}
+  </div>
 }
 
 function SourceLinks({ sources }: { sources: { label: string; url: string }[] }) {
@@ -453,20 +577,25 @@ function GalleryFlipCard({ item, record, areaLabel, index }: { item: GalleryItem
   </div>
 }
 
-function VelocityModal({ area, record, markets, measurements, examples, onClose }: {
+function VelocityModal({ area, record, markets, measurements, examples, itemId, onClose }: {
   area: FocusAreaKey
   record: InstrumentRecord
   markets: MarketSignal[]
   measurements: MeasurementSeries[]
   examples: IdeaVintageExample[]
+  itemId: string
   onClose: () => void
 }) {
-  const dialogRef = useGalleryDialog(onClose)
+  const dialogRef = useGalleryDialog(onClose, () => document.querySelector<HTMLElement>(`[data-instrument="${record.instrument}"]`))
   const galleryRef = useGalleryFan()
   const titleId = useId()
+  const [copyStatus, setCopyStatus] = useState('Copy link')
+  const directUrl = new URL(chartHash(area, record.instrument, itemId), window.location.href).href
   const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
   const inst = INSTRUMENT_BY_ID[record.instrument]
-  const { items, chartCount } = instrumentGallery(record, measurements, markets, examples, areaLabel)
+  const inventory = instrumentGallery(record, measurements, markets, examples, areaLabel)
+  const items = inventory.items.filter(item => item.id === itemId)
+  const chartCount = items.filter(item => item.kind !== 'reading' && (item.kind !== 'market' || item.market.prob != null)).length
   const columns = items.length <= 1 ? 1 : items.length === 2 || items.length === 4 ? 2 : 3
   const pv = record.instrument === 'idea_vintage' ? record.patentVintage : undefined
   return createPortal(
@@ -474,12 +603,17 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
       <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} data-columns={columns} className="instrument-gallery-dialog" tabIndex={-1}>
         <header className="instrument-gallery-header">
           <div><p className="text-xs text-gray-500">{areaLabel} · Field velocity · {chartCount} {chartCount === 1 ? 'chart' : 'charts'}</p>
-            <h2 id={titleId} className="mt-1 text-2xl font-semibold tracking-tight text-black">{inst.label}</h2>
+            <h2 id={titleId} className="mt-1 text-2xl font-semibold tracking-tight text-black">{items[0] ? chartTitle(items[0], record, areaLabel) : inst.label}</h2>
             <p className="mt-1 text-sm text-gray-500">{inst.subtitle}</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Close gallery" className="gallery-close">×</button>
         </header>
         <div className="instrument-gallery-scroll">
+          <div className="chart-share-controls">
+            <a data-chart-direct href={directUrl} onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) event.preventDefault() }}>Direct link ↗</a>
+            <button type="button" data-chart-copy onClick={async () => { try { await window.navigator.clipboard.writeText(directUrl); setCopyStatus('Copied') } catch { setCopyStatus('Copy failed — use Direct link') } }}>{copyStatus}</button>
+            <span className="sr-only" role="status">{copyStatus === 'Copy link' ? '' : copyStatus}</span>
+          </div>
           <section className="gallery-methodology text-sm text-gray-600">
             <h3 className="font-medium text-blue">Definition & methodology</h3>
             <p className="mt-3 leading-relaxed">{inst.description}</p>
@@ -487,7 +621,7 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
             {record.instrument === 'idea_vintage' && <IdeaVintageExamples examples={examples} showCharts={false} />}
           </section>
           {!items.some(i => i.kind === 'primary' || i.kind === 'reading') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
-          {chartCount === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
+          {items.length === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
           <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
             {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
           </div>
