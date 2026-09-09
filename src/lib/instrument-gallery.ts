@@ -29,7 +29,7 @@ export function instrumentGallery(
       if (record.patentVintage?.state === 'reading' && (record.patentVintage.series?.length ?? 0) > 1) items.push({ kind: 'patent', id: 'patent' })
       for (const example of examples) {
         // The selected area's paper-vintage chart is already the primary chart.
-        if (example.series.length > 1 && !(example.label === areaLabel && (record.series?.length ?? 0) > 1)) {
+        if (example.label === areaLabel && example.series.length > 1 && (record.series?.length ?? 0) < 2) {
           items.push({ kind: 'example', id: `example-${example.label}`, example })
         }
       }

@@ -21,19 +21,13 @@ test('measurement axes use power-of-ten tissue ticks and round linear participan
   assert.deepEqual(measurementTicks([1], 'log'), [1, 10])
 })
 
-test('near-coincident tissue tracks can be isolated without moving dates or dropping source evidence', () => {
+test('all tissue tracks stay visible with a compact noninteractive legend', () => {
   const { NEURO_MEASUREMENT_SERIES } = source('lib/measurement-series.ts')
-  const { visibleMeasurementTracks } = source('components/MeasurementSeriesCharts.tsx')
-  assert.equal(typeof visibleMeasurementTracks, 'function', 'missing track isolation')
   const tissue = NEURO_MEASUREMENT_SERIES[0]
-  for (const id of ['h01-human-imaged', 'microns-mouse-imaged']) {
-    assert.deepEqual(visibleMeasurementTracks(tissue, id), tissue.tracks.filter(t => t.id === id))
-  }
-  assert.deepEqual(visibleMeasurementTracks(tissue, null), tissue.tracks)
   const html = render([tissue])
-  assert.match(html, /Some markers overlap/)
-  for (const track of tissue.tracks) assert.ok(html.includes(`aria-label="Isolate ${track.label}"`))
-  assert.equal((html.match(/aria-pressed="false"/g) ?? []).length, tissue.tracks.length)
+  assert.doesNotMatch(html, /Isolate|Show all tracks|aria-pressed/)
+  assert.match(html, /measurement-legend/)
+  for (const track of tissue.tracks) assert.ok(html.includes(track.label))
   const trackColors = [...html.matchAll(/data-track="[^"]+" style="color:([^";]+)/g)].map(m => m[1])
   assert.equal(new Set(trackColors).size, tissue.tracks.length, 'every tissue track has a distinct marker color')
 })
@@ -84,7 +78,7 @@ test('a single sourced tissue point remains visible on a log chart with precisio
   const html = render(fixture())
   assert.match(html, /data-measurement="tissue-mapped"/)
   assert.match(html, /data-scale="log"/)
-  assert.match(html, /<svg[^>]*role="img"/)
+  assert.match(html, /<svg[^>]*role="group"/, 'interactive SVG must expose its source links, not flatten them as an image')
   assert.match(html, /data-point="test-track"/)
   assert.doesNotMatch(html, /NaN|Infinity|<polyline/)
   for (const copy of ['Test coverage', 'Test caveat', 'Performance curves', 'capability', 'mm³', 'Log scale', 'Test definition']) assert.ok(html.includes(copy), copy)

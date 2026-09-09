@@ -9,6 +9,7 @@
 import { useEffect, useId, useMemo, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useGalleryDialog } from '@/components/useGalleryDialog'
+import { useGalleryFan } from '@/components/useGalleryFan'
 import { instrumentGallery, type GalleryItem } from '@/lib/instrument-gallery'
 import {
   ROLE_META,
@@ -85,8 +86,7 @@ export default function ImpactDashboardV2({
    *  merged with any OpenAlex CSV readings). Falls back to the static set. */
   recordsByArea?: Partial<Record<FocusAreaKey, InstrumentRecord[]>>
   measurementSeriesByArea?: Partial<Record<FocusAreaKey, MeasurementSeries[]>>
-  /** Idea-vintage small multiples, so the field-velocity instrument modal shows
-   *  the same rich card as the methodology section. */
+  /** Methodology examples; galleries only use the selected area's fallback. */
   ideaVintageExamples?: IdeaVintageExample[]
 }) {
   const [selectedArea, setFilter] = useState<FocusAreaKey>(initialArea)
@@ -110,7 +110,7 @@ export default function ImpactDashboardV2({
 
   return (
     <>
-      <div className={fixedArea ? 'min-w-0' : 'min-w-0 lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-10'}>
+      <div className={fixedArea ? 'min-w-0' : 'field-velocity-dashboard min-w-0'}>
         {/* Vertical tabs (PR #29 layout), sticky so they stay visible while
             scrolling the field. */}
         {!fixedArea && <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
@@ -134,7 +134,7 @@ export default function ImpactDashboardV2({
           </div>
         </div>}
         {/* Content: field velocity box + inflection points */}
-        <div className="min-w-0">
+        <div className="field-velocity-content min-w-0">
           {/* Field velocity — label outside the box; the box previews the five
               instruments and opens a modal. */}
           <div className="mb-2 flex items-center gap-2">
@@ -150,7 +150,7 @@ export default function ImpactDashboardV2({
             Inflection points we&rsquo;re tracking
           </div>
           {visible.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
               {visible.map((p) => (
                 <InflectionCard
                   key={`${p.area}-${p.title}`}
@@ -388,12 +388,12 @@ function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; re
     {dataOnly && <p className="mt-3 text-sm text-gray-600">{item.market.prob != null ? `Probability: ${item.market.prob} (0–1 scale).` : `Readout: ${item.market.readout}.`} Question, venue and resolution date are retained above; the source link opens the original forecast.</p>}
   </>
   if (item.kind === 'example') return <>
-    <p className="text-xs text-gray-500">Cross-field comparison · OpenAlex paper vintage</p>
+    <p className="text-xs text-gray-500">OpenAlex paper vintage</p>
     <h3 className="mt-1 text-xl font-semibold text-black">{item.example.label}</h3>
     <RecordPlot series={item.example.series} scale={item.example.scale} unit="y" dataOnly={dataOnly} />
     <p className="mt-3 text-xs text-gray-500">Median reference age in years. Shading: 95% interval. Dashed tail: recent, under-indexed years.</p>
     {dataOnly && <>
-      <p className="mt-3 text-sm text-gray-600">Compare the recent-segment slope, not the absolute age. See definition & methodology for sampling, frozen keyword cohorts and catalog-growth caveats. This is a labeled cross-field comparison, not an additional measurement of {areaLabel}.</p>
+      <p className="mt-3 text-sm text-gray-600">Compare the recent-segment slope, not the absolute age. See definition & methodology for sampling, frozen keyword cohorts and catalog-growth caveats. This is the paper-vintage reading for {areaLabel}.</p>
       <SourceLinks sources={[{ label: 'OpenAlex (CC0)', url: 'https://openalex.org' }, { label: 'Source method', url: 'https://github.com/protocol/plrd.org/blob/main/scripts/velocity/field_velocity_openalex.py' }]} />
     </>}
   </>
@@ -424,13 +424,15 @@ function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; re
 function GalleryFlipCard({ item, record, areaLabel, index }: { item: GalleryItem; record: InstrumentRecord; areaLabel: string; index: number }) {
   const [showData, setShowData] = useState(false)
   const faceId = useId()
-  return <div data-gallery-item={item.id} data-is-chart={item.kind !== 'market' || item.market.prob != null} className="instrument-gallery-item" style={{ '--fan-index': Math.min(index, 5) } as CSSProperties}>
+  return <div data-gallery-item={item.id} data-is-chart={item.kind !== 'market' || item.market.prob != null} className="instrument-gallery-item">
     <div className="gallery-card-faces" id={faceId}>
-      <div data-face="chart" hidden={showData} aria-hidden={showData} inert={showData} className="gallery-card-face">
-        <GalleryChart item={item} record={record} areaLabel={areaLabel} face="chart" />
-      </div>
-      <div data-face="data" hidden={!showData} aria-hidden={!showData} inert={!showData} className="gallery-card-face">
-        <GalleryChart item={item} record={record} areaLabel={areaLabel} face="data" />
+      <div className="gallery-card-rotator" data-flipped={showData}>
+        <div data-face="chart" aria-hidden={showData} inert={showData} className="gallery-card-face">
+          <GalleryChart item={item} record={record} areaLabel={areaLabel} face="chart" />
+        </div>
+        <div data-face="data" aria-hidden={!showData} inert={!showData} className="gallery-card-face">
+          <GalleryChart item={item} record={record} areaLabel={areaLabel} face="data" />
+        </div>
       </div>
     </div>
     <div className="gallery-card-toolbar">
@@ -449,14 +451,16 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
   onClose: () => void
 }) {
   const dialogRef = useGalleryDialog(onClose)
+  const galleryRef = useGalleryFan()
   const titleId = useId()
   const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
   const inst = INSTRUMENT_BY_ID[record.instrument]
   const { items, chartCount } = instrumentGallery(record, measurements, markets, examples, areaLabel)
+  const columns = items.length <= 1 ? 1 : items.length === 2 || items.length === 4 ? 2 : 3
   const pv = record.instrument === 'idea_vintage' ? record.patentVintage : undefined
   return createPortal(
     <div className="instrument-gallery-backdrop" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
-      <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className="instrument-gallery-dialog" tabIndex={-1}>
+      <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} data-columns={columns} className="instrument-gallery-dialog" tabIndex={-1}>
         <header className="instrument-gallery-header">
           <div><p className="text-xs text-gray-500">{areaLabel} · Field velocity · {chartCount} {chartCount === 1 ? 'chart' : 'charts'}</p>
             <h2 id={titleId} className="mt-1 text-2xl font-semibold tracking-tight text-black">{inst.label}</h2>
@@ -465,7 +469,7 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
           <button type="button" onClick={onClose} aria-label="Close gallery" className="gallery-close">×</button>
         </header>
         <div className="instrument-gallery-scroll">
-          <details className="mb-6 rounded-lg border border-gray-200 p-4 text-sm text-gray-600">
+          <details className="gallery-methodology text-sm text-gray-600">
             <summary className="cursor-pointer font-medium text-blue">Definition & methodology</summary>
             <p className="mt-3 leading-relaxed">{inst.description}</p>
             {record.instrument === 'idea_vintage' && <p className="mt-3 italic">This reads the research side of the field. It does not observe invention directly, and the two can decouple.</p>}
@@ -473,7 +477,7 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
           </details>
           {!items.some(i => i.kind === 'primary') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
           {chartCount === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
-          <div className="instrument-gallery-grid">
+          <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
             {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
           </div>
           {pv && !items.some(i => i.kind === 'patent') && <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-600">
@@ -635,7 +639,7 @@ function InflectionCard({
       id={inflectionSlug(point)}
       onClick={onOpen}
       aria-haspopup="dialog"
-      className="group relative flex scroll-mt-24 flex-col rounded-xl border border-gray-200 bg-white p-6 text-left transition-all hover:border-gray-300 hover:shadow-md"
+      className="group relative flex scroll-mt-24 flex-col rounded-xl border border-gray-200 bg-white p-4 sm:p-5 text-left transition-all hover:border-gray-300 hover:shadow-md"
     >
       <span className="absolute right-4 top-4 inline-flex items-center gap-0.5 text-xs font-medium text-gray-300 transition-colors group-hover:text-blue">
         Detail
@@ -656,11 +660,11 @@ function InflectionCard({
       <p className="mb-3 line-clamp-3 text-sm leading-relaxed text-gray-600">{point.signal}</p>
 
       {/* Resolution: pending until a marker resolves. */}
-      <div className="mb-5">
+      <div className="mb-3">
         <ResolutionChip point={point} />
       </div>
 
-      <div className="mt-auto border-t border-gray-100 pt-4">
+      <div className="mt-auto border-t border-gray-100 pt-3">
         <div className="mb-3 flex items-center gap-2">
           <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: HAND_COLOR }}>
             Our hand
@@ -693,7 +697,7 @@ function CrowdForecast({ signal, divider = false }: { signal: MarketSignal; divi
   const pct = signal.prob != null ? Math.round(signal.prob * 100) : null
   return (
     <div className={divider ? 'mt-3 border-t border-gray-100 pt-3' : ''}>
-      <div className="mb-1 flex items-center gap-2">
+      <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">Crowd forecast</span>
         {signal.platform && (
           <span className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-gray-500">

@@ -69,7 +69,7 @@ export default async function ImpactPage({ searchParams }: {
 
       {/* Field velocity — grey full-bleed section to set it apart from the rest of the site */}
       <section id="field-velocity" className="border-y border-gray-200 bg-gray-100 scroll-mt-24">
-        <div className="max-w-6xl mx-auto px-6 py-14 lg:py-16">
+        <div className="field-velocity-overview mx-auto px-4 sm:px-6 py-10 lg:py-12">
           <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2">Field velocity</h2>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mb-8">
             Pick a focus area. The summary above reads that field&rsquo;s velocity across the instruments

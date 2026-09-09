@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { MeasurementPoint, MeasurementSeries } from '@/lib/measurement-series'
 import { INSTRUMENT_BY_ID } from '@/lib/velocity-instruments'
 
@@ -35,12 +35,12 @@ export function measurementTicks(values: number[], scale: MeasurementSeries['sca
   return Array.from({ length: Math.ceil(max / step) + 1 }, (_, i) => i * step)
 }
 
-export function visibleMeasurementTracks(measure: MeasurementSeries, selectedTrack: string | null) {
-  return selectedTrack === null ? measure.tracks : measure.tracks.filter(track => track.id === selectedTrack)
-}
-
 export function MeasurementChart({ measure, face = 'complete' }: { measure: MeasurementSeries; face?: 'complete' | 'chart' | 'data' | 'preview' }) {
-  const [selectedTrack, setSelectedTrack] = useState<string | null>(null)
+  const [hovered, setHovered] = useState<MeasurementPoint | null>(null)
+  const [focused, setFocused] = useState<MeasurementPoint | null>(null)
+  const activePoint = hovered ?? focused
+  const activeTrack = activePoint ? measure.tracks.find(track => track.points.includes(activePoint)) : undefined
+  const tooltipId = useId()
   const points = measure.tracks.flatMap(track => track.points)
   const dates = points.map(point => Date.parse(point.date))
   const first = Math.min(...dates)
@@ -66,9 +66,9 @@ export function MeasurementChart({ measure, face = 'complete' }: { measure: Meas
       </p>
       <h3 id={titleId} className="text-xl font-semibold text-black mb-2">{measure.title}</h3>
       <p className="text-sm text-gray-600 leading-relaxed">{measure.coverage}</p>
-      {face !== 'data' && <figure className="mt-4" aria-labelledby={titleId}>
+      {face !== 'data' && <figure className="measurement-figure mt-3" aria-labelledby={titleId}>
         <p className="text-xs text-gray-500">{measure.unit} · {measure.scale === 'log' ? 'Log scale' : 'Linear scale'}</p>
-        <svg viewBox="0 0 368 232" role="img" aria-labelledby={`${titleId}-chart`} data-scale={measure.scale} className="block w-full h-auto text-gray-500">
+        <svg viewBox="0 0 368 232" role="group" aria-labelledby={`${titleId}-chart`} data-scale={measure.scale} className="block w-full h-auto text-gray-500">
           <title id={`${titleId}-chart`}>{`${measure.title}: ${measure.unit} by date. ${measure.scale} scale. Separate evidence tracks; source data below.`}</title>
           {ticks.map(value => {
             const py = y(value)
@@ -79,22 +79,34 @@ export function MeasurementChart({ measure, face = 'complete' }: { measure: Meas
           })}
           <text x="60" y="216" fill="currentColor" fontSize="11">{new Date(first).getUTCFullYear()}</text>
           {first !== last && <text x="344" y="216" textAnchor="end" fill="currentColor" fontSize="11">{new Date(last).getUTCFullYear()}</text>}
-          {visibleMeasurementTracks(measure, selectedTrack).map(track => <g key={track.id} data-track={track.id} style={{ color: COLORS[measure.tracks.indexOf(track) % COLORS.length] }}>
+          {measure.tracks.map(track => <g key={track.id} data-track={track.id} style={{ color: COLORS[measure.tracks.indexOf(track) % COLORS.length] }}>
             {measure.chartKind === 'line' && track.points.length > 1 && <polyline data-line={track.id} points={track.points.map(point => `${x(point.date)},${y(point.value)}`).join(' ')} fill="none" stroke="currentColor" strokeWidth="2" />}
-            {track.points.map(point => <a key={`${point.date}-${point.label}`} href={point.sourceUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.label}: ${valueLabel(point)} ${measure.unit}, ${dateLabel(point)}. ${point.sourceLabel}`}>
+            {track.points.map(point => <a key={`${point.date}-${point.label}`} href={point.sourceUrl} target="_blank" rel="noopener noreferrer" tabIndex={0}
+              aria-label={`${point.label} · ${track.label}: ${valueLabel(point)} ${measure.unit}, ${dateLabel(point)}. ${point.sourceLabel}`}
+              aria-describedby={activePoint === point ? tooltipId : undefined}
+              onMouseEnter={() => setHovered(point)} onMouseLeave={() => setHovered(null)}
+              onFocus={() => setFocused(point)} onBlur={() => setFocused(null)}>
               <circle data-point={track.id} cx={x(point.date)} cy={y(point.value)} r="6" fill="currentColor" stroke="var(--color-white)" strokeWidth="1.5">
                 <title>{`${track.label} · ${point.label}: ${valueLabel(point)} ${measure.unit} · ${dateLabel(point)} (${point.datePrecision} precision; ${point.dateBasis})`}</title>
               </circle>
             </a>)}
           </g>)}
         </svg>
-        <figcaption className="space-y-1 text-xs leading-relaxed text-gray-600">
-          <p className="mb-2">Some markers overlap. Select a track to isolate it; axes stay fixed.</p>
-          <button type="button" aria-pressed={selectedTrack === null} onClick={() => setSelectedTrack(null)} className="text-blue underline py-1">Show all tracks</button>
-          {measure.tracks.map((track, index) => <button key={track.id} type="button" aria-label={`Isolate ${track.label}`} aria-pressed={selectedTrack === track.id} onClick={() => setSelectedTrack(selectedTrack === track.id ? null : track.id)} className={`flex w-full items-start gap-2 py-1.5 text-left rounded-sm focus-visible:outline-2 focus-visible:outline-blue ${selectedTrack === track.id ? 'font-semibold text-black' : ''}`}>
-            <span aria-hidden="true" className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-            <span>{track.label}</span>
-          </button>)}
+        {activePoint && activeTrack && <div id={tooltipId} role="tooltip" className="measurement-tooltip">
+          <p className="font-semibold text-black">{activePoint.label}</p>
+          <p className="font-medium text-black">{valueLabel(activePoint)} {measure.unit} · {dateLabel(activePoint)}</p>
+          <p>{activeTrack.label} · {activeTrack.definition}</p>
+          <p>{measure.coverage}</p>
+          <p className="text-gray-500">{activePoint.datePrecision} precision · {activePoint.dateBasis} · {activePoint.sourceLabel}</p>
+        </div>}
+        <figcaption className="text-xs leading-relaxed text-gray-600">
+          <ul className="measurement-legend" aria-label="Evidence tracks">
+            {measure.tracks.map((track, index) => <li key={track.id}>
+              <span aria-hidden="true" className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+              <span>{track.label}</span>
+            </li>)}
+          </ul>
+          <p className="mt-2 text-[11px] text-gray-500">Hover or focus a dot for details; follow it to the source. Some markers overlap; Tab visits every observation.</p>
         </figcaption>
       </figure>}
       <p className="mt-3 text-xs text-gray-500 leading-relaxed">{measure.caveat}</p>

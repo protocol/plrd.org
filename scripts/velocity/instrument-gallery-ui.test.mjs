@@ -72,16 +72,15 @@ test('every gallery kind flips to locally contained data and back with only the 
         assert.equal(toggle.textContent, 'Data & sources')
         const front = card.querySelector('[data-face="chart"]')
         const back = card.querySelector('[data-face="data"]')
-        assert.equal(back.hidden, true)
+        assert.equal(back.hidden, false, 'both physical faces stay rendered during rotation')
         assert.equal(back.getAttribute('aria-hidden'), 'true')
         assert.ok(back.hasAttribute('inert'))
-        const isolate = front.querySelector('button[aria-label^="Isolate"]')
-        if (isolate) { await click(isolate); assert.equal(isolate.getAttribute('aria-pressed'), 'true') }
         toggle.focus()
         await click(toggle)
         assert.equal(toggle.textContent, 'Back to chart')
         assert.ok(document.activeElement === toggle, 'stable flip control retains keyboard focus')
-        assert.equal(front.hidden, true)
+        assert.equal(front.hidden, false, 'front remains mounted at the back of the rotating card')
+        assert.equal(card.querySelector('.gallery-card-rotator').dataset.flipped, 'true')
         assert.equal(front.getAttribute('aria-hidden'), 'true')
         assert.ok(front.hasAttribute('inert'))
         assert.equal(back.hidden, false)
@@ -93,12 +92,66 @@ test('every gallery kind flips to locally contained data and back with only the 
         toggle.focus()
         await click(toggle)
         assert.equal(front.hidden, false)
-        assert.equal(back.hidden, true)
-        if (isolate) assert.equal(isolate.getAttribute('aria-pressed'), 'true', 'track selection survives flipping')
+        assert.equal(back.hidden, false, 'both physical faces stay rendered during rotation')
+        assert.equal(card.querySelector('.gallery-card-rotator').dataset.flipped, 'false')
       }
       await click(document.querySelector('[aria-label="Close gallery"]'))
     }
   } finally { await unmount() }
+})
+
+
+test('performance measurement dots reveal project, value, date and context on hover and keyboard focus', async () => {
+  const data = await load()
+  const unmount = await mount({ ...data, fixedArea: 'neurotech' })
+  try {
+    await click(document.querySelector('[data-instrument="performance_curves"]'))
+    for (const measure of data.measurementSeriesByArea.neurotech.filter(m => m.instrument === 'performance_curves')) {
+      const article = document.querySelector(`[data-measurement="${measure.id}"]`)
+      assert.equal(article.querySelectorAll('figcaption button').length, 0, 'legend cannot hide evidence')
+      const links = [...article.querySelectorAll('svg a')]
+      const entries = measure.tracks.flatMap(track => track.points.map(point => ({ track, point })))
+      assert.equal(links.length, entries.length)
+      for (const [index, link] of links.entries()) {
+        const { track, point } = entries[index]
+        await act(() => link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true })))
+        let tip = article.querySelector('[role="tooltip"]')
+        assert.ok(tip, 'immediate HTML tooltip, not only native SVG title')
+        for (const value of [point.label, track.label, track.definition, measure.unit, measure.coverage, point.date.slice(0, 4), point.dateBasis]) assert.ok(tip.textContent.includes(value), value)
+        assert.ok(tip.textContent.includes(point.value.toLocaleString('en-US', { maximumSignificantDigits: 15 })))
+        await act(() => link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true })))
+        assert.equal(article.querySelector('[role="tooltip"]'), null)
+        await act(() => link.focus())
+        tip = article.querySelector('[role="tooltip"]')
+        assert.ok(tip, 'keyboard focus shows the same details')
+        assert.equal(link.getAttribute('aria-describedby'), tip.id)
+        assert.equal(link.getAttribute('href'), point.sourceUrl)
+        await act(() => link.blur())
+        assert.equal(article.querySelector('[role="tooltip"]'), null)
+      }
+    }
+  } finally { await unmount() }
+})
+
+test('idea vintage is scoped to the current detail area or selected overview tab', async () => {
+  const data = await load()
+  const { FOCUS_AREAS } = source('lib/field-velocity.ts')
+  for (const fixedArea of ['neurotech', undefined]) {
+    const unmount = await mount({ ...data, fixedArea, initialArea: 'neurotech' })
+    try {
+      for (const area of fixedArea ? FOCUS_AREAS.filter(a => a.key === fixedArea) : FOCUS_AREAS) {
+        if (!fixedArea) await click([...document.querySelectorAll('[role="tab"]')].find(tab => tab.textContent.includes(area.label)))
+        const trigger = document.querySelector('[data-instrument="idea_vintage"]')
+        assert.equal(trigger.dataset.chartCount, '1')
+        await click(trigger)
+        const dialog = document.querySelector('[role="dialog"]')
+        assert.equal(dialog.querySelectorAll('[data-gallery-item]').length, 1)
+        assert.ok(dialog.querySelector('[data-face="chart"] h3').textContent.includes(area.label))
+        assert.equal(dialog.querySelectorAll('[data-gallery-item^="example-"]').length, 0)
+        await click(dialog.querySelector('[aria-label="Close gallery"]'))
+      }
+    } finally { await unmount() }
+  }
 })
 
 test('adoption preview uses its real chart without dumping historical prose or a research-only caveat', async () => {
@@ -118,14 +171,49 @@ test('adoption preview uses its real chart without dumping historical prose or a
   } finally { await unmount() }
 })
 
-test('gallery styling contains scroll, fans into readable columns, and disables motion when requested', () => {
+test('gallery styling uses a physical two-faced 3D rotation with reduced-motion support', () => {
   const css = readFileSync('src/app/globals.css', 'utf8')
-  assert.match(css, /\.instrument-gallery-grid\s*\{[^}]*grid-template-columns: repeat\(auto-fit, minmax\(min\(100%, 24rem\), 1fr\)\)/)
-  assert.match(css, /\.gallery-card-faces\s*\{[^}]*height:/, 'flip does not resize the card')
+  assert.match(css, /\.instrument-gallery-grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\)/)
+  assert.match(css, /\.gallery-card-face\[data-face="chart"\]\s*\{[^}]*position: relative/, 'chart content sizes the card; back stays contained')
+  assert.doesNotMatch(css, /height: clamp\(28rem, 62dvh, 38rem\)/)
   assert.match(css, /\.gallery-card-face\s*\{[^}]*overflow-y: auto/)
-  assert.match(css, /@keyframes instrument-fan-open/)
-  assert.match(css, /@keyframes gallery-card-turn/)
+  assert.doesNotMatch(css, /@keyframes instrument-fan-open/, 'measured spring motion replaces the tiny CSS fade')
+  assert.match(css, /\.gallery-card-rotator\s*\{[^}]*transform-style: preserve-3d/)
+  assert.match(css, /\.gallery-card-rotator\[data-flipped="true"\]\s*\{[^}]*transform: rotateY\(180deg\)/)
+  assert.match(css, /\.gallery-card-face\[data-face="data"\]\s*\{[^}]*transform: rotateY\(180deg\)/)
+  assert.match(css, /backface-visibility: hidden/)
+  assert.doesNotMatch(css, /@keyframes gallery-card-turn/)
+  assert.doesNotMatch(css, /\.gallery-plot svg\s*\{[^}]*max-height:/, 'sparkline pointer geometry must not be letterboxed by a height cap')
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.gallery-card-face[^}]*animation: none/)
+})
+
+test('gallery columns balance four cards as two pairs and fit three at wide container widths', async () => {
+  const data = await load()
+  const { INFLECTION_POINTS } = source('lib/field-velocity.ts')
+  const areaPoints = INFLECTION_POINTS.filter(p => p.area === 'ai-robotics')
+  const marketSignals = Object.fromEntries(areaPoints.slice(0, 2).map((p, i) => [p.title, { prob: 0.4, platform: 'polymarket', question: `Question ${i}?`, resolutionDate: '2027-01-01', url: `https://polymarket.com/${i}` }]))
+  const unmount = await mount({ ...data, marketSignals, initialArea: 'ai-robotics' })
+  try {
+    await click(document.querySelector('[data-instrument="markets"]'))
+    let grid = document.querySelector('.instrument-gallery-grid')
+    assert.equal(grid.children.length, 4)
+    assert.equal(grid.dataset.columns, '2', 'no lonely fourth card at desktop widths')
+    await click(document.querySelector('[aria-label="Close gallery"]'))
+    await click([...document.querySelectorAll('[role="tab"]')].find(t => t.textContent.includes('Neurotech')))
+    await click(document.querySelector('[data-instrument="performance_curves"]'))
+    grid = document.querySelector('.instrument-gallery-grid')
+    assert.equal(grid.children.length, 3)
+    assert.equal(grid.dataset.columns, '3')
+    const css = readFileSync('src/app/globals.css', 'utf8')
+    assert.match(css, /@container gallery \(min-width: 42rem\)/)
+    assert.match(css, /@container gallery \(min-width: 68rem\)/)
+    assert.match(css, /\.instrument-gallery-grid\[data-columns="3"\]/)
+    assert.match(css, /\.instrument-gallery-dialog\[data-columns="1"\]\s*\{[^}]*max-width: 52rem/, 'one chart does not fill a three-chart dialog')
+    assert.match(css, /\.instrument-previews\s*\{[^}]*gap: \.875rem/)
+    assert.match(css, /@container velocity \(min-width: 66rem\)/, 'five previews only when the actual panel has room')
+    assert.match(css, /\.field-velocity-overview\s*\{[^}]*max-width: 96rem/)
+    assert.match(css, /\.field-velocity-dashboard\s*\{[^}]*gap: 1\.25rem/)
+  } finally { await unmount() }
 })
 
 test('gallery traps focus, excludes closed evidence, restores trigger and body styles on every close path', async () => {
