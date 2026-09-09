@@ -69,6 +69,26 @@ test('shared previews open only the selected instrument’s real charts, never i
 })
 
 
+test('definitions and methodology are immediately visible and non-collapsible in every instrument modal', async () => {
+  const data = await load()
+  const { INSTRUMENT_BY_ID } = source('lib/velocity-instruments.ts')
+  for (const fixedArea of ['neurotech', 'ai-robotics', 'economies-governance', 'digital-human-rights', undefined]) {
+    const unmount = await mount({ ...data, fixedArea, initialArea: 'neurotech' })
+    try {
+      for (const trigger of document.querySelectorAll('button[data-instrument]')) {
+        await click(trigger)
+        const methodology = document.querySelector('[role="dialog"] .gallery-methodology')
+        assert.ok(methodology, 'every instrument retains its methodology')
+        assert.ok(!methodology.closest('details, [hidden], [inert], [aria-hidden="true"]'), 'methodology must be visible without opening a disclosure')
+        assert.equal(methodology.querySelector('summary, button, [role="button"]'), null, 'methodology has no collapse control')
+        assert.equal(methodology.querySelector('h3')?.textContent, 'Definition & methodology')
+        assert.ok(methodology.textContent.includes(INSTRUMENT_BY_ID[trigger.dataset.instrument].description), 'preserve the complete original definition')
+        await click(document.querySelector('[aria-label="Close gallery"]'))
+      }
+    } finally { await unmount() }
+  }
+})
+
 test('every gallery kind flips to locally contained data and back with only the active face exposed', async () => {
   const data = await load()
   const records = structuredClone(data.recordsByArea.neurotech)
@@ -201,6 +221,19 @@ test('adoption preview uses its real chart without dumping historical prose or a
   } finally { await unmount() }
 })
 
+test('the thin gallery frame belongs to both rotating faces, not the stationary shell', () => {
+  const css = readFileSync('src/app/globals.css', 'utf8')
+  const rule = selector => css.slice(css.indexOf(`${selector} {`)).split('}')[0]
+  const shell = rule('.instrument-gallery-item')
+  assert.match(shell, /border: 1px solid transparent/, 'retain the existing layout inset without painting a stationary frame')
+  assert.doesNotMatch(shell, /background:|overflow: hidden|box-shadow:|outline:/, 'the shell must neither paint a card nor clip its rotating corners')
+  const face = rule('.gallery-card-face')
+  assert.match(face, /outline: 1px solid color-mix\(in srgb, var\(--color-gray-500\) 24%, transparent\)/, 'each physical face paints the original thin frame without changing its size')
+  assert.match(face, /border-radius: \.875rem/)
+  assert.match(face, /backface-visibility: hidden/)
+  assert.match(rule('.gallery-card-toolbar'), /border-top: 1px solid transparent/, 'the stationary toolbar retains its size but does not leave a frame edge behind')
+})
+
 test('gallery styling uses a physical two-faced 3D rotation with reduced-motion support', () => {
   const css = readFileSync('src/app/globals.css', 'utf8')
   assert.match(css, /\.instrument-gallery-grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\)/)
@@ -270,9 +303,9 @@ test('gallery traps focus, excludes closed evidence, restores trigger and body s
       assert.ok(document.activeElement === close, 'forward Tab wraps to close')
       trigger.focus()
       assert.ok(dialog.contains(document.activeElement), 'programmatic outside focus is contained')
-      const definition = [...dialog.querySelectorAll('summary')].find(s => s.textContent === 'Definition & methodology')
-      await click(definition)
-      assert.equal(definition.parentElement.open, true)
+      const definition = dialog.querySelector('.gallery-methodology h3')
+      assert.equal(definition.textContent, 'Definition & methodology')
+      assert.ok(!definition.closest('details'), 'methodology is not a focusable disclosure')
       assert.ok(dialog.textContent.includes(source('lib/velocity-instruments.ts').INSTRUMENT_BY_ID.performance_curves.description))
       if (closeWith === 'Escape') await key('Escape')
       if (closeWith === 'backdrop') await click(document.querySelector('.instrument-gallery-backdrop'))

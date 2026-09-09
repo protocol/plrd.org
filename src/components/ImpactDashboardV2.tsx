@@ -469,12 +469,12 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
           <button type="button" onClick={onClose} aria-label="Close gallery" className="gallery-close">×</button>
         </header>
         <div className="instrument-gallery-scroll">
-          <details className="gallery-methodology text-sm text-gray-600">
-            <summary className="cursor-pointer font-medium text-blue">Definition & methodology</summary>
+          <section className="gallery-methodology text-sm text-gray-600">
+            <h3 className="font-medium text-blue">Definition & methodology</h3>
             <p className="mt-3 leading-relaxed">{inst.description}</p>
             {record.instrument === 'idea_vintage' && <p className="mt-3 italic">This reads the research side of the field. It does not observe invention directly, and the two can decouple.</p>}
             {record.instrument === 'idea_vintage' && <IdeaVintageExamples examples={examples} showCharts={false} />}
-          </details>
+          </section>
           {!items.some(i => i.kind === 'primary') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
           {chartCount === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
           <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
