@@ -614,7 +614,10 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
             <button type="button" data-chart-copy onClick={async () => { try { await window.navigator.clipboard.writeText(directUrl); setCopyStatus('Copied') } catch { setCopyStatus('Copy failed — use Direct link') } }}>{copyStatus}</button>
             <span className="sr-only" role="status">{copyStatus === 'Copy link' ? '' : copyStatus}</span>
           </div>
-          <section className="gallery-methodology text-sm text-gray-600">
+          <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
+            {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
+          </div>
+          <section className="gallery-methodology mt-6 text-sm text-gray-600">
             <h3 className="font-medium text-blue">Definition & methodology</h3>
             <p className="mt-3 leading-relaxed">{inst.description}</p>
             {record.instrument === 'idea_vintage' && <p className="mt-3 italic">This reads the research side of the field. It does not observe invention directly, and the two can decouple.</p>}
@@ -622,9 +625,6 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
           </section>
           {!items.some(i => i.kind === 'primary' || i.kind === 'reading') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
           {items.length === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
-          <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
-            {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
-          </div>
           {pv && !items.some(i => i.kind === 'patent') && <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-600">
             <h3 className="font-semibold text-black">Patent vintage · invention side</h3>
             {pv.state === 'unwired' ? <><p className="mt-2">Not yet wired. Intended metric: {pv.candidateMetric}</p><p>Blocked by: {pv.blocker}</p></> : pv.state === 'not_applicable' ? <p className="mt-2">Not applicable: {pv.reason}</p> : record.state === 'reading' ? <><p>{pv.value}</p>{pv.measuredAt && <p>measured {shortDate(pv.measuredAt)}</p>}{pv.sources && <SourceLinks sources={pv.sources} />}</> : <p>Not shown while this instrument is {record.state.replace('_', ' ')}.</p>}

@@ -230,6 +230,17 @@ test('opening and closing preserve an existing fragment, Next history state, and
   assert.equal(window.history.scrollRestoration, 'auto')
 })
 
+test('selected chart precedes long methodology without collapsing that methodology', async () => {
+  window.history.replaceState(null, '', '#fv/neurotech/idea_vintage/primary')
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  try {
+    const chart = document.querySelector('[role="dialog"] [data-gallery-item]')
+    const methodology = document.querySelector('.gallery-methodology')
+    assert.ok(chart.compareDocumentPosition(methodology) & window.Node.DOCUMENT_POSITION_FOLLOWING)
+    assert.equal(methodology.closest('details'), null)
+  } finally { await unmount() }
+})
+
 test('minimum-width mobile body does not receive a second scrollbar gutter', async () => {
   const inner = Object.getOwnPropertyDescriptor(window, 'innerWidth')
   const client = Object.getOwnPropertyDescriptor(document.documentElement, 'clientWidth')
