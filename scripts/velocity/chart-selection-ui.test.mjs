@@ -229,3 +229,23 @@ test('opening and closing preserve an existing fragment, Next history state, and
   } finally { await unmount() }
   assert.equal(window.history.scrollRestoration, 'auto')
 })
+
+test('minimum-width mobile body does not receive a second scrollbar gutter', async () => {
+  const inner = Object.getOwnPropertyDescriptor(window, 'innerWidth')
+  const client = Object.getOwnPropertyDescriptor(document.documentElement, 'clientWidth')
+  const minimum = document.body.style.minWidth
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 320 })
+  Object.defineProperty(document.documentElement, 'clientWidth', { configurable: true, value: 305 })
+  document.body.style.minWidth = '320px'
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  try {
+    await click(document.querySelector('[data-instrument="performance_curves"]'))
+    await click(document.querySelector('[data-chart-target="tissue-mapped"]'))
+    assert.equal(document.body.style.paddingRight, '', 'body already spans the full viewport at its minimum width')
+  } finally {
+    await unmount(); document.body.style.minWidth = minimum
+    Object.defineProperty(window, 'innerWidth', inner)
+    if (client) Object.defineProperty(document.documentElement, 'clientWidth', client)
+    else delete document.documentElement.clientWidth
+  }
+})

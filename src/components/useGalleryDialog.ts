@@ -23,7 +23,11 @@ export function useGalleryDialog(onClose: () => void, restoreTarget?: () => HTML
     if (!lock) {
       lock = { count: 0, overflow: body.style.overflow, paddingRight: body.style.paddingRight }
       bodyLocks.set(body, lock)
-      const gutter = document.documentElement.clientWidth > 0 ? Math.max(0, window.innerWidth - document.documentElement.clientWidth) : 0
+      const scrollbar = document.documentElement.clientWidth > 0 ? Math.max(0, window.innerWidth - document.documentElement.clientWidth) : 0
+      const minimumWidth = parseFloat(window.getComputedStyle(body).minWidth) || 0
+      // At the site's 320px body minimum, hiding the scrollbar doesn't widen
+      // the body. Compensate only the width it can actually gain.
+      const gutter = Math.min(scrollbar, Math.max(0, window.innerWidth - minimumWidth))
       const padding = parseFloat(window.getComputedStyle(body).paddingRight) || 0
       if (gutter) body.style.paddingRight = `${padding + gutter}px`
       body.style.overflow = 'hidden'
