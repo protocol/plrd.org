@@ -1,6 +1,6 @@
 # Individually selectable chart decks — verification
 
-Application revision: `9732914d58289932045b2b02e8c4b7c000693405`.
+Application revision: `973291ff011742e2b6d723ac131354208b7c6cad`.
 
 ## Behavior
 
