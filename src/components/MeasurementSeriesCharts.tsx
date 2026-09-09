@@ -38,7 +38,7 @@ export function measurementTicks(values: number[], scale: MeasurementSeries['sca
 export function MeasurementChart({ measure, face = 'complete' }: { measure: MeasurementSeries; face?: 'complete' | 'chart' | 'data' | 'preview' }) {
   const [hovered, setHovered] = useState<MeasurementPoint | null>(null)
   const [focused, setFocused] = useState<MeasurementPoint | null>(null)
-  const activePoint = hovered ?? focused
+  const activePoint = focused ?? hovered
   const activeTrack = activePoint ? measure.tracks.find(track => track.points.includes(activePoint)) : undefined
   const tooltipId = useId()
   const points = measure.tracks.flatMap(track => track.points)

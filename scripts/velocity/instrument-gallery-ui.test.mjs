@@ -129,6 +129,17 @@ test('performance measurement dots reveal project, value, date and context on ho
       const links = [...article.querySelectorAll('svg a')]
       const entries = measure.tracks.flatMap(track => track.points.map(point => ({ track, point })))
       assert.equal(links.length, entries.length)
+      // A stationary pointer must not steal details from keyboard navigation.
+      await act(() => links[0].dispatchEvent(new MouseEvent('mouseover', { bubbles: true })))
+      await act(() => links[1].focus())
+      let activeTip = article.querySelector('[role="tooltip"]')
+      assert.equal(links[1].getAttribute('aria-describedby'), activeTip.id, 'focused point owns the tooltip despite another hovered point')
+      assert.equal(links[0].getAttribute('aria-describedby'), null)
+      assert.ok(activeTip.textContent.includes(entries[1].point.label))
+      await act(() => links[1].blur())
+      activeTip = article.querySelector('[role="tooltip"]')
+      assert.equal(links[0].getAttribute('aria-describedby'), activeTip.id, 'blur restores the stationary hover')
+      await act(() => links[0].dispatchEvent(new MouseEvent('mouseout', { bubbles: true })))
       for (const [index, link] of links.entries()) {
         const { track, point } = entries[index]
         await act(() => link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true })))
