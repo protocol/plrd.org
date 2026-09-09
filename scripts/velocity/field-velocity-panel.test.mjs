@@ -32,6 +32,13 @@ test('overview dashboard initially selects the requested area while retaining ev
   }
 })
 
+test('hover-only role tooltips are hidden on narrow screens to prevent page overflow', () => {
+  const html = renderToStaticMarkup(React.createElement(Dashboard, { fixedArea: 'neurotech' }))
+  const tips = [...html.matchAll(/<span[^>]*class="([^"]*group-hover\/role:opacity-100[^"]*)"/g)]
+  assert.ok(tips.length > 0)
+  assert.ok(tips.every(m => m[1].includes('hidden sm:block')), 'off-screen hover tooltip boxes must not widen mobile layout')
+})
+
 function elements(node) {
   if (!React.isValidElement(node)) return []
   return [node, ...React.Children.toArray(node.props.children).flatMap(elements)]
