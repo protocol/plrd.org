@@ -23,6 +23,17 @@ test('approved Neuro article is public and discoverable at one clean URL', () =>
   assert.ok(!read('public/feed.xml').includes('/blog/preview-neurotech-'))
 })
 
+test('Neuro opportunity spaces render as an unordered bullet list', () => {
+  const article = JSON.parse(read('src/data/generated/blog.json')).find((post) => post.slug === slug)
+  assert.match(article.html, /<ul>\s*<li>Neural Augmentation \(Brain-Computer Interfaces\)<\/li>\s*<li>Biologically Inspired Intelligence \(NeuroAI\)<\/li>\s*<li>Whole Organism Emulation \(WOE\)<\/li>\s*<\/ul>/)
+})
+
+test('Neuro interface wording uses directly rather than invasively', () => {
+  const article = JSON.parse(read('src/data/generated/blog.json')).find((post) => post.slug === slug)
+  assert.ok(article.html.includes('how directly they interact with neural tissue'))
+  assert.ok(!article.html.includes('how invasively they interact'))
+})
+
 test('both shared Neuro preview URLs permanently redirect to the published article', async () => {
   const { outputText } = ts.transpileModule(read('next.config.ts'), {
     compilerOptions: { module: ts.ModuleKind.ESNext },

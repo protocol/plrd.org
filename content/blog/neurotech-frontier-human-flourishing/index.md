@@ -19,7 +19,7 @@ areas:
 
 <p>We focus on three opportunity spaces that could reshape both neuroscience and computing over the coming decade:</p>
 
-<ol>
+<ul>
 
 <li>Neural Augmentation (Brain-Computer Interfaces)</li>
 
@@ -27,7 +27,7 @@ areas:
 
 <li>Whole Organism Emulation (WOE)</li>
 
-</ol>
+</ul>
 
 <p>Together, these areas form a loop: advances in neuroscience (via augmentation and mapping) generate new data and understanding; those insights enable more capable AI systems and neurotechnologies (NeuroAI applications); and progress across both creates entirely new possibilities for augmenting human cognition (improved augmentation &amp; emulation).</p>
 
@@ -83,7 +83,7 @@ areas:
 
 <h3>Progress so far / case studies of momentum</h3>
 
-<p>Making neural interfaces useful beyond a small number of research participants requires progress on several fronts: how much information they can carry, how invasively they interact with neural tissue, and how they reach patients through clinical care. Recent developments show movement on each, although the devices are at different stages of clinical and commercial development.</p>
+<p>Making neural interfaces useful beyond a small number of research participants requires progress on several fronts: how much information they can carry, how directly they interact with neural tissue, and how they reach patients through clinical care. Recent developments show movement on each, although the devices are at different stages of clinical and commercial development.</p>
 
 <ul>
 
