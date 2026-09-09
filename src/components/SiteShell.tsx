@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import SiteHeader from './SiteHeader'
 import SiteFooter from './SiteFooter'
 import OffCanvasNav from './OffCanvasNav'
+import FeedbackButton from './FeedbackButton'
 
 // Routes that render full-screen (no footer, no bottom padding)
 const FULLSCREEN_PATTERNS = [
@@ -41,6 +42,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {!isFullscreen && <SiteFooter />}
+      <FeedbackButton />
     </>
   )
 }

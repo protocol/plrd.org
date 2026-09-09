@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import CookieSettingsLink from './CookieSettingsLink'
 import { COOKIE_CONSENT_ENABLED } from '@/lib/cookie-consent'
+import { siteConfig } from '@/lib/site-config'
 
 export default function SiteFooter() {
   return (
@@ -58,7 +59,7 @@ export default function SiteFooter() {
           <div>
             <h5 className="text-[11px] uppercase tracking-[0.12em] text-[#8b8d99] font-bold mb-3.5">Connect</h5>
             <ul className="space-y-1.5 list-none m-0 p-0">
-              <li><a href="https://github.com/protocol/plrd" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">GitHub</a></li>
+              <li><a href={siteConfig.githubUrl} className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">GitHub</a></li>
               <li><a href="https://bsky.app/profile/plrd.org" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">Bluesky</a></li>
               <li><a href="https://x.com/protocollabs_rd" target="_blank" rel="noopener noreferrer" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">X / Twitter</a></li>
               <li><a href="/feed.xml" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">RSS</a></li>
@@ -85,7 +86,7 @@ export default function SiteFooter() {
             © Protocol Labs · Content licensed CC-BY 4.0 · A research initiative of Protocol Labs
           </p>
           <div className="flex gap-5 text-[13px]">
-            <a href="https://github.com/protocol/plrd" className="text-[#cfd1da] hover:text-white transition-colors">GitHub</a>
+            <a href={siteConfig.githubUrl} className="text-[#cfd1da] hover:text-white transition-colors">GitHub</a>
             <a href="https://bsky.app/profile/plrd.org" className="text-[#cfd1da] hover:text-white transition-colors">Bluesky</a>
             <a href="https://x.com/protocollabs_rd" target="_blank" rel="noopener noreferrer" className="text-[#cfd1da] hover:text-white transition-colors">X</a>
             <a href="/feed.xml" className="text-[#cfd1da] hover:text-white transition-colors">RSS</a>
