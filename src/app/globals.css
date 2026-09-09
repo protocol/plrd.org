@@ -85,6 +85,48 @@
   --leading-cavernous: 3rem;
 }
 
+/* Area overview full-bleed rows: the center track is the former max-w-6xl
+   content width minus its two px-6 gutters. No viewport-width breakout, negative
+   margins, clipping or transformed ancestor (which would trap fixed modals).
+   The field section spans the actual page width; its children share the same
+   content track. bg-gray-200 exactly matches Neuro's empty opportunity cell. */
+.area-overview {
+  display: grid;
+  grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 69rem) minmax(1.5rem, 1fr);
+}
+.area-overview > * {
+  grid-column: 2;
+  min-width: 0;
+}
+.area-overview > .area-field-velocity {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+.area-field-velocity > * {
+  grid-column: 2;
+  min-width: 0;
+}
+
+/* Small multiples adapt to the available panel, not the viewport. Source tables
+   wrap inside the card even on phones; no horizontal scroll region is needed. */
+.measurement-series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  align-items: start;
+  gap: 2rem;
+}
+.measurement-data th,
+.measurement-data td {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  padding: 0.65rem 0.4rem;
+  border: 0;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+.measurement-data th:first-child,
+.measurement-data td:first-child { width: 34%; }
+
 /* ===== Base ===== */
 html {
   font-size: 16px;

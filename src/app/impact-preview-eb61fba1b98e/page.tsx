@@ -34,7 +34,7 @@ export default async function ImpactPage({ searchParams }: {
   ])
   const area = query?.area
   const initialArea = typeof area === 'string' && isFocusAreaKey(area) ? area : 'digital-human-rights'
-  const { recordsByArea, marketSignals, ideaVintageExamples } = fieldVelocity
+  const { recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples } = fieldVelocity
   return (
     <div>
       {/* Hero */}
@@ -83,6 +83,7 @@ export default async function ImpactPage({ searchParams }: {
             liveOutputs={liveOutputs}
             marketSignals={marketSignals}
             recordsByArea={recordsByArea}
+            measurementSeriesByArea={measurementSeriesByArea}
             ideaVintageExamples={ideaVintageExamples}
           />
         </div>

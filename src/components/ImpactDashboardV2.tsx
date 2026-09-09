@@ -38,6 +38,8 @@ import {
   type InstrumentRecord,
   type Direction,
 } from '@/lib/velocity-instruments'
+import MeasurementSeriesCharts from '@/components/MeasurementSeriesCharts'
+import type { MeasurementSeries } from '@/lib/measurement-series'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import { Sparkline, GhostChart, type SeriesPoint } from '@/components/VelocitySparkline'
 import { IdeaVintageExamples, type IdeaVintageExample } from '@/components/velocity-explainers'
@@ -66,6 +68,7 @@ export default function ImpactDashboardV2({
   liveOutputs = {},
   marketSignals = {},
   recordsByArea,
+  measurementSeriesByArea = {},
   ideaVintageExamples = [],
   fixedArea,
   initialArea = 'digital-human-rights',
@@ -78,6 +81,7 @@ export default function ImpactDashboardV2({
   /** Instrument records per focus area, precomputed server-side (static records
    *  merged with any OpenAlex CSV readings). Falls back to the static set. */
   recordsByArea?: Partial<Record<FocusAreaKey, InstrumentRecord[]>>
+  measurementSeriesByArea?: Partial<Record<FocusAreaKey, MeasurementSeries[]>>
   /** Idea-vintage small multiples, so the field-velocity instrument modal shows
    *  the same rich card as the methodology section. */
   ideaVintageExamples?: IdeaVintageExample[]
@@ -104,7 +108,7 @@ export default function ImpactDashboardV2({
 
   return (
     <>
-      <div className={fixedArea ? '' : 'lg:grid lg:grid-cols-[248px_1fr] lg:gap-10'}>
+      <div className={fixedArea ? 'min-w-0' : 'min-w-0 lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-10'}>
         {/* Vertical tabs (PR #29 layout), sticky so they stay visible while
             scrolling the field. */}
         {!fixedArea && <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
@@ -128,7 +132,7 @@ export default function ImpactDashboardV2({
           </div>
         </div>}
         {/* Content: field velocity box + inflection points */}
-        <div>
+        <div className="min-w-0">
           {/* Field velocity — label outside the box; the box previews the five
               instruments and opens a modal. */}
           <div className="mb-2 flex items-center gap-2">
@@ -138,6 +142,7 @@ export default function ImpactDashboardV2({
             <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
           </div>
           <FieldVelocityBox records={records} markets={fieldMarkets} onOpen={() => setVelocityOpen(true)} />
+          <MeasurementSeriesCharts key={filter} series={measurementSeriesByArea[filter] ?? []} />
 
           {/* Inflection points — four cards in two rows, with live signals. */}
           <div className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">

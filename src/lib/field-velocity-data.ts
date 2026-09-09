@@ -8,6 +8,7 @@ import { loadMarketCurve, withMarketCurve } from '@/lib/velocity-market-curve'
 import { resolveAllSignals, type MarketSignal } from '@/lib/market-signals'
 import { INFLECTION_POINTS, TOOLKIT_V2, FIELD_VELOCITY_METHODOLOGY, FIELD_VELOCITY_OVERVIEW, FIELD_VELOCITY_ORIGIN } from '@/lib/field-velocity'
 import { VELOCITY_INSTRUMENTS } from '@/lib/velocity-instruments'
+import { NEURO_MEASUREMENT_SERIES, type MeasurementSeries } from '@/lib/measurement-series'
 
 export function isFocusAreaKey(area: string): area is FocusAreaKey {
   return FOCUS_AREAS.some(({ key }) => key === area)
@@ -31,6 +32,7 @@ export function fieldVelocityForArea(data: Awaited<ReturnType<typeof loadFieldVe
     },
     instruments: VELOCITY_INSTRUMENTS,
     records: data.recordsByArea[area],
+    measurementSeries: data.measurementSeriesByArea[area],
     inflectionPoints,
     marketSignals,
     toolkit: TOOLKIT_V2,
@@ -56,5 +58,8 @@ export async function loadFieldVelocity(resolveSignals = resolveAllSignals) {
     return record ? [{ label, series: record.series!, scale: record.seriesScale ?? 'linear' as const }] : []
   })
   const marketSignals = await resolveSignals()
-  return { generatedAt: new Date().toISOString(), recordsByArea, ideaVintageExamples, marketSignals }
+  const measurementSeriesByArea = Object.fromEntries(FOCUS_AREAS.map(({ key }) => [
+    key, key === 'neurotech' ? NEURO_MEASUREMENT_SERIES : [],
+  ])) as Record<FocusAreaKey, MeasurementSeries[]>
+  return { generatedAt: new Date().toISOString(), recordsByArea, measurementSeriesByArea, ideaVintageExamples, marketSignals }
 }

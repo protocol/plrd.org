@@ -175,7 +175,7 @@ export default async function AreaPage({ params }: Props) {
   const { meta: oppMeta, cards: opportunities } = await loadOpportunityCards(slug)
 
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
+    <div className="area-overview pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Focus Areas', href: '/areas/' }, { label: stripFaPrefix(area.title) }]} />
       <div className="mt-4 empty:hidden">
         <PageEditHistoryByline rkey={`area-${slug}`} />

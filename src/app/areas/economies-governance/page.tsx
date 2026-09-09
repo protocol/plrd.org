@@ -80,7 +80,7 @@ export default async function FA2MainPage() {
 
   const bodyContent = bodySection?.body || "This focus area rectifies the inadequacies of current macro systems, which often struggle to coordinate and solve monumental challenges like climate change. By leveraging cryptoeconomics and improved governance tools, we are rethinking how capital is formed and deployed.\n\nThis movement harnesses mechanism design to align millions of people worldwide toward shared goals, creating structures that can allocate resources at the scale of nation-states for the benefit of all humanity."
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
+    <div className="area-overview pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Focus Areas', href: '/areas/' }, { label: 'Economies & Governance' }]} />
       <div className="mt-4 empty:hidden">
         <PageEditHistoryByline rkey="area-economies-governance" />

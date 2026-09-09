@@ -12,9 +12,9 @@ export default async function AreaFieldVelocity({ area }: { area: FocusAreaKey }
   const field = fieldVelocityForArea(data, area)
   const overview = `${FIELD_VELOCITY_OVERVIEW}?area=${area}`
   return (
-    <section id="field-velocity" aria-labelledby="field-velocity-heading" className="mb-12 border-y border-gray-200 bg-gray-50 px-4 py-8 sm:px-6 sm:py-10 scroll-mt-24">
+    <section id="field-velocity" aria-labelledby="field-velocity-heading" className="area-field-velocity mb-12 bg-gray-200 py-8 sm:py-10 scroll-mt-24">
       <div className="mb-7">
-        <h2 id="field-velocity-heading" className="text-2xl lg:text-[32px] font-semibold tracking-tight mb-3">Field velocity</h2>
+        <h2 id="field-velocity-heading" className="text-2xl lg:text-[32px] font-semibold tracking-tight mb-3">{field.area.label} field velocity</h2>
         <p className="text-base text-gray-600 leading-relaxed max-w-3xl">
           How {field.area.label} is moving: the same instruments and inflection points tracked in our cross-field overview.
           Field progress is not a claim of PL attribution.
@@ -30,6 +30,7 @@ export default async function AreaFieldVelocity({ area }: { area: FocusAreaKey }
         fixedArea={area}
         liveOutputs={liveOutputs}
         recordsByArea={{ [area]: field.records }}
+        measurementSeriesByArea={{ [area]: field.measurementSeries }}
         marketSignals={field.marketSignals}
         ideaVintageExamples={data.ideaVintageExamples}
       />

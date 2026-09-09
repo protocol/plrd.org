@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { source } from './test-source-loader.mjs'
 
 const Dashboard = source('components/ImpactDashboardV2.tsx').default
@@ -44,7 +44,7 @@ function elements(node) {
   return [node, ...React.Children.toArray(node.props.children).flatMap(elements)]
 }
 
-for (const { key } of FOCUS_AREAS) {
+for (const { key, label } of FOCUS_AREAS) {
   test(`${key} overview includes the shared panel, original strategy and selected-area methodology/toolkit links`, async (t) => {
     assert.ok(existsSync('src/components/AreaFieldVelocity.tsx'), 'missing reusable area panel')
     t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
@@ -62,7 +62,23 @@ for (const { key } of FOCUS_AREAS) {
       assert.deepEqual(elements(panelTree).find(el => el.type === Dashboard).props.liveOutputs, {}, 'area panel must retain the overview live-output channel even when providers are unavailable')
     }
     const html = text(renderToStaticMarkup(panelTree))
+    const { loadFieldVelocity } = source('lib/field-velocity-data.ts')
+    const data = await loadFieldVelocity(async () => ({}))
+    assert.deepEqual(elements(panelTree).find(el => el.type === Dashboard).props.measurementSeriesByArea, { [key]: data.measurementSeriesByArea[key] })
+    assert.equal((html.match(/data-measurement=/g) ?? []).length, key === 'neurotech' ? 3 : 0)
+
     assert.match(html, /id="field-velocity"/)
+    assert.ok(html.includes(`${label} field velocity</h2>`))
+    assert.ok(tree.props.className.includes('area-overview'))
+    assert.ok(panelTree.props.className.includes('area-field-velocity'))
+    assert.ok(panelTree.props.className.includes('bg-gray-200'))
+    assert.doesNotMatch(panelTree.props.className, /border-y|px-4|bg-gray-50/)
+    const css = readFileSync('src/app/globals.css', 'utf8')
+    assert.match(css, /\.area-overview\s*\{[^}]*grid-template-columns:\s*minmax\(1\.5rem, 1fr\) minmax\(0, 69rem\) minmax\(1\.5rem, 1fr\)/)
+    assert.match(css, /\.area-overview > \.area-field-velocity\s*\{[^}]*grid-column:\s*1 \/ -1/)
+    assert.match(css, /--color-gray-200: #F6F9FD/)
+    assert.match(css, /--color-gray-200: #21242c/)
+
     assert.ok(html.includes(`/impact-preview-eb61fba1b98e/?area=${key}#field-velocity`))
     assert.ok(html.includes(`/impact-preview-eb61fba1b98e/?area=${key}#methodology`))
     assert.ok(html.includes(`/impact-preview-eb61fba1b98e/?area=${key}#toolkit`))

@@ -24,6 +24,7 @@ on both success and unknown-area responses; credentialed CORS is not enabled.
   source: { url: string, repository: string, methodologyUrl: string },
   instruments: { id: string, label: string, subtitle: string, description: string }[],
   records: InstrumentRecord[],
+  measurementSeries: MeasurementSeries[], // additive; Neuro has three, other fields []
   inflectionPoints: InflectionPoint[],
   marketSignals: Record<string, MarketSignal>, // only this area's point titles
   toolkit: typeof TOOLKIT_V2,
@@ -42,6 +43,41 @@ OpenAlex talent-entry chart; consumers must preserve those different units.
 Cache policy: route revalidation 300 seconds; browser max-age 60 seconds;
 shared cache max-age 300 seconds and stale-while-revalidate 600 seconds. Forecast
 resolvers retain their existing provider caching and explicit unavailable states.
+
+## Sourced Neuro measurements
+
+`src/lib/measurement-series.ts` defines `MeasurementSeries`, `MeasurementTrack` and
+`MeasurementPoint` and validates the committed `src/data/velocity/neuro-measurement-series.json`.
+The [evidence ledger](neuro-measurement-series-evidence.md) records the exact primary
+sources, derivations, date choices, exclusions and coverage limitations.
+
+The five instrument categories and existing `records` are unchanged. Additional
+series are mapped into them, rather than claiming eight independent instruments:
+
+| Series ID | Existing instrument | Lens | Unit / chart |
+| --- | --- | --- | --- |
+| `tissue-mapped` | `performance_curves` | capability | mm³; log scatter |
+| `bci-implants` | `revealed_commitments` | adoption | participants; within-cohort lines |
+| `neural-recording-hours` | `performance_curves` | data-supply | hours; scatter |
+
+Every series carries `description`, `coverage`, `caveat`, `checkedAt`, `chartKind`,
+`scale` and named `tracks`. Each track has its own definition and sorted points.
+Every point preserves positive `value`, HTTPS source URL and label, an explanatory
+note, `datePrecision` (day/month/year), `dateBasis` (release/publication/observation/disclosure)
+and optional approximate/at-least/greater-than qualifier. The ISO `date` coordinate
+must not be displayed as an exact event day when the source only gives a month/year.
+
+Charts never sum datasets or overlapping cohorts. Only compatible points within a
+single track can be connected; only Neuralink currently has a connected history.
+The H01 and MICrONS points are near-coincident: keyboard-accessible legend buttons
+isolate tracks on fixed axes, without moving the dates or removing source rows.
+Source disclosures retain all points regardless of the selected chart track.
+
+Area panels use a page-width CSS grid and `subgrid` to keep their content aligned
+with surrounding sections; the section itself spans all columns. The background
+is the exact Neuro opportunity-grid `bg-gray-200` token: `#F6F9FD` in light mode,
+`#21242c` in dark mode. No `100vw`, negative-margin escape or overflow clipping is
+needed, so the layout does not introduce scrollbar-width bleed or clip modals.
 
 ## Overview and consumer dependency
 

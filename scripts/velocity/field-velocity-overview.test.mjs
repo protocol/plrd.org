@@ -21,6 +21,7 @@ test('impact overview accepts validated area deep links and uses exactly the cen
     assert.ok(dashboard)
     assert.equal(dashboard.props.initialArea, typeof area === 'string' && area !== 'unknown' ? area : 'digital-human-rights')
     assert.deepEqual(dashboard.props.recordsByArea, data.recordsByArea)
+    assert.deepEqual(dashboard.props.measurementSeriesByArea, data.measurementSeriesByArea)
     assert.deepEqual(dashboard.props.ideaVintageExamples, data.ideaVintageExamples)
     assert.deepEqual(dashboard.props.marketSignals, data.marketSignals)
     assert.ok(children.some(el => el.props.id === 'field-velocity'))
