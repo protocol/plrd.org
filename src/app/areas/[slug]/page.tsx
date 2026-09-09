@@ -1,4 +1,7 @@
 import type { Metadata } from 'next'
+import AreaFieldVelocity from '@/components/AreaFieldVelocity'
+import { isFocusAreaKey } from '@/lib/field-velocity-data'
+
 import EditPageButton from '@/components/EditPageButton'
 import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Link from 'next/link'
@@ -15,6 +18,8 @@ import MarkdownContent from '@/components/MarkdownContent'
 import aiOpportunityData from '@/data/fa2/ai-opportunityspaces.json'
 import dhrOpportunityData from '@/data/fa2/dhr-opportunityspaces.json'
 import neuroOpportunityData from '@/data/fa2/neuro-opportunityspaces.json'
+
+export const revalidate = 300
 
 type OpportunityCard = {
   id: string
@@ -280,6 +285,8 @@ export default async function AreaPage({ params }: Props) {
           </div>
         </section>
       )}
+
+      {isFocusAreaKey(slug) && <AreaFieldVelocity area={slug} />}
 
       {/* Insights — latest posts, publications, and talks for this focus area */}
       {areaInsights.length > 0 && (

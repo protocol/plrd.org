@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import AreaFieldVelocity from '@/components/AreaFieldVelocity'
 import EditPageButton from '@/components/EditPageButton'
 import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import AuthorCard from '@/components/AuthorCard'
@@ -253,6 +254,8 @@ export default async function FA2MainPage() {
           ))}
         </div>
       </section>
+
+      <AreaFieldVelocity area="economies-governance" />
 
       {/* Explore */}
       <h2 className="text-sm text-gray-500 uppercase tracking-wide mb-6">Explore</h2>

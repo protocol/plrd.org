@@ -37,7 +37,7 @@ export const VELOCITY_INSTRUMENTS: VelocityInstrument[] = [
     label: 'Performance curves',
     subtitle: 'Cost or capability per unit, tracked over time.',
     description:
-      'How much a fixed unit of output costs, or how much capability one unit buys, tracked over time: dollars per genome sequenced, per watt of solar, per kWh of battery, transistors per chip. These are real rates with units attached, and they tend to fall along steady curves, which makes them the most predictable trend in a field. The first job in each field is to find its gating unit, the single cost that everything downstream waits on.',
+      'How much a fixed unit of output costs, or how much capability one unit buys, tracked over time: dollars per genome sequenced, per watt of solar, per kWh of battery, transistors per chip. These are real rates with units attached, and they tend to fall along steady curves, which makes them the most predictable trend in a field. Multiple field-specific cost and capability measures can coexist; a field need not have a single gating unit. Compare like-for-like units and observation windows before reading a rate of change.',
   },
   {
     id: 'latency_compression',
@@ -256,9 +256,10 @@ export const INSTRUMENT_RECORDS: Partial<Record<FocusAreaKey, InstrumentRecord[]
   'economies-governance': [
     {
       instrument: 'performance_curves',
-      state: 'not_applicable',
-      reason:
-        'Programmable allocation and governance have no single manufactured unit whose cost gates the field, so there is no performance curve to read. Cost shows up as administrative overhead, tracked under revealed commitments instead.',
+      state: 'unwired',
+      candidateMetric: 'Cost or capability of comparable programmable-allocation and governance processes',
+      blocker:
+        'Comparable units, quality thresholds and observation windows are not yet defined; no series is wired. The absence of a single manufactured gating unit does not rule out domain-specific capability curves.',
     },
     {
       instrument: 'latency_compression',
@@ -392,33 +393,20 @@ export const INSTRUMENT_RECORDS: Partial<Record<FocusAreaKey, InstrumentRecord[]
     {
       instrument: 'revealed_commitments',
       state: 'reading',
-      metric:
-        'Cumulative humans implanted with an intracortical BCI (peer-reviewed count), against the 10,000-by-2030 milestone the field has set',
-      value: '67 participants implanted (1998–2024)',
-      // Single peer-reviewed cumulative figure, no year-by-year series yet, so no
-      // trend arrow is drawn. Capital raised by BCI companies remains unwired.
-      // TODO(lukas): add a ClinicalTrials.gov pull for a monthly-refreshing series.
-      // That pull should also cover the therapeutic side: Robinson (IEEE Pulse 2025,
-      // adapting Woods et al.) reports psychiatric brain-stimulation trials doubling
-      // every ~4.7 years since 2000. His headline (~100× since 2000) and the fitted
-      // doubling time don't reconcile (100× at 4.7y needs ~31 years), so we cite the
-      // claim in the trend text but wire no series until it comes from primary
-      // registry data we can reconcile ourselves.
+      metric: 'Cumulative participants in implantable BCI studies (peer-reviewed count)',
+      value: '67 participants through December 2023',
+      // A cumulative adoption/commitment stock, not a year-by-year rate.
+      // The review includes intracortical, endovascular and ECoG systems.
       trend:
-        'A peer-reviewed count across all iBCI trials, ~150× below the 10,000-by-2030 milestone. Enrolment is now accelerating across several companies (Neuralink 21, Synchron, Precision Neuroscience). On the therapeutic side, clinical trials of brain stimulation for psychiatric conditions have doubled roughly every 4.7 years since 2000 — trial starts are among the field’s costliest commitments.',
-      window: '1998 → 2024',
-      measuredAt: '2024-01-01',
-      checkedAt: '2024-01-01',
+        'The review identified participants receiving implantable BCIs for communication, motor or sensory restoration, including endovascular and ECoG systems as well as intracortical implants. It excludes short-term diagnostic ECoG studies, but includes some dedicated assistive studies lasting one month. This is a historical cohort, not the current active installed base. Data collection ended in December 2023. This single cumulative observation does not establish current enrollment velocity or acceleration; comparable annual additions are not yet wired.',
+      window: 'Through December 2023',
+      measuredAt: '2023-12-31',
+      checkedAt: '2026-09-09',
       sources: [
         {
           label: 'Patrick-Krueger et al. (2024), Nature Reviews Bioengineering',
           url: 'https://doi.org/10.1038/s44222-024-00239-5',
         },
-        {
-          label: 'Robinson (2025), IEEE Pulse — psychiatric-stimulation trial growth',
-          url: 'https://pubmed.ncbi.nlm.nih.gov/40668700/',
-        },
-        { label: 'PL Neuro — 10k-by-2030 milestone', url: 'https://www.plneuro.xyz/' },
       ],
     },
     {

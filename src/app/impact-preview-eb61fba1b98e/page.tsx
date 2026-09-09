@@ -1,64 +1,17 @@
 import type { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
-import ImpactDashboardV2, { type LiveMetric, type LiveOutputs } from '@/components/ImpactDashboardV2'
+import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import MeasuringQuestionsV2 from '@/components/MeasuringQuestionsV2'
 import { HypercertsShowcase } from '@/components/hypercerts/HypercertsShowcase'
 import { fetchResearchRetreatHypercerts } from '@/lib/hypercerts'
-import { fetchSimocracyStats } from '@/lib/simocracy'
-import { fetchGainforestStats } from '@/lib/gainforest'
-import { fetchGlowStats } from '@/lib/glow'
-import { resolveAllSignals } from '@/lib/market-signals'
-import { FOCUS_AREAS, type FocusAreaKey } from '@/lib/inflection-points'
-import { instrumentsForArea, withOpenAlex, withPatentVintage, type InstrumentRecord } from '@/lib/velocity-instruments'
-import { loadAllOpenAlex } from '@/lib/velocity-openalex'
-import { loadAllLatency, withLatency } from '@/lib/velocity-latency'
-import { loadMarketCurve, withMarketCurve } from '@/lib/velocity-market-curve'
+import { fetchLiveOutputs } from '@/lib/field-velocity-live'
+import { isFocusAreaKey, loadFieldVelocity } from '@/lib/field-velocity-data'
+import { FIELD_VELOCITY_METHODOLOGY } from '@/lib/field-velocity'
 
 // The impact page reads field velocity: the interventions we run, the five
 // instruments we read a field's rate of change with, and the inflection points
 // we track, each with its live signal.
 export const revalidate = 60
-
-async function fetchLiveOutputs(): Promise<LiveOutputs> {
-  const compact = (n: number) =>
-    new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)
-  const out: LiveOutputs = {}
-
-  const [sim, gf, glow] = await Promise.allSettled([
-    fetchSimocracyStats(),
-    fetchGainforestStats(),
-    fetchGlowStats(),
-  ])
-
-  // A binding decision at scale — Simocracy (a PL-supported deliberation mechanism).
-  if (sim.status === 'fulfilled' && !sim.value.degraded) {
-    const t = sim.value.totals
-    const metrics: LiveMetric[] = [
-      { n: t.uniqueHumans, label: 'participants' },
-      { n: t.totalSims, label: 'simulations' },
-      { n: t.totalGatherings, label: 'gatherings' },
-    ]
-      .filter((m) => m.n > 0)
-      .map((m) => ({ value: compact(m.n), label: m.label }))
-    if (metrics.length) out['A binding decision at scale'] = metrics
-  }
-
-  // Capital that pays on verified outcomes — GainForest + Glow (PL-backed MRV teams).
-  const verified: LiveMetric[] = []
-  if (gf.status === 'fulfilled' && !gf.value.degraded) {
-    const g = gf.value
-    if (g.observations > 0) verified.push({ value: compact(g.observations), label: 'species observations' })
-    if (g.certifiedOrgs > 0) verified.push({ value: compact(g.certifiedOrgs), label: 'certified orgs' })
-  }
-  if (glow.status === 'fulfilled' && !glow.value.degraded) {
-    const gl = glow.value
-    if (gl.activeFarms > 0) verified.push({ value: compact(gl.activeFarms), label: 'active solar farms' })
-    if (gl.carbon > 0) verified.push({ value: compact(gl.carbon), label: 'tCO₂ / wk' })
-  }
-  if (verified.length) out['Capital that pays on verified outcomes'] = verified
-
-  return out
-}
 
 export const metadata: Metadata = {
   title: 'Impact',
@@ -70,37 +23,18 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 }
 
-export default async function ImpactPage() {
-  const [liveOutputs, marketSignals, certs] = await Promise.all([
+export default async function ImpactPage({ searchParams }: {
+  searchParams: Promise<{ area?: string | string[] }>
+}) {
+  const [liveOutputs, fieldVelocity, certs, query] = await Promise.all([
     fetchLiveOutputs(),
-    resolveAllSignals(),
+    loadFieldVelocity(),
     fetchResearchRetreatHypercerts(),
+    searchParams,
   ])
-
-  // Merge any OpenAlex CSV readings (idea vintage + talent entry) into the static
-  // instrument records, per focus area. Parsed at build time; absent CSVs are a
-  // no-op, leaving the documented `unwired` records in place.
-  const openAlex = loadAllOpenAlex()
-  const latency = loadAllLatency()
-  const marketCurve = loadMarketCurve()
-  const recordsByArea = Object.fromEntries(
-    FOCUS_AREAS.map((fa) => [
-      fa.key,
-      withMarketCurve(
-        withLatency(withOpenAlex(withPatentVintage(instrumentsForArea(fa.key), fa.key), openAlex[fa.key]), latency[fa.key]),
-        marketCurve[fa.key],
-      ),
-    ]),
-  ) as Partial<Record<FocusAreaKey, InstrumentRecord[]>>
-
-  // Example idea-vintage series per field, for the methodology modal that explains
-  // the instrument (shown as small multiples).
-  const ideaVintageExamples = FOCUS_AREAS.map((fa) => {
-    const rec = (recordsByArea[fa.key] ?? []).find(
-      (r) => r.instrument === 'idea_vintage' && r.state === 'reading' && r.series && r.series.length > 1,
-    )
-    return rec ? { label: fa.label, series: rec.series!, scale: rec.seriesScale ?? 'linear' } : null
-  }).filter((x): x is { label: string; series: NonNullable<InstrumentRecord['series']>; scale: 'linear' | 'log' } => !!x)
+  const area = query?.area
+  const initialArea = typeof area === 'string' && isFocusAreaKey(area) ? area : 'digital-human-rights'
+  const { recordsByArea, marketSignals, ideaVintageExamples } = fieldVelocity
   return (
     <div>
       {/* Hero */}
@@ -134,7 +68,7 @@ export default async function ImpactPage() {
       </div>
 
       {/* Field velocity — grey full-bleed section to set it apart from the rest of the site */}
-      <section className="border-y border-gray-200 bg-gray-100">
+      <section id="field-velocity" className="border-y border-gray-200 bg-gray-100 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-6 py-14 lg:py-16">
           <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2">Field velocity</h2>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mb-8">
@@ -144,6 +78,8 @@ export default async function ImpactPage() {
             measure the change between two points.</span>
           </p>
           <ImpactDashboardV2
+            key={initialArea}
+            initialArea={initialArea}
             liveOutputs={liveOutputs}
             marketSignals={marketSignals}
             recordsByArea={recordsByArea}
@@ -156,8 +92,7 @@ export default async function ImpactPage() {
       <div id="methodology" className="max-w-6xl mx-auto px-6 py-14 lg:py-16 scroll-mt-24">
         <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2">Our methodology</h2>
         <p className="text-base text-gray-600 leading-relaxed max-w-3xl mb-10">
-          The method is the meta-research design of how we do field acceleration. We name the
-          interventions we run, then read field velocity as the result. Same design, every focus area.
+          {FIELD_VELOCITY_METHODOLOGY.intro}
         </p>
         <MeasuringQuestionsV2
           ideaVintageExamples={ideaVintageExamples}

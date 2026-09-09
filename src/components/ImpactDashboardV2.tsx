@@ -67,7 +67,12 @@ export default function ImpactDashboardV2({
   marketSignals = {},
   recordsByArea,
   ideaVintageExamples = [],
+  fixedArea,
+  initialArea = 'digital-human-rights',
 }: {
+  initialArea?: FocusAreaKey
+  /** Reuse the full charts/cards/modals on an area overview, without cross-field tabs. */
+  fixedArea?: FocusAreaKey
   liveOutputs?: LiveOutputs
   marketSignals?: MarketSignals
   /** Instrument records per focus area, precomputed server-side (static records
@@ -77,7 +82,8 @@ export default function ImpactDashboardV2({
    *  the same rich card as the methodology section. */
   ideaVintageExamples?: IdeaVintageExample[]
 }) {
-  const [filter, setFilter] = useState<FocusAreaKey>('digital-human-rights')
+  const [selectedArea, setFilter] = useState<FocusAreaKey>(initialArea)
+  const filter = fixedArea ?? selectedArea
   const [active, setActive] = useState<InflectionPoint | null>(null)
   const [velocityOpen, setVelocityOpen] = useState(false)
   const [defInstrument, setDefInstrument] = useState<InstrumentId | null>(null)
@@ -98,10 +104,10 @@ export default function ImpactDashboardV2({
 
   return (
     <>
-      <div className="lg:grid lg:grid-cols-[248px_1fr] lg:gap-10">
+      <div className={fixedArea ? '' : 'lg:grid lg:grid-cols-[248px_1fr] lg:gap-10'}>
         {/* Vertical tabs (PR #29 layout), sticky so they stay visible while
             scrolling the field. */}
-        <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
+        {!fixedArea && <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
           <div
             role="tablist"
             aria-orientation="vertical"
@@ -120,8 +126,7 @@ export default function ImpactDashboardV2({
               />
             ))}
           </div>
-        </div>
-
+        </div>}
         {/* Content: field velocity box + inflection points */}
         <div>
           {/* Field velocity — label outside the box; the box previews the five
