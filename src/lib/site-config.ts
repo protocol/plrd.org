@@ -7,6 +7,7 @@ export const siteConfig = {
   twitterUser: '@protocollabs_rd',
   avatar: '/images/pl_research_card.png',
   logo: '/images/pl_research_logo.svg',
+  githubUrl: 'https://github.com/protocol/plrd.org',
   copyright: '© Protocol Labs, Inc. Except as noted, content licensed CC-BY 3.0.',
 }
 
