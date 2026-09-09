@@ -165,4 +165,3 @@ test('gallery traps focus, excludes closed evidence, restores trigger and body s
     }
   } finally { await unmount() }
 })
-
