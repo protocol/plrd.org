@@ -368,7 +368,7 @@ function RecordPlot({ series, scale, unit = '', dataOnly = false }: { series: Se
   return <>
     <p className="my-3 text-xs text-gray-500">{scale === 'log' ? 'Log scale' : 'Linear scale'}{unit && ` · ${unit === 'y' ? 'years' : unit}`}</p>
     {!dataOnly && <div className="gallery-plot"><Sparkline series={series} scale={scale} band={series.some(p => p.lo != null)} width={360} height={160} axis unit={unit} interactive /></div>}
-    <div className="mt-2 flex justify-between text-xs text-gray-500"><span>{series[0].x}</span><span>{series[series.length - 1].x}</span></div>
+    <div className="gallery-plot-axis mt-2 flex justify-between text-xs text-gray-500"><span>{series[0].x}</span><span>{series[series.length - 1].x}</span></div>
     {dataOnly && <details open className="mt-4 text-xs text-gray-600">
       <summary className="cursor-pointer py-2 font-medium text-blue">Chart data · {series.length} observations</summary>
       <table className="measurement-data w-full table-fixed text-left"><thead><tr><th scope="col">Date / horizon</th><th scope="col">Value{unit && ` (${unit})`}</th><th scope="col">Interval / status</th></tr></thead>

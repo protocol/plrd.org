@@ -305,8 +305,9 @@
   font-weight: 600;
   cursor: pointer;
 }
-.gallery-plot { max-width: 31.5rem; margin-inline: auto; }
-.gallery-plot svg { width: 100%; height: auto; }
+.gallery-plot, .gallery-plot-axis { width: 100%; max-width: 31.5rem; margin-inline: auto; }
+.gallery-plot > span { display: block; width: 100%; }
+.gallery-plot svg { display: block; width: 100%; height: auto; }
 .gallery-card-face .measurement-figure svg { max-height: 16rem; }
 .gallery-plot svg text { font-size: 10px !important; }
 @keyframes instrument-pop-open {

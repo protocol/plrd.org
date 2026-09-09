@@ -10,6 +10,23 @@ for (const key of ['window', 'document', 'HTMLElement', 'Element', 'Node', 'Keyb
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const { createRoot } = await import('react-dom/client')
 const Dashboard = source('components/ImpactDashboardV2.tsx').default
+
+test('wide gallery plots fill the card and position hover details in scaled coordinates', async () => {
+  const css = readFileSync(new URL('../../src/app/globals.css', import.meta.url), 'utf8')
+  assert.match(css, /\.gallery-plot > span\s*\{[^}]*width:\s*100%/)
+  const data = await load()
+  const unmount = await mount({ ...data, fixedArea: 'ai-robotics' })
+  try {
+    await click(document.querySelector('[data-instrument="markets"]'))
+    const svg = document.querySelector('.gallery-plot svg')
+    assert.ok(svg.closest('.gallery-plot').nextElementSibling.classList.contains('gallery-plot-axis'), 'endpoint labels share the plot’s bounded frame')
+    svg.getBoundingClientRect = () => ({ left: 0, top: 0, width: 720, height: 320 })
+    await act(() => svg.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 300 })))
+    const tooltip = svg.parentElement.querySelector('span[style]')
+    assert.ok(tooltip, 'hover details are present')
+    assert.match(tooltip.style.top, /^calc\([^)]*%/, 'vertical position scales with the rendered SVG instead of staying in source pixels')
+  } finally { await unmount() }
+})
 const load = () => source('lib/field-velocity-data.ts').loadFieldVelocity(async () => ({}))
 const click = async node => { assert.ok(node, 'click target exists'); await act(() => node.click()) }
 const mount = async props => {
