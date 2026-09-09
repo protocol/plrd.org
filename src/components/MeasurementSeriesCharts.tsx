@@ -39,7 +39,7 @@ export function visibleMeasurementTracks(measure: MeasurementSeries, selectedTra
   return selectedTrack === null ? measure.tracks : measure.tracks.filter(track => track.id === selectedTrack)
 }
 
-function MeasurementChart({ measure }: { measure: MeasurementSeries }) {
+export function MeasurementChart({ measure, face = 'complete' }: { measure: MeasurementSeries; face?: 'complete' | 'chart' | 'data' | 'preview' }) {
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null)
   const points = measure.tracks.flatMap(track => track.points)
   const dates = points.map(point => Date.parse(point.date))
@@ -52,15 +52,21 @@ function MeasurementChart({ measure }: { measure: MeasurementSeries }) {
   const high = transform(ticks[ticks.length - 1])
   const x = (date: string) => first === last ? 200 : 60 + (Date.parse(date) - first) / (last - first) * 284
   const y = (value: number) => 190 - (transform(value) - low) / (high - low) * 156
-  const titleId = `measurement-${measure.id}`
+  if (face === 'preview') return <svg data-measurement-preview={measure.id} aria-hidden="true" viewBox="54 28 296 170" className="block w-full h-11">
+    {measure.tracks.map((track, index) => <g key={track.id} style={{ color: COLORS[index % COLORS.length] }}>
+      {measure.chartKind === 'line' && track.points.length > 1 && <polyline points={track.points.map(p => `${x(p.date)},${y(p.value)}`).join(' ')} fill="none" stroke="currentColor" strokeWidth="3" />}
+      {track.points.map((p, i) => <circle key={i} cx={x(p.date)} cy={y(p.value)} r="5" fill="currentColor" />)}
+    </g>)}
+  </svg>
+  const titleId = `measurement-${measure.id}${face === 'data' ? '-data' : ''}`
   return (
-    <article data-measurement={measure.id} className="min-w-0 border-t border-gray-300 pt-5">
+    <article data-measurement={face === 'data' ? undefined : measure.id} data-measurement-details={face === 'data' ? measure.id : undefined} className="min-w-0 border-t border-gray-300 pt-5">
       <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-2">
         {INSTRUMENT_BY_ID[measure.instrument].label} · {measure.lens.replace('-', ' ')}
       </p>
       <h3 id={titleId} className="text-xl font-semibold text-black mb-2">{measure.title}</h3>
       <p className="text-sm text-gray-600 leading-relaxed">{measure.coverage}</p>
-      <figure className="mt-4" aria-labelledby={titleId}>
+      {face !== 'data' && <figure className="mt-4" aria-labelledby={titleId}>
         <p className="text-xs text-gray-500">{measure.unit} · {measure.scale === 'log' ? 'Log scale' : 'Linear scale'}</p>
         <svg viewBox="0 0 368 232" role="img" aria-labelledby={`${titleId}-chart`} data-scale={measure.scale} className="block w-full h-auto text-gray-500">
           <title id={`${titleId}-chart`}>{`${measure.title}: ${measure.unit} by date. ${measure.scale} scale. Separate evidence tracks; source data below.`}</title>
@@ -90,9 +96,9 @@ function MeasurementChart({ measure }: { measure: MeasurementSeries }) {
             <span>{track.label}</span>
           </button>)}
         </figcaption>
-      </figure>
+      </figure>}
       <p className="mt-3 text-xs text-gray-500 leading-relaxed">{measure.caveat}</p>
-      <details className="mt-4 text-sm">
+      {face !== 'chart' && <details open={face === 'data' ? true : undefined} className="mt-4 text-sm">
         <summary className="cursor-pointer text-blue py-2 font-medium">Sources &amp; data · {points.length} observations</summary>
         <p className="my-3 text-gray-600 leading-relaxed">{measure.description}</p>
         <p className="text-xs text-gray-500 mb-4">Evidence checked {measure.checkedAt}. Dates retain the source’s precision; chart positions are not exact dates when only a month or year is known.</p>
@@ -108,7 +114,7 @@ function MeasurementChart({ measure }: { measure: MeasurementSeries }) {
             </tr>)}</tbody>
           </table>
         </div>)}
-      </details>
+      </details>}
     </article>
   )
 }

@@ -65,7 +65,7 @@ for (const { key, label } of FOCUS_AREAS) {
     const { loadFieldVelocity } = source('lib/field-velocity-data.ts')
     const data = await loadFieldVelocity(async () => ({}))
     assert.deepEqual(elements(panelTree).find(el => el.type === Dashboard).props.measurementSeriesByArea, { [key]: data.measurementSeriesByArea[key] })
-    assert.equal((html.match(/data-measurement=/g) ?? []).length, key === 'neurotech' ? 3 : 0)
+    assert.equal((html.match(/data-measurement=/g) ?? []).length, 0, 'area panel uses preview triggers, not inline detailed measurements')
 
     assert.match(html, /id="field-velocity"/)
     assert.ok(html.includes(`${label} field velocity</h2>`))

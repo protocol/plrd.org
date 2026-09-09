@@ -108,6 +108,201 @@
   min-width: 0;
 }
 
+/* Instrument previews keep the five-card overview compact. Back layers indicate
+   real additional charts, never placeholders or an invented combined value. */
+.instrument-previews {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding: 1.25rem 1.75rem 1.75rem 1.25rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 1rem;
+  background: var(--color-gray-100);
+}
+.instrument-preview {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  text-align: left;
+  cursor: pointer;
+  border-radius: .75rem;
+}
+.instrument-preview-face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  height: 100%;
+  min-height: 14rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-gray-500) 24%, transparent);
+  border-radius: .75rem;
+  background: var(--color-white);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.instrument-stack-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--color-gray-500) 30%, transparent);
+  border-radius: .75rem;
+  background: var(--color-white);
+  transform: translate(calc(var(--layer) * 4px), calc(var(--layer) * 5px));
+}
+.instrument-preview:hover .instrument-preview-face {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px #0000000c;
+}
+.instrument-preview:focus-visible,
+.instrument-gallery-dialog :is(button, a, summary):focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+}
+.instrument-chart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  align-self: flex-start;
+  border-radius: 1rem;
+  padding: .2rem .55rem;
+  color: var(--color-gray-600);
+  background: var(--color-gray-200);
+  font-size: .65rem;
+  font-weight: 600;
+}
+.instrument-preview-plot svg { width: 100%; height: 2.75rem; }
+@media (min-width: 640px) { .instrument-previews { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .instrument-previews { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.instrument-gallery-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(.5rem, 2vw, 2rem);
+  background: #0009;
+  backdrop-filter: blur(3px);
+}
+.instrument-gallery-dialog {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  max-width: 90rem;
+  max-height: calc(100dvh - 2 * clamp(.5rem, 2vw, 2rem));
+  border-radius: 1.25rem;
+  background: var(--color-white);
+  box-shadow: 0 28px 90px #0005;
+  overflow: hidden;
+  animation: instrument-pop-open 220ms cubic-bezier(.2,.8,.2,1) both;
+}
+.instrument-gallery-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+.gallery-close {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--color-gray-200);
+  color: var(--color-black);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.instrument-gallery-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem;
+}
+.instrument-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 1.25rem;
+  align-items: start;
+  perspective: 1400px;
+}
+.instrument-gallery-item {
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--color-gray-500) 24%, transparent);
+  border-radius: .875rem;
+  background: var(--color-white);
+  overflow: hidden;
+  animation: instrument-fan-open 420ms cubic-bezier(.16,1,.3,1) both;
+  animation-delay: calc(var(--fan-index) * 45ms);
+}
+.gallery-card-faces {
+  height: clamp(28rem, 62dvh, 38rem);
+  position: relative;
+  perspective: 1200px;
+}
+.gallery-card-face {
+  height: 100%;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 1.25rem;
+  overflow-wrap: anywhere;
+  backface-visibility: hidden;
+  animation: gallery-card-turn 300ms cubic-bezier(.16,1,.3,1) both;
+}
+.gallery-card-face[hidden] { display: none; }
+.gallery-card-face[data-face="data"] { background: var(--color-gray-100); }
+.gallery-card-face > article { border-top: 0; padding-top: 0; }
+.gallery-card-face h3 { font-family: var(--font-body); font-size: 1.125rem; }
+.gallery-card-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  border-top: 1px solid var(--color-gray-300);
+  padding: .5rem 1rem;
+}
+.gallery-card-toolbar button {
+  padding: .5rem .65rem;
+  min-height: 2.75rem;
+  border-radius: .5rem;
+  color: var(--color-blue);
+  background: var(--color-gray-200);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gallery-plot svg { width: 100%; height: auto; }
+.gallery-plot svg text { font-size: 10px !important; }
+@keyframes instrument-pop-open {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes instrument-fan-open {
+  from { opacity: 0; transform: translate3d(calc(var(--fan-index) * -12px), 18px, -35px) rotateY(-6deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes gallery-card-turn {
+  from { opacity: .15; transform: rotateY(-16deg) scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 639px) {
+  .instrument-gallery-header { padding: 1rem; }
+  .instrument-gallery-scroll { padding: .875rem; }
+  .gallery-card-face { padding: 1rem; }
+  .instrument-preview-face { padding: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .instrument-gallery-dialog, .instrument-gallery-item, .gallery-card-face { animation: none; }
+  .instrument-preview-face { transition: none; }
+  .instrument-preview:hover .instrument-preview-face { transform: none; }
+}
+
 /* Small multiples adapt to the available panel, not the viewport. Source tables
    wrap inside the card even on phones; no horizontal scroll region is needed. */
 .measurement-series-grid {

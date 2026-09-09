@@ -38,12 +38,14 @@ test('near-coincident tissue tracks can be isolated without moving dates or drop
   assert.equal(new Set(trackColors).size, tissue.tracks.length, 'every tissue track has a distinct marker color')
 })
 
-test('selected Neuro renders every real sourced measurement on the existing dashboard, other areas none', async () => {
+test('overview defers measurement details to galleries; dedicated chart renderer retains every source', async () => {
   const { loadFieldVelocity } = source('lib/field-velocity-data.ts')
   const Dashboard = source('components/ImpactDashboardV2.tsx').default
   const data = await loadFieldVelocity(async () => ({}))
   for (const initialArea of ['neurotech', 'ai-robotics', 'economies-governance', 'digital-human-rights']) {
-    const html = renderToStaticMarkup(React.createElement(Dashboard, { ...data, initialArea }))
+    const overview = renderToStaticMarkup(React.createElement(Dashboard, { ...data, initialArea }))
+    assert.equal((overview.match(/data-measurement=/g) ?? []).length, 0, 'details belong in focused galleries, not under the overview')
+    const html = render(data.measurementSeriesByArea[initialArea])
     assert.equal((html.match(/data-measurement=/g) ?? []).length, initialArea === 'neurotech' ? 3 : 0)
     if (initialArea === 'neurotech') {
       assert.equal((html.match(/data-point=/g) ?? []).length, data.measurementSeriesByArea.neurotech.flatMap(s => s.tracks.flatMap(t => t.points)).length)
