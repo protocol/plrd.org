@@ -285,15 +285,15 @@ function FieldVelocityBox({ records, markets, measurements, examples, area, onOp
         const previewMeasure = items.find(item => item.kind === 'measurement')
         const inst = INSTRUMENT_BY_ID[record.instrument]
         return (
-          <button key={record.instrument} type="button" data-instrument={record.instrument} data-chart-count={chartCount}
-            aria-haspopup="dialog" aria-label={`${inst.label}: ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. Open gallery and evidence`}
+          <button key={record.instrument} type="button" data-instrument={record.instrument} data-chart-count={chartCount} data-view-count={items.length}
+            aria-haspopup="dialog" aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. Open gallery and evidence`}
             onClick={event => { event.currentTarget.focus({ preventScroll: true }); onOpen(record.instrument) }} className="instrument-preview">
-            {Array.from({ length: chartCount > 1 ? Math.min(chartCount - 1, 2) : 0 }, (_, index) => (
+            {Array.from({ length: items.length > 1 ? Math.min(items.length - 1, 2) : 0 }, (_, index) => (
               <span key={index} aria-hidden="true" data-stack-layer={index + 1} className="instrument-stack-layer" style={{ '--layer': index + 1 } as CSSProperties} />
             ))}
             <span className="instrument-preview-face">
               <span className="text-sm font-semibold leading-snug text-black">{inst.label}</span>
-              <span className="instrument-chart-badge">{chartCount} {chartCount === 1 ? 'chart' : 'charts'} <span aria-hidden="true">↗</span></span>
+              <span className="instrument-chart-badge">{items.length > chartCount ? `${items.length} views` : `${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}`} <span aria-hidden="true">↗</span></span>
               {record.state === 'reading' ? <>
                 {record.series && record.series.length > 1 && <span className="instrument-preview-plot" aria-hidden="true">
                   <Sparkline series={record.series} scale={record.seriesScale} band={record.series.some(p => p.lo != null)} />
@@ -380,6 +380,17 @@ function RecordPlot({ series, scale, unit = '', dataOnly = false }: { series: Se
 
 function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; record: InstrumentRecord; areaLabel: string; face: 'chart' | 'data' }) {
   const dataOnly = face === 'data'
+  if (item.kind === 'reading') return <>
+    <h3 className="text-xl font-semibold text-black">Historical reading</h3>
+    <p className="my-3 text-xs text-gray-500">Single historical observation · not a time series</p>
+    {dataOnly ? <RecordEvidence record={record} /> : <div className="space-y-3 text-sm text-gray-600">
+      <p className="text-lg font-semibold leading-snug text-black">{record.value}</p>
+      <p>{record.metric}</p>
+      {record.measuredAt && <p className="text-xs">measured {shortDate(record.measuredAt)}</p>}
+      <p>One historical observation does not establish the current level, rate, or acceleration.</p>
+      {isStaleReading(record) && <StaleMarker />}
+    </div>}
+  </>
   if (item.kind === 'measurement') return <MeasurementChart measure={item.measure} face={face} />
   if (item.kind === 'market') return <>
     <CrowdForecast signal={item.market} />
@@ -424,7 +435,7 @@ function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; re
 function GalleryFlipCard({ item, record, areaLabel, index }: { item: GalleryItem; record: InstrumentRecord; areaLabel: string; index: number }) {
   const [showData, setShowData] = useState(false)
   const faceId = useId()
-  return <div data-gallery-item={item.id} data-is-chart={item.kind !== 'market' || item.market.prob != null} className="instrument-gallery-item">
+  return <div data-gallery-item={item.id} data-is-chart={item.kind !== 'reading' && (item.kind !== 'market' || item.market.prob != null)} className="instrument-gallery-item">
     <div className="gallery-card-faces" id={faceId}>
       <div className="gallery-card-rotator" data-flipped={showData}>
         <div data-face="chart" aria-hidden={showData} inert={showData} className="gallery-card-face">
@@ -436,8 +447,8 @@ function GalleryFlipCard({ item, record, areaLabel, index }: { item: GalleryItem
       </div>
     </div>
     <div className="gallery-card-toolbar">
-      <span className="text-xs text-gray-500" aria-hidden="true">{showData ? 'Evidence' : 'Chart'} · {index + 1}</span>
-      <button type="button" data-flip-action aria-controls={faceId} aria-pressed={showData} onClick={() => setShowData(value => !value)}>{showData ? 'Back to chart' : 'Data & sources'}</button>
+      <span className="text-xs text-gray-500" aria-hidden="true">{showData ? 'Evidence' : item.kind === 'reading' ? 'Reading' : 'Chart'} · {index + 1}</span>
+      <button type="button" data-flip-action aria-controls={faceId} aria-pressed={showData} onClick={() => setShowData(value => !value)}>{showData ? item.kind === 'reading' ? 'Back to reading' : 'Back to chart' : 'Data & sources'}</button>
     </div>
   </div>
 }
@@ -475,7 +486,7 @@ function VelocityModal({ area, record, markets, measurements, examples, onClose 
             {record.instrument === 'idea_vintage' && <p className="mt-3 italic">This reads the research side of the field. It does not observe invention directly, and the two can decouple.</p>}
             {record.instrument === 'idea_vintage' && <IdeaVintageExamples examples={examples} showCharts={false} />}
           </section>
-          {!items.some(i => i.kind === 'primary') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
+          {!items.some(i => i.kind === 'primary' || i.kind === 'reading') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
           {chartCount === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
           <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
             {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}

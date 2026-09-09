@@ -144,7 +144,7 @@
   border: 1px solid color-mix(in srgb, var(--color-gray-500) 24%, transparent);
   border-radius: .75rem;
   background: var(--color-white);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
 }
 .instrument-stack-layer {
   position: absolute;
@@ -153,11 +153,20 @@
   border: 1px solid color-mix(in srgb, var(--color-gray-500) 30%, transparent);
   border-radius: .75rem;
   background: var(--color-white);
-  transform: translate(calc(var(--layer) * 4px), calc(var(--layer) * 5px));
+  pointer-events: none;
+  transform-origin: 50% 85%;
+  transform: translate(calc(var(--layer) * 3px), calc(var(--layer) * 4px));
+  transition: transform 320ms cubic-bezier(.22,.68,0,1.05), border-color 240ms ease;
 }
-.instrument-preview:hover .instrument-preview-face {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px #0000000c;
+.instrument-preview:is(:hover, :focus-visible) { z-index: 2; }
+.instrument-preview:is(:hover, :focus-visible) .instrument-stack-layer {
+  transform: translate(calc((var(--layer) * 2 - 3) * 7px), 1px) rotate(calc((var(--layer) * 2 - 3) * 3deg));
+  border-color: color-mix(in srgb, var(--color-blue) 60%, transparent);
+}
+.instrument-preview:is(:hover, :focus-visible) .instrument-preview-face {
+  transform: translateY(-4px);
+  border-color: var(--color-blue);
+  box-shadow: 0 10px 24px #00000012;
 }
 .instrument-preview:focus-visible,
 .instrument-gallery-dialog :is(button, a, summary):focus-visible {
@@ -322,8 +331,11 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .instrument-gallery-dialog, .instrument-gallery-item, .gallery-card-face { animation: none; }
-  .instrument-preview-face, .gallery-card-rotator { transition: none; }
-  .instrument-preview:hover .instrument-preview-face { transform: none; }
+  .instrument-preview-face, .instrument-stack-layer, .gallery-card-rotator { transition: none; }
+  .instrument-preview:is(:hover, :focus-visible) .instrument-preview-face { transform: none; }
+  .instrument-preview:is(:hover, :focus-visible) .instrument-stack-layer {
+    transform: translate(calc(var(--layer) * 3px), calc(var(--layer) * 4px));
+  }
 }
 
 .measurement-figure { position: relative; }

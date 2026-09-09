@@ -11,6 +11,31 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
 const { createRoot } = await import('react-dom/client')
 const Dashboard = source('components/ImpactDashboardV2.tsx').default
 
+test('commitments opens a two-view sheet and a two-card deck while counting only the real cohort chart', async () => {
+  const data = await load()
+  const unmount = await mount({ ...data, fixedArea: 'neurotech' })
+  try {
+    const trigger = document.querySelector('[data-instrument="revealed_commitments"]')
+    assert.equal(trigger.dataset.viewCount, '2')
+    assert.equal(trigger.dataset.chartCount, '1')
+    assert.equal(trigger.querySelectorAll('[data-stack-layer]').length, 1)
+    assert.match(trigger.getAttribute('aria-label'), /2 views/)
+    await click(trigger)
+    const dialog = document.querySelector('[role="dialog"]')
+    assert.equal(dialog.querySelectorAll('[data-gallery-item]').length, 2)
+    assert.equal(dialog.querySelectorAll('[data-is-chart="true"]').length, 1)
+    assert.equal(dialog.querySelector('[data-gallery-item="reading"]').dataset.isChart, 'false')
+    const reading = dialog.querySelector('[data-gallery-item="reading"]')
+    assert.ok(reading.textContent.includes('67 participants'))
+    const sourceNote = data.recordsByArea.neurotech.find(r => r.instrument === 'revealed_commitments').trend
+    assert.ok(!reading.querySelector('[data-face="chart"]').textContent.includes(sourceNote), 'front stays a compact historical reading')
+    assert.ok(reading.querySelector('[data-face="data"]').textContent.includes(sourceNote), 'full source scope remains on the reverse')
+    assert.equal(dialog.querySelector('.instrument-gallery-grid').dataset.columns, '2')
+    await click(dialog.querySelector('[aria-label="Close gallery"]'))
+    assert.equal(document.activeElement, trigger)
+  } finally { await unmount() }
+})
+
 test('wide gallery plots fill the card and position hover details in scaled coordinates', async () => {
   const css = readFileSync(new URL('../../src/app/globals.css', import.meta.url), 'utf8')
   assert.match(css, /\.gallery-plot > span\s*\{[^}]*width:\s*100%/)
@@ -47,7 +72,8 @@ test('shared previews open only the selected instrument’s real charts, never i
       for (const trigger of triggers) {
         assert.equal(trigger.getAttribute('aria-haspopup'), 'dialog')
         const count = Number(trigger.dataset.chartCount)
-        assert.equal(trigger.querySelectorAll('[data-stack-layer]').length, count > 1 ? Math.min(count - 1, 2) : 0)
+        const views = Number(trigger.dataset.viewCount)
+        assert.equal(trigger.querySelectorAll('[data-stack-layer]').length, views > 1 ? Math.min(views - 1, 2) : 0)
         await click(trigger)
         const dialog = document.querySelector('[role="dialog"]')
         assert.ok(dialog, 'opens focused gallery')
@@ -114,7 +140,7 @@ test('every gallery kind flips to locally contained data and back with only the 
         assert.ok(back.hasAttribute('inert'))
         toggle.focus()
         await click(toggle)
-        assert.equal(toggle.textContent, 'Back to chart')
+        assert.equal(toggle.textContent, card.dataset.galleryItem === 'reading' ? 'Back to reading' : 'Back to chart')
         assert.ok(document.activeElement === toggle, 'stable flip control retains keyboard focus')
         assert.equal(front.hidden, false, 'front remains mounted at the back of the rotating card')
         assert.equal(card.querySelector('.gallery-card-rotator').dataset.flipped, 'true')

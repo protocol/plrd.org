@@ -4,7 +4,7 @@ import { isRenderableMarket, type MarketSignal } from '@/lib/market-signals'
 import type { IdeaVintageExample } from '@/components/velocity-explainers'
 
 export type GalleryItem =
-  | { kind: 'primary' | 'secondary' | 'patent'; id: string }
+  | { kind: 'primary' | 'secondary' | 'patent' | 'reading'; id: string }
   | { kind: 'market'; id: string; market: MarketSignal }
   | { kind: 'measurement'; id: string; measure: MeasurementSeries }
   | { kind: 'example'; id: string; example: IdeaVintageExample }
@@ -44,5 +44,10 @@ export function instrumentGallery(
       }
     }
   }
-  return { items, chartCount: items.filter(item => item.kind !== 'market' || item.market.prob != null).length }
+  // A single sourced historical reading is a peer evidence card, not an
+  // invented second time series. Keep it beside its measurement views.
+  if (record.state === 'reading' && record.value && !items.some(item => item.kind === 'primary') && items.some(item => item.kind === 'measurement')) {
+    items.unshift({ kind: 'reading', id: 'reading' })
+  }
+  return { items, chartCount: items.filter(item => item.kind !== 'reading' && (item.kind !== 'market' || item.market.prob != null)).length }
 }
