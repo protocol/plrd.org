@@ -4,7 +4,6 @@ import React from 'react'
 import { readFileSync } from 'node:fs'
 import { source } from './test-source-loader.mjs'
 
-const Panel = source('components/AreaFieldVelocity.tsx').default
 const Dashboard = source('components/ImpactDashboardV2.tsx').default
 const Methodology = source('components/MeasuringQuestionsV2.tsx').default
 const { FOCUS_AREAS, FIELD_VELOCITY_OVERVIEW } = source('lib/field-velocity.ts')
@@ -19,21 +18,8 @@ function offlineProviders(t) {
   t.mock.method(console, 'warn', () => {})
 }
 
-for (const { key } of FOCUS_AREAS) {
-  test(`${key} public detail keeps existing content but does not mount field velocity or preview links`, async (t) => {
-    offlineProviders(t)
-    const route = key === 'economies-governance' ? 'app/areas/economies-governance/page.tsx' : 'app/areas/[slug]/page.tsx'
-    const Page = source(route).default
-    const nodes = elements(await Page({ params: Promise.resolve({ slug: key }) }))
-    assert.ok(!nodes.some(node => node.type === Panel || node.type === Dashboard || node.type === Methodology), 'unreleased field velocity must not mount on public pages')
-    assert.ok(!nodes.some(node => node.props.id === 'field-velocity'))
-    assert.ok(!nodes.some(node => /impact-preview|#fv\/|#field-velocity|#methodology|#toolkit/.test(node.props.href ?? '')), 'no discovery links to the unlisted preview')
-    assert.ok(nodes.some(node => node.props.id === 'opportunity-spaces'), 'original strategy remains')
-    const existingLink = key === 'economies-governance' ? '/areas/economies-governance/projects/' : '/insights/'
-    assert.ok(nodes.some(node => node.props.href === existingLink), 'original Explore/Insights content remains')
-    assert.doesNotMatch(readFileSync(`src/${route}`, 'utf8'), /from ['"]@\/(?:components\/(?:AreaFieldVelocity|ImpactDashboardV2|MeasuringQuestionsV2)|lib\/field-velocity[^'"]*)['"]/, 'public routes must not load field-velocity modules')
-  })
-}
+// Public detail mounting is covered by field-velocity-panel.test.mjs.
+// The cross-field overview itself keeps its existing unlisted route.
 
 test('the exact unlisted overview retains all fields, charts, methodology and noindex metadata', async (t) => {
   offlineProviders(t)
