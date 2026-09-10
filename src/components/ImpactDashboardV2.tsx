@@ -6,7 +6,12 @@
 // laid out as four cards in two rows with their live signals. The inflection
 // cards mirror the PR #29 design; shared primitives are imported, never forked.
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
+import { useGalleryDialog } from '@/components/useGalleryDialog'
+import { useGalleryFan } from '@/components/useGalleryFan'
+import { chartHash, parseChartHash } from '@/lib/chart-selection'
+import { instrumentGallery, type GalleryItem } from '@/lib/instrument-gallery'
 import {
   ROLE_META,
   PL_ROLE_ORDER,
@@ -38,6 +43,8 @@ import {
   type InstrumentRecord,
   type Direction,
 } from '@/lib/velocity-instruments'
+import { MeasurementChart } from '@/components/MeasurementSeriesCharts'
+import type { MeasurementSeries } from '@/lib/measurement-series'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import { Sparkline, GhostChart, type SeriesPoint } from '@/components/VelocitySparkline'
 import { IdeaVintageExamples, type IdeaVintageExample } from '@/components/velocity-explainers'
@@ -66,21 +73,28 @@ export default function ImpactDashboardV2({
   liveOutputs = {},
   marketSignals = {},
   recordsByArea,
+  measurementSeriesByArea = {},
   ideaVintageExamples = [],
+  fixedArea,
+  initialArea = 'digital-human-rights',
 }: {
+  initialArea?: FocusAreaKey
+  /** Reuse the full charts/cards/modals on an area overview, without cross-field tabs. */
+  fixedArea?: FocusAreaKey
   liveOutputs?: LiveOutputs
   marketSignals?: MarketSignals
   /** Instrument records per focus area, precomputed server-side (static records
    *  merged with any OpenAlex CSV readings). Falls back to the static set. */
   recordsByArea?: Partial<Record<FocusAreaKey, InstrumentRecord[]>>
-  /** Idea-vintage small multiples, so the field-velocity instrument modal shows
-   *  the same rich card as the methodology section. */
+  measurementSeriesByArea?: Partial<Record<FocusAreaKey, MeasurementSeries[]>>
+  /** Methodology examples; galleries only use the selected area's fallback. */
   ideaVintageExamples?: IdeaVintageExample[]
 }) {
-  const [filter, setFilter] = useState<FocusAreaKey>('digital-human-rights')
+  const [selectedArea, setFilter] = useState<FocusAreaKey>(initialArea)
+  const filter = fixedArea ?? selectedArea
   const [active, setActive] = useState<InflectionPoint | null>(null)
-  const [velocityOpen, setVelocityOpen] = useState(false)
-  const [defInstrument, setDefInstrument] = useState<InstrumentId | null>(null)
+  const [chartSelection, setChartSelection] = useState<{ instrument: InstrumentId; itemId: string } | null>(null)
+  const velocityInstrument = chartSelection?.instrument
 
   const visible = useMemo(() => INFLECTION_POINTS.filter((p) => p.area === filter), [filter])
   const records = recordsByArea?.[filter] ?? instrumentsForArea(filter)
@@ -96,12 +110,68 @@ export default function ImpactDashboardV2({
     [visible, marketSignals],
   )
 
+  // Fragments are deliberately not DOM ids: opening a chart never scrolls the
+  // background. History retains Next's own state and the origin/path/query.
+  const ownedChart = useRef<string | null>(null)
+  const navigationData = useRef({ recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples })
+  navigationData.current = { recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples }
+  useEffect(() => {
+    const restore = () => {
+      const route = parseChartHash(window.location.hash)
+      if (route?.instrument) setActive(null)
+      setChartSelection(null)
+      if (!route || (fixedArea && route.area !== fixedArea)) {
+        if (!fixedArea) setFilter(initialArea)
+        return
+      }
+      setFilter(route.area)
+      if (!route.instrument || !route.itemId) return
+      const data = navigationData.current
+      const record = (data.recordsByArea?.[route.area] ?? instrumentsForArea(route.area)).find(r => r.instrument === route.instrument)
+      if (!record) return
+      const markets = INFLECTION_POINTS.filter(p => p.area === route.area).map(p => data.marketSignals[p.title]).filter((market): market is MarketSignal => !!market)
+      const label = FOCUS_AREAS.find(area => area.key === route.area)!.label
+      const { items } = instrumentGallery(record, data.measurementSeriesByArea[route.area] ?? [], markets, data.ideaVintageExamples, label)
+      if (items.some(item => item.id === route.itemId) || (!items.length && route.itemId === 'evidence')) setChartSelection({ instrument: route.instrument, itemId: route.itemId })
+    }
+    const previousScrollRestoration = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+    restore()
+    window.addEventListener('popstate', restore)
+    window.addEventListener('hashchange', restore)
+    return () => {
+      window.removeEventListener('popstate', restore)
+      window.removeEventListener('hashchange', restore)
+      window.history.scrollRestoration = previousScrollRestoration
+    }
+  }, [fixedArea, initialArea])
+  const selectArea = (area: FocusAreaKey) => {
+    window.history.pushState(window.history.state, '', chartHash(area))
+    setFilter(area)
+    setChartSelection(null)
+    ownedChart.current = null
+  }
+  const openChart = (instrument: InstrumentId, itemId: string) => {
+    setActive(null)
+    window.history.pushState(window.history.state, '', chartHash(filter, instrument, itemId))
+    ownedChart.current = window.location.href
+    setChartSelection({ instrument, itemId })
+  }
+  const closeChart = () => {
+    if (ownedChart.current === window.location.href) window.history.back()
+    else {
+      window.history.replaceState(window.history.state, '', chartHash(filter))
+      setChartSelection(null)
+    }
+    ownedChart.current = null
+  }
+
   return (
     <>
-      <div className="lg:grid lg:grid-cols-[248px_1fr] lg:gap-10">
+      <div className={fixedArea ? 'min-w-0' : 'field-velocity-dashboard min-w-0'}>
         {/* Vertical tabs (PR #29 layout), sticky so they stay visible while
             scrolling the field. */}
-        <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
+        {!fixedArea && <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
           <div
             role="tablist"
             aria-orientation="vertical"
@@ -116,14 +186,13 @@ export default function ImpactDashboardV2({
                 forthcoming={fa.forthcoming}
                 icon={FA_ICON[fa.key]}
                 active={filter === fa.key}
-                onClick={() => setFilter(fa.key)}
+                onClick={() => selectArea(fa.key)}
               />
             ))}
           </div>
-        </div>
-
+        </div>}
         {/* Content: field velocity box + inflection points */}
-        <div>
+        <div className="field-velocity-content min-w-0">
           {/* Field velocity — label outside the box; the box previews the five
               instruments and opens a modal. */}
           <div className="mb-2 flex items-center gap-2">
@@ -132,14 +201,14 @@ export default function ImpactDashboardV2({
             </span>
             <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
           </div>
-          <FieldVelocityBox records={records} markets={fieldMarkets} onOpen={() => setVelocityOpen(true)} />
+          <FieldVelocityBox records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} />
 
           {/* Inflection points — four cards in two rows, with live signals. */}
           <div className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
             Inflection points we&rsquo;re tracking
           </div>
           {visible.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
               {visible.map((p) => (
                 <InflectionCard
                   key={`${p.area}-${p.title}`}
@@ -164,20 +233,16 @@ export default function ImpactDashboardV2({
           onClose={() => setActive(null)}
         />
       )}
-      {velocityOpen && (
+      {velocityInstrument && records.find(r => r.instrument === velocityInstrument) && (
         <VelocityModal
+          key={`${filter}-${velocityInstrument}-${chartSelection?.itemId}`}
+          itemId={chartSelection!.itemId}
           area={filter}
-          records={records}
+          record={records.find(r => r.instrument === velocityInstrument)!}
           markets={fieldMarkets}
-          onClose={() => setVelocityOpen(false)}
-          onOpenDef={setDefInstrument}
-        />
-      )}
-      {defInstrument && (
-        <InstrumentDefinitionModal
-          id={defInstrument}
-          ideaVintageExamples={ideaVintageExamples}
-          onClose={() => setDefInstrument(null)}
+          measurements={measurementSeriesByArea[filter] ?? []}
+          examples={ideaVintageExamples}
+          onClose={closeChart}
         />
       )}
     </>
@@ -263,102 +328,118 @@ function StaleMarker({ size = 'sm' }: { size?: 'sm' | 'lg' }) {
   )
 }
 
-function InstrumentCell({ record, markets }: { record: InstrumentRecord; markets?: MarketSignal[] }) {
-  const inst = INSTRUMENT_BY_ID[record.instrument]
-  // When the markets instrument carries an aggregated term structure (a reading
-  // with a series — the same milestone priced across horizons), show that curve
-  // and its implied date via the normal reading path below. Otherwise fall back
-  // to counting the field's live mapped bets, which reads better than a single
-  // point-in-time probability.
-  const isMarketsTermStructure =
-    record.instrument === 'markets' && record.state === 'reading' && !!record.series && record.series.length > 1
-  if (record.instrument === 'markets' && markets && markets.length && !isMarketsTermStructure) {
-    const totalVolume = markets.reduce((sum, s) => sum + (s.volume ?? 0), 0)
-    return (
-      <div className="flex flex-col gap-1.5 border-l-2 border-gray-100 pl-3">
-        <span className="text-sm font-medium leading-snug text-black">{inst.label}</span>
-        <span className="text-sm font-semibold leading-snug text-black">
-          {markets.length} bet{markets.length === 1 ? '' : 's'} tracked
-        </span>
-        {totalVolume > 0 && (
-          <span className="text-[11px] text-gray-400">{formatUSD(totalVolume)} at stake</span>
-        )}
-      </div>
-    )
-  }
-  return (
-    <div className="flex flex-col gap-1.5 border-l-2 border-gray-100 pl-3">
-      <span className="text-sm font-medium leading-snug text-black">{inst.label}</span>
-      {record.state === 'reading' && (
-        <>
-          {record.series && record.series.length > 1 && (
-            <Sparkline
-              series={record.series as SeriesPoint[]}
-              scale={record.seriesScale}
-              band={record.series.some((p) => (p as SeriesPoint).lo != null)}
-              axis
-              unit={record.instrument === 'idea_vintage' ? 'y' : ''}
-              interactive
-            />
-          )}
-          <span className="line-clamp-2 text-sm font-semibold leading-snug text-black">{record.value}</span>
-          {record.trend && (
-            <span className="line-clamp-2 text-[11px] leading-snug text-gray-400">{record.trend}</span>
-          )}
-          <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-gray-400">
-            {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}
-            {isStaleReading(record) && <StaleMarker />}
-            {record.measuredAt && <span className="tabular-nums">measured {shortDate(record.measuredAt)}</span>}
-            {record.instrument === 'markets' && markets && markets.length > 0 && (
-              <span>+ {markets.length} bet{markets.length === 1 ? '' : 's'} tracked</span>
-            )}
-          </span>
-        </>
-      )}
-      {record.state === 'unwired' && (
-        <>
-          <GhostChart />
-          <span className="text-[11px] font-medium text-gray-400">not yet wired</span>
-        </>
-      )}
-      {record.state === 'not_applicable' && (
-        <span className="text-[11px] italic text-gray-400">not applicable to this field</span>
-      )}
-    </div>
-  )
+function chartTitle(item: GalleryItem, record: InstrumentRecord, areaLabel: string) {
+  if (item.kind === 'measurement') return item.measure.title
+  if (item.kind === 'market') return item.market.question ?? 'Forecast'
+  if (item.kind === 'reading') return 'Historical reading'
+  if (item.kind === 'patent') return 'Patent vintage · invention side'
+  if (item.kind === 'example') return `${item.example.label} · paper vintage`
+  if (item.kind === 'secondary') return record.series2Label ?? 'Secondary series / normalizer'
+  return record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : record.metric ?? INSTRUMENT_BY_ID[record.instrument].label
 }
 
-function FieldVelocityBox({
-  records,
-  markets,
-  onOpen,
-}: {
-  records: InstrumentRecord[]
-  markets?: MarketSignal[]
-  onOpen: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      aria-haspopup="dialog"
-      className="group relative flex w-full flex-col rounded-xl border border-gray-200 bg-white p-6 pt-10 text-left transition-all hover:border-gray-300 hover:shadow-md"
-    >
-      <span className="absolute right-4 top-4 inline-flex items-center gap-0.5 text-xs font-medium text-gray-300 transition-colors group-hover:text-blue">
-        Detail
-        <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </span>
+function ChartPreview({ item, record }: { item: GalleryItem; record: InstrumentRecord }) {
+  if (item.kind === 'measurement') return <><MeasurementChart measure={item.measure} face="preview" /><span className="chart-preview-caption">{item.measure.unit} · {item.measure.scale} scale</span></>
+  if (item.kind === 'reading') return <><strong className="chart-preview-reading">{record.value}</strong><span className="chart-preview-caption">Single historical observation · not a time series</span></>
+  if (item.kind === 'market') return <>{item.market.prob != null ? <meter min={0} max={1} value={item.market.prob} aria-label={item.market.question ?? 'Forecast probability'} /> : <strong>{item.market.readout}</strong>}<span className="chart-preview-caption">{item.market.prob != null ? `${Math.round(item.market.prob * 100)}% · ` : ''}{item.market.platform} · resolves {item.market.resolutionDate}</span></>
+  const series: SeriesPoint[] = item.kind === 'secondary' ? record.series2! : item.kind === 'patent' ? record.patentVintage!.series! : item.kind === 'example' ? item.example.series : record.series!
+  const scale = item.kind === 'example' ? item.example.scale : item.kind === 'primary' ? record.seriesScale : 'linear'
+  return <><Sparkline series={series} scale={scale} band={series.some(p => p.lo != null)} width={280} height={112} /><span className="chart-preview-caption">{series[0].x}–{series[series.length - 1].x} · {scale ?? 'linear'} scale</span></>
+}
 
-      {/* Ragged by design — a field lists only the instruments that apply. */}
-      <div className="grid grid-cols-2 items-start gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
-        {records.map((r) => (
-          <InstrumentCell key={r.instrument} record={r} markets={r.instrument === 'markets' ? markets : undefined} />
-        ))}
-      </div>
+function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen }: {
+  record: InstrumentRecord; items: GalleryItem[]; chartCount: number; areaLabel: string; area: FocusAreaKey
+  onOpen: (id: InstrumentId, itemId: string) => void
+}) {
+  const [expanded, setExpanded] = useState(false)
+  const [page, setPage] = useState(0)
+  const [placement, setPlacement] = useState({ left: 0, top: 0, width: 0 })
+  const deck = useRef<HTMLDivElement>(null)
+  const cover = useRef<HTMLButtonElement>(null)
+  const suppressFocus = useRef(false)
+  const pinned = useRef(false)
+  const fanId = useId()
+  const inst = INSTRUMENT_BY_ID[record.instrument]
+  const previewMeasure = items.find(item => item.kind === 'measurement')
+  const place = () => {
+    const node = deck.current
+    if (!node) return
+    const rect = node.getBoundingClientRect()
+    const bounds = node.parentElement!.getBoundingClientRect()
+    const width = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
+    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
+    const fan = node.querySelector<HTMLElement>('[data-chart-fan]')
+    // Measure after applying its real width, not the compact cover's width.
+    fan?.style.setProperty('--fan-width', `${width}px`)
+    const height = Math.min((fan?.scrollHeight ?? 0) + 2, window.innerHeight * .72, 36 * (parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16))
+    const top = Math.max(12 - rect.top, Math.min(0, window.innerHeight - 12 - rect.top - height))
+    setPlacement({ left: left - rect.left, top, width })
+  }
+  const expand = () => { if (items.length) { place(); setExpanded(true) } }
+  const dismiss = () => {
+    pinned.current = false
+    setExpanded(false)
+    suppressFocus.current = true
+    cover.current?.focus({ preventScroll: true })
+    suppressFocus.current = false
+  }
+  useEffect(() => {
+    if (!expanded) return
+    const outside = (event: PointerEvent) => { if (!(event.target instanceof Element && event.target.closest('.instrument-gallery-backdrop')) && !deck.current?.contains(event.target as Node)) { pinned.current = false; setExpanded(false) } }
+    document.addEventListener('pointerdown', outside)
+    window.addEventListener('resize', place)
+    return () => { document.removeEventListener('pointerdown', outside); window.removeEventListener('resize', place) }
+  }, [expanded])
+  return <div ref={deck} className="chart-deck" data-chart-deck={record.instrument} data-expanded={expanded}
+    onPointerEnter={event => { if (event.pointerType === 'mouse') expand() }}
+    onPointerLeave={() => { if (!pinned.current && !deck.current?.contains(document.activeElement)) setExpanded(false) }}
+    onFocus={() => { if (!suppressFocus.current) expand() }}
+    onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest('.instrument-gallery-backdrop')) && !event.currentTarget.contains(event.relatedTarget)) { pinned.current = false; setExpanded(false) } }}
+    onKeyDown={event => { if (event.key === 'Escape' && expanded) { event.preventDefault(); event.stopPropagation(); dismiss() } }}>
+    <button ref={cover} type="button" data-instrument={record.instrument} data-chart-count={chartCount} data-view-count={items.length}
+      aria-expanded={items.length ? expanded : undefined} aria-controls={items.length ? fanId : undefined} aria-haspopup={items.length ? undefined : 'dialog'}
+      aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. ${items.length ? 'Choose a chart' : 'View evidence and status'}`}
+      onClick={event => { event.currentTarget.focus({ preventScroll: true }); if (items.length) { pinned.current = true; expand() } else onOpen(record.instrument, 'evidence') }} className="instrument-preview">
+      <span className="instrument-preview-face">
+        <span className="text-sm font-semibold leading-snug text-black">{inst.label}</span>
+        <span className="instrument-chart-badge">{items.length > chartCount ? `${items.length} views` : `${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}`} <span aria-hidden="true">↗</span></span>
+        {record.state === 'reading' ? <>
+          {record.series && record.series.length > 1 && <span className="instrument-preview-plot" aria-hidden="true"><Sparkline series={record.series} scale={record.seriesScale} band={record.series.some(p => p.lo != null)} /></span>}
+          {!(record.series && record.series.length > 1) && previewMeasure?.kind === 'measurement' && <MeasurementChart measure={previewMeasure.measure} face="preview" />}
+          <span className="line-clamp-3 text-xs font-medium leading-relaxed text-black">{record.value}</span>
+          <span className="mt-auto flex flex-wrap items-center gap-1.5">
+            {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}{isStaleReading(record) && <StaleMarker />}
+            {record.measuredAt && <span className="text-[10px] text-gray-500">measured {shortDate(record.measuredAt)}</span>}
+          </span>
+        </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Not yet wired' : 'Not applicable to this field'}</span></>}
+        <span className="mt-auto text-[11px] font-medium text-blue">{items.length ? 'Hover or tap to choose a chart' : 'View evidence & status'}</span>
+      </span>
     </button>
-  )
+    {items.length > 0 && <div id={fanId} className="chart-fan" data-chart-fan inert={!expanded} aria-hidden={!expanded}
+      style={{ '--fan-left': `${placement.left}px`, '--fan-top': `${placement.top}px`, '--fan-width': placement.width ? `${placement.width}px` : '100%' } as CSSProperties}>
+      <div className="chart-fan-heading"><strong>{inst.label}</strong><button type="button" onClick={dismiss} aria-label={`Collapse ${inst.label} previews`}>Close previews ×</button></div>
+      <div className="chart-fan-cards" data-count={Math.min(items.length, 3)}>
+        {items.map((item, index) => <a key={item.id} href={chartHash(area, record.instrument, item.id)} hidden={Math.floor(index / 3) !== page}
+          className="chart-fan-card" data-chart-target={item.id} aria-haspopup="dialog" style={{ '--fan-index': index % 3 } as CSSProperties}
+          onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); pinned.current = true; event.currentTarget.focus({ preventScroll: true }); onOpen(record.instrument, item.id) }}>
+          <span data-preview-title>{chartTitle(item, record, areaLabel)}</span>
+          <span className="chart-fan-plot"><ChartPreview item={item} record={record} /></span>
+          <span className="chart-preview-caption">Open {item.kind === 'reading' ? 'reading' : 'chart'} ↗</span>
+        </a>)}
+      </div>
+      {items.length > 3 && <div className="chart-fan-pages"><button type="button" disabled={page === 0} onClick={() => setPage(value => value - 1)}>Previous previews</button><span>{page + 1} / {Math.ceil(items.length / 3)}</span><button type="button" disabled={(page + 1) * 3 >= items.length} onClick={() => setPage(value => value + 1)}>More previews</button></div>}
+    </div>}
+  </div>
+}
+
+function FieldVelocityBox({ records, markets, measurements, examples, area, onOpen }: {
+  records: InstrumentRecord[]; markets: MarketSignal[]; measurements: MeasurementSeries[]; examples: IdeaVintageExample[]; area: FocusAreaKey
+  onOpen: (id: InstrumentId, itemId: string) => void
+}) {
+  const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
+  return <div className="instrument-previews" aria-label="Field velocity charts">
+    {records.map(record => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...instrumentGallery(record, measurements, markets, examples, areaLabel)} areaLabel={areaLabel} area={area} onOpen={onOpen} />)}
+  </div>
 }
 
 function SourceLinks({ sources }: { sources: { label: string; url: string }[] }) {
@@ -382,305 +463,175 @@ function SourceLinks({ sources }: { sources: { label: string; url: string }[] })
   )
 }
 
-/** Idea vintage's second chart: the patent-side (invention) twin. Reading shows a
- *  sparkline; unwired shows a ghost + blocker; not_applicable shows the reason. */
-function PatentVintagePanel({ pv }: { pv: NonNullable<InstrumentRecord['patentVintage']> }) {
-  return (
-    <div className="mt-4 border-t border-gray-100 pt-4">
-      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-        Patent vintage <span className="font-normal text-gray-400">· invention side</span>
+/** Full record evidence remains available even for a reading with no time series. */
+function RecordEvidence({ record: r }: { record: InstrumentRecord }) {
+  return <div className="space-y-2 text-sm leading-relaxed text-gray-600">
+    {r.state === 'reading' ? <>
+      {r.value && <p className="font-semibold text-black">{r.value}</p>}
+      {r.metric && <p>{r.metric}</p>}
+      {r.trend && <p>{r.trend}</p>}
+      <div className="flex flex-wrap gap-2 text-xs text-gray-500">
+        {shownDirection(r) && <DirectionChip direction={shownDirection(r)!} />}
+        {isStaleReading(r) && <StaleMarker />}
+        {r.window && <span>window {r.window}</span>}
+        {r.measuredAt && <span>measured {shortDate(r.measuredAt)}</span>}
+        {r.checkedAt && <span>last checked {shortDate(r.checkedAt)}</span>}
       </div>
-      {pv.state === 'reading' && (
-        <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
-          {pv.series && pv.series.length > 1 && (
-            <Sparkline series={pv.series as SeriesPoint[]} width={200} height={56} axis unit="y" interactive />
-          )}
-          <div className="min-w-[10rem] flex-1">
-            {pv.value && <div className="text-lg font-semibold leading-tight text-black">{pv.value}</div>}
-            {pv.measuredAt && (
-              <div className="mt-1 text-[11px] tabular-nums text-gray-400">measured {shortDate(pv.measuredAt)}</div>
-            )}
-            {pv.sources && <SourceLinks sources={pv.sources} />}
-          </div>
-        </div>
-      )}
-      {pv.state === 'unwired' && (
-        <div className="flex items-start gap-4">
-          <div className="shrink-0 pt-1">
-            <GhostChart width={140} height={44} />
-          </div>
-          <div className="text-sm leading-relaxed text-gray-500">
-            <p><span className="font-medium text-gray-700">Intended metric:</span> {pv.candidateMetric}</p>
-            <p className="mt-1"><span className="font-medium text-gray-700">Blocked by:</span> {pv.blocker}</p>
-          </div>
-        </div>
-      )}
-      {pv.state === 'not_applicable' && (
-        <p className="text-sm italic leading-relaxed text-gray-400">{pv.reason}</p>
-      )}
-    </div>
-  )
+      {isStaleReading(r) && <p className="text-xs text-amber-700">Last measured over {STALE_AFTER_MONTHS} months ago and not re-measured since, so no current direction is claimed.</p>}
+      {r.provenance && <p className="text-xs break-words">{r.provenance.query && <>Cohort / query: {r.provenance.query}. </>}{r.provenance.generated && <>Retrieved {r.provenance.generated}</>}</p>}
+      {r.sources && <SourceLinks sources={r.sources} />}
+    </> : r.state === 'unwired' ? <>
+      <p className="font-semibold text-black">Not yet wired</p>
+      <p>Intended metric: {r.candidateMetric}</p><p>Blocked by: {r.blocker}</p>
+      {r.owner && <p>Owner: {r.owner}</p>}
+    </> : <p>Not applicable to this field: {r.reason}</p>}
+  </div>
 }
 
-function MarketsPanel({ markets, hasTermStructure = false }: { markets: MarketSignal[]; hasTermStructure?: boolean }) {
-  return (
-    <div>
-      <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-        {markets.map((s, i) => (
-          <CrowdForecast key={i} signal={s} divider={i > 0} />
-        ))}
-      </div>
-      <p className="mt-2 text-[11px] leading-relaxed text-gray-400">
-        Per-marker forecasts mapped to this field.{' '}
-        {hasTermStructure
-          ? 'The term structure across horizons is shown above.'
-          : 'A term structure across horizons is not yet aggregated.'}{' '}
-        Read with care: market moves partly reflect our own attention work.
-      </p>
-    </div>
-  )
+function RecordPlot({ series, scale, unit = '', dataOnly = false }: { series: SeriesPoint[]; scale?: 'linear' | 'log'; unit?: string; dataOnly?: boolean }) {
+  return <>
+    <p className="my-3 text-xs text-gray-500">{scale === 'log' ? 'Log scale' : 'Linear scale'}{unit && ` · ${unit === 'y' ? 'years' : unit}`}</p>
+    {!dataOnly && <div className="gallery-plot"><Sparkline series={series} scale={scale} band={series.some(p => p.lo != null)} width={360} height={160} axis unit={unit} interactive /></div>}
+    <div className="gallery-plot-axis mt-2 flex justify-between text-xs text-gray-500"><span>{series[0].x}</span><span>{series[series.length - 1].x}</span></div>
+    {dataOnly && <details open className="mt-4 text-xs text-gray-600">
+      <summary className="cursor-pointer py-2 font-medium text-blue">Chart data · {series.length} observations</summary>
+      <table className="measurement-data w-full table-fixed text-left"><thead><tr><th scope="col">Date / horizon</th><th scope="col">Value{unit && ` (${unit})`}</th><th scope="col">Interval / status</th></tr></thead>
+        <tbody>{series.map((p, i) => <tr key={i}><td>{p.x}</td><td>{p.y}</td><td>{p.lo != null && p.hi != null ? `${p.lo}–${p.hi}; ` : ''}{p.reliable === false ? 'Under-indexed (dashed)' : '—'}</td></tr>)}</tbody>
+      </table>
+    </details>}
+  </>
 }
 
-function VelocityModal({
-  area,
-  records,
-  markets,
-  onClose,
-  onOpenDef,
-}: {
+function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; record: InstrumentRecord; areaLabel: string; face: 'chart' | 'data' }) {
+  const dataOnly = face === 'data'
+  if (item.kind === 'reading') return <>
+    <h3 className="text-xl font-semibold text-black">Historical reading</h3>
+    <p className="my-3 text-xs text-gray-500">Single historical observation · not a time series</p>
+    {dataOnly ? <RecordEvidence record={record} /> : <div className="space-y-3 text-sm text-gray-600">
+      <p className="text-lg font-semibold leading-snug text-black">{record.value}</p>
+      <p>{record.metric}</p>
+      {record.measuredAt && <p className="text-xs">measured {shortDate(record.measuredAt)}</p>}
+      <p>One historical observation does not establish the current level, rate, or acceleration.</p>
+      {isStaleReading(record) && <StaleMarker />}
+    </div>}
+  </>
+  if (item.kind === 'measurement') return <MeasurementChart measure={item.measure} face={face} />
+  if (item.kind === 'market') return <>
+    <CrowdForecast signal={item.market} />
+    {!dataOnly && item.market.prob != null && <meter className="mt-4 h-5 w-full" min={0} max={1} value={item.market.prob} aria-label={item.market.question ?? undefined} />}
+    <p className="mt-3 text-xs text-gray-500">Per-marker forecast, not a time series or a settled outcome. Market moves may partly reflect our own attention work.</p>
+    {dataOnly && <p className="mt-3 text-sm text-gray-600">{item.market.prob != null ? `Probability: ${item.market.prob} (0–1 scale).` : `Readout: ${item.market.readout}.`} Question, venue and resolution date are retained above; the source link opens the original forecast.</p>}
+  </>
+  if (item.kind === 'example') return <>
+    <p className="text-xs text-gray-500">OpenAlex paper vintage</p>
+    <h3 className="mt-1 text-xl font-semibold text-black">{item.example.label}</h3>
+    <RecordPlot series={item.example.series} scale={item.example.scale} unit="y" dataOnly={dataOnly} />
+    <p className="mt-3 text-xs text-gray-500">Median reference age in years. Shading: 95% interval. Dashed tail: recent, under-indexed years.</p>
+    {dataOnly && <>
+      <p className="mt-3 text-sm text-gray-600">Compare the recent-segment slope, not the absolute age. See definition & methodology for sampling, frozen keyword cohorts and catalog-growth caveats. This is the paper-vintage reading for {areaLabel}.</p>
+      <SourceLinks sources={[{ label: 'OpenAlex (CC0)', url: 'https://openalex.org' }, { label: 'Source method', url: 'https://github.com/protocol/plrd.org/blob/main/scripts/velocity/field_velocity_openalex.py' }]} />
+    </>}
+  </>
+  if (item.kind === 'patent') {
+    const pv = record.patentVintage!
+    return <>
+      <h3 className="text-xl font-semibold text-black">Patent vintage · invention side</h3>
+      <RecordPlot series={pv.series!} unit="y" dataOnly={dataOnly} />
+      <p className="mt-3 text-sm text-gray-600">{pv.value}</p>
+      {pv.measuredAt && <p className="text-xs text-gray-500">measured {shortDate(pv.measuredAt)}</p>}
+      {dataOnly && pv.sources && <SourceLinks sources={pv.sources} />}
+    </>
+  }
+  const secondary = item.kind === 'secondary'
+  return <>
+    <h3 className="text-xl font-semibold text-black">{secondary ? record.series2Label ?? 'Secondary series / normalizer' : record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : record.metric ?? INSTRUMENT_BY_ID[record.instrument].label}</h3>
+    <RecordPlot series={(secondary ? record.series2 : record.series)!} scale={secondary ? 'linear' : record.seriesScale} unit={record.instrument === 'idea_vintage' ? 'y' : ''} dataOnly={dataOnly} />
+    {dataOnly ? <div className="mt-4"><RecordEvidence record={record} /></div> : <div className="mt-4 space-y-2 text-sm text-gray-600">
+      {!secondary && <p>{record.value}</p>}
+      {record.measuredAt && <p className="text-xs">measured {shortDate(record.measuredAt)}</p>}
+      {isStaleReading(record) && <StaleMarker />}
+      {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}
+      {record.series?.some(p => p.reliable === false) && <p className="text-xs">Shading: 95% interval. Dashed tail: recent, under-indexed years.</p>}
+    </div>}
+  </>
+}
+
+function GalleryFlipCard({ item, record, areaLabel, index }: { item: GalleryItem; record: InstrumentRecord; areaLabel: string; index: number }) {
+  const [showData, setShowData] = useState(false)
+  const faceId = useId()
+  return <div data-gallery-item={item.id} data-is-chart={item.kind !== 'reading' && (item.kind !== 'market' || item.market.prob != null)} className="instrument-gallery-item">
+    <div className="gallery-card-faces" id={faceId}>
+      <div className="gallery-card-rotator" data-flipped={showData}>
+        <div data-face="chart" aria-hidden={showData} inert={showData} className="gallery-card-face">
+          <GalleryChart item={item} record={record} areaLabel={areaLabel} face="chart" />
+        </div>
+        <div data-face="data" aria-hidden={!showData} inert={!showData} className="gallery-card-face">
+          <GalleryChart item={item} record={record} areaLabel={areaLabel} face="data" />
+        </div>
+      </div>
+    </div>
+    <div className="gallery-card-toolbar">
+      <span className="text-xs text-gray-500" aria-hidden="true">{showData ? 'Evidence' : item.kind === 'reading' ? 'Reading' : 'Chart'} · {index + 1}</span>
+      <button type="button" data-flip-action aria-controls={faceId} aria-pressed={showData} onClick={() => setShowData(value => !value)}>{showData ? item.kind === 'reading' ? 'Back to reading' : 'Back to chart' : 'Data & sources'}</button>
+    </div>
+  </div>
+}
+
+function VelocityModal({ area, record, markets, measurements, examples, itemId, onClose }: {
   area: FocusAreaKey
-  records: InstrumentRecord[]
-  markets?: MarketSignal[]
-  onClose: () => void
-  onOpenDef: (id: InstrumentId) => void
-}) {
-  useModalChrome(onClose)
-  const fa = FOCUS_AREAS.find((f) => f.key === area)!
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Field velocity"
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:p-6 lg:p-10"
-      onClick={onClose}
-    >
-      <div className="relative my-4 w-full max-w-3xl rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-black"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <div className="p-6 sm:p-8">
-          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-500">
-            <span className="flex h-5 w-5 items-center justify-center text-gray-400">
-              <AreaIcon type={FA_ICON[fa.key]} className="block h-4 w-4" />
-            </span>
-            {fa.label}
-          </div>
-          <div className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: FIELD_COLOR }}>
-            Field velocity
-          </div>
-          <h2 className="mb-2 text-2xl font-semibold leading-tight tracking-tight text-black">
-            The rate the field is moving
-          </h2>
-          <p className="mb-6 text-sm leading-relaxed text-gray-500">
-            The five instruments we read velocity with. Where a reading is live, it carries a date and a
-            source. Where it is not, we name the metric we intend to use and what is blocking it. Where an
-            instrument does not fit this field, we say so.
-          </p>
-
-          <div className="space-y-5">
-            {records.map((r) => {
-              const inst = INSTRUMENT_BY_ID[r.instrument]
-              const liveMarkets = r.instrument === 'markets' && markets ? markets : []
-              const isLiveMarkets = liveMarkets.length > 0
-              // The markets instrument can now carry BOTH an aggregated term
-              // structure (a reading with a series) and the per-point live bets.
-              const isTermStructure = r.instrument === 'markets' && r.state === 'reading' && !!r.series && r.series.length > 1
-              return (
-                <div key={r.instrument} className="border-t border-gray-100 pt-5 first:border-t-0 first:pt-0">
-                  <div className="mb-2 flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => onOpenDef(r.instrument)}
-                      className="group inline-flex items-center gap-1 text-base font-semibold tracking-tight text-black hover:text-blue"
-                    >
-                      {inst.label}
-                      <svg className="h-3.5 w-3.5 text-gray-300 transition-colors group-hover:text-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </button>
-                    {isLiveMarkets && (
-                      <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500">
-                        <span className="relative flex h-2 w-2">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full" style={{ backgroundColor: `${LIVE_COLOR}99` }} />
-                          <span className="relative inline-flex h-2 w-2 rounded-full" style={{ backgroundColor: LIVE_COLOR }} />
-                        </span>
-                        {liveMarkets.length} live market{liveMarkets.length === 1 ? '' : 's'}
-                      </span>
-                    )}
-                    {!isLiveMarkets && r.state === 'reading' && (shownDirection(r) || isStaleReading(r)) && (
-                      <span className="ml-auto inline-flex items-center gap-2">
-                        {isStaleReading(r) && <StaleMarker size="lg" />}
-                        {shownDirection(r) && <DirectionChip direction={shownDirection(r)!} size="lg" />}
-                      </span>
-                    )}
-                    {!isLiveMarkets && r.state === 'unwired' && (
-                      <span className="ml-auto text-[11px] font-medium uppercase tracking-wide text-gray-400">not yet wired</span>
-                    )}
-                    {!isLiveMarkets && r.state === 'not_applicable' && (
-                      <span className="ml-auto text-[11px] font-medium uppercase tracking-wide text-gray-400">not applicable to this field</span>
-                    )}
-                  </div>
-
-                  {(isTermStructure || !isLiveMarkets) && r.state === 'reading' && (
-                    <div>
-                      <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
-                        {r.series && r.series.length > 1 && (
-                          <div className="shrink-0">
-                            <Sparkline
-                              series={r.series as SeriesPoint[]}
-                              scale={r.seriesScale}
-                              band={r.series.some((p) => (p as SeriesPoint).lo != null)}
-                              width={200}
-                              height={56}
-                              axis
-                              unit={r.instrument === 'idea_vintage' ? 'y' : ''}
-                              interactive
-                            />
-                          </div>
-                        )}
-                        {r.series2 && r.series2.length > 1 && (
-                          <div className="shrink-0">
-                            <Sparkline series={r.series2 as SeriesPoint[]} width={140} height={44} interactive />
-                            <div className="mt-1 text-[10px] text-gray-400">{r.series2Label ?? 'normalizer'}</div>
-                          </div>
-                        )}
-                        <div className="min-w-[10rem] flex-1">
-                          <div className="text-lg font-semibold leading-tight text-black">{r.value}</div>
-                          {r.metric && <div className="mt-0.5 text-xs text-gray-500">{r.metric}</div>}
-                          {r.trend && <div className="mt-1 text-xs text-gray-500">{r.trend}</div>}
-                          <div className="mt-1 flex flex-wrap gap-x-3 text-[11px] text-gray-400">
-                            {r.window && <span>window {r.window}</span>}
-                            {r.measuredAt && (
-                              <span className="tabular-nums">measured {shortDate(r.measuredAt)}</span>
-                            )}
-                            {r.checkedAt && r.checkedAt !== r.measuredAt && (
-                              <span className="tabular-nums">last checked {shortDate(r.checkedAt)}</span>
-                            )}
-                          </div>
-                          {isStaleReading(r) && (
-                            <p className="mt-1 text-[11px] leading-relaxed text-amber-700">
-                              Last measured over {STALE_AFTER_MONTHS} months ago and not re-measured since,
-                              so no current direction is claimed.
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      {r.provenance && (r.provenance.query || r.provenance.generated) && (
-                        <p className="mt-2 text-[11px] leading-relaxed text-gray-400">
-                          {r.provenance.query && (
-                            <>
-                              Keyword cohort (title + abstract): <span className="font-mono">{r.provenance.query}</span>
-                              {r.provenance.generated ? ' · ' : ''}
-                            </>
-                          )}
-                          {r.provenance.generated && <>retrieved {shortDate(r.provenance.generated)}</>}
-                        </p>
-                      )}
-                      {r.sources && <SourceLinks sources={r.sources} />}
-                      {r.instrument === 'idea_vintage' && r.patentVintage && (
-                        <PatentVintagePanel pv={r.patentVintage} />
-                      )}
-                    </div>
-                  )}
-
-                  {isLiveMarkets && (
-                    <div className={isTermStructure ? 'mt-4' : undefined}>
-                      <MarketsPanel markets={liveMarkets} hasTermStructure={isTermStructure} />
-                    </div>
-                  )}
-
-                  {!isLiveMarkets && r.state === 'unwired' && (
-                    <div className="flex items-start gap-4">
-                      <div className="shrink-0 pt-1">
-                        <GhostChart width={140} height={44} />
-                      </div>
-                      <div className="text-sm leading-relaxed text-gray-500">
-                        <p><span className="font-medium text-gray-700">Intended metric:</span> {r.candidateMetric}</p>
-                        <p className="mt-1"><span className="font-medium text-gray-700">Blocked by:</span> {r.blocker}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {!isLiveMarkets && r.state === 'not_applicable' && (
-                    <p className="text-sm italic leading-relaxed text-gray-400">{r.reason}</p>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function InstrumentDefinitionModal({
-  id,
-  ideaVintageExamples = [],
-  onClose,
-}: {
-  id: InstrumentId
-  ideaVintageExamples?: IdeaVintageExample[]
+  record: InstrumentRecord
+  markets: MarketSignal[]
+  measurements: MeasurementSeries[]
+  examples: IdeaVintageExample[]
+  itemId: string
   onClose: () => void
 }) {
-  useModalChrome(onClose)
-  const inst = INSTRUMENT_BY_ID[id]
-  const researchSide = id === 'idea_vintage' || id === 'revealed_commitments'
-  const isIdeaVintage = id === 'idea_vintage'
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={inst.label}
-      className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:p-6 lg:p-10"
-      onClick={onClose}
-    >
-      <div className="relative my-4 w-full max-w-3xl rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-black"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <div className="p-6 sm:p-8">
-          <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide" style={{ color: FIELD_COLOR }}>
-            Field velocity
+  const dialogRef = useGalleryDialog(onClose, () => document.querySelector<HTMLElement>(`[data-instrument="${record.instrument}"]`))
+  const galleryRef = useGalleryFan()
+  const titleId = useId()
+  const [copyStatus, setCopyStatus] = useState('Copy link')
+  const directUrl = new URL(chartHash(area, record.instrument, itemId), window.location.href).href
+  const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
+  const inst = INSTRUMENT_BY_ID[record.instrument]
+  const inventory = instrumentGallery(record, measurements, markets, examples, areaLabel)
+  const items = inventory.items.filter(item => item.id === itemId)
+  const chartCount = items.filter(item => item.kind !== 'reading' && (item.kind !== 'market' || item.market.prob != null)).length
+  const columns = items.length <= 1 ? 1 : items.length === 2 || items.length === 4 ? 2 : 3
+  const pv = record.instrument === 'idea_vintage' ? record.patentVintage : undefined
+  return createPortal(
+    <div className="instrument-gallery-backdrop" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} data-columns={columns} className="instrument-gallery-dialog" tabIndex={-1}>
+        <header className="instrument-gallery-header">
+          <div><p className="text-xs text-gray-500">{areaLabel} · Field velocity · {chartCount} {chartCount === 1 ? 'chart' : 'charts'}</p>
+            <h2 id={titleId} className="mt-1 text-2xl font-semibold tracking-tight text-black">{items[0] ? chartTitle(items[0], record, areaLabel) : inst.label}</h2>
+            <p className="mt-1 text-sm text-gray-500">{inst.subtitle}</p>
           </div>
-          <h2 className="mb-1 text-2xl font-semibold leading-tight tracking-tight text-black">{inst.label}</h2>
-          <div className="mb-5 text-sm text-gray-500">{inst.subtitle}</div>
-          <p className="text-sm leading-relaxed text-gray-700">{inst.description}</p>
-          {researchSide && (
-            <p className="mt-4 rounded-lg bg-gray-50 px-4 py-3 text-sm italic leading-relaxed text-gray-500">
-              This reads the research side of the field. It does not observe invention directly, and the
-              two can decouple.
-            </p>
-          )}
-          {isIdeaVintage && <IdeaVintageExamples examples={ideaVintageExamples} />}
+          <button type="button" onClick={onClose} aria-label="Close gallery" className="gallery-close">×</button>
+        </header>
+        <div className="instrument-gallery-scroll">
+          <div className="chart-share-controls">
+            <a data-chart-direct href={directUrl} onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) event.preventDefault() }}>Direct link ↗</a>
+            <button type="button" data-chart-copy onClick={async () => { try { await window.navigator.clipboard.writeText(directUrl); setCopyStatus('Copied') } catch { setCopyStatus('Copy failed — use Direct link') } }}>{copyStatus}</button>
+            <span className="sr-only" role="status">{copyStatus === 'Copy link' ? '' : copyStatus}</span>
+          </div>
+          <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
+            {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
+          </div>
+          <section className="gallery-methodology mt-6 text-sm text-gray-600">
+            <h3 className="font-medium text-blue">Definition & methodology</h3>
+            <p className="mt-3 leading-relaxed">{inst.description}</p>
+            {record.instrument === 'idea_vintage' && <p className="mt-3 italic">This reads the research side of the field. It does not observe invention directly, and the two can decouple.</p>}
+            {record.instrument === 'idea_vintage' && <IdeaVintageExamples examples={examples} showCharts={false} />}
+          </section>
+          {!items.some(i => i.kind === 'primary' || i.kind === 'reading') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
+          {items.length === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
+          {pv && !items.some(i => i.kind === 'patent') && <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-600">
+            <h3 className="font-semibold text-black">Patent vintage · invention side</h3>
+            {pv.state === 'unwired' ? <><p className="mt-2">Not yet wired. Intended metric: {pv.candidateMetric}</p><p>Blocked by: {pv.blocker}</p></> : pv.state === 'not_applicable' ? <p className="mt-2">Not applicable: {pv.reason}</p> : record.state === 'reading' ? <><p>{pv.value}</p>{pv.measuredAt && <p>measured {shortDate(pv.measuredAt)}</p>}{pv.sources && <SourceLinks sources={pv.sources} />}</> : <p>Not shown while this instrument is {record.state.replace('_', ' ')}.</p>}
+          </div>}
         </div>
-      </div>
-    </div>
+      </section>
+    </div>, document.body,
   )
 }
 
@@ -732,7 +683,7 @@ function CategoryTag({ role }: { role: PLRole }) {
       </span>
       <span
         role="tooltip"
-        className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-60 rounded-lg bg-gray-900 px-3 py-2 text-left text-xs font-normal normal-case leading-relaxed text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover/role:opacity-100"
+        className="hidden sm:block pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-60 rounded-lg bg-gray-900 px-3 py-2 text-left text-xs font-normal normal-case leading-relaxed text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover/role:opacity-100"
       >
         {ROLE_META[role].description}
       </span>
@@ -833,7 +784,7 @@ function InflectionCard({
       id={inflectionSlug(point)}
       onClick={onOpen}
       aria-haspopup="dialog"
-      className="group relative flex scroll-mt-24 flex-col rounded-xl border border-gray-200 bg-white p-6 text-left transition-all hover:border-gray-300 hover:shadow-md"
+      className="group relative flex scroll-mt-24 flex-col rounded-xl border border-gray-200 bg-white p-4 sm:p-5 text-left transition-all hover:border-gray-300 hover:shadow-md"
     >
       <span className="absolute right-4 top-4 inline-flex items-center gap-0.5 text-xs font-medium text-gray-300 transition-colors group-hover:text-blue">
         Detail
@@ -854,11 +805,11 @@ function InflectionCard({
       <p className="mb-3 line-clamp-3 text-sm leading-relaxed text-gray-600">{point.signal}</p>
 
       {/* Resolution: pending until a marker resolves. */}
-      <div className="mb-5">
+      <div className="mb-3">
         <ResolutionChip point={point} />
       </div>
 
-      <div className="mt-auto border-t border-gray-100 pt-4">
+      <div className="mt-auto border-t border-gray-100 pt-3">
         <div className="mb-3 flex items-center gap-2">
           <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: HAND_COLOR }}>
             Our hand
@@ -891,7 +842,7 @@ function CrowdForecast({ signal, divider = false }: { signal: MarketSignal; divi
   const pct = signal.prob != null ? Math.round(signal.prob * 100) : null
   return (
     <div className={divider ? 'mt-3 border-t border-gray-100 pt-3' : ''}>
-      <div className="mb-1 flex items-center gap-2">
+      <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">Crowd forecast</span>
         {signal.platform && (
           <span className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-gray-500">

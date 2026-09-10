@@ -85,6 +85,352 @@
   --leading-cavernous: 3rem;
 }
 
+/* Area overview full-bleed rows: the center track is the former max-w-6xl
+   content width minus its two px-6 gutters. No viewport-width breakout, negative
+   margins, clipping or transformed ancestor (which would trap fixed modals).
+   The field section spans the actual page width; its children share the same
+   content track. bg-gray-200 exactly matches Neuro's empty opportunity cell. */
+.area-overview {
+  display: grid;
+  grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 69rem) minmax(1.5rem, 1fr);
+}
+.area-overview > * {
+  grid-column: 2;
+  min-width: 0;
+}
+.area-overview > .area-field-velocity {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+.area-field-velocity > * {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.field-velocity-overview { max-width: 96rem; }
+.field-velocity-content { container: velocity / inline-size; }
+@media (min-width: 1024px) {
+  .field-velocity-dashboard { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 1.25rem; }
+}
+
+/* Compact covers expand into individually selectable, real chart previews. */
+.instrument-previews {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .875rem;
+  padding: .75rem 1.25rem 1.25rem .75rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 1rem;
+  background: var(--color-gray-100);
+}
+.instrument-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  text-align: left;
+  cursor: pointer;
+  border-radius: .75rem;
+}
+.instrument-preview-face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  height: 100%;
+  min-height: 14rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-gray-500) 24%, transparent);
+  border-radius: .75rem;
+  background: var(--color-white);
+  transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+.instrument-preview:is(:hover, :focus-visible) .instrument-preview-face {
+  transform: translateY(-4px);
+  border-color: var(--color-blue);
+  box-shadow: 0 10px 24px #00000012;
+}
+.instrument-preview:focus-visible,
+.instrument-gallery-dialog :is(button, a, summary):focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+}
+.instrument-chart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  align-self: flex-start;
+  border-radius: 1rem;
+  padding: .2rem .55rem;
+  color: var(--color-gray-600);
+  background: var(--color-gray-200);
+  font-size: .65rem;
+  font-weight: 600;
+}
+.instrument-preview-plot svg { width: 100%; height: 2.75rem; }
+@container velocity (min-width: 40rem) { .instrument-previews { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container velocity (min-width: 66rem) { .instrument-previews { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+/* Absolutely positioned spread: the chart inventory never reflows the page.
+   One continuous hit region includes headings, gaps and all three targets. */
+.chart-deck { position: relative; min-width: 0; }
+.chart-deck[data-expanded="true"] { z-index: 30; }
+.chart-fan {
+  position: absolute;
+  top: var(--fan-top);
+  left: var(--fan-left);
+  width: var(--fan-width);
+  max-width: calc(100vw - 24px);
+  max-height: min(72dvh, 36rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: .75rem;
+  border: 1px solid var(--color-blue);
+  border-radius: 1rem;
+  background: var(--color-gray-200);
+  box-shadow: 0 16px 40px #0003;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease, visibility 180ms;
+}
+.chart-deck[data-expanded="true"] .chart-fan { visibility: visible; pointer-events: auto; opacity: 1; }
+.chart-fan-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; font-size: .875rem; color: var(--color-black); }
+.chart-fan-heading button, .chart-fan-pages button { min-height: 2.75rem; padding: .4rem; font-size: .75rem; color: var(--color-blue); cursor: pointer; }
+.chart-fan-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+.chart-fan-cards[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+.chart-fan-cards[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chart-fan-card {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  min-width: 0;
+  padding: .875rem;
+  border: 1px solid color-mix(in srgb, var(--color-blue) 35%, transparent);
+  border-radius: .75rem;
+  background: var(--color-white);
+  color: var(--color-black);
+  text-align: left;
+  overflow-wrap: anywhere;
+  transform: translateX(calc(var(--fan-index) * -70%)) rotate(calc(var(--fan-index) * -5deg)) scale(.9);
+  transform-origin: 50% 90%;
+  transition: transform 360ms cubic-bezier(.22,.68,0,1.05), border-color 180ms, box-shadow 180ms;
+}
+.chart-fan-card[hidden] { display: none; }
+.chart-deck[data-expanded="true"] .chart-fan-card { transform: none; }
+.chart-fan-card:is(:hover, :focus-visible) { border-color: var(--color-blue); box-shadow: 0 5px 15px #1982f428; }
+.chart-fan-card [data-preview-title] { font-size: .9rem; font-weight: 600; line-height: 1.35; }
+.chart-fan-plot { display: flex; flex-direction: column; gap: .5rem; margin-top: auto; min-width: 0; }
+.chart-fan-plot > span { display: block; width: 100%; }
+.chart-fan-plot svg { display: block; width: 100%; height: 7rem; }
+.chart-fan-plot meter { width: 100%; height: 2rem; }
+.chart-preview-caption { font-size: .6875rem; line-height: 1.4; color: var(--color-gray-600); }
+.chart-preview-reading { padding-block: 1rem; font-size: 1.25rem; }
+.chart-fan-pages { display: flex; justify-content: space-between; align-items: center; font-size: .75rem; }
+.chart-fan-pages button:disabled { color: var(--color-gray-500); opacity: .5; cursor: default; }
+.chart-share-controls { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; }
+.chart-share-controls :is(a, button) { padding: .5rem .65rem; min-height: 2.75rem; color: var(--color-blue); background: var(--color-gray-200); border-radius: .5rem; font-size: .8rem; cursor: pointer; }
+.chart-deck :is(a, button):focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
+@media (max-width: 639px) {
+  .chart-fan-cards, .chart-fan-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
+  .chart-fan-card { gap: .35rem; padding: .75rem; }
+  .chart-fan-plot svg { height: 5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-fan, .chart-fan-card { transition: none; }
+  .chart-fan-card { transform: none; }
+}
+.instrument-gallery-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(.5rem, 2vw, 2rem);
+  background: #0009;
+  backdrop-filter: blur(3px);
+}
+.instrument-gallery-dialog {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  max-width: 90rem;
+  max-height: calc(100dvh - 2 * clamp(.5rem, 2vw, 2rem));
+  border-radius: 1.25rem;
+  background: var(--color-white);
+  box-shadow: 0 28px 90px #0005;
+  overflow: hidden;
+  animation: instrument-pop-open 220ms cubic-bezier(.2,.8,.2,1) both;
+}
+.instrument-gallery-dialog[data-columns="1"] { max-width: 52rem; }
+.instrument-gallery-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+.gallery-close {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--color-gray-200);
+  color: var(--color-black);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.instrument-gallery-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem 1.25rem 1.25rem;
+  container: gallery / inline-size;
+}
+.gallery-methodology { margin-bottom: 1rem; border-bottom: 1px solid var(--color-gray-200); padding-bottom: .75rem; }
+.gallery-methodology h3 { min-height: 2rem; align-content: center; }
+.instrument-gallery-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  perspective: 1400px;
+}
+@container gallery (min-width: 42rem) {
+  .instrument-gallery-grid:not([data-columns="1"]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container gallery (min-width: 68rem) {
+  .instrument-gallery-grid[data-columns="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.instrument-gallery-item {
+  min-width: 0;
+  /* Keep the layout inset, but paint the frame only on the rotating faces. */
+  border: 1px solid transparent;
+}
+.gallery-card-faces {
+  position: relative;
+  perspective: 1200px;
+}
+.gallery-card-rotator {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 650ms cubic-bezier(.22,.68,0,1.05);
+}
+.gallery-card-rotator[data-flipped="true"] { transform: rotateY(180deg); }
+.gallery-card-face {
+  position: absolute;
+  inset: 0;
+  outline: 1px solid color-mix(in srgb, var(--color-gray-500) 24%, transparent);
+  border-radius: .875rem;
+  background: var(--color-white);
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 1rem;
+  overflow-wrap: anywhere;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+/* Only the chart sizes the card; evidence scrolls within its reverse face.
+   Cap long chart/legend surfaces without forcing sparse forecasts to that height. */
+.gallery-card-face[data-face="chart"] {
+  position: relative;
+  min-height: 16rem;
+  max-height: min(36rem, 68dvh);
+}
+.gallery-card-face[data-face="data"] { transform: rotateY(180deg); background: var(--color-gray-100); }
+.gallery-card-face > article { border-top: 0; padding-top: 0; }
+.gallery-card-face h3 { font-family: var(--font-body); font-size: 1.125rem; }
+.gallery-card-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  border-top: 1px solid transparent;
+  padding: .5rem 1rem;
+}
+.gallery-card-toolbar button {
+  padding: .5rem .65rem;
+  min-height: 2.75rem;
+  border-radius: .5rem;
+  color: var(--color-blue);
+  background: var(--color-gray-200);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gallery-plot, .gallery-plot-axis { width: 100%; max-width: 31.5rem; margin-inline: auto; }
+.gallery-plot > span { display: block; width: 100%; }
+.gallery-plot svg { display: block; width: 100%; height: auto; }
+.gallery-card-face .measurement-figure svg { max-height: 16rem; }
+.gallery-plot svg text { font-size: 10px !important; }
+@keyframes instrument-pop-open {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 639px) {
+  .instrument-gallery-header { padding: 1rem; }
+  .instrument-gallery-scroll { padding: .875rem; }
+  .gallery-card-face { padding: 1rem; }
+  .instrument-preview-face { padding: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .instrument-gallery-dialog, .instrument-gallery-item, .gallery-card-face { animation: none; }
+  .instrument-preview-face, .gallery-card-rotator { transition: none; }
+  .instrument-preview:is(:hover, :focus-visible) .instrument-preview-face { transform: none; }
+
+}
+
+.measurement-figure { position: relative; }
+.measurement-figure figcaption { font-size: .6875rem; font-style: normal; line-height: 1.35; }
+.measurement-legend { display: flex; flex-wrap: wrap; gap: .3rem .85rem; }
+.measurement-legend li { display: flex; align-items: flex-start; gap: .35rem; }
+.measurement-tooltip {
+  position: absolute;
+  z-index: 5;
+  top: 1.5rem;
+  left: .25rem;
+  right: .25rem;
+  padding: .75rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: .65rem;
+  background: var(--color-white);
+  box-shadow: 0 8px 24px #0002;
+  color: var(--color-gray-600);
+  font-size: .75rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+.measurement-tooltip p + p { margin-top: .3rem; }
+.measurement-figure a:focus-visible circle { stroke: var(--color-black); stroke-width: 3; }
+
+/* Small multiples adapt to the available panel, not the viewport. Source tables
+   wrap inside the card even on phones; no horizontal scroll region is needed. */
+.measurement-series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  align-items: start;
+  gap: 2rem;
+}
+.measurement-data th,
+.measurement-data td {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  padding: 0.65rem 0.4rem;
+  border: 0;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+.measurement-data th:first-child,
+.measurement-data td:first-child { width: 34%; }
+
 /* ===== Base ===== */
 html {
   font-size: 16px;

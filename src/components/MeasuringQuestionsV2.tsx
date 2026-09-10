@@ -1,12 +1,10 @@
 'use client'
 
-// Methodology section. Two blocks joined by a downward divider that reads as
-// "these interventions drive the below": (1) the PL R&D interventions (the
-// toolkit), and (2) observed field velocity, the five instruments we read the
-// result with. Both the toolkit tools and the velocity instruments open modals.
+// Methodology section: our toolkit and observed field velocity are separate axes,
+// not a causal attribution claim. Both tools and velocity instruments open modals.
 
 import { useEffect, useState, type ReactNode } from 'react'
-import { HAND_COLOR, FIELD_COLOR, TOOLKIT_V2, type ToolkitEntry } from '@/lib/field-velocity'
+import { HAND_COLOR, FIELD_COLOR, TOOLKIT_V2, FIELD_VELOCITY_METHODOLOGY, type ToolkitEntry } from '@/lib/field-velocity'
 import { VELOCITY_INSTRUMENTS, INFLECTION_EXPLAINER } from '@/lib/velocity-instruments'
 import { IdeaVintageExamples, InflectionQuadrant, type IdeaVintageExample } from '@/components/velocity-explainers'
 import InterventionExampleCards from '@/components/InterventionExampleCards'
@@ -32,7 +30,7 @@ export default function MeasuringQuestionsV2({
   return (
     <div>
       {/* Block 1 — the interventions (our toolkit) */}
-      <section>
+      <section id="toolkit" className="scroll-mt-24">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
           <div>
             <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide" style={{ color: HAND_COLOR }}>
@@ -43,10 +41,7 @@ export default function MeasuringQuestionsV2({
               A fixed toolkit we bring to every field. Pick the ones a field is missing, then push.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-gray-500">
-              We don&rsquo;t claim these interventions directly cause a field to accelerate:
-              attribution at the field level isn&rsquo;t cleanly identifiable. For now we name what we run
-              and watch whether the field moves; making that link clearer is work we intend to do, and to
-              publish here later.
+              {FIELD_VELOCITY_METHODOLOGY.attribution}
             </p>
           </div>
 
@@ -83,7 +78,7 @@ export default function MeasuringQuestionsV2({
 
       {interlude}
 
-      {/* Downward divider — interventions drive the observed velocity below. */}
+      {/* Divider between our documented work and the field we observe. */}
       <div className="relative my-12" aria-hidden>
         <div className="border-t border-gray-200" />
         <span className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-sm">
@@ -102,13 +97,10 @@ export default function MeasuringQuestionsV2({
             </div>
             <h3 className="text-lg font-semibold tracking-tight text-black">Observed velocity</h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-500">
-              The interventions are the input. Field velocity, the rate a field is moving, is what tells
-              us whether they landed. We read it through five instruments, plus the dated markers we track.
+              {FIELD_VELOCITY_METHODOLOGY.observedVelocity}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-gray-500">
-              Not every instrument fits every field. A field with no single gating unit cost has no
-              performance curve to read, and a field no forecast market has priced has no market signal.
-              We show the instruments that apply and name the ones that do not.
+              {FIELD_VELOCITY_METHODOLOGY.stocksAndFlows}
             </p>
           </div>
 

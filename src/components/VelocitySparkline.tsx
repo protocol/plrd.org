@@ -243,7 +243,7 @@ export function Sparkline({
       {selReady ? (
         <span
           className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-center shadow-lg"
-          style={{ left: scaleX(selMidX), top: selTopY - 6 }}
+          style={{ left: scaleX(selMidX), top: `calc(${(selTopY / height) * 100}% - 6px)` }}
         >
           <span className="block text-[11px] font-semibold leading-tight tabular-nums text-white">
             {fmtDelta(dAbs, unit)}
@@ -259,7 +259,7 @@ export function Sparkline({
         hp && (
           <span
             className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-center shadow-lg"
-            style={{ left: scaleX(hx), top: hy - 6 }}
+            style={{ left: scaleX(hx), top: `calc(${(hy / height) * 100}% - 6px)` }}
           >
             <span className="block text-[11px] font-semibold leading-tight tabular-nums text-white">
               {fmt(hp.y, unit)}
