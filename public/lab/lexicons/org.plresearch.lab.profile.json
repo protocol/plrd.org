@@ -51,6 +51,11 @@
             "format": "uri",
             "maxLength": 2048
           },
+          "linkedinUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
           "scholarUrl": {
             "type": "string",
             "format": "uri",
