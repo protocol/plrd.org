@@ -17,6 +17,7 @@ export type LabProfile = {
   lookingFor: string;
   githubUrl?: string;
   scholarUrl?: string;
+  linkedinUrl?: string;
 };
 export type LabRecord = {
   uri: string;

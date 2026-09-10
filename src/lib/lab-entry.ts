@@ -1,4 +1,5 @@
 import { safeUrl } from "@/lib/lab-client";
+import { validProfileLink } from "@/lib/lab-social";
 import { fields, postTypes } from "@/lib/lab-data";
 import type { RecordKind } from "@/lib/lab-types";
 export type EntryValues = Record<string, string>;
@@ -96,6 +97,7 @@ export const entryFields: Record<RecordKind, EntryField[]> = {
       hint: "Comma-separated. Up to 8 interests, 60 characters each.",
     },
     { key: "lookingFor", label: "Looking for", type: "textarea", max: 1200 },
+    { key: "linkedinUrl", label: "LinkedIn URL (optional)", type: "url", max: 2048, hint: "A self-supplied profile link, not a verified credential." },
     {
       key: "githubUrl",
       label: "GitHub URL (optional)",
@@ -146,6 +148,8 @@ export function validateEntry(kind: RecordKind, values: EntryValues) {
       errors[f.key] = "Choose an option.";
   }
   if (kind === "profile") {
+    if (values.linkedinUrl?.trim() && !validProfileLink("linkedinUrl", values.linkedinUrl.trim()))
+      errors.linkedinUrl = "Use a public LinkedIn /in/ profile URL, without tracking parameters.";
     const interests = (values.interests || "")
       .split(",")
       .map((s) => s.trim())

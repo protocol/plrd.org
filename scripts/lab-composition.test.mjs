@@ -17,6 +17,15 @@ test('the main invitation starts at a bottleneck while retaining the experiment 
   assert.ok(doc.querySelector('.lab-hero-copy a[href="/lab/apps/#signal-sandbox"]'))
 })
 
+test('LinkedIn survives profile defaults and public draft preparation with format validation', () => {
+  const entry = source('lib/lab-entry.ts')
+  const values = {...entry.entryDefaults('profile'), workingOn:'Reproducibility tools', interests:'ai-robotics', lookingFor:'A reviewer', linkedinUrl:'https://www.linkedin.com/in/demo-person/'}
+  assert.equal(entry.entryDefaults('profile').linkedinUrl, '')
+  assert.equal(entry.entryPayload('profile', values).linkedinUrl, values.linkedinUrl)
+  assert.equal(entry.validateEntry('profile', values).linkedinUrl, undefined)
+  assert.ok(entry.validateEntry('profile', {...values, linkedinUrl:'https://example.org/not-linkedin'}).linkedinUrl)
+})
+
 test('the collaboration route contains the actual researcher and reviewer return workbench', () => {
   const Page = source('app/lab/collaborate/page.tsx').default
   const doc = new JSDOM(renderToStaticMarkup(React.createElement(Page))).window.document
