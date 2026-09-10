@@ -14,7 +14,7 @@ The invitation is **“A place for science before it’s finished.”** “Break
 
 A builder gets a legible home for a useful science app and a way to ask for a specific next contribution. A researcher gets collaborators around the problem they are working on, not an institution-shaped directory. A curious person can improve a source, test a tool, or reproduce a small result without claiming to be a principal investigator. Someone with an agent can contribute a bounded piece of work without giving a platform their account keys.
 
-Browsing should be useful before signing in. The first session should produce something even when nobody else is online: a tool tried, an evidence note drafted, a research profile assembled, or a concrete work packet downloaded. Sign-in comes when a person wants a durable public identity and contribution record. Existing Bluesky identity is a reduction in friction, not the value proposition itself.
+Browsing should be useful before signing in. The mandatory first-use episode is a small synthetic signal experiment: change the sampling rate, discover an alias, and keep the exact configuration and result. It is an educational instrument, not a scientific measurement. Real source-linked apps provide the broader entrance; the Atlas source-audit pilot separately tests collaboration. Sign-in comes when a person wants a durable public identity and contribution record. Existing Bluesky identity is a reduction in friction, not the value proposition itself.
 
 ### A first-session loop
 
@@ -61,7 +61,7 @@ The motivating OpenAI example is real as an announcement: its [September 8 repor
 
 Nothing fundamental prevents people from contributing separately funded agent work to a common project. The difficult parts are making the work decomposable, preventing duplicated effort, checking outputs cheaply, and combining useful intermediate results. Provider tokens are not a common currency: models, context limits, tools, prices, licenses, and account terms differ.
 
-The right first experiment is narrow. For example: audit a small source packet for a public research map. Each task names a claim and source; the worker returns an exact quote/location, a judgment of support, and limitations. A different contributor reviews it. This tests the coordination loop before asking it to discover new mathematics.
+The first experiment is narrow: trace the size claim in the [NIH’s account of the 2024 FlyWire connectome](https://www.nih.gov/news-events/nih-research-matters/complete-wiring-map-adult-fruit-fly-brain) to the original study, and identify what a structural map does not establish about brain function. Paired research/review packets pin that same claim and source. Each return includes an exact quote/location, a judgment of support, and limitations. The local workbench imports both returns, preserves disagreement, and exports an attributed human-resolution bundle. Names and independence remain self-reported; an export is neither an accepted Atlas edit nor a publication. This is Open Lab’s proposed exercise, not a recruited FlyWire campaign.
 
 A later execution service needs task leases, idempotency, checkpointed artifacts, provenance, a review queue, contributor-controlled spending limits, and defenses against malicious instructions in source material. Downloading a work packet is not execution. Publishing an intent is not a reserved task. Uploading a result is not verification. Keep these boundaries visible.
 
