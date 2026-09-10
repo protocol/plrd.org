@@ -12,15 +12,18 @@ import {
 } from "@/lib/lab-data";
 import { createLabClient, safeUrl } from "@/lib/lab-client";
 import { loadDraft, saveDraft } from "@/lib/lab-drafts";
-import type { Artifact, LabFeed, LabRecord } from "@/lib/lab-types";
+import { labInspectorHref, type LabNotebook } from "@/lib/lab-notebook";
+import type { LabRecordView } from "@/lib/lab-protocol";
+import type { Artifact, LabFeed } from "@/lib/lab-types";
 import RecordEditor from "@/components/lab/RecordEditor";
 import ResearchMap from "@/components/lab/ResearchMap";
 import ArtifactBrief from "@/components/lab/ArtifactBrief";
 import { useLabFilters } from "@/components/lab/useLabFilters";
+import { DemoCommunityPanel } from "@/components/lab/demo";
 const client = createLabClient();
 export default function FeedWorkbench() {
   const f = useLabFilters();
-  const { isAuthenticated, session } = useLabIdentity();
+  const { isAuthenticated, session, isLoading } = useLabIdentity();
   const [compose, setCompose] = useState(false);
   const [evidence, setEvidence] = useState<Artifact | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
@@ -28,7 +31,8 @@ export default function FeedWorkbench() {
   const [source, setSource] = useState("starters");
   const [map, setMap] = useState(false);
   const [live, setLive] = useState<LabFeed | null>(null);
-  const [records, setRecords] = useState<LabRecord[]>([]);
+  const [records, setRecords] = useState<LabRecordView[]>([]);
+  const [notebook, setNotebook] = useState<LabNotebook | null>(null);
   const [recordError, setRecordError] = useState("");
   const [recordsLoading, setRecordsLoading] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -53,16 +57,17 @@ export default function FeedWorkbench() {
   useEffect(() => {
     let active = true;
     setRecords([]);
+    setNotebook(null);
     setRecordError("");
-    setRecordsLoading(isAuthenticated);
-    if (isAuthenticated)
+    setRecordsLoading(isAuthenticated && !isLoading);
+    if (isAuthenticated && session?.did && !isLoading)
       client
-        .records()
-        .then((v) => { if (active) setRecords(v.records); })
+        .records(session.did)
+        .then((v) => { if (active) { setRecords(v.records); setNotebook(v); } })
         .catch((e) => { if (active) setRecordError(e.message); })
         .finally(() => { if (active) setRecordsLoading(false); });
     return () => { active = false; };
-  }, [isAuthenticated, session?.did, revision]);
+  }, [isAuthenticated, session?.did, isLoading, revision]);
   function interest(id: string) {
     const next = saved.includes(id)
       ? saved.filter((s) => s !== id)
@@ -87,9 +92,8 @@ export default function FeedWorkbench() {
   const posts = (live?.items || []).filter((p) =>
     p.text.toLowerCase().includes(f.query.toLowerCase()),
   );
-  const own = records.filter(
+  const own = records.filter((r): r is LabRecordView<"note"> => r.kind === "note").filter(
     (r) =>
-      r.kind === "note" &&
       String(r.data?.text || "")
         .toLowerCase()
         .includes(f.query.toLowerCase()) &&
@@ -113,6 +117,7 @@ export default function FeedWorkbench() {
           </button>
         </div>
       </div>
+      <DemoCommunityPanel className="lab-community-supplement" context="feed" caseId="reproducibility" title="Around the shared bottleneck" showPeople />
       {map ? (
         <>
           <ResearchMap />
@@ -373,7 +378,8 @@ export default function FeedWorkbench() {
             )}
             {source === "mine" && (
               <>
-                {!isAuthenticated ? (
+                {notebook && <p className="lab-smallprint">Showing up to {notebook.limit} per collection{notebook.hasMore ? " / more exist" : " / no further pages reported"}. Current-PDS HTTPS read, not a repository-signature proof or peer review. Only matching notes appear here; all returned kinds are on your bench.</p>}
+                {isLoading ? <p role="status">Restoring your identity…</p> : !isAuthenticated ? (
                   <div className="lab-empty">
                     <h2>Your public work goes here.</h2>
                     <p>
@@ -393,7 +399,9 @@ export default function FeedWorkbench() {
                     <article className="lab-feed-entry" key={r.uri}>
                       <span className="lab-eyebrow">YOUR PUBLIC RECORD</span>
                       <p>{String(r.data.text || "")}</p>
+                      <a href={labInspectorHref(r.uri)}>Inspect exact public note ↗</a>
                       <code className="lab-receipt">{r.uri}</code>
+                      <small>CID: {r.cid} · Current PDS: {r.pds}</small>
                     </article>
                   ))
                 ) : (
@@ -423,10 +431,10 @@ export default function FeedWorkbench() {
           </aside>
         </div>
       )}
-      {compose && (
+      {compose && !isLoading && (
         <RecordEditor kind="note" onSaved={() => setRevision(n => n + 1)} onClose={() => setCompose(false)} />
       )}{" "}
-      {evidence && (
+      {evidence && !isLoading && (
         <RecordEditor
           kind="contribution"
           initial={{ targetUrl: evidence.url, field: evidence.field }}

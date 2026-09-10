@@ -53,7 +53,7 @@ test('blocked dismiss is visible and keeps the action; changing owner never expo
   } finally { dom.window.Storage.prototype.setItem = original; await view.unmount() }
 })
 
-test('onboarding route works without a parent provider and never attempts a public write', async () => {
+test('onboarding route uses the parent provider and never attempts a public write', async () => {
   localStorage.clear()
   const Page = source('app/lab/onboarding/page.tsx').default
   const calls = []
@@ -61,7 +61,7 @@ test('onboarding route works without a parent provider and never attempts a publ
   globalThis.fetch = async (url, init) => { calls.push({ url, method: init?.method || 'GET' }); throw Error('Unconfigured synthetic test environment') }
   const root = createRoot(document.getElementById('root'))
   try {
-    await React.act(async () => { root.render(React.createElement(Page)); await new Promise(resolve => setTimeout(resolve, 20)) })
+    await React.act(async () => { root.render(React.createElement(source('lib/lab-auth.tsx').LabAuthProvider, null, React.createElement(Page))); await new Promise(resolve => setTimeout(resolve, 20)) })
     assert.match(document.body.textContent, /Save starting choices/)
     assert.match(document.body.textContent, /Save profile locally/)
     assert.ok(calls.every(c => c.method === 'GET'))

@@ -1,4 +1,7 @@
 import { test, beforeEach, afterEach, mock } from 'node:test';
+import { createRequire } from 'node:module';
+// Composed shell imports scoped styles; Node probes behavior, browser QA owns geometry.
+createRequire(import.meta.url).extensions['.css'] = m => { m.exports = {}; };
 import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 import React, { act } from 'react';

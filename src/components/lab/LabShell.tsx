@@ -6,6 +6,9 @@ import { useLabIdentity } from "@/lib/lab-identity";
 import { createLabClient } from "@/lib/lab-client";
 import type { Capabilities } from "@/lib/lab-types";
 import LabDialog from "@/components/lab/LabDialog";
+import { DemoCommunityProvider, DemoModeBanner, DemoNotifications, useDemoCommunity } from "@/components/lab/demo";
+import { LabActionInbox } from "@/components/lab/social/LabActionInbox";
+import "@/components/lab/lab-composition.css";
 const client = createLabClient();
 const LabContext = createContext<{
   capabilities: Capabilities;
@@ -16,15 +19,20 @@ const LabContext = createContext<{
 });
 export const useLab = () => useContext(LabContext);
 const navigation = [
-  ["/lab/feed/", "The lab"],
+  ["/lab/bottlenecks/", "Bottlenecks"],
+  ["/lab/feed/", "Community"],
   ["/lab/apps/", "Apps"],
   ["/lab/atlas/", "Atlas"],
   ["/lab/collaborate/", "Collaborate"],
   ["/lab/profile/", "My bench"],
 ];
 export default function LabShell({ children }: { children: React.ReactNode }) {
+  return <DemoCommunityProvider initialMode="demo"><LabChrome>{children}</LabChrome></DemoCommunityProvider>;
+}
+function LabChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { isAuthenticated, session } = useLabIdentity();
+  const { isAuthenticated, session, isLoading } = useLabIdentity();
+  const demo = useDemoCommunity();
   const [loginOpen, setLoginOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [capabilities, setCapabilities] = useState<Capabilities>({
@@ -55,7 +63,7 @@ export default function LabShell({ children }: { children: React.ReactNode }) {
     <LabContext.Provider
       value={{ capabilities, openLogin: () => setLoginOpen(true) }}
     >
-      <div className="open-lab">
+      <div className="open-lab lab-composed">
         <a className="lab-skip" href="#lab-main">
           Skip to content
         </a>
@@ -89,7 +97,7 @@ export default function LabShell({ children }: { children: React.ReactNode }) {
               >
                 {dark ? "☼" : "◐"}
               </button>
-              {isAuthenticated ? (
+              {isLoading ? <span className="lab-smallprint" role="status">Restoring identity…</span> : isAuthenticated ? (
                 <Link className="lab-button lab-small" href="/lab/profile/">
                   {session?.handle || "Your bench"}
                 </Link>
@@ -101,10 +109,12 @@ export default function LabShell({ children }: { children: React.ReactNode }) {
                   Join with Bluesky <span aria-hidden="true">↗</span>
                 </button>
               )}
+              {demo.ready && (demo.isDemo ? <DemoNotifications /> : !isLoading ? <LabActionInbox ownerId={session?.did || "guest"} /> : null)}
             </div>
           </div>
         </header>
         <main id="lab-main" className="lab-main">
+          <div className="lab-wrap lab-composition-banner"><DemoModeBanner /></div>
           {children}
         </main>
         <footer className="lab-footer">
@@ -112,6 +122,9 @@ export default function LabShell({ children }: { children: React.ReactNode }) {
             Open Lab <span>Science is a work in progress.</span>
           </Link>
           <div>
+            <Link href="/lab/onboarding/">Starting choices</Link>
+            <Link href="/lab/efforts/">Efforts experiment</Link>
+            <Link href="/lab/demo/">Demo stories</Link>
             <Link href="/about/">About PL R&amp;D ↗</Link>
             <a
               href="https://atproto.com/"

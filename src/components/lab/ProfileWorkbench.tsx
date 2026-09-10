@@ -15,7 +15,8 @@ import LabDialog from "@/components/lab/LabDialog";
 import RecordEditor from "@/components/lab/RecordEditor";
 
 export default function ProfileWorkbench() {
-  const { session } = useLabIdentity();
+  const { session, isLoading } = useLabIdentity();
+  if (isLoading) return <p className="lab-wrap" role="status">Restoring your identity before opening your bench…</p>;
   return <Bench key={session?.did || "guest"} />;
 }
 function Bench() {
@@ -120,6 +121,7 @@ function Bench() {
         lookingFor: profile.lookingFor,
         githubUrl: profile.githubUrl || "",
         scholarUrl: profile.scholarUrl || "",
+        linkedinUrl: profile.linkedinUrl || "",
       }
     : {};
   return (
@@ -143,6 +145,7 @@ function Bench() {
           </button>
         )}
       </div>
+      <aside className="lab-composition-prompt"><h2>Give someone a useful way to help.</h2><p>Choose interests and a contribution style. Optional LinkedIn, Scholar, or GitHub links give context—not verified credentials, expertise scores, or access requirements.</p><Link href="/lab/onboarding/#profile-completion">Complete your profile and starting choices →</Link><p className="lab-smallprint">These choices share your local profile draft. Publishing still requires a separate review and explicit consent here.</p></aside>
       <div className="lab-profile-grid">
         <section className="lab-profile-card">
           <div className="lab-profile-monogram" aria-hidden="true">
@@ -190,7 +193,7 @@ function Bench() {
                   ))}
               </div>
             )}
-            {["githubUrl", "scholarUrl"].map((key) => {
+            {["githubUrl", "scholarUrl", "linkedinUrl"].map((key) => {
               const url = visible?.[key as keyof typeof visible];
               return typeof url === "string" && safeUrl(url) ? (
                 <a
@@ -200,7 +203,7 @@ function Bench() {
                   rel="noopener noreferrer"
                   className="lab-text-button"
                 >
-                  {key === "githubUrl" ? "GitHub" : "Google Scholar"} ↗
+                  {key === "githubUrl" ? "GitHub" : key === "linkedinUrl" ? "LinkedIn" : "Google Scholar"} ↗
                 </a>
               ) : null;
             })}
