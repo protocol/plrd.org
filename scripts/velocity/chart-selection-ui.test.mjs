@@ -18,6 +18,33 @@ const mount = async props => {
   return async () => { await act(() => root.unmount()); window.history.replaceState(null, '', '/areas/?qa=1') }
 }
 
+test('one, two and three preview fans share a card width and shrink their outer frame', async () => {
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  const oldWidth = window.innerWidth
+  try {
+    const groups = ['latency_compression', 'revealed_commitments', 'performance_curves']
+    for (const viewport of [1440, 768, 390, 320]) {
+      window.innerWidth = viewport
+      const available = Math.min(860, viewport - 64)
+      const widths = []
+      for (const [index, group] of groups.entries()) {
+        const deck = document.querySelector(`[data-chart-deck="${group}"]`)
+        deck.getBoundingClientRect = () => ({ left: 24, top: 100, width: 200, height: 250 })
+        deck.parentElement.getBoundingClientRect = () => ({ left: 24, right: viewport - 24, width: viewport - 48 })
+        await click(deck.querySelector('[data-instrument]'))
+        const width = parseFloat(deck.querySelector('[data-chart-fan]').style.getPropertyValue('--fan-width'))
+        widths.push(width)
+        const columns = viewport <= 639 ? 1 : index + 1
+        const cardWidth = (width - 26 - (columns - 1) * 12) / columns
+        const expected = viewport <= 639 ? available - 26 : (available - 50) / 3
+        assert.ok(Math.abs(cardWidth - expected) < .01, `${viewport}px / ${columns} columns: ${cardWidth} should equal ${expected}`)
+      }
+      if (viewport > 639) assert.ok(widths[0] < widths[1] && widths[1] < widths[2])
+      else assert.equal(new Set(widths).size, 1, 'stacked mobile cards use the same available width')
+    }
+  } finally { window.innerWidth = oldWidth; await unmount() }
+})
+
 test('cover expands in place to individually titled real previews; each card opens only itself', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
   try {
