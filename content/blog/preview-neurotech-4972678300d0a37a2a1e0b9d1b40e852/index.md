@@ -100,7 +100,7 @@ unlisted: true
 
 <p>An inflection point is a specific moment when field momentum can shift dramatically to accelerate progress.</p>
 
-<p>Looking forward, a few specific inflection points could greatly accelerate progress in the field.</p>
+<p>Looking forward, clinical capabilities that create demand beyond medical use and an open BCI app ecosystem could greatly accelerate adoption.</p>
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-eyebrow">Inflection point #1:</span></div>
@@ -160,7 +160,7 @@ unlisted: true
 
 <h3>Inflection Points</h3>
 
-<p>Looking forward, a few specific inflection points could greatly accelerate progress in the field.</p>
+<p>For NeuroAI, learning directly from neural data and achieving major energy savings through brain-inspired computing could mark the next inflection points.</p>
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-eyebrow">Inflection point #1:</span></div>
@@ -222,7 +222,7 @@ unlisted: true
 
 <h3>Inflection Points</h3>
 
-<p>Looking forward, a few specific inflection points could greatly accelerate progress in the field.</p>
+<p>In whole organism emulation, demonstrating memory retrieval in simulation and completing a whole mouse-brain connectome could substantially accelerate progress.</p>
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-eyebrow">Inflection point #1:</span></div>

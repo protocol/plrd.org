@@ -34,13 +34,18 @@ test('Each opportunity space introduces its inflection cards, with the definitio
   const { document } = new JSDOM(article.html).window
   const intros = [...document.querySelectorAll('h3')].filter(h => h.textContent === 'Inflection Points')
   assert.equal(intros.length, 3, 'Each of the three opportunity spaces needs a section heading')
+  const approvedIntros = [
+    "Looking forward, clinical capabilities that create demand beyond medical use and an open BCI app ecosystem could greatly accelerate adoption.",
+    "For NeuroAI, learning directly from neural data and achieving major energy savings through brain-inspired computing could mark the next inflection points.",
+    "In whole organism emulation, demonstrating memory retrieval in simulation and completing a whole mouse-brain connectome could substantially accelerate progress."
+  ]
   for (const [index, heading] of intros.entries()) {
     let intro = heading.nextElementSibling
     if (index === 0) {
       assert.equal(intro.textContent, 'An inflection point is a specific moment when field momentum can shift dramatically to accelerate progress.')
       intro = intro.nextElementSibling
     }
-    assert.equal(intro.textContent, 'Looking forward, a few specific inflection points could greatly accelerate progress in the field.')
+    assert.equal(intro.textContent, approvedIntros[index])
     assert.ok(intro.nextElementSibling.classList.contains('inflection'))
   }
   assert.equal((article.html.match(/An inflection point is/g) || []).length, 1)
