@@ -95,6 +95,12 @@ export default function ImpactDashboardV2({
   const [active, setActive] = useState<InflectionPoint | null>(null)
   const [chartSelection, setChartSelection] = useState<{ instrument: InstrumentId; itemId: string } | null>(null)
   const velocityInstrument = chartSelection?.instrument
+  const returningCover = useRef<InstrumentId | null>(null)
+  const restoreCoverFocus = (instrument: InstrumentId) => {
+    if (returningCover.current !== instrument) return false
+    returningCover.current = null
+    return true
+  }
 
   const visible = useMemo(() => INFLECTION_POINTS.filter((p) => p.area === filter), [filter])
   const records = recordsByArea?.[filter] ?? instrumentsForArea(filter)
@@ -200,7 +206,7 @@ export default function ImpactDashboardV2({
             </span>
             <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
           </div>
-          <FieldVelocityBox key={filter} records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} />
+          <FieldVelocityBox key={filter} records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} restoreCoverFocus={restoreCoverFocus} />
 
           {/* Inflection points — four cards in two rows, with live signals. */}
           <div className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
@@ -242,6 +248,7 @@ export default function ImpactDashboardV2({
           measurements={measurementSeriesByArea[filter] ?? []}
           examples={ideaVintageExamples}
           onClose={closeChart}
+          onRestoreCover={() => { returningCover.current = velocityInstrument }}
         />
       )}
     </>
@@ -349,13 +356,12 @@ function ChartPreview({ item, record }: { item: GalleryItem; record: InstrumentR
   return <><Sparkline series={series} scale={scale} band={series.some(p => p.lo != null)} width={280} height={112} /><span className="chart-preview-caption">{series[0].x}–{series[series.length - 1].x} · {scale ?? 'linear'} scale</span></>
 }
 
-function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expanded, onExpand, onCollapse }: {
+function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expanded, subdued, shift, onExpand, onCollapse, restoreCoverFocus }: {
   record: InstrumentRecord; items: GalleryItem[]; chartCount: number; areaLabel: string; area: FocusAreaKey
   onOpen: (id: InstrumentId, itemId: string) => void
-  expanded: boolean; onExpand: () => void; onCollapse: () => void
+  expanded: boolean; subdued: boolean; shift: number; onExpand: () => void; onCollapse: () => void
+  restoreCoverFocus: () => boolean
 }) {
-  const [page, setPage] = useState(0)
-  const [placement, setPlacement] = useState({ left: 0, top: 0, width: 0 })
   const deck = useRef<HTMLDivElement>(null)
   const cover = useRef<HTMLButtonElement>(null)
   const suppressFocus = useRef(false)
@@ -363,40 +369,33 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
   const fanId = useId()
   const inst = INSTRUMENT_BY_ID[record.instrument]
   const previewMeasure = items.find(item => item.kind === 'measurement')
-  const place = () => {
-    const node = deck.current
-    if (!node) return
-    const rect = node.getBoundingClientRect()
-    const bounds = node.parentElement!.getBoundingClientRect()
-    const maxWidth = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
-    const rem = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16
-    // Match the fan's .75rem padding/gaps and 1px borders in globals.css.
-    // Size every desktop preview from the same three-column budget, even in
-    // one/two-view decks; only the enclosing frame grows with the view count.
-    const fan = node.querySelector<HTMLElement>('[data-chart-fan]')
-    const gap = .75 * rem
-    // Include the stable scrollbar gutter so short and scrollable fans agree.
-    const frame = 2 * gap + (fan ? fan.offsetWidth - fan.clientWidth || 2 : 2)
-    const columns = Math.min(items.length, 3)
-    const cardWidth = Math.max(0, (maxWidth - frame - 2 * gap) / 3)
-    const width = window.innerWidth <= 639 ? maxWidth : Math.min(maxWidth, frame + columns * cardWidth + (columns - 1) * gap)
-    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
-    // Measure after applying its real width, not the compact cover's width.
-    fan?.style.setProperty('--fan-width', `${width}px`)
-    const height = Math.min((fan?.scrollHeight ?? 0) + 2, window.innerHeight * .72, 36 * (parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16))
-    const top = Math.max(12 - rect.top, Math.min(0, window.innerHeight - 12 - rect.top - height))
-    setPlacement({ left: left - rect.left, top, width })
+  const multi = items.length > 1
+  const expand = () => { if (multi) onExpand() }
+  const revealCover = () => {
+    const frame = deck.current?.closest<HTMLElement>('[data-chart-viewport]')
+    if (!frame || !cover.current) return
+    const bounds = frame.getBoundingClientRect()
+    const target = cover.current.getBoundingClientRect()
+    if (target.left < bounds.left || target.right > bounds.right) {
+      // Dismissal can leave keyboard focus several cards offscreen on mobile.
+      // Reveal only inside this gallery; never move the document vertically.
+      frame.scrollTo?.({ left: Math.max(0, frame.scrollLeft + target.left - bounds.left), behavior: 'instant' })
+    }
   }
-  const expand = () => { if (items.length) { place(); onExpand() } }
   const dismiss = () => {
     pinned.current = false
     onCollapse()
     suppressFocus.current = true
     cover.current?.focus({ preventScroll: true })
     suppressFocus.current = false
+    revealCover()
   }
+  const focusFirstPreview = () => deck.current?.querySelector<HTMLAnchorElement>('.chart-fan-card')?.focus({ preventScroll: true })
   useLayoutEffect(() => {
-    if (expanded) return
+    if (expanded) {
+      if (document.activeElement === cover.current) focusFirstPreview()
+      return
+    }
     pinned.current = false
     // A sibling can take ownership on hover while keyboard focus is inside
     // this fan. Recover before paint instead of stranding focus in inert UI.
@@ -404,25 +403,33 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
       suppressFocus.current = true
       cover.current?.focus({ preventScroll: true })
       suppressFocus.current = false
+      if (!subdued) revealCover()
     }
   }, [expanded])
   useEffect(() => {
     if (!expanded) return
     const outside = (event: PointerEvent) => { if (!(event.target instanceof Element && event.target.closest('.instrument-gallery-backdrop')) && !deck.current?.contains(event.target as Node)) { pinned.current = false; onCollapse() } }
     document.addEventListener('pointerdown', outside)
-    window.addEventListener('resize', place)
-    return () => { document.removeEventListener('pointerdown', outside); window.removeEventListener('resize', place) }
+    return () => document.removeEventListener('pointerdown', outside)
   }, [expanded])
-  return <div ref={deck} className="chart-deck" data-chart-deck={record.instrument} data-expanded={expanded}
+  return <div ref={deck} className="chart-deck" data-chart-deck={record.instrument} data-expanded={expanded} data-subdued={subdued}
+    style={{ '--deck-shift': shift } as CSSProperties}
     onPointerEnter={event => { if (event.pointerType === 'mouse') expand() }}
     onPointerLeave={() => { if (!pinned.current && !deck.current?.contains(document.activeElement)) onCollapse() }}
-    onFocus={() => { if (!suppressFocus.current) expand() }}
+    onFocus={event => {
+      if (suppressFocus.current) return
+      if (event.target.isSameNode(cover.current) && restoreCoverFocus()) { revealCover(); return }
+      expand()
+      if (expanded && event.target.isSameNode(cover.current)) focusFirstPreview()
+    }}
     onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest('.instrument-gallery-backdrop')) && !event.currentTarget.contains(event.relatedTarget)) { pinned.current = false; onCollapse() } }}
     onKeyDown={event => { if (event.key === 'Escape' && expanded) { event.preventDefault(); event.stopPropagation(); dismiss() } }}>
     <button ref={cover} type="button" data-instrument={record.instrument} data-chart-count={chartCount} data-view-count={items.length}
-      aria-expanded={items.length ? expanded : undefined} aria-controls={items.length ? fanId : undefined} aria-haspopup={items.length ? undefined : 'dialog'}
-      aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. ${items.length ? 'Choose a chart' : 'View evidence and status'}`}
-      onClick={event => { event.currentTarget.focus({ preventScroll: true }); if (items.length) { pinned.current = true; expand() } else onOpen(record.instrument, 'evidence') }} className="instrument-preview">
+      tabIndex={expanded ? -1 : 0}
+      data-chart-target={!multi ? items[0]?.id : undefined}
+      aria-expanded={multi ? expanded : undefined} aria-controls={multi ? fanId : undefined} aria-haspopup={multi ? undefined : 'dialog'}
+      aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. ${multi ? 'Choose a chart' : items.length ? 'Open chart' : 'View evidence and status'}`}
+      onClick={event => { event.currentTarget.focus({ preventScroll: true }); if (multi) { pinned.current = true; expand() } else onOpen(record.instrument, items[0]?.id ?? 'evidence') }} className="instrument-preview">
       {items.length > 2 && <span data-stack-layer="2" aria-hidden="true" className="instrument-stack-layer" />}
       {items.length > 1 && <span data-stack-layer="1" aria-hidden="true" className="instrument-stack-layer" />}
       <span className="instrument-preview-face">
@@ -437,39 +444,69 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
             {record.measuredAt && <span className="text-[10px] text-gray-500">measured {shortDate(record.measuredAt)}</span>}
           </span>
         </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Not yet wired' : 'Not applicable to this field'}</span></>}
-        <span className="mt-auto text-[11px] font-medium text-blue">{items.length ? 'Hover or tap to choose a chart' : 'View evidence & status'}</span>
+        <span className="mt-auto text-[11px] font-medium text-blue">{multi ? 'Hover or tap to choose a chart' : items.length ? 'Open chart ↗' : 'View evidence & status'}</span>
       </span>
     </button>
-    {items.length > 0 && <div id={fanId} className="chart-fan" data-chart-fan inert={!expanded} aria-hidden={!expanded}
-      style={{ '--fan-left': `${placement.left}px`, '--fan-top': `${placement.top}px`, '--fan-width': placement.width ? `${placement.width}px` : '100%' } as CSSProperties}>
-      <div className="chart-fan-heading"><strong>{inst.label}</strong><button type="button" onClick={dismiss} aria-label={`Collapse ${inst.label} previews`}>Close previews ×</button></div>
-      <div className="chart-fan-cards" data-count={Math.min(items.length, 3)}>
-        {items.map((item, index) => <a key={item.id} href={chartHash(area, record.instrument, item.id)} hidden={Math.floor(index / 3) !== page}
-          className="chart-fan-card" data-chart-target={item.id} aria-haspopup="dialog" style={{ '--fan-index': index % 3 } as CSSProperties}
+    {multi && <div id={fanId} className="chart-fan" data-chart-fan inert={!expanded} aria-hidden={!expanded}
+      style={{ '--fan-count': items.length } as CSSProperties}>
+      <div className="chart-fan-heading"><button type="button" onClick={dismiss} aria-label={`Collapse ${inst.label} previews`}><span aria-hidden="true">×</span></button></div>
+      <div className="chart-fan-cards" data-count={items.length}>
+        {items.map((item, index) => <a key={item.id} href={chartHash(area, record.instrument, item.id)}
+          className="chart-fan-card" data-chart-target={item.id} aria-haspopup="dialog" style={{ '--fan-index': index } as CSSProperties}
           onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); pinned.current = true; event.currentTarget.focus({ preventScroll: true }); onOpen(record.instrument, item.id) }}>
+          <span className="chart-fan-group">{inst.label} · {index + 1}/{items.length}</span>
           <span data-preview-title>{chartTitle(item, record, areaLabel)}</span>
           <span className="chart-fan-plot"><ChartPreview item={item} record={record} /></span>
           <span className="chart-preview-caption">Open {item.kind === 'reading' ? 'reading' : 'chart'} ↗</span>
         </a>)}
       </div>
-      {items.length > 3 && <div className="chart-fan-pages"><button type="button" disabled={page === 0} onClick={() => setPage(value => value - 1)}>Previous previews</button><span>{page + 1} / {Math.ceil(items.length / 3)}</span><button type="button" disabled={(page + 1) * 3 >= items.length} onClick={() => setPage(value => value + 1)}>More previews</button></div>}
     </div>}
   </div>
 }
 
-function FieldVelocityBox({ records, markets, measurements, examples, area, onOpen }: {
+function FieldVelocityBox({ records, markets, measurements, examples, area, onOpen, restoreCoverFocus }: {
   records: InstrumentRecord[]; markets: MarketSignal[]; measurements: MeasurementSeries[]; examples: IdeaVintageExample[]; area: FocusAreaKey
   onOpen: (id: InstrumentId, itemId: string) => void
+  restoreCoverFocus: (instrument: InstrumentId) => boolean
 }) {
   const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
   // One owner for the entire deck row: a pinned/focused deck cannot coexist
   // with a newly hovered one. Late leave/blur events only close their own deck.
   const [expandedInstrument, setExpandedInstrument] = useState<InstrumentId | null>(null)
-  return <div className="instrument-previews" aria-label="Field velocity charts">
-    {records.map(record => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...instrumentGallery(record, measurements, markets, examples, areaLabel)} areaLabel={areaLabel} area={area} onOpen={onOpen}
-      expanded={expandedInstrument === record.instrument}
-      onExpand={() => setExpandedInstrument(record.instrument)}
-      onCollapse={() => setExpandedInstrument(current => current === record.instrument ? null : current)} />)}
+  const viewport = useRef<HTMLDivElement>(null)
+  const galleries = records.map(record => instrumentGallery(record, measurements, markets, examples, areaLabel))
+  const expandedIndex = records.findIndex(record => record.instrument === expandedInstrument)
+  const viewCount = expandedIndex < 0 ? 0 : galleries[expandedIndex].items.length
+  const extra = Math.max(0, viewCount - 1)
+  useLayoutEffect(() => {
+    if (!expandedInstrument) return
+    const reveal = () => {
+      const frame = viewport.current
+      const deck = frame?.querySelector<HTMLElement>(`[data-chart-deck="${expandedInstrument}"]`)
+      if (!frame?.clientWidth || !deck) return
+      const row = deck.parentElement!
+      const gap = parseFloat(window.getComputedStyle(row).columnGap) || 0
+      const width = Math.min(viewCount * (deck.offsetWidth + gap) - gap, frame.clientWidth)
+      const start = row.offsetLeft + deck.offsetLeft
+      const left = Math.max(0, start + width - frame.clientWidth, Math.min(frame.scrollLeft, start))
+      // Never scrollIntoView: only the gallery's horizontal viewport may move.
+      // Stable dependencies also preserve a user's scroll across modal/history updates.
+      frame.scrollTo?.({ left, behavior: 'instant' })
+    }
+    reveal()
+    window.addEventListener('resize', reveal)
+    return () => window.removeEventListener('resize', reveal)
+  }, [expandedInstrument, viewCount])
+  return <div ref={viewport} className="instrument-preview-viewport" data-chart-viewport role="region" aria-label="Field velocity charts">
+    <div className="instrument-previews" data-active-group={expandedInstrument ?? undefined} style={{ '--gallery-slots': records.length + extra } as CSSProperties}>
+      {records.map((record, index) => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...galleries[index]} areaLabel={areaLabel} area={area} onOpen={onOpen}
+        restoreCoverFocus={() => restoreCoverFocus(record.instrument)}
+        expanded={expandedInstrument === record.instrument}
+        subdued={expandedInstrument !== null && expandedInstrument !== record.instrument}
+        shift={expandedIndex >= 0 && index > expandedIndex ? extra : 0}
+        onExpand={() => setExpandedInstrument(record.instrument)}
+        onCollapse={() => setExpandedInstrument(current => current === record.instrument ? null : current)} />)}
+    </div>
   </div>
 }
 
@@ -608,7 +645,7 @@ function GalleryFlipCard({ item, record, areaLabel, index }: { item: GalleryItem
   </div>
 }
 
-function VelocityModal({ area, record, markets, measurements, examples, itemId, onClose }: {
+function VelocityModal({ area, record, markets, measurements, examples, itemId, onClose, onRestoreCover }: {
   area: FocusAreaKey
   record: InstrumentRecord
   markets: MarketSignal[]
@@ -616,8 +653,14 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
   examples: IdeaVintageExample[]
   itemId: string
   onClose: () => void
+  onRestoreCover: () => void
 }) {
-  const dialogRef = useGalleryDialog(onClose, () => document.querySelector<HTMLElement>(`[data-instrument="${record.instrument}"]`))
+  const dialogRef = useGalleryDialog(onClose, () => {
+    // A fresh URL has no clicked preview. Keep its fallback cover visibly closed
+    // rather than immediately hiding the control we are returning focus to.
+    onRestoreCover()
+    return document.querySelector<HTMLElement>(`[data-instrument="${record.instrument}"]`)
+  })
   const galleryRef = useGalleryFan()
   const titleId = useId()
   const [copyStatus, setCopyStatus] = useState('Copy link')

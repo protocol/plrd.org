@@ -55,8 +55,8 @@ const load = () => source('lib/field-velocity-data.ts').loadFieldVelocity(async 
 const click = async node => { assert.ok(node, 'click target exists'); await act(async () => { node.click(); await historyTasks() }) }
 const open = async cover => {
   await click(cover)
-  const target = cover.closest('[data-chart-deck]').querySelector('[data-chart-target]:not([hidden])')
-  if (target) await click(target)
+  const target = cover.closest('[data-chart-deck]').querySelector('[data-chart-target]')
+  if (target && target !== cover) await click(target)
   return target ?? cover
 }
 const mount = async props => {
@@ -84,7 +84,7 @@ test('all four overview tabs and Neuro detail select every real view once with e
           assert.equal(targets.length, Number(cover.dataset.viewCount))
           let chartCount = 0
           const seen = new Set()
-          if (targets.length) await click(cover)
+          if (targets.length > 1) await click(cover)
           for (const target of targets.length ? targets : [cover]) {
             await click(target)
             const dialog = document.querySelector('[role="dialog"]')
@@ -138,7 +138,7 @@ test('every gallery kind flips to locally contained data and back with only the 
   const unmount = await mount({ ...data, marketSignals, recordsByArea: { neurotech: records }, fixedArea: 'neurotech' })
   try {
     for (const trigger of document.querySelectorAll('button[data-instrument]')) {
-      await click(trigger)
+      if (Number(trigger.dataset.viewCount) > 1) await click(trigger)
       for (const target of trigger.closest('[data-chart-deck]').querySelectorAll('[data-chart-target]')) {
       await click(target)
       for (const card of document.querySelectorAll('[data-gallery-item]')) {
@@ -292,7 +292,7 @@ test('gallery styling uses a physical two-faced 3D rotation with reduced-motion 
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.gallery-card-face[^}]*animation: none/)
 })
 
-test('large inventories page at most three titled previews, while every modal stays single-chart', async () => {
+test('large inventories expose every horizontal sibling without pagination, while every modal stays single-chart', async () => {
   const data = await load()
   const areaPoints = source('lib/field-velocity.ts').INFLECTION_POINTS.filter(p => p.area === 'ai-robotics')
   const marketSignals = Object.fromEntries(areaPoints.slice(0, 2).map((p, i) => [p.title, { prob: 0.4, platform: 'polymarket', question: `Question ${i}?`, resolutionDate: '2027-01-01', url: `https://polymarket.com/${i}` }]))
@@ -300,14 +300,22 @@ test('large inventories page at most three titled previews, while every modal st
   try {
     const deck = document.querySelector('[data-chart-deck="markets"]')
     await click(deck.querySelector('[data-instrument]'))
-    assert.equal(deck.querySelectorAll('[data-chart-target]:not([hidden])').length, 3)
-    await click([...deck.querySelectorAll('button')].find(button => button.textContent === 'More previews'))
-    assert.equal(deck.querySelectorAll('[data-chart-target]:not([hidden])').length, 1)
-    const target = deck.querySelector('[data-chart-target]:not([hidden])')
-    await click(target)
-    assert.equal(document.querySelectorAll('[data-gallery-item]').length, 1)
-    assert.equal(document.querySelector('.instrument-gallery-grid').dataset.columns, '1')
-    assert.equal(document.querySelector('[data-gallery-item]').dataset.galleryItem, target.dataset.chartTarget)
+    const targets = [...deck.querySelectorAll('[data-chart-target]')]
+    assert.equal(targets.length, 4)
+    assert.equal(deck.parentElement.style.getPropertyValue('--gallery-slots'), '8')
+    assert.ok(targets.every(target => !target.hidden))
+    assert.equal(deck.querySelector('.chart-fan-pages'), null)
+    const css = readFileSync('src/app/globals.css', 'utf8')
+    assert.match(css, /\.chart-fan\s*\{[^}]*z-index: 1/, 'fan stacking is isolated below its cover even with more than three views')
+    for (const [index, target] of targets.entries()) {
+      assert.equal(target.style.getPropertyValue('--fan-index'), String(index))
+      await click(target)
+      assert.equal(document.querySelectorAll('[data-gallery-item]').length, 1)
+      assert.equal(document.querySelector('.instrument-gallery-grid').dataset.columns, '1')
+      assert.equal(document.querySelector('[data-gallery-item]').dataset.galleryItem, target.dataset.chartTarget)
+      await click(document.querySelector('[aria-label="Close gallery"]'))
+      assert.ok(document.activeElement === target)
+    }
   } finally { await unmount() }
 })
 
