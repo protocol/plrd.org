@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+
 import EditPageButton from '@/components/EditPageButton'
 import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Link from 'next/link'
@@ -15,6 +16,8 @@ import MarkdownContent from '@/components/MarkdownContent'
 import aiOpportunityData from '@/data/fa2/ai-opportunityspaces.json'
 import dhrOpportunityData from '@/data/fa2/dhr-opportunityspaces.json'
 import neuroOpportunityData from '@/data/fa2/neuro-opportunityspaces.json'
+
+export const revalidate = 300
 
 type OpportunityCard = {
   id: string
@@ -170,7 +173,7 @@ export default async function AreaPage({ params }: Props) {
   const { meta: oppMeta, cards: opportunities } = await loadOpportunityCards(slug)
 
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
+    <div className="area-overview pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Focus Areas', href: '/areas/' }, { label: stripFaPrefix(area.title) }]} />
       <div className="mt-4 empty:hidden">
         <PageEditHistoryByline rkey={`area-${slug}`} />
@@ -277,9 +280,14 @@ export default async function AreaPage({ params }: Props) {
                 )}
               </Link>
             ))}
+            {slug === 'neurotech' && opportunities.length % 2 !== 0 && (
+              <div aria-hidden={true} className="hidden md:block bg-white" />
+            )}
           </div>
         </section>
       )}
+
+      {/* Field velocity is preview-only until a separate public launch. */}
 
       {/* Insights — latest posts, publications, and talks for this focus area */}
       {areaInsights.length > 0 && (

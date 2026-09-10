@@ -33,6 +33,17 @@ export { FIELD_COLOR, FIELD_INK, HAND_COLOR, LIVE_COLOR }
 export { FOCUS_AREAS, INFLECTION_POINTS }
 export type { FocusAreaKey, InflectionPoint }
 
+export const FIELD_VELOCITY_OVERVIEW = '/impact-preview-eb61fba1b98e/'
+export const FIELD_VELOCITY_ORIGIN = 'https://www.plrd.org'
+
+// Shared public copy: the overview and API must explain the same reading rules.
+export const FIELD_VELOCITY_METHODOLOGY = {
+  intro: 'We document the interventions PL R&D runs, then observe how each field changes. The toolkit describes our work; field velocity and inflection points describe the field, not a causal score for PL.',
+  attribution: 'Fields move with or without PL. We do not claim these interventions directly cause a field to accelerate: field-level attribution is not cleanly identifiable. We name what we run and watch whether the field moves; making that link clearer remains research work.',
+  observedVelocity: 'Field velocity is the rate a field is moving. We read it through five instrument categories, each able to hold multiple field-specific measures, plus dated, falsifiable markers. Not every measure fits every field. Having no single gating cost does not mean there is no capability curve: comparable cost, scale, quality or capability measures can still be tracked. An unpriced milestone has no market signal; missing data is not evidence of no progress.',
+  stocksAndFlows: 'Stocks are not velocity. Compare annual additions or changes using comparable units, definitions and observation windows; acceleration requires a change in that rate, not just a larger total. Mapped-volume frontiers can measure capability; available data-hours are a data resource stock; cumulative implants are an adoption and commitment stock. They are not all pure performance curves. Keep coverage, quality, access and the observation cutoff explicit before comparing them.',
+} as const
+
 // ── The toolkit — PL R&D interventions ────────────────────────────────────────
 // Seven interventions we run to move a field. The short entry (title, subtitle,
 // oneLiner) renders in the methodology grid; the full description renders in the
