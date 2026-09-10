@@ -112,15 +112,36 @@
 .field-velocity-content { container: velocity / inline-size; }
 .field-velocity-dashboard { display: block; }
 
-/* Compact covers expand into individually selectable, real chart previews. */
-.instrument-previews {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: .875rem;
-  padding: .75rem 1.25rem 1.25rem .75rem;
+/* Shared PL Neuro sideways interaction, retaining PLRD's surfaces and copy.
+   Only this local viewport scrolls; covers and their siblings share one size. */
+.instrument-preview-viewport {
+  position: relative;
+  container-type: inline-size;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-400) transparent;
+  --gallery-gap: 1.5rem;
+  --gallery-card-height: 304px;
+  /* Space for at-rest back sheets and non-overlay horizontal scrollbars. */
+  height: calc(var(--gallery-card-height) + 3rem);
+  padding: .5rem .75rem 1.25rem;
   border: 1px solid var(--color-gray-300);
   border-radius: 1rem;
   background: var(--color-gray-100);
+}
+.instrument-previews {
+  --gallery-card-width: min(300px, 78cqw);
+  --gallery-step: calc(var(--gallery-card-width) + var(--gallery-gap));
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gallery-gap);
+  width: calc(var(--gallery-slots) * var(--gallery-step) - var(--gallery-gap));
+  height: var(--gallery-card-height);
 }
 .instrument-preview {
   position: relative;
@@ -179,42 +200,66 @@
   font-weight: 600;
 }
 .instrument-preview-plot svg { width: 100%; height: 2.75rem; }
-@container velocity (min-width: 40rem) { .instrument-previews { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@container velocity (min-width: 66rem) { .instrument-previews { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-/* Absolutely positioned spread: the chart inventory never reflows the page.
-   One continuous hit region includes headings, gaps and all three targets. */
-.chart-deck { position: relative; min-width: 0; }
-.chart-deck[data-expanded="true"] { z-index: 30; }
+@container velocity (min-width: 40rem) { .instrument-previews { --gallery-card-width: calc((100cqw - 3rem) / 3); } }
+@container velocity (min-width: 66rem) { .instrument-previews { --gallery-card-width: calc((100cqw - 6rem) / 5); } }
+/* Siblings begin underneath the cover and slide along the same horizontal step
+   that displaces peers. The fan's full-width hit region includes every gap. */
+.chart-deck {
+  position: relative;
+  flex: 0 0 var(--gallery-card-width);
+  width: var(--gallery-card-width);
+  height: var(--gallery-card-height);
+  min-width: 0;
+  transform: translateX(calc(var(--deck-shift, 0) * var(--gallery-step)));
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1);
+}
+.chart-deck[data-expanded="true"] { z-index: 8; }
+.chart-deck[data-subdued="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: .75rem;
+  background: color-mix(in srgb, var(--color-gray-500) 30%, transparent);
+  pointer-events: none;
+}
+.chart-deck > .instrument-preview { z-index: 4; transition: opacity 160ms ease; }
+.chart-deck .instrument-preview-face { min-height: 0; }
+.chart-deck[data-expanded="true"] > .instrument-preview { opacity: 0; pointer-events: none; }
 .chart-fan {
   position: absolute;
-  top: var(--fan-top);
-  left: var(--fan-left);
-  width: var(--fan-width);
-  max-width: calc(100vw - 24px);
-  max-height: min(72dvh, 36rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  padding: .75rem;
-  border: 1px solid var(--color-blue);
-  border-radius: 1rem;
-  background: var(--color-gray-200);
-  box-shadow: 0 16px 40px #0003;
-  visibility: hidden;
+  z-index: 1;
+  inset: 0 auto 0 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 180ms ease, visibility 180ms;
 }
-.chart-deck[data-expanded="true"] .chart-fan { visibility: visible; pointer-events: auto; opacity: 1; }
-.chart-fan-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; font-size: .875rem; color: var(--color-black); }
-.chart-fan-heading button, .chart-fan-pages button { min-height: 2.75rem; padding: .4rem; font-size: .75rem; color: var(--color-blue); cursor: pointer; }
-.chart-fan-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
-.chart-fan-cards[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
-.chart-fan-cards[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chart-deck[data-expanded="true"] .chart-fan {
+  width: calc(var(--fan-count) * var(--gallery-step) - var(--gallery-gap));
+  pointer-events: auto;
+}
+.chart-deck[data-expanded="true"] .chart-fan::after {
+  content: "";
+  position: absolute;
+  left: calc(100% + var(--gallery-gap) / 2);
+  top: .5rem;
+  bottom: .5rem;
+  width: 1px;
+  background: color-mix(in srgb, var(--color-blue) 50%, transparent);
+}
+.chart-fan-heading { position: absolute; left: calc(var(--gallery-card-width) - 3rem); top: .25rem; z-index: calc(var(--fan-count) + 1); visibility: hidden; }
+.chart-deck[data-expanded="true"] .chart-fan-heading { visibility: visible; }
+.chart-fan-heading button { width: 44px; height: 44px; font-size: 1.4rem; color: var(--color-blue); cursor: pointer; }
+.chart-fan-cards { height: 100%; gap: var(--gallery-gap); }
 .chart-fan-card {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: flex;
   flex-direction: column;
   gap: .65rem;
+  width: var(--gallery-card-width);
+  height: 100%;
   min-width: 0;
   padding: .875rem;
   border: 1px solid color-mix(in srgb, var(--color-blue) 35%, transparent);
@@ -223,33 +268,26 @@
   color: var(--color-black);
   text-align: left;
   overflow-wrap: anywhere;
-  transform: translateX(calc(var(--fan-index) * -70%)) rotate(calc(var(--fan-index) * -5deg)) scale(.9);
-  transform-origin: 50% 90%;
-  transition: transform 360ms cubic-bezier(.22,.68,0,1.05), border-color 180ms, box-shadow 180ms;
+  z-index: calc(var(--fan-count) - var(--fan-index));
+  transform: translateX(calc(var(--fan-index) * 4px));
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1), border-color 180ms, box-shadow 180ms;
 }
-.chart-fan-card[hidden] { display: none; }
-.chart-deck[data-expanded="true"] .chart-fan-card { transform: none; }
+.chart-deck[data-expanded="true"] .chart-fan-card { transform: translateX(calc(var(--fan-index) * var(--gallery-step))); }
 .chart-fan-card:is(:hover, :focus-visible) { border-color: var(--color-blue); box-shadow: 0 5px 15px #1982f428; }
-.chart-fan-card [data-preview-title] { font-size: .9rem; font-weight: 600; line-height: 1.35; }
+.chart-fan-group { min-height: 2rem; font-size: .65rem; line-height: 1.4; color: var(--color-gray-600); }
+.chart-fan-card:first-child .chart-fan-group { padding-right: 2rem; }
+.chart-fan-card [data-preview-title] { font-size: .85rem; font-weight: 600; line-height: 1.4; }
 .chart-fan-plot { display: flex; flex-direction: column; gap: .5rem; margin-top: auto; min-width: 0; }
 .chart-fan-plot > span { display: block; width: 100%; }
-.chart-fan-plot svg { display: block; width: 100%; height: 7rem; }
+.chart-fan-plot svg { display: block; width: 100%; height: 5.375rem; }
 .chart-fan-plot meter { width: 100%; height: 2rem; }
 .chart-preview-caption { font-size: .6875rem; line-height: 1.4; color: var(--color-gray-600); }
-.chart-preview-reading { padding-block: 1rem; font-size: 1.25rem; }
-.chart-fan-pages { display: flex; justify-content: space-between; align-items: center; font-size: .75rem; }
-.chart-fan-pages button:disabled { color: var(--color-gray-500); opacity: .5; cursor: default; }
+.chart-preview-reading { padding-block: .5rem; font-size: 1.1rem; }
 .chart-share-controls { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; }
 .chart-share-controls :is(a, button) { padding: .5rem .65rem; min-height: 2.75rem; color: var(--color-blue); background: var(--color-gray-200); border-radius: .5rem; font-size: .8rem; cursor: pointer; }
-.chart-deck :is(a, button):focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
-@media (max-width: 639px) {
-  .chart-fan-cards, .chart-fan-cards[data-count="2"] { grid-template-columns: minmax(0, 1fr); }
-  .chart-fan-card { gap: .35rem; padding: .75rem; }
-  .chart-fan-plot svg { height: 5rem; }
-}
+.chart-deck :is(a, button):focus-visible { outline: 2px solid var(--color-blue); outline-offset: -3px; border-radius: .75rem; }
 @media (prefers-reduced-motion: reduce) {
-  .chart-fan, .chart-fan-card { transition: none; }
-  .chart-fan-card { transform: none; }
+  .chart-deck, .chart-deck > .instrument-preview, .chart-fan-card { transition: none; }
 }
 .instrument-gallery-backdrop {
   position: fixed;

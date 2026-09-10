@@ -30,31 +30,32 @@ test('focus-area tabs are horizontal above a normal-width overview', async () =>
   } finally { await unmount() }
 })
 
-test('one, two and three preview fans share a card width and shrink their outer frame', async () => {
+test('single covers and two/three-view spreads share the same bounded horizontal card dimensions', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
-  const oldWidth = window.innerWidth
   try {
-    const groups = ['latency_compression', 'revealed_commitments', 'performance_curves']
-    for (const viewport of [1440, 768, 390, 320]) {
-      window.innerWidth = viewport
-      const available = Math.min(860, viewport - 64)
-      const widths = []
-      for (const [index, group] of groups.entries()) {
-        const deck = document.querySelector(`[data-chart-deck="${group}"]`)
-        deck.getBoundingClientRect = () => ({ left: 24, top: 100, width: 200, height: 250 })
-        deck.parentElement.getBoundingClientRect = () => ({ left: 24, right: viewport - 24, width: viewport - 48 })
-        await click(deck.querySelector('[data-instrument]'))
-        const width = parseFloat(deck.querySelector('[data-chart-fan]').style.getPropertyValue('--fan-width'))
-        widths.push(width)
-        const columns = viewport <= 639 ? 1 : index + 1
-        const cardWidth = (width - 26 - (columns - 1) * 12) / columns
-        const expected = viewport <= 639 ? available - 26 : (available - 50) / 3
-        assert.ok(Math.abs(cardWidth - expected) < .01, `${viewport}px / ${columns} columns: ${cardWidth} should equal ${expected}`)
+    const { readFileSync } = await import('node:fs')
+    const css = readFileSync('src/app/globals.css', 'utf8')
+    const rule = selector => css.slice(css.indexOf(`${selector} {`)).split('}')[0]
+    assert.match(rule('.chart-deck'), /width: var\(--gallery-card-width\)/)
+    assert.match(rule('.chart-fan-card'), /width: var\(--gallery-card-width\)/)
+    assert.match(rule('.instrument-preview'), /height: 100%/)
+    assert.match(rule('.chart-fan-card'), /height: 100%/)
+    assert.match(rule('.chart-deck'), /height: var\(--gallery-card-height\)/)
+    for (const [index, group] of ['latency_compression', 'revealed_commitments', 'performance_curves'].entries()) {
+      const deck = document.querySelector(`[data-chart-deck="${group}"]`)
+      const cover = deck.querySelector('[data-instrument]')
+      assert.equal(Number(cover.dataset.viewCount), index + 1)
+      await click(cover)
+      if (index === 0) {
+        assert.equal(deck.querySelector('[data-chart-fan]'), null, 'single views open directly')
+        assert.ok(document.querySelector('[role="dialog"]'))
+        await click(document.querySelector('[aria-label="Close gallery"]'))
+      } else {
+        assert.equal(deck.querySelector('[data-chart-fan]').style.getPropertyValue('--fan-count'), String(index + 1))
+        assert.equal(deck.parentElement.style.getPropertyValue('--gallery-slots'), String(5 + index))
       }
-      if (viewport > 639) assert.ok(widths[0] < widths[1] && widths[1] < widths[2])
-      else assert.equal(new Set(widths).size, 1, 'stacked mobile cards use the same available width')
     }
-  } finally { window.innerWidth = oldWidth; await unmount() }
+  } finally { await unmount() }
 })
 
 test('multi-view covers visibly retain layered backs at rest while single charts do not', async () => {
@@ -76,8 +77,9 @@ test('latency animal-model qualifier appears only on the data face, not chart ti
     await click(cover)
     const target = cover.closest('[data-chart-deck]').querySelector('[data-chart-target]')
     assert.doesNotMatch(target.textContent, /Most entries are/)
-    await click(target)
+    assert.ok(target === cover, 'single latency chart opens directly, without another preview')
     const dialog = document.querySelector('[role="dialog"]')
+    assert.equal(dialog.querySelector('[data-gallery-item]').dataset.galleryItem, cover.dataset.chartTarget)
     assert.doesNotMatch(dialog.querySelector('h2').textContent, /Most entries are/)
     assert.doesNotMatch(dialog.querySelector('[data-face="chart"]').textContent, /Most entries are/)
     await click(dialog.querySelector('[data-flip-action]'))
@@ -96,7 +98,7 @@ test('opening another deck replaces a pinned or focused fan for every input mode
   }
   const openDecks = () => [...document.querySelectorAll('[data-chart-deck][data-expanded="true"]')].map(e => e.dataset.chartDeck)
   try {
-    const a = document.querySelector('[data-instrument="latency_compression"]')
+    const a = document.querySelector('[data-instrument="performance_curves"]')
     const b = document.querySelector('[data-instrument="revealed_commitments"]')
     await click(a)
     const priorTarget = a.closest('[data-chart-deck]').querySelector('[data-chart-target]')
@@ -110,7 +112,7 @@ test('opening another deck replaces a pinned or focused fan for every input mode
     await pointer(a, 'pointerout', document.body)
     assert.deepEqual(openDecks(), ['revealed_commitments'], 'a late leave from the old deck cannot close the new deck')
     await act(() => { a.blur(); a.focus() })
-    assert.deepEqual(openDecks(), ['latency_compression'], 'keyboard focus replaces the hovered fan')
+    assert.deepEqual(openDecks(), ['performance_curves'], 'keyboard focus replaces the hovered fan')
     await click(b)
     assert.deepEqual(openDecks(), ['revealed_commitments'], 'touch/click replaces the other fan')
   } finally { await unmount() }
@@ -277,23 +279,24 @@ test('every available chart has a unique fresh URL; invalid, unavailable and cro
   try { assert.ok(!document.querySelector('[role="dialog"]'), 'dialog must be closed') } finally { await unmount() }
 })
 
-test('the spread is clamped horizontally and vertically when its cover is at viewport edges', async () => {
+test('edge spreads stay in the local horizontal viewport instead of positioning a vertical popover', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
   try {
     const deck = document.querySelector('[data-chart-deck="performance_curves"]')
     const fan = deck.querySelector('[data-chart-fan]')
-    deck.getBoundingClientRect = () => ({ left: 900, top: 700, width: 100, height: 250 })
-    deck.parentElement.getBoundingClientRect = () => ({ left: 24, right: 1000, width: 976 })
-    Object.defineProperty(fan, 'scrollHeight', { configurable: true, value: 400 })
+    const frame = deck.closest('[data-chart-viewport]')
+    const before = { x: window.scrollX, y: window.scrollY, overflow: document.body.style.overflow }
+    assert.ok(frame)
+    deck.getBoundingClientRect = () => ({ left: 900, top: 700, width: 100, height: 304 })
     await click(deck.querySelector('[data-instrument]'))
-    const width = parseFloat(fan.style.getPropertyValue('--fan-width'))
-    const left = 900 + parseFloat(fan.style.getPropertyValue('--fan-left'))
-    const top = 700 + parseFloat(fan.style.getPropertyValue('--fan-top'))
-    assert.ok(left >= 12 && left + width <= window.innerWidth - 12)
-    assert.ok(top >= 12 && top + 402 <= window.innerHeight - 12, 'entire spread stays inside the viewport, not below a bottom-row cover')
+    for (const property of ['--fan-top', '--fan-left', '--fan-width']) assert.equal(fan.style.getPropertyValue(property), '')
+    assert.equal(fan.style.getPropertyValue('--fan-count'), '3')
+    assert.deepEqual({ x: window.scrollX, y: window.scrollY, overflow: document.body.style.overflow }, before)
+    const { readFileSync } = await import('node:fs')
+    const css = readFileSync('src/app/globals.css', 'utf8')
+    assert.match(css, /\.instrument-preview-viewport\s*\{[^}]*overflow-x: auto;[^}]*overflow-y: hidden;/)
   } finally { await unmount() }
 })
-
 
 test('close keeps the modal input boundary until its pending history traversal finishes', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
