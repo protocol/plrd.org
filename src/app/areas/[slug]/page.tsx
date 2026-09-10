@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import AreaFieldVelocity from '@/components/AreaFieldVelocity'
-import { isFocusAreaKey } from '@/lib/field-velocity-data'
 
 import EditPageButton from '@/components/EditPageButton'
 import { PageEditHistoryByline } from '@/components/EditHistoryByline'
@@ -289,7 +287,7 @@ export default async function AreaPage({ params }: Props) {
         </section>
       )}
 
-      {isFocusAreaKey(slug) && <AreaFieldVelocity area={slug} />}
+      {/* Field velocity is preview-only until a separate public launch. */}
 
       {/* Insights — latest posts, publications, and talks for this focus area */}
       {areaInsights.length > 0 && (
