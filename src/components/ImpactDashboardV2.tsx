@@ -6,7 +6,7 @@
 // laid out as four cards in two rows with their live signals. The inflection
 // cards mirror the PR #29 design; shared primitives are imported, never forked.
 
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useLayoutEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useGalleryDialog } from '@/components/useGalleryDialog'
 import { useGalleryFan } from '@/components/useGalleryFan'
@@ -395,8 +395,19 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
     cover.current?.focus({ preventScroll: true })
     suppressFocus.current = false
   }
+  useLayoutEffect(() => {
+    if (expanded) return
+    pinned.current = false
+    // A sibling can take ownership on hover while keyboard focus is inside
+    // this fan. Recover before paint instead of stranding focus in inert UI.
+    if (deck.current?.querySelector('[data-chart-fan]')?.contains(document.activeElement)) {
+      suppressFocus.current = true
+      cover.current?.focus({ preventScroll: true })
+      suppressFocus.current = false
+    }
+  }, [expanded])
   useEffect(() => {
-    if (!expanded) { pinned.current = false; return }
+    if (!expanded) return
     const outside = (event: PointerEvent) => { if (!(event.target instanceof Element && event.target.closest('.instrument-gallery-backdrop')) && !deck.current?.contains(event.target as Node)) { pinned.current = false; onCollapse() } }
     document.addEventListener('pointerdown', outside)
     window.addEventListener('resize', place)
