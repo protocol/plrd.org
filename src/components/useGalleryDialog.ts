@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 
 // Reference-count ownership so replacing a URL-addressed modal cannot restore
 // scrolling/inert state owned by another mounted dialog.
-const bodyLocks = new WeakMap<HTMLElement, { count: number; overflow: string; paddingRight: string }>()
+const bodyLocks = new WeakMap<HTMLElement, { count: number; overflow: string; paddingRight: string; paddingBottom: string }>()
 const inertLocks = new WeakMap<Element, { count: number; value: string | null }>()
 
 /** One portal focus boundary; definitions remain visible within it. */
@@ -21,7 +21,7 @@ export function useGalleryDialog(onClose: () => void, restoreTarget?: () => HTML
     const body = document.body
     let lock = bodyLocks.get(body)
     if (!lock) {
-      lock = { count: 0, overflow: body.style.overflow, paddingRight: body.style.paddingRight }
+      lock = { count: 0, overflow: body.style.overflow, paddingRight: body.style.paddingRight, paddingBottom: body.style.paddingBottom }
       bodyLocks.set(body, lock)
       const scrollbar = document.documentElement.clientWidth > 0 ? Math.max(0, window.innerWidth - document.documentElement.clientWidth) : 0
       const minimumWidth = parseFloat(window.getComputedStyle(body).minWidth) || 0
@@ -29,6 +29,12 @@ export function useGalleryDialog(onClose: () => void, restoreTarget?: () => HTML
       // the body. Compensate only the width it can actually gain.
       const gutter = Math.min(scrollbar, Math.max(0, window.innerWidth - minimumWidth))
       const padding = parseFloat(window.getComputedStyle(body).paddingRight) || 0
+      // The preview's full-bleed band can also create a horizontal scrollbar.
+      // Removing it increases the viewport height and clamps scrollY at the
+      // document bottom. Reserve that height BEFORE hiding either scrollbar.
+      const horizontalGutter = document.documentElement.clientHeight > 0 ? Math.max(0, window.innerHeight - document.documentElement.clientHeight) : 0
+      const bottomPadding = parseFloat(window.getComputedStyle(body).paddingBottom) || 0
+      if (horizontalGutter) body.style.paddingBottom = `${bottomPadding + horizontalGutter}px`
       if (gutter) body.style.paddingRight = `${padding + gutter}px`
       body.style.overflow = 'hidden'
     }
@@ -81,6 +87,7 @@ export function useGalleryDialog(onClose: () => void, restoreTarget?: () => HTML
       if (!lock.count) {
         body.style.overflow = lock.overflow
         body.style.paddingRight = lock.paddingRight
+        body.style.paddingBottom = lock.paddingBottom
         bodyLocks.delete(body)
       }
       siblings.forEach(el => {
