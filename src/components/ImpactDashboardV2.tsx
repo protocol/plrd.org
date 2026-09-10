@@ -371,12 +371,24 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
   const previewMeasure = items.find(item => item.kind === 'measurement')
   const multi = items.length > 1
   const expand = () => { if (multi) onExpand() }
+  const revealCover = () => {
+    const frame = deck.current?.closest<HTMLElement>('[data-chart-viewport]')
+    if (!frame || !cover.current) return
+    const bounds = frame.getBoundingClientRect()
+    const target = cover.current.getBoundingClientRect()
+    if (target.left < bounds.left || target.right > bounds.right) {
+      // Dismissal can leave keyboard focus several cards offscreen on mobile.
+      // Reveal only inside this gallery; never move the document vertically.
+      frame.scrollTo?.({ left: Math.max(0, frame.scrollLeft + target.left - bounds.left), behavior: 'instant' })
+    }
+  }
   const dismiss = () => {
     pinned.current = false
     onCollapse()
     suppressFocus.current = true
     cover.current?.focus({ preventScroll: true })
     suppressFocus.current = false
+    revealCover()
   }
   const focusFirstPreview = () => deck.current?.querySelector<HTMLAnchorElement>('.chart-fan-card')?.focus({ preventScroll: true })
   useLayoutEffect(() => {
@@ -391,6 +403,7 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
       suppressFocus.current = true
       cover.current?.focus({ preventScroll: true })
       suppressFocus.current = false
+      if (!subdued) revealCover()
     }
   }, [expanded])
   useEffect(() => {
@@ -405,7 +418,7 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
     onPointerLeave={() => { if (!pinned.current && !deck.current?.contains(document.activeElement)) onCollapse() }}
     onFocus={event => {
       if (suppressFocus.current) return
-      if (event.target.isSameNode(cover.current) && restoreCoverFocus()) return
+      if (event.target.isSameNode(cover.current) && restoreCoverFocus()) { revealCover(); return }
       expand()
       if (expanded && event.target.isSameNode(cover.current)) focusFirstPreview()
     }}

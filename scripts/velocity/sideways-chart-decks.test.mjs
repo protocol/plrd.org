@@ -164,6 +164,31 @@ test('right-edge touch spreads reveal only the local viewport on expansion and r
   } finally { await unmount() }
 })
 
+test('scrolled dismissal brings the restored cover back into the local viewport without scrolling the page', async () => {
+ const unmount = await mount({ fixedArea: 'neurotech' })
+ try {
+  const frame = document.querySelector('[data-chart-viewport]')
+  const deck = document.querySelector('[data-chart-deck="performance_curves"]')
+  const cover = deck.querySelector('[data-instrument]')
+  const last = deck.querySelector('[data-chart-target="neural-recording-hours"]')
+  frame.getBoundingClientRect = () => ({ left: 16, right: 359 })
+  cover.getBoundingClientRect = () => ({ left: 29 - frame.scrollLeft, right: 276 - frame.scrollLeft })
+  frame.scrollTo = ({ left }) => { frame.scrollLeft = left }
+  for (const method of ['Escape', 'close', 'outside']) {
+   await act(() => { cover.blur(); cover.focus() })
+   frame.scrollLeft = 548
+   await act(() => last.focus({ preventScroll: true }))
+   if (method === 'Escape') await act(() => last.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })))
+   else if (method === 'close') await click(deck.querySelector('[aria-label="Collapse Performance curves previews"]'))
+   else await pointer(document.body, 'pointerdown')
+   assert.equal(deck.dataset.expanded, 'false')
+   assert.equal(document.activeElement, cover)
+   assert.equal(frame.scrollLeft, 13, `${method} reveals the focused cover horizontally`)
+   assert.equal(window.scrollY, 0, 'the document does not move')
+  }
+ } finally { await unmount() }
+})
+
 test('all four tabs spread real sibling slots horizontally and displace/dim only the neighboring decks', async () => {
   const unmount = await mount()
   try {
