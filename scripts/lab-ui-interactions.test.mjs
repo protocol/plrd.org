@@ -25,7 +25,12 @@ beforeEach(() => {
   window.history.replaceState(null, "", "/lab/");
   exports = [];
   identity = { session: null, isAuthenticated: false, isLoading: false, error: null, login: async () => {}, logout: async () => {} };
-  mock.method(identityModule, "useLabIdentity", () => identity);
+  const sdkSessions = new Map();
+  mock.method(identityModule, "useLabIdentity", () => {
+    const did = identity.session?.did;
+    if (did && !sdkSessions.has(did)) sdkSessions.set(did, { sub: did, did });
+    return { ...identity, oauthSession: did ? sdkSessions.get(did) : null, authorizeWrite: async () => {} };
+  });
   mock.method(services, "useLab", () => ({ capabilities: { canSignIn: false, canPublish: false, mode: "unconfigured" }, openLogin() {} }));
   mock.method(downloads, "downloadText", (name, text, type) => exports.push({ name, text, type }));
   root = createRoot(document.getElementById("root"));
@@ -102,6 +107,13 @@ test("feed search, filters and local Promising survive reload; records follow th
     }
     return Response.json({ status: "empty", items: [], fetchedAt: null, sourceLabel: "Public fixture source" });
   });
+  // Inject the account-bound notebook seam for this rendering-only fixture.
+  // Production FeedWorkbench must pass session.did (parent-owned integration).
+  const realClient = source("lib/lab-client.ts").createLabClient;
+  mock.method(source("lib/lab-client.ts"), "createLabClient", (...args) => ({
+    ...realClient(...args),
+    records: async () => (await fetch("fixture:records")).json(),
+  }));
   const Feed = source("components/lab/FeedWorkbench.tsx").default;
   await mount(Feed);
   await change('[aria-label="Search scientific work"]', "marimo");

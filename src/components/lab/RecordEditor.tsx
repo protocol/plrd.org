@@ -4,6 +4,9 @@ import { useLabIdentity } from "@/lib/lab-identity";
 import { useLab } from "@/components/lab/LabShell";
 import LabDialog from "@/components/lab/LabDialog";
 import { createLabClient } from "@/lib/lab-client";
+import { LabPermissionError, LabWriteVerificationError } from "@/lib/lab-records";
+import { labInspectorHref } from "@/lib/lab-notebook";
+import type { LabRecordView } from "@/lib/lab-protocol";
 import { draftSlot, loadDraft, saveDraft } from "@/lib/lab-drafts";
 import {
   entryDefaults,
@@ -19,6 +22,8 @@ type EditorProps = {
   kind: RecordKind;
   initial?: EntryValues;
   draftId?: string;
+  reviewedProfile?: LabRecordView | null;
+  profileReadReady?: boolean;
   onClose: () => void;
   onSaved?: () => void;
 };
@@ -32,11 +37,15 @@ function EditorForm({
   draftId,
   onClose,
   onSaved,
+  reviewedProfile,
+  profileReadReady = false,
 }: EditorProps) {
-  const { session, isAuthenticated } = useLabIdentity();
+  const { session, oauthSession, isAuthenticated, isLoading, authorizeWrite } = useLabIdentity();
   const { capabilities, openLogin } = useLab();
   const owner = session?.did || "guest";
   const slot = draftId || draftSlot(kind, initial);
+  const [reviewedVersion] = useState(reviewedProfile);
+  const [profileWasRead] = useState(profileReadReady);
   const [values, setValues] = useState<EntryValues>({
     ...entryDefaults(kind),
     ...initial,
@@ -50,6 +59,13 @@ function EditorForm({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [receipt, setReceipt] = useState("");
+  const [receiptCid, setReceiptCid] = useState("");
+  const [permission, setPermission] = useState<LabPermissionError | null>(null);
+  const [uncertainUri, setUncertainUri] = useState("");
+  const active = useRef(true);
+  useEffect(() => { active.current = true; return () => { active.current = false; }; }, []);
+  useEffect(() => { setConsent(false); setPreview(false); setPermission(null); }, [oauthSession]);
+  const action = kind === "profile" && reviewedVersion ? "update" : "create";
   const previewRef = useRef<HTMLElement>(null);
   useEffect(() => { if (preview) previewRef.current?.focus(); }, [preview]);
   useEffect(() => {
@@ -79,6 +95,13 @@ function EditorForm({
         if (g.data) setGuest(g.data as EntryValues);
       } catch {}
     }
+    try {
+      const outcome = loadDraft(localStorage, `publication:${slot}`, owner).data;
+      if (outcome?.status === "unknown" && typeof outcome.uri === "string") setUncertainUri(outcome.uri);
+      if (outcome?.status === "published" && typeof outcome.uri === "string") {
+        setReceipt(outcome.uri); setReceiptCid(typeof outcome.cid === "string" ? outcome.cid : "");
+      }
+    } catch { /* The existing storage warning applies; never discard content. */ }
     setReady(true);
     // Initial values are the explicit artifact context at the time this editor opens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,7 +111,10 @@ function EditorForm({
     setValues(next);
     setPreview(false);
     setConsent(false);
-    setReceipt("");
+    setReceipt(""); setReceiptCid(""); setPermission(null); setMessage("");
+    if (!uncertainUri) {
+      try { saveDraft(localStorage, `publication:${slot}`, owner, { status: "new-draft" }); } catch {}
+    }
     if (ready) {
       try {
         const r = saveDraft(localStorage, slot, owner, next);
@@ -140,29 +166,54 @@ function EditorForm({
     if (
       !consent ||
       !preview ||
-      !isAuthenticated ||
-      !capabilities.canPublish ||
+      !isAuthenticated || !oauthSession || oauthSession.sub !== owner || isLoading ||
+      !capabilities.canPublish || uncertainUri || receipt ||
+      (kind === "profile" && ((!profileReadReady || !profileWasRead) || (reviewedVersion && reviewedVersion.authorDid !== owner))) ||
       busy
     )
       return;
     setBusy(true);
     setMessage("");
     try {
-      const r = await createLabClient().publish(kind, payload);
+      const r = await createLabClient(fetch, { session: oauthSession }).publish(kind, payload, {
+        public: true, experimental: true, did: owner, action,
+        ...(action === "update" ? { expectedCid: reviewedVersion!.cid } : {}),
+      });
+      try { saveDraft(localStorage, `publication:${slot}`, owner, { status: "published", uri: r.uri, cid: r.cid }); } catch {}
+      if (!active.current) return;
       setReceipt(r.uri);
+      setReceiptCid(r.cid);
       setMessage(
         "Public AT Protocol record saved and read back. It is not automatically featured, peer reviewed, or accepted into an Atlas.",
       );
       onSaved?.();
     } catch (e) {
+      if (e instanceof LabWriteVerificationError) {
+        try { saveDraft(localStorage, `publication:${slot}`, owner, { status: "unknown", uri: e.uri }); } catch {}
+      }
+      if (!active.current) return;
+      setConsent(false);
+      if (e instanceof LabPermissionError) setPermission(e);
+      if (e instanceof LabWriteVerificationError) setUncertainUri(e.uri);
       setMessage(
         e instanceof Error
           ? e.message
           : "Publishing failed. Your draft is unchanged.",
       );
     } finally {
-      setBusy(false);
+      if (active.current) setBusy(false);
     }
+  }
+  async function authorize() {
+    if (!permission || busy || !capabilities.canPublish || isLoading) return;
+    try {
+      const saved = saveDraft(localStorage, slot, owner, values);
+      if (!saved.ok) throw Error("Storage is blocked. Download your draft before authorizing; nothing was published.");
+      setBusy(true); setConsent(false); setPreview(false);
+      await authorizeWrite(kind, permission.action, window.location.pathname + window.location.search + "#draft");
+      if (active.current) { setPermission(null); setMessage("Authorization requested. Review the intact draft and confirm publication again."); }
+    } catch (e) { if (active.current) setMessage(e instanceof Error ? e.message : "Authorization failed. Your draft is unchanged."); }
+    finally { if (active.current) setBusy(false); }
   }
   return (
     <LabDialog title={entryTitles[kind]} onClose={onClose} wide>
@@ -279,9 +330,11 @@ function EditorForm({
               REVIEW YOUR {kind.toUpperCase()} RECORD
             </div>
             <pre>{JSON.stringify(payload, null, 2)}</pre>
+            {kind === "profile" && reviewedVersion && <p>Updating the profile version you reviewed: <a href={labInspectorHref(reviewedVersion.uri)}>Inspect current public profile</a><br />URI: <code>{reviewedVersion.uri}</code><br />Reviewed CID: <code>{reviewedVersion.cid}</code></p>}
+            {kind === "profile" && (!profileReadReady || !profileWasRead) && <p className="lab-notice">Read your current public profile in My bench, then close and reopen this draft before publishing. Local drafting remains available.</p>}
             <p className="lab-smallprint">
               Public records may be copied and indexed by others. Do not include
-              sensitive, personal, or unpublished material.
+              sensitive, personal, or unpublished material. These are experimental candidate schemas, not a stable publication standard.
               Your record is not automatically listed in the shared feed, featured,
               peer reviewed, or accepted into an Atlas. Publishing is separate from discovery and human acceptance.
             </p>
@@ -294,7 +347,7 @@ function EditorForm({
                   onChange={(e) => setConsent(e.target.checked)}
                 />
                 I have reviewed this and want to publish it publicly as{" "}
-                {session?.handle}.
+                {session?.did}, using the experimental schema.
               </label>
             ) : (
               <p className="lab-smallprint">
@@ -311,10 +364,15 @@ function EditorForm({
             {message}
           </p>
         )}
+        {permission && <p className="lab-notice">Additional permission is required. Authorization does not publish anything. <button type="button" className="lab-button" disabled={busy || isLoading || !capabilities.canPublish} onClick={authorize}>Authorize {permission.action} for this {kind}</button></p>}
+        {uncertainUri && <p className="lab-error" role="alert">Unknown write outcome. <a href={labInspectorHref(uncertainUri)}>Inspect this exact record before retrying</a>: <code>{uncertainUri}</code>. Do not publish a duplicate. Your local draft is unchanged.</p>}
         {receipt && (
           <p className="lab-receipt">
             <strong>Record receipt</strong>
+            <a href={labInspectorHref(receipt)}>Inspect public record ↗</a>
             <code>{receipt}</code>
+            CID: <code>{receiptCid}</code>
+            <span>Current PDS HTTPS readback; not a repository-signature proof or peer review.</span>
             <button
               type="button"
               className="lab-text-button"
@@ -322,7 +380,7 @@ function EditorForm({
                 downloadText(
                   "open-lab-receipt.json",
                   JSON.stringify(
-                    { uri: receipt, kind, data: payload },
+                    { uri: receipt, cid: receiptCid, verification: "pds-readback", kind, data: payload },
                     null,
                     2,
                   ),
@@ -361,7 +419,9 @@ function EditorForm({
               type="button"
               className="lab-button"
               disabled={
-                !consent || !capabilities.canPublish || busy || !!receipt
+                !consent || !capabilities.canPublish || busy || isLoading || !oauthSession ||
+                oauthSession.sub !== owner || !!receipt || !!uncertainUri ||
+                (kind === "profile" && (!profileReadReady || !profileWasRead))
               }
               onClick={publish}
             >

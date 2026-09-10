@@ -64,10 +64,45 @@ export function configForBrowser(config: LabOAuthConfig, origin: string): LabOAu
 }
 
 export function safeLabReturnTo(input?: string | null): string {
-  if (!input || input.length > 1024 || /[\\%\u0000-\u0020]/.test(input)) return '/lab/'
-  const match = /^(\/lab\/(?:feed\/|apps\/|atlas\/|collaborate\/|profile\/|record\/)?)((?:\?[^#]*)?)(#[a-zA-Z0-9_-]+)?$/.exec(input)
+  // Check the original path BEFORE decoding or constructing a URL (which normalizes it).
+  if (!input || input.length > 4096 || /[\\\u0000-\u0020\u007f]/.test(input)) return '/lab/'
+  const match = /^(\/lab\/(?:feed\/|apps\/|atlas\/|collaborate\/|profile\/|record\/|bottlenecks\/|onboarding\/|demo\/|efforts\/|explorations\/(?:arcade\/|observatory\/)?)?)((?:\?[^#]*)?)(#[a-zA-Z0-9_-]{1,80})?$/.exec(input)
   if (!match) return '/lab/'
-  const query = new URLSearchParams(match[2])
-  if ([...query.keys()].some(k => !['type', 'field', 'q', 'uri', 'app', 'task', 'node'].includes(k))) return '/lab/'
+  const seen = new Set<string>()
+  const fields = ['all', 'digital-human-rights', 'economies-governance', 'ai-robotics', 'neurotech', 'cross-field']
+  for (const pair of match[2].slice(1).split('&').filter(Boolean)) {
+    const parts = pair.split('=')
+    if (parts.length !== 2 || !/^[a-z]+$/.test(parts[0]) || seen.has(parts[0])) return '/lab/'
+    const key = parts[0]
+    seen.add(key)
+    let value: string
+    try { value = decodeURIComponent(parts[1].replace(/\+/g, ' ')) } catch { return '/lab/' }
+    if (!value || /[\\%\u0000-\u001f\u007f]/.test(value)) return '/lab/'
+    if (key === 'uri' || key === 'response') {
+      if (match[1] !== '/lab/record/' || !safeReturnRecordUri(value)) return '/lab/'
+    } else if (key === 'field') {
+      if (!fields.includes(value)) return '/lab/'
+    } else if (key === 'type') {
+      if (!['all', 'question', 'finding', 'tool', 'help', 'negative'].includes(value)) return '/lab/'
+    } else if (key === 'case') {
+      if (!['reproducibility', 'neural-measurement', 'open-artifacts'].includes(value)) return '/lab/'
+    } else if (key === 'q') {
+      if (value.length > 200) return '/lab/'
+    } else if (['app', 'task', 'node', 'thread', 'person'].includes(key)) {
+      if (!/^[a-zA-Z0-9_-]{1,100}$/.test(value)) return '/lab/'
+    } else return '/lab/'
+  }
+  if (seen.has('response') && !seen.has('uri')) return '/lab/'
   return input
+}
+// Deliberately dependency-light: this public config module also runs on the server.
+function safeReturnRecordUri(value: string): boolean {
+  if (value.length > 1024) return false
+  const match = /^at:\/\/(did:plc:[a-z2-7]{24}|did:web:[a-z0-9.-]+)\/(org\.plresearch\.lab\.(profile|note|app|contribution|participation))\/([a-zA-Z0-9._~:-]{1,512})$/.exec(value)
+  if (!match || ['.', '..'].includes(match[4]) || (match[3] === 'profile' && match[4] !== 'self')) return false
+  if (match[1].startsWith('did:web:')) {
+    const domain = match[1].slice(8)
+    if (!/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z][a-z0-9-]*$/.test(domain) || /\.(local|localhost|internal|test)$/.test(domain)) return false
+  }
+  return true
 }

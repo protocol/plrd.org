@@ -1,34 +1,81 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLabIdentity } from "@/lib/lab-identity";
 import { useLab } from "@/components/lab/LabShell";
 import { listDrafts, loadDraft } from "@/lib/lab-drafts";
 import { createLabClient, safeUrl } from "@/lib/lab-client";
 import { artifacts } from "@/lib/lab-data";
-import type { LabProfile, LabRecord, RecordKind } from "@/lib/lab-types";
+import { labInspectorHref, type LabNotebook } from "@/lib/lab-notebook";
+import type { LabRecordView } from "@/lib/lab-protocol";
+import type { LabProfile, RecordKind } from "@/lib/lab-types";
 import type { EntryValues } from "@/lib/lab-entry";
+import { deleteLabRecord, LabPermissionError, LabWriteVerificationError } from "@/lib/lab-records";
+import LabDialog from "@/components/lab/LabDialog";
 import RecordEditor from "@/components/lab/RecordEditor";
 
 export default function ProfileWorkbench() {
-  const { session, isAuthenticated, logout } = useLabIdentity();
-  const { openLogin } = useLab();
+  const { session } = useLabIdentity();
+  return <Bench key={session?.did || "guest"} />;
+}
+function Bench() {
+  const { session, oauthSession, isAuthenticated, isLoading, logout, authorizeWrite } = useLabIdentity();
+  const { openLogin, capabilities } = useLab();
   const [editor, setEditor] = useState<RecordKind | null>(null);
   const [draftId, setDraftId] = useState<string | undefined>();
   const [drafts, setDrafts] = useState<
     { slot: string; kind: string; savedAt?: string; data: Record<string, unknown> }[]
   >([]);
   const [profile, setProfile] = useState<LabProfile | null>(null);
-  const [records, setRecords] = useState<LabRecord[]>([]);
+  const [records, setRecords] = useState<LabRecordView[]>([]);
+  const [notebook, setNotebook] = useState<LabNotebook | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [publicStatus, setPublicStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [revision, setRevision] = useState(0);
+  const [deleting, setDeleting] = useState<LabRecordView | null>(null);
+  const [deleteConsent, setDeleteConsent] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [deletePermission, setDeletePermission] = useState(false);
+  const [deleteUnknown, setDeleteUnknown] = useState("");
+  const active = useRef(true);
+  useEffect(() => { active.current = true; return () => { active.current = false; }; }, []);
+  function chooseDelete(record: LabRecordView) {
+    setDeleting(record); setDeleteConsent(false); setDeletePermission(false); setDeleteUnknown(""); setError("");
+  }
+  async function confirmDelete() {
+    if (!deleting || !deleteConsent || deleteBusy || deleteUnknown || isLoading || !capabilities.canPublish || !oauthSession || oauthSession.sub !== session?.did || deleting.authorDid !== session.did) return;
+    setDeleteBusy(true);
+    try {
+      await deleteLabRecord(oauthSession, deleting.uri, { public: true, experimental: true, did: session.did, action: "delete", expectedCid: deleting.cid });
+      if (!active.current) return;
+      setDeleting(null); setRevision(n => n + 1);
+      setDeleteUnknown("");
+      setDeletionReceipt(`Current PDS returned exact RecordNotFound for ${deleting.uri}. Copies may persist elsewhere.`);
+    } catch (e) {
+      if (!active.current) return;
+      setDeleteConsent(false);
+      if (e instanceof LabPermissionError) setDeletePermission(true);
+      if (e instanceof LabWriteVerificationError) setDeleteUnknown(e.uri);
+      setError(e instanceof Error ? e.message : "Deletion failed. Your local content is unchanged.");
+    } finally { if (active.current) setDeleteBusy(false); }
+  }
+  async function authorizeDelete() {
+    if (!deleting || deleteBusy || isLoading || !capabilities.canPublish) return;
+    setDeleteConsent(false); setDeleteBusy(true);
+    try {
+      await authorizeWrite(deleting.kind, "delete", "/lab/profile/");
+      if (active.current) { setDeleting(null); setDeletePermission(false); }
+    } catch (e) { if (active.current) setError(e instanceof Error ? e.message : "Authorization failed. Nothing was deleted."); }
+    finally { if (active.current) setDeleteBusy(false); }
+  }
+  const [deletionReceipt, setDeletionReceipt] = useState("");
   useEffect(() => {
     let active = true;
     setError("");
     setProfile(null);
     setRecords([]);
+    setNotebook(null);
     setSaved([]);
     setPublicStatus(isAuthenticated ? "loading" : "idle");
     const owner = session?.did || "guest";
@@ -49,9 +96,10 @@ export default function ProfileWorkbench() {
     setDrafts(result);
     if (isAuthenticated)
       createLabClient()
-        .records()
+        .records(session?.did)
         .then((v) => {
           if (!active) return;
+          setNotebook(v);
           setProfile(v.profile);
           setRecords(v.records);
           setPublicStatus("ready");
@@ -110,7 +158,7 @@ export default function ProfileWorkbench() {
               session?.handle ||
               "Make yourself at home."}
           </h2>
-          {session?.handle && <p>@{session.handle}</p>}
+          {session?.handle && !session.handle.startsWith("did:") && <p>@{session.handle}</p>}
           {session?.did && (
             <div className="lab-identity">
               <small>Permanent identity (DID). Your handle can change.</small>
@@ -159,7 +207,7 @@ export default function ProfileWorkbench() {
           </div>
           <button
             className="lab-button lab-quiet"
-            onClick={() => setEditor("profile")}
+            onClick={() => { setDraftId(undefined); setEditor("profile"); }}
           >
             {visible ? "Edit profile draft" : "Create profile draft"} →
           </button>
@@ -168,6 +216,7 @@ export default function ProfileWorkbench() {
               ? "Showing your local draft. Not published or synced."
               : "Work links are self-supplied links, not OAuth connections or verified ownership."}
           </p>
+          {session?.did && <p><a href={labInspectorHref(`at://${session.did}/org.plresearch.lab.profile/self`)}>Inspect public profile ↗</a></p>}
           {isAuthenticated && (
             <button
               className="lab-text-button"
@@ -269,11 +318,16 @@ export default function ProfileWorkbench() {
               <h2>Out in the world.</h2>
               <span className="lab-eyebrow">PUBLIC RECORDS</span>
             </div>
+            {deletionReceipt && <p role="status">{deletionReceipt}</p>}
+            {notebook && <p className="lab-smallprint">Showing up to {notebook.limit} per collection{notebook.hasMore ? " / more exist" : " / no further pages reported"}. Read directly from your current PDS over HTTPS, not a cryptographic repository-signature proof or peer review.</p>}
             {publicStatus === "loading" ? <p role="status" className="lab-smallprint">Reading your public records…</p> : publicStatus === "error" ? <p className="lab-smallprint">Public records could not be read. Local drafts are unchanged.</p> : records.length ? (
               records.map((r) => (
                 <div className="lab-public-record" key={r.uri}>
                   <strong>{r.kind}</strong>
+                  <a href={labInspectorHref(r.uri)}>Inspect public {r.kind} ↗</a>
                   <code>{r.uri}</code>
+                  <small>CID: <code>{r.cid}</code> · Current PDS: {r.pds}</small>
+                  <button className="lab-text-button" disabled={deleteBusy || isLoading || !capabilities.canPublish || r.authorDid !== session?.did} onClick={() => chooseDelete(r)}>Delete this record…</button>
                 </div>
               ))
             ) : (
@@ -286,10 +340,24 @@ export default function ProfileWorkbench() {
           </section>
         </div>
       </div>
+      {deleting && <LabDialog title="Delete one exact public record?" onClose={() => { if (!deleteBusy) setDeleting(null); }}>
+        <p>Only this record in your own repository will be deleted. Copies may persist in other services. Local drafts will not be deleted.</p>
+        <p><a href={labInspectorHref(deleting.uri)}>Inspect exact public record</a></p>
+        <p>URI: <code>{deleting.uri}</code><br />Reviewed CID: <code>{deleting.cid}</code></p>
+        <pre>{JSON.stringify(deleting.data, null, 2)}</pre>
+        <label className="lab-checkbox"><input type="checkbox" checked={deleteConsent} disabled={deleteBusy || !!deleteUnknown} onChange={e => setDeleteConsent(e.target.checked)} />I reviewed this exact URI and CID and authorize deletion as {session?.did}. I understand public copies and experimental schemas.</label>
+        {error && <p role="alert">{error}</p>}
+        {deleteUnknown && <p role="alert">Unknown deletion outcome. <a href={labInspectorHref(deleteUnknown)}>Inspect this exact record before retrying</a>.</p>}
+        {deletePermission && <button className="lab-button" disabled={deleteBusy || isLoading || !capabilities.canPublish} onClick={authorizeDelete}>Authorize deletion (then review again)</button>}
+        <button className="lab-button" disabled={!deleteConsent || deleteBusy || isLoading || !capabilities.canPublish || !!deleteUnknown} onClick={confirmDelete}>Confirm exact deletion</button>
+        <button className="lab-button lab-quiet" disabled={deleteBusy} onClick={() => setDeleting(null)}>Cancel</button>
+      </LabDialog>}
       {editor && (
         <RecordEditor
           kind={editor}
           draftId={draftId}
+          reviewedProfile={notebook?.profileRecord}
+          profileReadReady={publicStatus === "ready"}
           initial={editor === "profile" && !localProfile ? profileValues : {}}
           onSaved={() => setRevision((n) => n + 1)}
           onClose={() => {

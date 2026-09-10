@@ -1,8 +1,11 @@
+import { loadLabNotebook } from "@/lib/lab-notebook";
+import { listLabRecords } from "@/lib/lab-protocol";
+import { createLabRecordWriter, type LabOAuthSession, type LabWriteConsent } from "@/lib/lab-records";
+import { validateLabData } from "@/lib/lab-validation";
+import type { LabOAuthConfig } from "@/lib/lab-oauth-config";
 import type {
   Capabilities,
   LabFeed,
-  LabProfile,
-  LabRecord,
   RecordKind,
 } from "@/lib/lab-types";
 
@@ -23,7 +26,12 @@ export function safeUrl(value: string): string | null {
     return null;
   }
 }
-export function createLabClient(fetcher: typeof fetch = fetch) {
+type LabClientDependencies = {
+  session?: LabOAuthSession | null;
+  loadConfig?: () => Promise<LabOAuthConfig>;
+  listRecords?: typeof listLabRecords;
+};
+export function createLabClient(fetcher: typeof fetch = fetch, deps: LabClientDependencies = {}) {
   async function request(
     path: string,
     body?: unknown,
@@ -126,42 +134,14 @@ export function createLabClient(fetcher: typeof fetch = fetch) {
         };
       }
     },
-    async records(): Promise<{
-      profile: LabProfile | null;
-      records: LabRecord[];
-    }> {
-      const v = await request("/api/lab/records/");
-      const profile = v.profile as LabProfile | null;
-      const validProfile = !profile || (
-        typeof profile.workingOn === "string" && typeof profile.lookingFor === "string" &&
-        Array.isArray(profile.interests) && profile.interests.every(i => typeof i === "string") &&
-        (!profile.githubUrl || typeof profile.githubUrl === "string") &&
-        (!profile.scholarUrl || typeof profile.scholarUrl === "string")
-      );
-      if (!validProfile || !Array.isArray(v.records) || v.records.some(r => !r || typeof r.uri !== "string" || !r.uri.startsWith("at://") || !["profile", "note", "app", "contribution", "participation"].includes(r.kind) || !r.data || typeof r.data !== "object" || Array.isArray(r.data)))
-        throw Error(
-          "Your public records could not be read. Local drafts are unchanged.",
-        );
-      return {
-        profile: (v.profile as LabProfile) || null,
-        records: v.records as LabRecord[],
-      };
+    async records(did: string | undefined = deps.session?.sub) {
+      if (!did) throw Error("An explicit Open Lab DID is required to read your notebook.");
+      return loadLabNotebook(did, deps.listRecords);
     },
-    async publish(
-      kind: RecordKind,
-      data: Record<string, unknown>,
-    ): Promise<{ uri: string; cid: string; record: unknown }> {
-      const v = await request("/api/lab/records/", { kind, data });
-      if (
-        typeof v.uri !== "string" ||
-        !v.uri.startsWith("at://") ||
-        typeof v.cid !== "string" ||
-        !v.record
-      )
-        throw Error(
-          "No verified public record receipt was returned. Do not retry before checking your records.",
-        );
-      return v as { uri: string; cid: string; record: unknown };
+    async publish(kind: RecordKind, data: Record<string, unknown>, consent?: LabWriteConsent) {
+      if (!deps.session) throw Error("Sign in with your Open Lab identity before publishing. Your draft is unchanged.");
+      if (!consent) throw Error("Review this exact draft and confirm public experimental-schema consent first.");
+      return createLabRecordWriter(deps.session, deps.loadConfig).publish(kind, validateLabData(kind, data), consent);
     },
     async login(handle: string, returnTo: string): Promise<string> {
       void handle;
