@@ -1,20 +1,20 @@
-# Open Lab: a place for science before it’s finished
+# Open Lab: co-create what helps science move
 
 **Product proposal · September 2026 · not a launch announcement**
 
 ## The bet
 
-PL R&D should not compete with Bluesky for another timeline. It should make a particular kind of encounter happen: someone brings an unfinished piece of science, and someone else makes it easier to finish.
+The platform’s center is **collective, responsible invention and field acceleration**: make a bottleneck legible, refine the diagnosis together, co-design an intervention, rally useful contributions, and test whether it helped. The social network exists to make that work easier—not to maximize time spent in a science-themed feed.
 
-The smallest useful unit is not a profile or a post. It is **work with an opening**: a question with a missing dataset, a working demo that needs a user, a claim that needs replication, or a research map with a missing source. The feed, app showcase, Atlas, and agent collaboration are different views of that same work—not four separate communities to populate.
+The central object is a **bottleneck with an opening for action**, linked to a proposed intervention and evidence. Keep the Interventions Console’s useful invariant: no intervention without a bottleneck. A proposal names its causal hypothesis, affected people, smallest useful test, success signal, risks, and stopping/review conditions. Apps, Atlas evidence, agents, effort backing and profiles help people contribute to that same chain. PL focus areas provide a starting community, not a boundary excluding other scientific fields.
 
-The invitation is **“A place for science before it’s finished.”** “Breakthrough” provides ambition, but cannot be the admission requirement. Rough tools, negative results, replication attempts, and precise questions must belong here. Otherwise, this becomes a stage for polished announcements, not a place to work.
+The invitation is **“What’s holding progress back—and what could we build together to change it?”** A playful entrance can still welcome someone who is not ready to design an intervention. Rough tools, negative results, replication attempts, and precise questions belong here. Thoughtfulness means consulting affected people and testing a causal claim, not decorating a popular idea with an impact score.
 
 ## Why somebody joins
 
 A builder gets a legible home for a useful science app and a way to ask for a specific next contribution. A researcher gets collaborators around the problem they are working on, not an institution-shaped directory. A curious person can improve a source, test a tool, or reproduce a small result without claiming to be a principal investigator. Someone with an agent can contribute a bounded piece of work without giving a platform their account keys.
 
-Browsing should be useful before signing in. The mandatory first-use episode is a small synthetic signal experiment: change the sampling rate, discover an alias, and keep the exact configuration and result. It is an educational instrument, not a scientific measurement. Real source-linked apps provide the broader entrance; the Atlas source-audit pilot separately tests collaboration. Sign-in comes when a person wants a durable public identity and contribution record. Existing Bluesky identity is a reduction in friction, not the value proposition itself.
+Browsing should be useful before signing in. One low-friction entrance is a small synthetic signal experiment: change the sampling rate, discover an alias, and keep the exact configuration and result. It is an educational instrument, not a scientific measurement. Real source-linked apps provide the broader entrance; the Atlas source-audit pilot separately tests collaboration. Sign-in comes when a person wants a durable public identity and contribution record. Existing Bluesky identity is a reduction in friction, not the value proposition itself.
 
 ### A first-session loop
 
@@ -24,13 +24,13 @@ Browsing should be useful before signing in. The mandatory first-use episode is 
 4. Use an existing AT Protocol account when ready to publish. Preview the exact public content first.
 5. Return because another person used or responded to the contribution—not because an engagement counter went up.
 
-The longer loop is **question → useful artifact → independent contribution → better artifact → new question**. The application should make those links visible.
+The organizing loop is **bottleneck → collective refinement → intervention proposal → responsible test → evidence → revise, continue or retire**. The application should make each relationship, contribution and unresolved disagreement inspectable.
 
 ## How the destination fits together
 
 **The landing page** is an invitation with a window into the work. Its editorial typography and PL blue remain related to the public site, while the wider canvas and inspectable map make the transition into a working space apparent. The brochure remains the home for institutional context; Open Lab is the home for participation.
 
-**The workbench** contains questions, findings, tools, requests for help, and negative results. The prompt can ask, “What breakthrough are you working on?” while explicitly welcoming work that has not succeeded yet. Work should carry a next action or a source, rather than reward a confident-sounding announcement.
+**The bottleneck workbench** is the main action surface: what is blocked, whom it affects, what evidence supports the diagnosis, and what removal would look like. Refinements and intervention designs are proposals alongside the baseline, never silent overwrites or assignments. The science feed supplies context and entry points; it is not the organizing system.
 
 **Apps** provide the most immediate reason to visit. Open the thing, understand what it enables, inspect its code when available, and see what its maker needs. The desired energy is “I built a weirdly useful thing over the weekend,” not procurement. But a public URL does not imply open-source licensing, safety, reproducibility, or endorsement. External apps remain external unless deliberately reviewed for integration.
 
@@ -38,9 +38,27 @@ The longer loop is **question → useful artifact → independent contribution �
 
 **Collaborate** starts with bounded work, not a theatrical “launch 10,000 agents” button. A person can inspect a task, select a role, set a budget in their own environment, and export a work packet with clear outputs and stopping conditions. A future coordinator can assign and reconcile those packets once there is a working verification method.
 
-**My bench** is a research identity: what I am working on, what I can contribute, what I need, and links to GitHub or Google Scholar. Links should be labeled links, not implied account integrations or proof of credentials. Institutional prestige should not determine who can contribute.
+**My bench** is a research identity: what I am working on, what I can contribute, what I need, and optional links to LinkedIn, GitHub or Google Scholar. Links should be labeled links, not implied account integrations or proof of credentials. Institutional prestige should not determine who can contribute.
 
 **The map** is an alternate way to discover work, not decorative proof that a community exists. A point must correspond to an inspectable artifact. A line must have an explainable meaning, such as a shared topic or an explicit contribution. Topic similarity is not a collaboration relationship. A curated starter map and a live community map must not be presented as the same thing.
+
+## Make the community legible before it exists
+
+A deliberately populated **demo community** is part of this proposal. Fictional people, substantive discussion, competing intervention designs, evidence, and notifications should tell a few coherent stories across the app. Show a disagreement that improves a diagnosis, a narrower responsible test, and a useful negative result—not just celebratory comments. The overall demo label and smaller module chips distinguish invented activity from actual public records without burying the experience in repetitive disclaimers.
+
+Let someone open a fictional profile, reply locally to a thread, and follow a demo notification to its real on-page target. None of that creates real members or posts publicly. A visible demo/real-empty switch preserves the actual empty-start path and real local drafts. Use synthetic scenarios rather than private workspace notes; selective console publication can come later.
+
+For the genuine visitor, interest and contribution-style onboarding should suggest a particular bottleneck, tool or source-checking task and explain the fit. A small, optional completion checklist makes research interests, useful context and LinkedIn/Scholar links worth supplying; the links stay self-described, not verified credentials. A top-right inbox distinguishes actual local next actions from illustrative demo replies. No expertise score, admission gate, or profile-completion nag should get between someone and a useful contribution.
+
+## Back an effort without confusing conviction with evidence
+
+A finite points budget is worth testing: let people spend a finite attention budget on work they want done, rather than adding unlimited likes. The experimental choice is **100 local points**, a design parameter rather than an approved community policy. Allocating more to one effort leaves less for others; reallocation is explicit. It elicits priorities, but free points are not cash at risk and must never be presented as a real funding commitment.
+
+Keep three independent things visible: **support** (what people want pursued), **evidence** (what happened, with source/method), and **evaluation** (someone’s accountable assessment of that evidence). Neither a large allocation nor a Hypercert proves scientific usefulness. Preserve negative results and disagreement rather than optimizing for an always-upward impact score. The proposed first test is whether allocating points and then reading new evidence changes someone’s allocation and leads to one bounded contribution.
+
+Hypercerts are especially relevant because their [current core data model](https://docs.hypercerts.org/core-concepts/hypercerts-core-data-model) already uses AT Protocol: an activity claim anchors work scope, contributors and dates; attachments, measurements and evaluations are separate records with strong references (URI plus CID). An evaluator’s record can remain on their own PDS. Reuse those interoperable schemas for an eventual effort/evidence layer rather than inventing a competing impact-certificate format. The [quickstart](https://docs.hypercerts.org/getting-started/quickstart) documents that path. The docs currently distinguish it from on-chain tokenization, which they say is not yet implemented; no token, ownership right, investment return or grant award is implied here.
+
+The `/lab/efforts/` experiment is intentionally local: no enforced one-person budget, crowd totals, payments, certificate issuance, or publicly posted allocations. A real pilot needs an admitted-member roster, a defined budget period and aggregation rule, tamper-resistant accounting, Sybil/coordination safeguards, conflict disclosures, moderation, and a clear statement of whether any actual grantmaker will use the signal. Identity alone does not provide those guarantees. Start with a small named cohort and observable research contributions, not a speculative token economy.
 
 ## Science-shaped, without counterfeit science
 

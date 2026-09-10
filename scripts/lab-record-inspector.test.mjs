@@ -18,12 +18,22 @@ test('record share URLs preserve exact AT URI and only accept explicit Open Lab 
   assert.throws(() => readRecordLocation('?uri='+encodeURIComponent(uri)+'&uri='+encodeURIComponent(uri)))
 })
 
+test('the public record viewer has a registered route entrypoint', () => {
+  assert.ok(existsSync('src/app/lab/record/page.tsx'),'public record route exists')
+})
+
 test('PDS read adapter preserves response identity and content without calling it verified', () => {
   const m=source('lib/lab-record-display.ts')
   assert.equal(typeof m.presentPdsRecord,'function')
   const raw={uri,cid:'bafyreia',authorDid:'did:plc:abcdefghijklmnopqrstuvwx',kind:'note',data:{title:'Evidence',body:'Read the source'},pds:'https://public.example',provenance:'pds-https-unverified-signature'}
   assert.deepEqual(m.presentPdsRecord(raw),{uri,cid:'bafyreia',did:raw.authorDid,kind:'note',data:raw.data})
   assert.throws(()=>m.presentPdsRecord({...raw,authorDid:'did:plc:zzzzzzzzzzzzzzzzzzzzzzzz'}),/author/i)
+})
+
+test('participation records remain inspectable with their actual return text', () => {
+  const m=source('lib/lab-record-display.ts')
+  const record=m.presentPdsRecord({uri:uri.replace('.note/','.participation/'),cid:'bafyrei',authorDid:'did:plc:abcdefghijklmnopqrstuvwx',kind:'participation',data:{campaignId:'pilot',taskId:'source-trace',role:'review',note:'Negative result: could not corroborate.'}})
+  assert.match(m.displayRecord(record).rows.map(x=>x.value).join(' '),/could not corroborate/)
 })
 
 test('untrusted public record presentation exposes only named fields, never html or control metadata', () => {

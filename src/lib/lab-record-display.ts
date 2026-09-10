@@ -17,7 +17,7 @@ export function presentPdsRecord(input: {
 }): PublicLabDocument {
   const uri = checkedRecordUri(input.uri)
   if (uri.split('/')[2] !== input.authorDid) throw new Error('Record author does not match its location.')
-  if (!['profile','note','app','contribution'].includes(input.kind)) throw new Error('Unsupported public record kind.')
+  if (!kinds.some(kind => kind === input.kind)) throw new Error('Unsupported public record kind.')
   return { uri, cid: input.cid, did: input.authorDid, kind: input.kind as PublicLabDocument['kind'], data: input.data as Record<string,unknown> }
 }
 
