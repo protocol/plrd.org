@@ -16,19 +16,16 @@ export default function Landing() {
             <span className="lab-blue-dot" /> A NEW KIND OF RESEARCH COMMONS
           </p>
           <h1>
-            A place for
-            <br />
-            science before
-            <br />
-            it’s <em>finished.</em>
+            Find a bottleneck.<br />
+            <em>Build together.</em>
           </h1>
           <p className="lab-hero-deck">
-            The next breakthrough starts with unfinished work. An open question.
-            A useful tool. A result that needs another pair of eyes.
+            What’s holding progress back? Refine the problem together, design a
+            thoughtful intervention, and test whether it helps.
           </p>
           <div className="lab-hero-actions">
-            <Link href="/lab/feed/" className="lab-button lab-primary">
-              Explore the lab <span>↗</span>
+            <Link href="/lab/bottlenecks/" className="lab-button lab-primary">
+              Find a place to contribute <span>↗</span>
             </Link>
             <Link className="lab-text-button" href="/lab/apps/#signal-sandbox">
               Try an experiment. Keep the result. →

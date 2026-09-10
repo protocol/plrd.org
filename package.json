@@ -8,8 +8,8 @@
     "build": "node scripts/build-content.mjs && next build",
     "start": "next start",
     "generate-jwk": "node scripts/generate-jwk.js",
-    "test:lab": "node --test --test-concurrency=1 scripts/lab-protocol-*.test.mjs scripts/lab-public-feed.test.mjs",
-    "test": "node --test scripts/velocity/*.test.mjs scripts/neuro-content.test.mjs scripts/neuro-publication.test.mjs"
+    "test:lab": "node --test --test-concurrency=1 scripts/lab-*.test.mjs",
+    "test": "node --test --test-concurrency=1 scripts/velocity/*.test.mjs scripts/*.test.mjs"
   },
   "dependencies": {
     "@atproto-labs/did-resolver": "0.3.7",

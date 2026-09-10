@@ -1,4 +1,5 @@
 import CollaborateWorkbench from "@/components/lab/CollaborateWorkbench";
+import LabEvidenceWorkbench from "@/components/lab/LabEvidenceWorkbench";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Collaborate",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
   alternates: { canonical: "/lab/collaborate/" },
 };
 export default function Page() {
-  return <CollaborateWorkbench />;
+  return <CollaborateWorkbench evidenceWorkbench={<LabEvidenceWorkbench />} />;
 }
