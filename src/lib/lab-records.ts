@@ -1,4 +1,5 @@
 import { Agent } from '@atproto/api'
+import { boundedLabFetch, type LabTransportOptions } from '@/lib/lab-bounded-transport'
 import type { OAuthSession } from '@atproto/oauth-client-browser'
 import { TID } from '@atproto/common-web'
 import { configForBrowser, type LabOAuthConfig } from '@/lib/lab-oauth-config'
@@ -32,8 +33,8 @@ function canonical(value: unknown): string {
   if (value && typeof value === 'object') return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${JSON.stringify(k)}:${canonical(v)}`).join(',')}}`
   return JSON.stringify(value)
 }
-export function createLabRecordWriter(session: LabOAuthSession, loadConfig: () => Promise<LabOAuthConfig> = fetchLabCapabilities) {
-  const agent = new Agent(session)
+export function createLabRecordWriter(session: LabOAuthSession, loadConfig: () => Promise<LabOAuthConfig> = fetchLabCapabilities, transportOptions: LabTransportOptions = {}) {
+  const agent = new Agent({ get did() { return session.did }, fetchHandler: boundedLabFetch(session, transportOptions) })
   async function authorize(kind: LabKind, action: LabAction, consent: LabWriteConsent) {
     if (typeof window === 'undefined') throw new Error('PDS operations run directly in the browser.')
     assertLabDid(session.sub)

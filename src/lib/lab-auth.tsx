@@ -9,7 +9,7 @@ import { assertLabDid } from '@/lib/lab-protocol'
 
 export type LabSession = { did: string; handle: string; displayName?: string; avatar?: string }
 type LabAuthSnapshot = { session: LabSession | null; oauthSession: OAuthSession | null; isAuthenticated: boolean; isLoading: boolean; error: string | null; capabilities: LabOAuthConfig | null }
-type LabSdkClient = Pick<BrowserOAuthClient, 'init' | 'signInRedirect'>
+type LabSdkClient = Pick<BrowserOAuthClient, 'init' | 'authorize'>
 type LabAuthDependencies = {
   loadConfig: () => Promise<LabOAuthConfig>;
   loadClient: (config: LabOAuthConfig, onDeleted: (did: string) => void) => Promise<LabSdkClient>;
@@ -35,6 +35,7 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
   let client: LabSdkClient | undefined
   let initialized: Promise<void> | undefined
   let signingOut = false
+  let generation = 0
   const subscribers = new Set<() => void>()
   function update(patch: Partial<LabAuthSnapshot>) {
     snapshot = { ...snapshot, ...patch }
@@ -46,7 +47,11 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
     if (!capabilities.canSignIn) throw new Error(capabilities.message)
     if (!client) {
       client = await deps.loadClient(capabilities, did => {
-        if (did === snapshot.session?.did) update({ session: null, oauthSession: null, isAuthenticated: false, error: signingOut ? null : 'Your Open Lab session ended. Sign in again to publish.' })
+        // With no installed identity this can invalidate a pending restore too.
+        if (!snapshot.session || did === snapshot.session.did) {
+          generation++
+          update({ session: null, oauthSession: null, isAuthenticated: false, isLoading: false, error: signingOut ? null : 'Your Open Lab session ended. Sign in again to publish.' })
+        }
       })
     }
     return client
@@ -57,53 +62,75 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
     subscribe: (listener: () => void) => { subscribers.add(listener); return () => { subscribers.delete(listener) } },
     initialize() {
       return initialized ??= (async () => {
+        const operation = generation
         try {
           const sdk = await ready()
+          if (operation !== generation) return
           const result = await sdk.init()
+          if (operation !== generation) {
+            // The SDK owns local-store removal and best-effort remote revocation.
+            // A failed cleanup must never reinstall a canceled session.
+            try { await result?.session.signOut() } catch { /* Discard locally. */ }
+            return
+          }
           if (result) {
             assertLabDid(result.session.sub)
             // DID fallback is deliberate: no fabricated or unverified profile/handle.
             update({ session: { did: result.session.sub, handle: result.session.sub }, oauthSession: result.session, isAuthenticated: true })
-            if ('state' in result) deps.replace(safeLabReturnTo(result.state))
+            if (operation === generation && 'state' in result) deps.replace(safeLabReturnTo(result.state))
           }
-        } catch { update({ error: snapshot.capabilities?.canSignIn ? 'Open Lab sign-in could not be restored or completed. Your local drafts are unchanged. Try signing in again.' : snapshot.capabilities?.message ?? 'Open Lab sign-in is unavailable. Browsing still works.' }) }
-        finally { update({ isLoading: false }) }
+        } catch { if (operation === generation) update({ error: snapshot.capabilities?.canSignIn ? 'Open Lab sign-in could not be restored or completed. Your local drafts are unchanged. Try signing in again.' : snapshot.capabilities?.message ?? 'Open Lab sign-in is unavailable. Browsing still works.' }) }
+        finally { if (operation === generation) update({ isLoading: false }) }
       })()
     },
     async login(handle: string, returnTo?: string) {
       try { ensureValidHandle(handle) }
       catch { const message = 'Enter your existing AT Protocol handle, without @, whitespace, or a URL.'; update({ error: message }); throw new Error(message) }
+      const operation = ++generation
       update({ error: null, isLoading: true })
       try {
         const sdk = await ready()
-        await sdk.signInRedirect(handle, { scope: LAB_SIGN_IN_SCOPE, state: safeLabReturnTo(returnTo) })
+        if (operation !== generation) return
+        // Keep SDK authorization, but guard the final navigation: its combined
+        // signInRedirect helper navigates unconditionally after awaiting PAR.
+        const url = await sdk.authorize(handle, { scope: LAB_SIGN_IN_SCOPE, state: safeLabReturnTo(returnTo) })
+        if (operation === generation) deps.replace(url.href)
       } catch {
+        if (operation !== generation) return
         const message = snapshot.capabilities?.canSignIn ? 'Sign-in was canceled or could not start. Your drafts are unchanged; try again.' : snapshot.capabilities?.message ?? 'Sign-in is unavailable.'
         update({ error: message }); throw new Error(message)
-      } finally { update({ isLoading: false }) }
+      } finally { if (operation === generation) update({ isLoading: false }) }
     },
     async authorizeWrite(kind: LabKind, action: LabAction, returnTo?: string) {
       const scope = `${LAB_SIGN_IN_SCOPE} ${labActionScope(kind, action)}`
       const did = snapshot.session?.did
       if (!did) throw new Error('Sign in before authorizing a public action.')
+      const operation = ++generation
       update({ error: null, isLoading: true })
       try {
         const sdk = await ready()
+        if (operation !== generation) return
         if (!snapshot.capabilities?.canPublish) throw new Error('Public publication is disabled on this origin.')
         // Return to a draft, never to an automatic publish/delete continuation.
-        await sdk.signInRedirect(did, { scope, state: safeLabReturnTo(returnTo), prompt: 'consent' })
+        const url = await sdk.authorize(did, { scope, state: safeLabReturnTo(returnTo), prompt: 'consent' })
+        if (operation === generation && snapshot.session?.did === did) deps.replace(url.href)
       } catch {
+        if (operation !== generation) return
         const message = snapshot.capabilities?.canPublish ? 'Authorization was canceled or could not start. Review your draft and try again.' : 'Public publication is disabled on this origin.'
         update({ error: message }); throw new Error(message)
-      } finally { update({ isLoading: false }) }
+      } finally { if (operation === generation) update({ isLoading: false }) }
     },
     async logout() {
-      update({ error: null })
+      generation++
+      const session = snapshot.oauthSession
+      update({ session: null, oauthSession: null, isAuthenticated: false, isLoading: false, error: null })
       signingOut = true
       try {
-        await snapshot.oauthSession?.signOut()
-        update({ session: null, oauthSession: null, isAuthenticated: false })
-      } catch { update({ error: 'Sign-out could not be confirmed. Retry, or revoke Open Lab access in your account settings.' }); throw new Error('Sign-out could not be confirmed.') }
+        await session?.signOut()
+      } catch {
+        const message = 'Signed out of this page, but SDK local session cleanup could not be confirmed. Clear this site’s browser storage and revoke Open Lab access in your account settings.'
+        update({ error: message }); throw new Error(message)
+      }
       finally { signingOut = false }
     },
   }

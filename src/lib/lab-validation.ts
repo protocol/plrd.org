@@ -33,7 +33,10 @@ export function safeLabHttpsUrl(value: unknown): string {
   let url: URL
   try { url = new URL(value) } catch { throw new Error('Use a public HTTPS URL.') }
   if (url.protocol !== 'https:' || url.username || url.password || url.port || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z][a-z0-9-]*$/i.test(url.hostname) || /\.(?:local|localhost|internal|test)$/i.test(url.hostname)) throw new Error('Use a public HTTPS URL without credentials or a custom port.')
-  if ([...url.searchParams.keys()].some(k => /^(?:access_token|refresh_token|token|key|api_key|secret|password|code|signature|x-amz-signature|x-goog-signature)$/i.test(k))) throw new Error('Do not publish credential-bearing URLs.')
+  // Inspect fragment parameters too (including #/route?name=value), without
+  // rewriting the reviewed URL. URLSearchParams decodes percent-encoded names.
+  const parameters = [url.searchParams, ...url.hash.slice(1).split('?').map(part => new URLSearchParams(part))]
+  if (parameters.some(params => [...params.keys()].some(k => /^(?:access_token|refresh_token|id_token|token|key|api_key|secret|password|code|signature|x-amz-signature|x-goog-signature)$/i.test(k)))) throw new Error('Do not publish credential-bearing URLs.')
   return value
 }
 
