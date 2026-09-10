@@ -12,7 +12,7 @@ export default async function AreaFieldVelocity({ area }: { area: FocusAreaKey }
   const field = fieldVelocityForArea(data, area)
   const overview = `${FIELD_VELOCITY_OVERVIEW}?area=${area}`
   return (
-    <section id="field-velocity" aria-labelledby="field-velocity-heading" className="area-field-velocity mb-12 bg-gray-200 py-8 sm:py-10 scroll-mt-24">
+    <section id="field-velocity" aria-labelledby="field-velocity-heading" className={`area-field-velocity mb-12 ${area === 'neurotech' ? 'bg-gray-100' : 'bg-gray-200'} py-8 sm:py-10 scroll-mt-24`}>
       <div className="mb-7">
         <h2 id="field-velocity-heading" className="text-2xl lg:text-[32px] font-semibold tracking-tight mb-3">{field.area.label} field velocity</h2>
         <p className="text-base text-gray-600 leading-relaxed max-w-3xl">

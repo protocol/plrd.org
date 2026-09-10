@@ -99,9 +99,6 @@ export default function MeasuringQuestionsV2({
             <p className="mt-2 text-sm leading-relaxed text-gray-500">
               {FIELD_VELOCITY_METHODOLOGY.observedVelocity}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-gray-500">
-              {FIELD_VELOCITY_METHODOLOGY.stocksAndFlows}
-            </p>
           </div>
 
           <div>
