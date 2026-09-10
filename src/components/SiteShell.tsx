@@ -32,6 +32,9 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     }
   }, [isFullscreen])
 
+  const isLab = /^\/lab(?:\/|$)/.test(pathname)
+  if (isLab) return <>{children}</>
+
   return (
     <>
       <SiteHeader onMenuClick={() => setNavOpen(true)} />
