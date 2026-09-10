@@ -7,7 +7,7 @@ function harness({ configPatch = {}, result, initError } = {}) {
   const config = source('lib/lab-oauth-config.ts').getLabOAuthConfig({ LAB_PUBLIC_URL: origin, LAB_ENABLE_PUBLISH: 'true' })
   const calls = []; const redirects = []; const listeners = new Map()
   const oauthSession = { sub: did, did, signOut: async () => { calls.push(['signOut']) } }
-  const client = { init: async () => { calls.push(['init']); if (initError) throw initError; return result === 'callback' ? { session: oauthSession, state: '/lab/profile/#draft' } : result === 'restore' ? { session: oauthSession } : undefined }, signInRedirect: async (handle, options) => { calls.push(['signInRedirect', handle, options]) }, addEventListener: (name, cb) => listeners.set(name, cb) }
+  const client = { init: async () => { calls.push(['init']); if (initError) throw initError; return result === 'callback' ? { session: oauthSession, state: '/lab/profile/#draft' } : result === 'restore' ? { session: oauthSession } : undefined }, authorize: async (handle, options) => { calls.push(['authorize', handle, options]); return new URL('https://auth.example.org/authorize') }, addEventListener: (name, cb) => listeners.set(name, cb) }
   const runtime = source('lib/lab-auth.tsx').createLabAuthRuntime({ loadConfig: async () => ({ ...config, ...configPatch }), loadClient: async (c, onDeleted) => { calls.push(['load', c.clientId]); listeners.set('deleted', onDeleted); return client }, location: () => ({ origin, pathname: '/lab/oauth/return/' }), replace: path => redirects.push(path) })
   return { runtime, calls, redirects, listeners, configPatch }
 }
@@ -26,11 +26,11 @@ test('handle-only sign-in requests identity, permission escalation requests one 
   const h = harness({ result: 'restore' })
   await h.runtime.initialize()
   for (const input of ['https://pds.example.org', 'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa', '@science.bsky.social', 'science.bsky.social ', 'bad']) await assert.rejects(() => h.runtime.login(input))
-  assert.equal(h.calls.filter(c => c[0] === 'signInRedirect').length, 0)
+  assert.equal(h.calls.filter(c => c[0] === 'authorize').length, 0)
   await h.runtime.login('science.bsky.social', '//evil.example.org/')
-  assert.deepEqual(h.calls.at(-1), ['signInRedirect', 'science.bsky.social', { scope: 'atproto', state: '/lab/' }])
+  assert.deepEqual(h.calls.at(-1), ['authorize', 'science.bsky.social', { scope: 'atproto', state: '/lab/' }])
   await h.runtime.authorizeWrite('note', 'create', '/lab/feed/#draft')
-  assert.deepEqual(h.calls.at(-1), ['signInRedirect', did, { scope: 'atproto repo:org.plresearch.lab.note?action=create', state: '/lab/feed/#draft', prompt: 'consent' }])
+  assert.deepEqual(h.calls.at(-1), ['authorize', did, { scope: 'atproto repo:org.plresearch.lab.note?action=create', state: '/lab/feed/#draft', prompt: 'consent' }])
   h.configPatch.canPublish = false
   await assert.rejects(() => h.runtime.authorizeWrite('note', 'create'), /disabled/)
 })
