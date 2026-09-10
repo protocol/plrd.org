@@ -1,3 +1,4 @@
+import { DemoCommunityPanel } from "@/components/lab/demo";
 import AtlasWorkbench from "@/components/lab/AtlasWorkbench";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
   alternates: { canonical: "/lab/atlas/" },
 };
 export default function Page() {
-  return <AtlasWorkbench />;
+  return <><div className="lab-wrap"><DemoCommunityPanel className="lab-community-supplement" context="atlas" title="A measurement question, worked through" showPeople /></div><AtlasWorkbench /></>;
 }

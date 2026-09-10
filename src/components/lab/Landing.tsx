@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { DemoCommunityPanel } from "@/components/lab/demo";
 import ResearchMap from "@/components/lab/ResearchMap";
 import RecordEditor from "@/components/lab/RecordEditor";
 import { artifacts, starterDisclosure } from "@/lib/lab-data";
@@ -47,6 +48,7 @@ export default function Landing() {
           <ResearchMap />
         </div>
       </section>
+      <div className="lab-wrap"><DemoCommunityPanel className="lab-community-supplement" context="landing" caseId="reproducibility" title="A failed test. A better question. A next step." showPeople /></div>
       <div className="lab-frontier-strip lab-wrap">
         <span>THINGS WORTH FIGURING OUT</span>
         <Link href="/lab/feed/?field=digital-human-rights">Human freedom</Link>

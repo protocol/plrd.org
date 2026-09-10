@@ -80,6 +80,9 @@ export function safeLabReturnTo(input?: string | null): string {
     if (!value || /[\\%\u0000-\u001f\u007f]/.test(value)) return '/lab/'
     if (key === 'uri' || key === 'response') {
       if (match[1] !== '/lab/record/' || !safeReturnRecordUri(value)) return '/lab/'
+    } else if (key === 'discussion') {
+      if (match[1] !== '/lab/demo/' || !['split-boundary', 'duration-denominator', 'receipt-permission'].includes(value)) return '/lab/'
+      if (match[3] && match[3] !== `#demo-discussion-${value}`) return '/lab/'
     } else if (key === 'field') {
       if (!fields.includes(value)) return '/lab/'
     } else if (key === 'type') {

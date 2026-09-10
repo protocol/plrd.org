@@ -1,3 +1,4 @@
+import { DemoCommunityPanel } from "@/components/lab/demo";
 import AppsWorkbench from "@/components/lab/AppsWorkbench";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
   alternates: { canonical: "/lab/apps/" },
 };
 export default function Page() {
-  return <AppsWorkbench />;
+  return <><div className="lab-wrap"><DemoCommunityPanel className="lab-community-supplement" context="apps" caseId="reproducibility" title="What would make this tool useful?" showPeople /></div><AppsWorkbench /></>;
 }

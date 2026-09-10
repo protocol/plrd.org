@@ -17,6 +17,24 @@ test('the main invitation starts at a bottleneck while retaining the experiment 
   assert.ok(doc.querySelector('.lab-hero-copy a[href="/lab/apps/#signal-sandbox"]'))
 })
 
+test('login preserves only known demo discussion contexts without normalizing the original', () => {
+ const {safeLabReturnTo}=source('lib/lab-oauth-config.ts');
+ for(const id of ['split-boundary','duration-denominator','receipt-permission']){
+  const path=`/lab/demo/?discussion=${id}#demo-discussion-${id}`;
+  assert.equal(safeLabReturnTo(path),path);
+ }
+ for(const path of ['/lab/demo/?discussion=unknown','/lab/feed/?discussion=split-boundary','/lab/demo/?discussion=split-boundary&redirect=evil','/lab/demo/?discussion=split-boundary&discussion=split-boundary','/lab/demo/?discussion=split-boundary#demo-discussion-duration-denominator','/lab/%64emo/?discussion=split-boundary','/lab/demo/?discussion=split%252dboundary'])assert.equal(safeLabReturnTo(path),'/lab/',path);
+});
+
+test('composition responsive overrides outrank base styles regardless of CSS import order', async () => {
+ const {readFileSync}=await import('node:fs');
+ const css=readFileSync('src/components/lab/lab-composition.css','utf8');
+ const shell=readFileSync('src/components/lab/LabShell.tsx','utf8');
+ assert.match(shell,/className="open-lab lab-composed"/);
+ assert.match(css,/\.open-lab\.lab-composed \.lab-header-inner/);
+ assert.match(css,/min-height: 44px/);assert.match(css,/max-width: 600px/);
+});
+
 test('LinkedIn survives profile defaults and public draft preparation with format validation', () => {
   const entry = source('lib/lab-entry.ts')
   const values = {...entry.entryDefaults('profile'), workingOn:'Reproducibility tools', interests:'ai-robotics', lookingFor:'A reviewer', linkedinUrl:'https://www.linkedin.com/in/demo-person/'}

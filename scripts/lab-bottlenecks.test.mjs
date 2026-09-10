@@ -5,7 +5,9 @@ import { source } from './velocity/test-source-loader.mjs';
 
 test('the route mounts the workbench with only locally scoped responsive styles', () => {
   const page = fs.readFileSync('src/app/lab/bottlenecks/page.tsx', 'utf8');
-  assert.match(page, /<BottleneckWorkbench\s*\/>/);
+  assert.match(page, /<LabBottleneckExperience\s*\/>/);
+  const adapter = fs.readFileSync('src/components/lab/LabBottleneckExperience.tsx', 'utf8');
+  assert.match(adapter, /<BottleneckWorkbench owner=\{owner\} onPrepareContribution=\{setInitial\}/);
   assert.match(page, /BottleneckWorkbench.css/);
   const css = fs.readFileSync('src/components/lab/BottleneckWorkbench.css', 'utf8');
   assert.match(css, /\.open-lab \.bottleneck-workbench/);

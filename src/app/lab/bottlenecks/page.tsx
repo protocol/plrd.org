@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import BottleneckWorkbench from '@/components/lab/BottleneckWorkbench';
+import LabBottleneckExperience from '@/components/lab/LabBottleneckExperience';
 import '@/components/lab/BottleneckWorkbench.css';
 
 export const metadata: Metadata = {
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
   description: 'Refine a public-source bottleneck, design a bounded intervention, and prepare a local proposal for human review.',
 };
 export default function BottlenecksPage() {
-  return <BottleneckWorkbench />;
+  return <LabBottleneckExperience />;
 }

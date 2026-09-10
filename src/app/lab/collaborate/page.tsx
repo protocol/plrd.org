@@ -1,3 +1,4 @@
+import { DemoCommunityPanel } from "@/components/lab/demo";
 import CollaborateWorkbench from "@/components/lab/CollaborateWorkbench";
 import LabEvidenceWorkbench from "@/components/lab/LabEvidenceWorkbench";
 import type { Metadata } from "next";
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
   alternates: { canonical: "/lab/collaborate/" },
 };
 export default function Page() {
-  return <CollaborateWorkbench evidenceWorkbench={<LabEvidenceWorkbench />} />;
+  return <><div className="lab-wrap"><DemoCommunityPanel className="lab-community-supplement" context="agents" caseId="reproducibility" title="A small test for a researcher and a skeptical reviewer" showPeople /></div><CollaborateWorkbench evidenceWorkbench={<LabEvidenceWorkbench />} /></>;
 }
