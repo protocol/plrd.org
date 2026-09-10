@@ -8,7 +8,6 @@ authors:
 cover_image: "/images/blog/neurotechnology-hero.webp"
 areas:
   - neurotech
-unlisted: true
 ---
 <figure class="post-figure post-hero"><img src="/images/blog/neurotechnology-hero.webp" alt="Neurotechnology: bridging minds and machines for human flourishing." /></figure>
 

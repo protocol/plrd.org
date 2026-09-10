@@ -8,6 +8,17 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Preserve shared preview links when the approved Neuro article goes live.
+      {
+        source: '/blog/preview-neurotech-4972678300d0a37a2a1e0b9d1b40e852/',
+        destination: '/blog/neurotech-frontier-human-flourishing/',
+        permanent: true,
+      },
+      {
+        source: '/blog/preview-neurotech-ea88a298/',
+        destination: '/blog/neurotech-frontier-human-flourishing/',
+        permanent: true,
+      },
       {
         source: '/areas/upgrade-economies-governance/:path*',
         destination: '/areas/economies-governance/:path*',

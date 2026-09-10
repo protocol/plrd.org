@@ -90,7 +90,7 @@ function getLatestUpdates(count: number): UpdateItem[] {
     title: b.title || b.slug,
     date: b.date || '',
     type: 'Blog',
-    permalink: b.external_url || `/blog/${b.slug}`,
+    permalink: b.external_url || `/blog/${b.slug}/`,
     slug: b.slug,
     areas: [],
     coverImage: b.coverImage || '',
