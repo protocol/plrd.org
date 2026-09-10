@@ -14,6 +14,7 @@ import { AnimatePresence } from "framer-motion"
 import type { Hypercert } from "@/data/hypercerts"
 import { HypercertCard } from "@/components/hypercerts/HypercertCard"
 import { HypercertDetail } from "@/components/hypercerts/HypercertDetail"
+import { useImpactNavigation } from "@/components/useImpactNavigation"
 
 type CardStyle = {
   translateX: string
@@ -92,6 +93,7 @@ export function ImpactExperience({
 }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
+  const [foreignFragment, setForeignFragment] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [cardWidth, setCardWidth] = useState<number>(MAX_CARD_W)
 
@@ -111,6 +113,7 @@ export function ImpactExperience({
   const openDetail = (rkey: string) => {
     const idx = items.findIndex((c) => c.rkey === rkey)
     if (idx >= 0) setActiveIndex(idx)
+    setForeignFragment(false)
     setSelected(rkey)
     const base = window.location.pathname + window.location.search
     window.history.pushState({ hypercert: rkey }, "", `${base}#${rkey}`)
@@ -131,22 +134,17 @@ export function ImpactExperience({
 
   // Read the hash on mount (deep link) and on Back/Forward (popstate), keeping
   // the open cert in step with the URL.
-  useEffect(() => {
-    const sync = () => {
+  useImpactNavigation(() => {
       const rkey = window.location.hash.slice(1)
       const idx = rkey ? items.findIndex((c) => c.rkey === rkey) : -1
+      setForeignFragment(!!rkey && idx < 0)
       if (idx >= 0) {
         setActiveIndex(idx)
         setSelected(rkey)
       } else {
         setSelected(null)
       }
-    }
-    sync()
-    window.addEventListener("popstate", sync)
-    return () => window.removeEventListener("popstate", sync)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
   useEffect(() => {
     const el = containerRef.current
@@ -393,8 +391,9 @@ export function ImpactExperience({
         Drag to browse past &amp; upcoming editions · click a card to open its impact claim
       </p>
 
-      {/* Detail overlay with shared-layout morph */}
-      <AnimatePresence>
+      {/* A different fragment family must remove the old overlay immediately,
+          not retain its body lock above a newly opened dialog during exit. */}
+      <AnimatePresence key={foreignFragment ? 'other-fragment' : 'cert'}>
         {activeCert && (
           <HypercertDetail
             key={activeCert.rkey}
