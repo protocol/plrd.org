@@ -33,7 +33,7 @@ test('unknown and malformed fragments fail closed across every family and keep r
   } finally { await unmount() }
 })
 
-test('all methodology triggers push once, Direct link does not push, repeated close waits for one Back', async () => {
+test('all methodology triggers push once, Share does not push, repeated close waits for one Back', async () => {
   const unmount = await mount()
   const back = window.history.back.bind(window.history)
   try {
@@ -46,7 +46,9 @@ test('all methodology triggers push once, Direct link does not push, repeated cl
       const opened = window.history.length
       assert.ok(opened <= length + 1)
       await click(trigger)
-      await click(document.querySelector('[data-impact-direct]'))
+      assert.equal(document.querySelector('[data-impact-direct], [data-chart-direct]'), null)
+      Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText: async () => {} } })
+      await click(document.querySelector('[data-impact-copy]'))
       assert.equal(window.history.length, opened)
       let traversals = 0
       window.history.back = () => { traversals++ }

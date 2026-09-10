@@ -9,7 +9,7 @@
 - URLs use source identities, not card order: `#fv/<area>/<instrument>/<encodeURIComponent(item.id)>`. There is intentionally no matching DOM id: fresh URLs and history navigation must not scroll the page to a fragment target.
 - Area-only history entries use `#fv/<area>`. Fresh chart URLs restore the relevant overview tab. Invalid/unavailable charts and a different area's chart on a fixed-area detail route fail closed.
 - Ordinary preview activation pushes history without rewriting the preceding entry/fragment or Next's existing state; closing a locally opened chart goes Back. A fresh-link modal closes in place to its area fragment. Pending Back retains the modal input boundary until traversal completes. While the dashboard subscribes, it owns `history.scrollRestoration = 'manual'` and restores the prior value on unmount.
-- Direct link and Copy link preserve origin, pathname and query. Modifier-click follows native link behavior. Clipboard failures are visible instead of claiming success.
+- A single Share control copies the current origin, pathname and query. There is no separate Direct link. Clipboard failures are visible, with a selectable URL fallback instead of claiming success.
 - Modal body locking compensates the scrollbar and restores prior overflow/padding exactly; ownership is reference-counted during modal replacement.
 
 ## Routes
@@ -42,7 +42,7 @@ Use actual preview `href` values for other areas and live market views; market U
 - Modal: `.instrument-gallery-dialog[role="dialog"]`
 - Selected card: `[data-gallery-item]` (exactly one for chart/reading URLs)
 - True chart count: `[data-gallery-item][data-is-chart="true"]`
-- Sharing: `[data-chart-direct]`, `[data-chart-copy]`
+- Sharing: `[data-chart-copy]` (label Share); fallback URL: `[data-share-url]`
 - Close modal: `[aria-label="Close gallery"]`
 - Flip: `[data-flip-action]`; rotator: `.gallery-card-rotator[data-flipped]`
 - Physical faces: `[data-face="chart"]`, `[data-face="data"]`

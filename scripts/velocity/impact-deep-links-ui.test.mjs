@@ -68,12 +68,13 @@ test('every methodology link opens fresh in a portal focus boundary and closes s
       assert.equal(dialog()?.getAttribute('aria-label'), entry.title, entry.hash)
       assert.ok(document.getElementById('app').hasAttribute('inert'), 'background is inert')
       assert.ok(dialog().contains(document.activeElement), 'focus moves inside without scrolling')
-      const direct = dialog().querySelector('[data-impact-direct]')
-      assert.equal(direct.href, window.location.href)
-      const modifiedClick = new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey: true })
-      // Probe native new-tab semantics without asking jsdom to navigate.
-      direct.addEventListener('click', event => { assert.equal(event.defaultPrevented, false); event.preventDefault() }, { once: true })
-      await act(() => direct.dispatchEvent(modifiedClick))
+      assert.equal(dialog().querySelector('[data-impact-direct], [data-chart-direct]'), null)
+      const share = dialog().querySelector('[data-impact-copy]')
+      assert.equal(share.textContent, 'Share')
+      let copied
+      Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText: async text => { copied = text } } })
+      await click(share)
+      assert.equal(copied, window.location.href)
       if (index % 3 === 0) await click(dialog().querySelector('[aria-label="Close"]'))
       else if (index % 3 === 1) await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await tasks() })
       else await click(dialog().parentElement)
@@ -87,10 +88,12 @@ test('every methodology link opens fresh in a portal focus boundary and closes s
   }
 })
 
-test('Copy link reports both clipboard success and failure truthfully', async () => {
+test('Share copies the URL and reports clipboard failure with a selectable fallback', async () => {
   window.history.replaceState(null, '', `${base}#intervention/culture`)
   const unmount = await mount()
   try {
+    assert.equal(dialog().querySelector('[data-impact-direct], [data-chart-direct]'), null)
+    assert.equal(dialog().querySelector('[data-impact-copy]').textContent, 'Share')
     let copied
     Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText: async text => { copied = text } } })
     await click(dialog().querySelector('[data-impact-copy]'))
@@ -100,7 +103,7 @@ test('Copy link reports both clipboard success and failure truthfully', async ()
       Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value })
       await click(dialog().querySelector('[data-impact-copy]'))
       assert.match(dialog().querySelector('[role="status"]').textContent, /Copy failed/)
-      assert.equal(dialog().querySelector('[data-impact-direct]').href, window.location.href)
+      assert.equal(dialog().querySelector('[data-share-url]').textContent, window.location.href)
     }
   } finally { await unmount() }
 })
@@ -116,8 +119,8 @@ test('every inflection opens its area from a fresh namespaced URL with safe clos
       assert.equal(dialog()?.getAttribute('aria-label'), point.title, hash)
       const area = FOCUS_AREAS.find(area => area.key === point.area)
       assert.match(document.querySelector('[role="tab"][aria-selected="true"]').textContent, new RegExp(area.label.replaceAll('&', '&')))
-      assert.equal(dialog().querySelector('[data-impact-direct]').hash, hash)
-      assert.ok(dialog().querySelector('[data-impact-copy]'))
+      assert.equal(dialog().querySelector('[data-impact-direct], [data-chart-direct]'), null)
+      assert.equal(dialog().querySelector('[data-impact-copy]').textContent, 'Share')
       assert.equal(document.getElementById(hash.slice(1)), null, 'modal hashes never scroll the background')
       assert.ok(dialog().contains(document.activeElement))
       await click(dialog().querySelector('[aria-label="Close"]'))
@@ -147,7 +150,10 @@ test('inflection click and history interoperate with definition and chart famili
     for (const hash of ['#definition/performance_curves', '#fv/neurotech/performance_curves/tissue-mapped', '#intervention/culture', `#inflection/neurotech/${inflectionSlug(point)}`, '#toolkit']) {
       await navigate(hash)
       assert.equal(document.querySelectorAll('[role="dialog"]').length, hash === '#toolkit' ? 0 : 1, hash)
-      if (dialog()) assert.equal(dialog().querySelector('[data-impact-direct], [data-chart-direct]').hash, hash)
+      if (dialog()) {
+        assert.equal(dialog().querySelector('[data-impact-direct], [data-chart-direct]'), null)
+        assert.ok(dialog().querySelector('[data-impact-copy], [data-chart-copy]'))
+      }
     }
     await go('back')
     assert.equal(dialog().getAttribute('aria-label'), point.title)

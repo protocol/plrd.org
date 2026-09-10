@@ -56,7 +56,8 @@ test('single-view cards open their exact chart directly and evidence gaps never 
         assert.equal(dialog.querySelector('[data-gallery-item]')?.dataset.galleryItem, id === 'evidence' ? undefined : id)
         const hash = `#fv/${area.key}/${cover.dataset.instrument}/${encodeURIComponent(id)}`
         assert.equal(window.location.hash, hash)
-        assert.equal(document.querySelector('[data-chart-direct]').href, window.location.href)
+        assert.equal(document.querySelector('[data-chart-direct]'), null)
+        assert.equal(document.querySelector('[data-chart-copy]').textContent, 'Share')
         let copied
         Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText: async value => { copied = value } } })
         await click(document.querySelector('[data-chart-copy]'))
