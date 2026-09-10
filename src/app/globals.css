@@ -220,8 +220,11 @@
   inset: 0;
   z-index: 5;
   border-radius: .75rem;
-  background: color-mix(in srgb, var(--color-gray-500) 30%, transparent);
+  background: color-mix(in srgb, #fff 60%, transparent);
   pointer-events: none;
+}
+html.dark .chart-deck[data-subdued="true"]::after {
+  background: color-mix(in srgb, var(--color-gray-500) 30%, transparent);
 }
 .chart-deck > .instrument-preview { z-index: 4; transition: opacity 160ms ease; }
 .chart-deck .instrument-preview-face { min-height: 0; }

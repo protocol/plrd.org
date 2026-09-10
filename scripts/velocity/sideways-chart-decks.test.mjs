@@ -27,6 +27,13 @@ const mount = async props => {
 const css = readFileSync('src/app/globals.css', 'utf8')
 const rule = selector => css.slice(css.indexOf(`${selector} {`)).split('}')[0]
 
+test('inactive decks fade toward white in light mode and retain the original dark-mode mask', () => {
+  const selector = '.chart-deck[data-subdued="true"]::after'
+  assert.match(rule(selector), /background: color-mix\(in srgb, #fff 60%, transparent\)/)
+  assert.match(rule(`html.dark ${selector}`), /background: color-mix\(in srgb, var\(--color-gray-500\) 30%, transparent\)/)
+  assert.match(rule(selector), /pointer-events: none/)
+})
+
 test('single-view cards open their exact chart directly and evidence gaps never become dead covers', async () => {
   const unmount = await mount()
   try {

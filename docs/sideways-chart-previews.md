@@ -1,5 +1,14 @@
 # Sideways chart previews
 
+## Latest light-mode refinement
+
+At Lukas's request, displaced inactive cards fade toward **white** in light mode (a 60% white veil), not gray. Dark mode explicitly retains the original gray mask; no event handling, geometry, data or publication boundary changes.
+
+These focused gallery crops are from the local development candidate containing this follow-up's CSS. They supersede the gray-mask appearance in the historical production captures below; final production and hosted checks are recorded in the PR.
+
+![Light mode: inactive peers fade toward white](screenshots/sideways/after-white-peers-desktop.png)
+![Mobile slide frame, unchanged](screenshots/sideways/after-white-peers-mobile.png)
+
 ## Scope
 
 This preview-only change adapts the horizontal chart-deck interaction from `protocol/plneuro.xyz#23` (reference head `2a066e3ce7e577a6063e5617f24cb29b51c1e3eb`) to PLRD's existing chart system.
