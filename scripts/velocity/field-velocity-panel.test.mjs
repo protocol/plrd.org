@@ -45,14 +45,19 @@ function elements(node) {
 }
 
 for (const { key, label } of FOCUS_AREAS) {
-  test(`${key} staged panel retains charts and selected-area methodology/toolkit links without public route wiring`, async (t) => {
+  test(`${key} overview includes the shared panel, original strategy and selected-area methodology/toolkit links`, async (t) => {
     assert.ok(existsSync('src/components/AreaFieldVelocity.tsx'), 'missing reusable area panel')
     t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
     t.mock.method(console, 'warn', () => {})
     const Panel = source('components/AreaFieldVelocity.tsx').default
-    // The component is retained for a later launch, but no public page mounts it.
-    // Public-route absence is covered separately by preview-only.test.mjs.
-    const panelTree = await Panel({ area: key })
+    const Page = source(key === 'economies-governance' ? 'app/areas/economies-governance/page.tsx' : 'app/areas/[slug]/page.tsx').default
+    const tree = await Page({ params: Promise.resolve({ slug: key }) })
+    const children = elements(tree)
+    const panel = children.find(el => el.type === Panel)
+    assert.ok(panel, `${key} page does not mount shared panel`)
+    assert.equal(panel.props.area, key)
+    assert.ok(children.some(el => el.props.id === 'opportunity-spaces'), 'existing strategy preserved')
+    const panelTree = await Panel(panel.props)
     if (key === 'economies-governance') {
       assert.deepEqual(elements(panelTree).find(el => el.type === Dashboard).props.liveOutputs, {}, 'area panel must retain the overview live-output channel even when providers are unavailable')
     }
@@ -64,7 +69,7 @@ for (const { key, label } of FOCUS_AREAS) {
 
     assert.match(html, /id="field-velocity"/)
     assert.ok(html.includes(`${label} field velocity</h2>`))
-
+    assert.ok(tree.props.className.includes('area-overview'))
     assert.ok(panelTree.props.className.includes('area-field-velocity'))
     assert.ok(panelTree.props.className.includes(key === 'neurotech' ? 'bg-gray-100' : 'bg-gray-200'))
     assert.doesNotMatch(panelTree.props.className, /border-y|px-4|bg-gray-50/)
