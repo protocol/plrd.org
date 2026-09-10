@@ -12,7 +12,7 @@ export const LAB_SCHEMAS = [profile, note, app, contribution, participation] as 
 const lexicons = new Lexicons(LAB_SCHEMAS)
 export type LabField = 'digital-human-rights' | 'economies-governance' | 'ai-robotics' | 'neurotech' | 'cross-field'
 export type LabDataMap = {
-  profile: { workingOn: string; interests: string[]; lookingFor: string; githubUrl?: string; scholarUrl?: string };
+  profile: { workingOn: string; interests: string[]; lookingFor: string; githubUrl?: string; scholarUrl?: string; linkedinUrl?: string };
   note: { text: string; postType: 'question' | 'finding' | 'tool' | 'help' | 'negative'; field: LabField; evidenceUrl?: string };
   app: { title: string; url: string; description: string; field: LabField; githubUrl?: string };
   contribution: { targetUrl: string; observation: string; evidenceUrl: string; field: LabField };
@@ -53,6 +53,10 @@ function checkBusinessFields(kind: LabKind, data: Record<string, unknown>, recor
     const u = new URL(data.githubUrl)
     const shape = kind === 'profile' ? /^\/[a-zA-Z0-9-]{1,39}\/?$/ : /^\/[a-zA-Z0-9-]{1,39}\/[a-zA-Z0-9_.-]{1,100}\/?$/
     if (u.hostname !== 'github.com' || !shape.test(u.pathname) || u.search || u.hash) throw new Error('Use a GitHub profile or repository URL appropriate to this record.')
+  }
+  if (kind === 'profile' && typeof data.linkedinUrl === 'string') {
+    const u = new URL(data.linkedinUrl)
+    if (!['linkedin.com', 'www.linkedin.com'].includes(u.hostname) || !/^\/in\/[a-zA-Z0-9_%\-]{1,200}\/?$/.test(u.pathname) || u.search || u.hash) throw new Error('Use a LinkedIn /in/ profile URL without tracking parameters.')
   }
   if (typeof data.scholarUrl === 'string') {
     const u = new URL(data.scholarUrl)

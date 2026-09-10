@@ -1,0 +1,55 @@
+.open-lab.lab-social-route { background: var(--lab-paper, #f8f7f3); padding-bottom: 24px; }
+.open-lab .lab-social { color: var(--lab-ink, #17191a); font: 16px/1.6 Aileron, sans-serif; min-width: 0; }
+.open-lab .lab-social :is(h1,h2,h3) { font-family: var(--font-serif), Georgia, serif; font-weight: 400; line-height: 1.12; }
+.open-lab .lab-social h1 { font-size: clamp(34px, 5vw, 64px); margin: 12px 0 24px; }
+.open-lab .lab-social h2 { font-size: 27px; margin: 0 0 10px; }
+.open-lab .lab-social h3 { font-size: 22px; }
+.open-lab .lab-social p { margin: 12px 0; }
+.open-lab .lab-social :is(button,a,input,textarea) { font: inherit; }
+.open-lab .lab-social :is(button,a) { min-height: 44px; }
+.open-lab .lab-social button { cursor: pointer; padding: 9px 14px; border: 1px solid var(--lab-line, #d9dcd5); background: transparent; color: inherit; border-radius: 4px; }
+.open-lab .lab-social button:disabled { cursor: wait; opacity: .6; }
+.open-lab .lab-social :is(button,a,input,textarea):focus-visible { outline: 2px solid var(--lab-blue, #0969ce); outline-offset: 3px; }
+.open-lab .lab-social a { color: var(--lab-blue, #0969ce); display: inline-flex; align-items: center; text-underline-offset: 4px; overflow-wrap: anywhere; }
+.open-lab .lab-social button[aria-pressed=true], .open-lab .lab-social .lab-social-primary { background: var(--lab-blue, #0969ce); color: var(--lab-paper, #f8f7f3); border-color: var(--lab-blue, #0969ce); }
+.open-lab .lab-social .lab-social-kicker { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--lab-muted, #626660); }
+.open-lab .lab-social .lab-social-muted { font-size: 14px; color: var(--lab-muted, #626660); }
+.open-lab .lab-social-onboarding { max-width: 980px; margin: 0 auto; padding: 64px 28px; }
+.open-lab .lab-social fieldset { min-width: 0; margin: 28px 0; padding: 0; border: 0; }
+.open-lab .lab-social legend { margin-bottom: 12px; font-weight: 700; }
+.open-lab .lab-social-choices, .open-lab .lab-social-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.open-lab .lab-social-recommendations { margin-top: 38px; border-top: 1px solid var(--lab-line, #d9dcd5); }
+.open-lab .lab-social-recommendations article { display: grid; grid-template-columns: 40px 1fr; gap: 12px; padding: 24px 0; border-bottom: 1px solid var(--lab-line, #d9dcd5); }
+.open-lab .lab-social-number { color: var(--lab-blue, #0969ce); font-size: 12px; padding-top: 9px; }
+.open-lab .lab-social-bench { margin-top: 20px; }
+.open-lab .lab-social .lab-social-error { border-left: 3px solid #b84524; padding-left: 12px; }
+.open-lab .lab-social-completion { padding: 28px; background: var(--lab-card, #fdfcf9); border: 1px solid var(--lab-line, #d9dcd5); max-width: 850px; margin: 24px auto; scroll-margin-top: 100px; }
+.open-lab .lab-social-progress-heading { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+.open-lab .lab-social progress { display: block; width: 100%; height: 7px; margin-top: 10px; accent-color: var(--lab-blue, #0969ce); }
+.open-lab .lab-social-checklist { list-style: none; padding: 0; font-size: 14px; }
+.open-lab .lab-social-checklist li { padding: 4px 0; }
+.open-lab .lab-social-field { display: grid; gap: 8px; margin: 16px 0 8px; font-weight: 600; }
+.open-lab .lab-social-field :is(input,textarea) { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; color: inherit; background: var(--lab-paper, #f8f7f3); border: 1px solid var(--lab-line, #d9dcd5); border-radius: 3px; font-weight: 400; }
+.open-lab .lab-social-field textarea { resize: vertical; }
+.open-lab .lab-social-link-field { border-top: 1px solid var(--lab-line, #d9dcd5); padding: 8px 0 16px; }
+.open-lab .lab-social-inbox { position: relative; flex-shrink: 0; }
+.open-lab .lab-social .lab-social-bell { width: 44px; height: 44px; padding: 10px; display: grid; place-items: center; position: relative; border-radius: 50%; }
+.open-lab .lab-social-badge { position: absolute; top: -5px; right: -5px; min-width: 20px; height: 20px; padding: 0 4px; font-size: 11px; line-height: 20px; border-radius: 10px; background: var(--lab-blue, #0969ce); color: var(--lab-paper, #f8f7f3); }
+.open-lab .lab-social-warning { position: absolute; bottom: -5px; right: -4px; font-weight: 700; }
+.open-lab .lab-social-inbox-panel { position: absolute; top: calc(100% + 14px); right: 0; z-index: 90; width: min(380px, calc(100vw - 32px)); max-height: min(620px, 75dvh); overflow: auto; padding: 22px; background: var(--lab-card, #fdfcf9); border: 1px solid var(--lab-line, #d9dcd5); box-shadow: 0 14px 40px #1313161a; border-radius: 6px; }
+.open-lab .lab-social-inbox-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.open-lab .lab-social-inbox-heading h2 { font-size: 25px; margin: 0; }
+.open-lab .lab-social-inbox-heading button { width: 44px; flex-shrink: 0; }
+.open-lab .lab-social-action-list { padding: 0; list-style: none; }
+.open-lab .lab-social-action-list li { border-top: 1px solid var(--lab-line, #d9dcd5); padding: 18px 0; }
+.open-lab .lab-social-action-list li > :is(a,button) { display: flex; text-align: left; font-weight: 600; }
+.open-lab .lab-social .lab-social-action-link { border: 0; color: var(--lab-blue, #0969ce); padding: 8px 0; }
+.open-lab .lab-social-action-list .lab-social-controls button { font-size: 13px; }
+@media (max-width: 600px) {
+  .open-lab .lab-social-inbox-panel { position: fixed; top: 80px; left: 16px; right: 16px; width: auto; padding: 18px; max-height: calc(100dvh - 112px); }
+  .open-lab .lab-social-completion { margin: 16px; padding: 20px 16px; }
+}
+@media (max-width: 480px) {
+  .open-lab .lab-social-onboarding { padding: 36px 16px; }
+  .open-lab .lab-social-recommendations article { grid-template-columns: 24px minmax(0, 1fr); gap: 8px; }
+}
