@@ -366,9 +366,19 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen }: {
     if (!node) return
     const rect = node.getBoundingClientRect()
     const bounds = node.parentElement!.getBoundingClientRect()
-    const width = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
-    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
+    const maxWidth = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
+    const rem = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16
+    // Match the fan's .75rem padding/gaps and 1px borders in globals.css.
+    // Size every desktop preview from the same three-column budget, even in
+    // one/two-view decks; only the enclosing frame grows with the view count.
     const fan = node.querySelector<HTMLElement>('[data-chart-fan]')
+    const gap = .75 * rem
+    // Include the stable scrollbar gutter so short and scrollable fans agree.
+    const frame = 2 * gap + (fan ? fan.offsetWidth - fan.clientWidth || 2 : 2)
+    const columns = Math.min(items.length, 3)
+    const cardWidth = Math.max(0, (maxWidth - frame - 2 * gap) / 3)
+    const width = window.innerWidth <= 639 ? maxWidth : Math.min(maxWidth, frame + columns * cardWidth + (columns - 1) * gap)
+    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
     // Measure after applying its real width, not the compact cover's width.
     fan?.style.setProperty('--fan-width', `${width}px`)
     const height = Math.min((fan?.scrollHeight ?? 0) + 2, window.innerHeight * .72, 36 * (parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16))
