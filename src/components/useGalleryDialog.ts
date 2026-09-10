@@ -87,6 +87,9 @@ export function useGalleryDialog(onClose: () => void, restoreTarget?: () => HTML
       if (!lock.count) {
         body.style.overflow = lock.overflow
         body.style.paddingRight = lock.paddingRight
+        // Width restoration can bring back the horizontal scrollbar. Commit
+        // its viewport height before removing the compensating bottom space.
+        void document.documentElement.clientHeight
         body.style.paddingBottom = lock.paddingBottom
         bodyLocks.delete(body)
       }

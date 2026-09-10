@@ -13,7 +13,11 @@ const { useGalleryDialog } = source('components/useGalleryDialog.ts')
 Object.defineProperty(window, 'innerWidth', { value: 1440, configurable: true })
 Object.defineProperty(window, 'innerHeight', { value: 1000, configurable: true })
 Object.defineProperty(document.documentElement, 'clientWidth', { get: () => document.body.style.overflow === 'hidden' ? 1440 : 1425, configurable: true })
-Object.defineProperty(document.documentElement, 'clientHeight', { get: () => document.body.style.overflow === 'hidden' ? 1000 : 985, configurable: true })
+const layoutReads = []
+Object.defineProperty(document.documentElement, 'clientHeight', { get: () => {
+  layoutReads.push({ overflow: document.body.style.overflow, right: document.body.style.paddingRight, bottom: document.body.style.paddingBottom })
+  return document.body.style.overflow === 'hidden' ? 1000 : 985
+}, configurable: true })
 
 function Dialog() {
   const ref = useGalleryDialog(() => {})
@@ -26,7 +30,9 @@ test('modal lock reserves the disappearing horizontal scrollbar height to avoid 
     await act(() => root.render(React.createElement(Dialog)))
     assert.equal(document.body.style.paddingBottom, '22px', 'preserve existing padding plus the 15px gained viewport height')
     assert.equal(document.body.style.overflow, 'hidden')
+    layoutReads.length = 0
   } finally { await act(() => root.unmount()) }
   assert.equal(document.body.style.paddingBottom, '7px', 'restore the exact original inline padding')
   assert.equal(document.body.style.overflow, '')
+  assert.ok(layoutReads.some(read => read.overflow === '' && read.right === '' && read.bottom === '22px'), 'flush restored horizontal scrollbar after width compensation, before removing its height reservation')
 })

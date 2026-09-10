@@ -252,6 +252,3 @@ test('existing cert links yield to other fragment families without a lingering o
     document.body.style.overflow = ''; document.body.style.paddingRight = ''
   }
 })
-
-
-
