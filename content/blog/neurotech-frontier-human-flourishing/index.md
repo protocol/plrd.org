@@ -289,4 +289,4 @@ areas:
 
 <p>Follow <a href="https://x.com/protocollabs_rd">PL R&amp;D </a>and <a href="https://x.com/protocollabs">Protocol Labs</a> for future publications, field maps, convenings, and opportunities to participate in the ecosystem as it continues to grow.</p>
 
-<p><em>This post is for informational purposes only. It is not an offer, solicitation, or recommendation of any security or investment product, and nothing here is a commitment or guarantee of any future performance or any outcome.</em></p>
+<p><em>This post is for informational purposes only. It is not an offer, solicitation, or recommendation of any security or investment product, and nothing here is a commitment or guarantee of any future performance or any outcome. <strong>Protocol Labs, Inc. and its affiliates hold, or may in the future hold, financial interests in some of the companies mentioned in this post.</strong></em></p>
