@@ -44,3 +44,8 @@ test('both shared Neuro preview URLs permanently redirect to the published artic
     assert.ok(redirects.some((rule) => rule.source === `/blog/${preview}/` && rule.destination === path && rule.permanent === true), `${preview} must redirect permanently`)
   }
 })
+
+test('Neuro disclaimer includes the exact approved financial-interests disclosure', () => {
+  const article = JSON.parse(read('src/data/generated/blog.json')).find((post) => post.slug === slug)
+  assert.ok(article.html.includes("<p><em>This post is for informational purposes only. It is not an offer, solicitation, or recommendation of any security or investment product, and nothing here is a commitment or guarantee of any future performance or any outcome. <strong>Protocol Labs, Inc. and its affiliates hold, or may in the future hold, financial interests in some of the companies mentioned in this post.</strong></em></p>"))
+})
