@@ -282,6 +282,9 @@ export default async function AreaPage({ params }: Props) {
                 )}
               </Link>
             ))}
+            {slug === 'neurotech' && opportunities.length % 2 !== 0 && (
+              <div aria-hidden={true} className="hidden md:block bg-white" />
+            )}
           </div>
         </section>
       )}

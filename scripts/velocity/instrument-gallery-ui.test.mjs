@@ -111,20 +111,15 @@ test('all four overview tabs and Neuro detail select every real view once with e
   }
 })
 
-test('definitions and methodology are immediately visible and non-collapsible in every instrument modal', async () => {
+test('every instrument popout omits the repeated general Definition & methodology footer', async () => {
   const data = await load()
-  const { INSTRUMENT_BY_ID } = source('lib/velocity-instruments.ts')
   for (const fixedArea of ['neurotech', 'ai-robotics', 'economies-governance', 'digital-human-rights', undefined]) {
     const unmount = await mount({ ...data, fixedArea, initialArea: 'neurotech' })
     try {
       for (const trigger of document.querySelectorAll('button[data-instrument]')) {
         await open(trigger)
         const methodology = document.querySelector('[role="dialog"] .gallery-methodology')
-        assert.ok(methodology, 'every instrument retains its methodology')
-        assert.ok(!methodology.closest('details, [hidden], [inert], [aria-hidden="true"]'), 'methodology must be visible without opening a disclosure')
-        assert.equal(methodology.querySelector('summary, button, [role="button"]'), null, 'methodology has no collapse control')
-        assert.equal(methodology.querySelector('h3')?.textContent, 'Definition & methodology')
-        assert.ok(methodology.textContent.includes(INSTRUMENT_BY_ID[trigger.dataset.instrument].description), 'preserve the complete original definition')
+        assert.ok(!methodology, 'no duplicated general methodology after the chart')
         await click(document.querySelector('[aria-label="Close gallery"]'))
       }
     } finally { await unmount() }
@@ -338,10 +333,7 @@ test('gallery traps focus, excludes closed evidence, restores trigger and body s
       assert.ok(document.activeElement === close, 'forward Tab wraps to close')
       await act(() => target.focus())
       assert.ok(dialog.contains(document.activeElement), 'programmatic outside focus is contained')
-      const definition = dialog.querySelector('.gallery-methodology h3')
-      assert.equal(definition.textContent, 'Definition & methodology')
-      assert.ok(!definition.closest('details'), 'methodology is not a focusable disclosure')
-      assert.ok(dialog.textContent.includes(source('lib/velocity-instruments.ts').INSTRUMENT_BY_ID.performance_curves.description))
+      assert.ok(!dialog.querySelector('.gallery-methodology'), 'no repeated methodology footer')
       if (closeWith === 'Escape') await key('Escape')
       if (closeWith === 'backdrop') await click(document.querySelector('.instrument-gallery-backdrop'))
       if (closeWith === 'button') await click(close)

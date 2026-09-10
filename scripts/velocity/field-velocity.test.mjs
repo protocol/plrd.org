@@ -38,7 +38,7 @@ test('observed velocity distinguishes attribution, comparable flows and differen
   const { renderToStaticMarkup } = source('../node_modules/react-dom/server.node.js')
   const Methodology = source('components/MeasuringQuestionsV2.tsx').default
   const html = renderToStaticMarkup(React.createElement(Methodology))
-  assert.ok(html.includes('Stocks are not velocity'))
+  assert.ok(!html.includes('Stocks are not velocity'), 'overview omits the requested paragraph; shared API retains it')
   assert.ok(html.includes('with or without PL'))
   assert.doesNotMatch(html, /whether they landed|has no performance curve/)
 })

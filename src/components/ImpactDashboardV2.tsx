@@ -6,7 +6,7 @@
 // laid out as four cards in two rows with their live signals. The inflection
 // cards mirror the PR #29 design; shared primitives are imported, never forked.
 
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useLayoutEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useGalleryDialog } from '@/components/useGalleryDialog'
 import { useGalleryFan } from '@/components/useGalleryFan'
@@ -47,7 +47,7 @@ import { MeasurementChart } from '@/components/MeasurementSeriesCharts'
 import type { MeasurementSeries } from '@/lib/measurement-series'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import { Sparkline, GhostChart, type SeriesPoint } from '@/components/VelocitySparkline'
-import { IdeaVintageExamples, type IdeaVintageExample } from '@/components/velocity-explainers'
+import type { IdeaVintageExample } from '@/components/velocity-explainers'
 import { isRenderableMarket, type MarketSignal } from '@/lib/market-signals'
 
 /** Live output metrics for a point, keyed by the point's title. Fetched server-side. */
@@ -169,14 +169,13 @@ export default function ImpactDashboardV2({
   return (
     <>
       <div className={fixedArea ? 'min-w-0' : 'field-velocity-dashboard min-w-0'}>
-        {/* Vertical tabs (PR #29 layout), sticky so they stay visible while
-            scrolling the field. */}
-        {!fixedArea && <div className="-mx-1 mb-6 flex flex-col gap-1.5 px-1 pb-2 lg:mx-0 lg:mb-0 lg:self-start lg:px-0 lg:pb-0 lg:sticky lg:top-20">
+        {/* Focus-area tabs share the content width and sit above every chart. */}
+        {!fixedArea && <div className="mb-6 min-w-0">
           <div
             role="tablist"
-            aria-orientation="vertical"
+            aria-orientation="horizontal"
             aria-label="Filter by focus area"
-            className="flex gap-1.5 overflow-x-auto lg:flex-col lg:overflow-visible"
+            className="flex flex-wrap gap-1.5"
           >
             {FOCUS_AREAS.map((fa) => (
               <Tab
@@ -201,7 +200,7 @@ export default function ImpactDashboardV2({
             </span>
             <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
           </div>
-          <FieldVelocityBox records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} />
+          <FieldVelocityBox key={filter} records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} />
 
           {/* Inflection points — four cards in two rows, with live signals. */}
           <div className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
@@ -249,7 +248,7 @@ export default function ImpactDashboardV2({
   )
 }
 
-// ── Focus-area tab (vertical, PR #29 layout) ─────────────────────────────────
+// ── Focus-area tab (horizontal overview navigation) ─────────────────────────────────
 function Tab({
   label,
   count,
@@ -271,7 +270,7 @@ function Tab({
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`flex shrink-0 items-center gap-3 rounded-lg border px-3.5 py-3 text-left text-sm font-medium transition-all lg:w-full ${
+      className={`flex shrink-0 items-center gap-3 rounded-lg border px-3.5 py-3 text-left text-sm font-medium transition-all ${
         active
           ? 'border-gray-200 bg-white text-black shadow-sm'
           : 'border-transparent text-gray-500 hover:bg-white/60 hover:text-black'
@@ -283,7 +282,7 @@ function Tab({
       >
         {icon && <AreaIcon type={icon} className="block h-5 w-5" />}
       </span>
-      <span className="flex-1 whitespace-nowrap lg:whitespace-normal">{label}</span>
+      <span className="flex-1 whitespace-nowrap">{label}</span>
       {forthcoming ? (
         <span className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wide text-gray-400">Soon</span>
       ) : (
@@ -335,7 +334,10 @@ function chartTitle(item: GalleryItem, record: InstrumentRecord, areaLabel: stri
   if (item.kind === 'patent') return 'Patent vintage · invention side'
   if (item.kind === 'example') return `${item.example.label} · paper vintage`
   if (item.kind === 'secondary') return record.series2Label ?? 'Secondary series / normalizer'
-  return record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : record.metric ?? INSTRUMENT_BY_ID[record.instrument].label
+  // Keep the animal-model qualifier in the complete RecordEvidence data face,
+  // not in a repeated preview/modal/plot heading. The source feed is unchanged.
+  const metricTitle = record.instrument === 'latency_compression' ? record.metric?.split(' Most entries are ')[0] : record.metric
+  return record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : metricTitle ?? INSTRUMENT_BY_ID[record.instrument].label
 }
 
 function ChartPreview({ item, record }: { item: GalleryItem; record: InstrumentRecord }) {
@@ -347,11 +349,11 @@ function ChartPreview({ item, record }: { item: GalleryItem; record: InstrumentR
   return <><Sparkline series={series} scale={scale} band={series.some(p => p.lo != null)} width={280} height={112} /><span className="chart-preview-caption">{series[0].x}–{series[series.length - 1].x} · {scale ?? 'linear'} scale</span></>
 }
 
-function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen }: {
+function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expanded, onExpand, onCollapse }: {
   record: InstrumentRecord; items: GalleryItem[]; chartCount: number; areaLabel: string; area: FocusAreaKey
   onOpen: (id: InstrumentId, itemId: string) => void
+  expanded: boolean; onExpand: () => void; onCollapse: () => void
 }) {
-  const [expanded, setExpanded] = useState(false)
   const [page, setPage] = useState(0)
   const [placement, setPlacement] = useState({ left: 0, top: 0, width: 0 })
   const deck = useRef<HTMLDivElement>(null)
@@ -366,40 +368,63 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen }: {
     if (!node) return
     const rect = node.getBoundingClientRect()
     const bounds = node.parentElement!.getBoundingClientRect()
-    const width = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
-    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
+    const maxWidth = Math.min(860, Math.max(0, bounds.width - 16), window.innerWidth - 24)
+    const rem = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16
+    // Match the fan's .75rem padding/gaps and 1px borders in globals.css.
+    // Size every desktop preview from the same three-column budget, even in
+    // one/two-view decks; only the enclosing frame grows with the view count.
     const fan = node.querySelector<HTMLElement>('[data-chart-fan]')
+    const gap = .75 * rem
+    // Include the stable scrollbar gutter so short and scrollable fans agree.
+    const frame = 2 * gap + (fan ? fan.offsetWidth - fan.clientWidth || 2 : 2)
+    const columns = Math.min(items.length, 3)
+    const cardWidth = Math.max(0, (maxWidth - frame - 2 * gap) / 3)
+    const width = window.innerWidth <= 639 ? maxWidth : Math.min(maxWidth, frame + columns * cardWidth + (columns - 1) * gap)
+    const left = Math.max(12, bounds.left + 8, Math.min(rect.left, bounds.right - 8 - width, window.innerWidth - 12 - width))
     // Measure after applying its real width, not the compact cover's width.
     fan?.style.setProperty('--fan-width', `${width}px`)
     const height = Math.min((fan?.scrollHeight ?? 0) + 2, window.innerHeight * .72, 36 * (parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16))
     const top = Math.max(12 - rect.top, Math.min(0, window.innerHeight - 12 - rect.top - height))
     setPlacement({ left: left - rect.left, top, width })
   }
-  const expand = () => { if (items.length) { place(); setExpanded(true) } }
+  const expand = () => { if (items.length) { place(); onExpand() } }
   const dismiss = () => {
     pinned.current = false
-    setExpanded(false)
+    onCollapse()
     suppressFocus.current = true
     cover.current?.focus({ preventScroll: true })
     suppressFocus.current = false
   }
+  useLayoutEffect(() => {
+    if (expanded) return
+    pinned.current = false
+    // A sibling can take ownership on hover while keyboard focus is inside
+    // this fan. Recover before paint instead of stranding focus in inert UI.
+    if (deck.current?.querySelector('[data-chart-fan]')?.contains(document.activeElement)) {
+      suppressFocus.current = true
+      cover.current?.focus({ preventScroll: true })
+      suppressFocus.current = false
+    }
+  }, [expanded])
   useEffect(() => {
     if (!expanded) return
-    const outside = (event: PointerEvent) => { if (!(event.target instanceof Element && event.target.closest('.instrument-gallery-backdrop')) && !deck.current?.contains(event.target as Node)) { pinned.current = false; setExpanded(false) } }
+    const outside = (event: PointerEvent) => { if (!(event.target instanceof Element && event.target.closest('.instrument-gallery-backdrop')) && !deck.current?.contains(event.target as Node)) { pinned.current = false; onCollapse() } }
     document.addEventListener('pointerdown', outside)
     window.addEventListener('resize', place)
     return () => { document.removeEventListener('pointerdown', outside); window.removeEventListener('resize', place) }
   }, [expanded])
   return <div ref={deck} className="chart-deck" data-chart-deck={record.instrument} data-expanded={expanded}
     onPointerEnter={event => { if (event.pointerType === 'mouse') expand() }}
-    onPointerLeave={() => { if (!pinned.current && !deck.current?.contains(document.activeElement)) setExpanded(false) }}
+    onPointerLeave={() => { if (!pinned.current && !deck.current?.contains(document.activeElement)) onCollapse() }}
     onFocus={() => { if (!suppressFocus.current) expand() }}
-    onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest('.instrument-gallery-backdrop')) && !event.currentTarget.contains(event.relatedTarget)) { pinned.current = false; setExpanded(false) } }}
+    onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest('.instrument-gallery-backdrop')) && !event.currentTarget.contains(event.relatedTarget)) { pinned.current = false; onCollapse() } }}
     onKeyDown={event => { if (event.key === 'Escape' && expanded) { event.preventDefault(); event.stopPropagation(); dismiss() } }}>
     <button ref={cover} type="button" data-instrument={record.instrument} data-chart-count={chartCount} data-view-count={items.length}
       aria-expanded={items.length ? expanded : undefined} aria-controls={items.length ? fanId : undefined} aria-haspopup={items.length ? undefined : 'dialog'}
       aria-label={`${inst.label}: ${items.length} ${items.length === 1 ? 'view' : 'views'}, ${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}. ${items.length ? 'Choose a chart' : 'View evidence and status'}`}
       onClick={event => { event.currentTarget.focus({ preventScroll: true }); if (items.length) { pinned.current = true; expand() } else onOpen(record.instrument, 'evidence') }} className="instrument-preview">
+      {items.length > 2 && <span data-stack-layer="2" aria-hidden="true" className="instrument-stack-layer" />}
+      {items.length > 1 && <span data-stack-layer="1" aria-hidden="true" className="instrument-stack-layer" />}
       <span className="instrument-preview-face">
         <span className="text-sm font-semibold leading-snug text-black">{inst.label}</span>
         <span className="instrument-chart-badge">{items.length > chartCount ? `${items.length} views` : `${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}`} <span aria-hidden="true">↗</span></span>
@@ -437,8 +462,14 @@ function FieldVelocityBox({ records, markets, measurements, examples, area, onOp
   onOpen: (id: InstrumentId, itemId: string) => void
 }) {
   const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
+  // One owner for the entire deck row: a pinned/focused deck cannot coexist
+  // with a newly hovered one. Late leave/blur events only close their own deck.
+  const [expandedInstrument, setExpandedInstrument] = useState<InstrumentId | null>(null)
   return <div className="instrument-previews" aria-label="Field velocity charts">
-    {records.map(record => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...instrumentGallery(record, measurements, markets, examples, areaLabel)} areaLabel={areaLabel} area={area} onOpen={onOpen} />)}
+    {records.map(record => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...instrumentGallery(record, measurements, markets, examples, areaLabel)} areaLabel={areaLabel} area={area} onOpen={onOpen}
+      expanded={expandedInstrument === record.instrument}
+      onExpand={() => setExpandedInstrument(record.instrument)}
+      onCollapse={() => setExpandedInstrument(current => current === record.instrument ? null : current)} />)}
   </div>
 }
 
@@ -544,7 +575,7 @@ function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; re
   }
   const secondary = item.kind === 'secondary'
   return <>
-    <h3 className="text-xl font-semibold text-black">{secondary ? record.series2Label ?? 'Secondary series / normalizer' : record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : record.metric ?? INSTRUMENT_BY_ID[record.instrument].label}</h3>
+    <h3 className="text-xl font-semibold text-black">{chartTitle(item, record, areaLabel)}</h3>
     <RecordPlot series={(secondary ? record.series2 : record.series)!} scale={secondary ? 'linear' : record.seriesScale} unit={record.instrument === 'idea_vintage' ? 'y' : ''} dataOnly={dataOnly} />
     {dataOnly ? <div className="mt-4"><RecordEvidence record={record} /></div> : <div className="mt-4 space-y-2 text-sm text-gray-600">
       {!secondary && <p>{record.value}</p>}
@@ -617,12 +648,6 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
           <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
             {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
           </div>
-          <section className="gallery-methodology mt-6 text-sm text-gray-600">
-            <h3 className="font-medium text-blue">Definition & methodology</h3>
-            <p className="mt-3 leading-relaxed">{inst.description}</p>
-            {record.instrument === 'idea_vintage' && <p className="mt-3 italic">This reads the research side of the field. It does not observe invention directly, and the two can decouple.</p>}
-            {record.instrument === 'idea_vintage' && <IdeaVintageExamples examples={examples} showCharts={false} />}
-          </section>
           {!items.some(i => i.kind === 'primary' || i.kind === 'reading') && (record.state === 'reading' && chartCount > 0 ? <details className="mb-6 text-sm text-gray-600"><summary className="cursor-pointer py-2 text-blue">Reading context · {record.value}</summary><RecordEvidence record={record} /></details> : <div className="mb-6"><RecordEvidence record={record} /></div>)}
           {items.length === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
           {pv && !items.some(i => i.kind === 'patent') && <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-600">

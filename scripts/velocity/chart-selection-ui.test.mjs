@@ -18,6 +18,104 @@ const mount = async props => {
   return async () => { await act(() => root.unmount()); window.history.replaceState(null, '', '/areas/?qa=1') }
 }
 
+test('focus-area tabs are horizontal above a normal-width overview', async () => {
+  const unmount = await mount()
+  try {
+    const tabs = document.querySelector('[role="tablist"]')
+    assert.equal(tabs.getAttribute('aria-orientation'), 'horizontal')
+    const { readFileSync } = await import('node:fs')
+    const css = readFileSync('src/app/globals.css', 'utf8')
+    assert.match(css, /\.field-velocity-overview\s*\{ max-width: 72rem; \}/)
+    assert.ok(!css.includes('grid-template-columns: 13rem'), 'no reserved left sidebar')
+  } finally { await unmount() }
+})
+
+test('one, two and three preview fans share a card width and shrink their outer frame', async () => {
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  const oldWidth = window.innerWidth
+  try {
+    const groups = ['latency_compression', 'revealed_commitments', 'performance_curves']
+    for (const viewport of [1440, 768, 390, 320]) {
+      window.innerWidth = viewport
+      const available = Math.min(860, viewport - 64)
+      const widths = []
+      for (const [index, group] of groups.entries()) {
+        const deck = document.querySelector(`[data-chart-deck="${group}"]`)
+        deck.getBoundingClientRect = () => ({ left: 24, top: 100, width: 200, height: 250 })
+        deck.parentElement.getBoundingClientRect = () => ({ left: 24, right: viewport - 24, width: viewport - 48 })
+        await click(deck.querySelector('[data-instrument]'))
+        const width = parseFloat(deck.querySelector('[data-chart-fan]').style.getPropertyValue('--fan-width'))
+        widths.push(width)
+        const columns = viewport <= 639 ? 1 : index + 1
+        const cardWidth = (width - 26 - (columns - 1) * 12) / columns
+        const expected = viewport <= 639 ? available - 26 : (available - 50) / 3
+        assert.ok(Math.abs(cardWidth - expected) < .01, `${viewport}px / ${columns} columns: ${cardWidth} should equal ${expected}`)
+      }
+      if (viewport > 639) assert.ok(widths[0] < widths[1] && widths[1] < widths[2])
+      else assert.equal(new Set(widths).size, 1, 'stacked mobile cards use the same available width')
+    }
+  } finally { window.innerWidth = oldWidth; await unmount() }
+})
+
+test('multi-view covers visibly retain layered backs at rest while single charts do not', async () => {
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  try {
+    for (const cover of document.querySelectorAll('[data-instrument]')) {
+      const layers = cover.querySelectorAll('[data-stack-layer]')
+      const views = Number(cover.dataset.viewCount)
+      assert.equal(layers.length, Math.min(2, Math.max(0, views - 1)))
+      for (const layer of layers) assert.equal(layer.getAttribute('aria-hidden'), 'true')
+    }
+  } finally { await unmount() }
+})
+
+test('latency animal-model qualifier appears only on the data face, not chart titles or previews', async () => {
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  try {
+    const cover = document.querySelector('[data-instrument="latency_compression"]')
+    await click(cover)
+    const target = cover.closest('[data-chart-deck]').querySelector('[data-chart-target]')
+    assert.doesNotMatch(target.textContent, /Most entries are/)
+    await click(target)
+    const dialog = document.querySelector('[role="dialog"]')
+    assert.doesNotMatch(dialog.querySelector('h2').textContent, /Most entries are/)
+    assert.doesNotMatch(dialog.querySelector('[data-face="chart"]').textContent, /Most entries are/)
+    await click(dialog.querySelector('[data-flip-action]'))
+    const data = dialog.querySelector('[data-face="data"]')
+    assert.equal(data.getAttribute('aria-hidden'), 'false')
+    assert.match(data.textContent, /Most entries are nonhuman-primate; the animal model is recorded per entry \(Synchron's pivotal preclinical work was in sheep\)\./)
+  } finally { await unmount() }
+})
+
+test('opening another deck replaces a pinned or focused fan for every input mode', async () => {
+  const unmount = await mount({ fixedArea: 'neurotech' })
+  const pointer = async (target, type, relatedTarget = null) => {
+    const event = new MouseEvent(type, { bubbles: true, relatedTarget })
+    Object.defineProperty(event, 'pointerType', { value: 'mouse' })
+    await act(() => target.dispatchEvent(event))
+  }
+  const openDecks = () => [...document.querySelectorAll('[data-chart-deck][data-expanded="true"]')].map(e => e.dataset.chartDeck)
+  try {
+    const a = document.querySelector('[data-instrument="latency_compression"]')
+    const b = document.querySelector('[data-instrument="revealed_commitments"]')
+    await click(a)
+    const priorTarget = a.closest('[data-chart-deck]').querySelector('[data-chart-target]')
+    await act(() => priorTarget.focus())
+    await pointer(a, 'pointerout', document.body)
+    await pointer(b, 'pointerover', document.body)
+    assert.deepEqual(openDecks(), ['revealed_commitments'], 'hover replaces the previously clicked/pinned fan')
+    assert.ok(document.activeElement === a, 'focus safely returns to the prior cover, not its now-inert preview')
+    assert.ok(!document.activeElement.closest('[inert], [aria-hidden="true"]'))
+    assert.equal(a.closest('[data-chart-deck]').querySelector('[data-chart-fan]').getAttribute('aria-hidden'), 'true')
+    await pointer(a, 'pointerout', document.body)
+    assert.deepEqual(openDecks(), ['revealed_commitments'], 'a late leave from the old deck cannot close the new deck')
+    await act(() => { a.blur(); a.focus() })
+    assert.deepEqual(openDecks(), ['latency_compression'], 'keyboard focus replaces the hovered fan')
+    await click(b)
+    assert.deepEqual(openDecks(), ['revealed_commitments'], 'touch/click replaces the other fan')
+  } finally { await unmount() }
+})
+
 test('cover expands in place to individually titled real previews; each card opens only itself', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
   try {
@@ -230,14 +328,13 @@ test('opening and closing preserve an existing fragment, Next history state, and
   assert.equal(window.history.scrollRestoration, 'auto')
 })
 
-test('selected chart precedes long methodology without collapsing that methodology', async () => {
+test('selected chart does not repeat general methodology below the popout', async () => {
   window.history.replaceState(null, '', '#fv/neurotech/idea_vintage/primary')
   const unmount = await mount({ fixedArea: 'neurotech' })
   try {
     const chart = document.querySelector('[role="dialog"] [data-gallery-item]')
-    const methodology = document.querySelector('.gallery-methodology')
-    assert.ok(chart.compareDocumentPosition(methodology) & window.Node.DOCUMENT_POSITION_FOLLOWING)
-    assert.equal(methodology.closest('details'), null)
+    assert.ok(chart)
+    assert.ok(!document.querySelector('.gallery-methodology'), 'repeated methodology footer must be absent')
   } finally { await unmount() }
 })
 

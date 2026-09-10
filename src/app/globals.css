@@ -108,11 +108,9 @@
   min-width: 0;
 }
 
-.field-velocity-overview { max-width: 96rem; }
+.field-velocity-overview { max-width: 72rem; }
 .field-velocity-content { container: velocity / inline-size; }
-@media (min-width: 1024px) {
-  .field-velocity-dashboard { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 1.25rem; }
-}
+.field-velocity-dashboard { display: block; }
 
 /* Compact covers expand into individually selectable, real chart previews. */
 .instrument-previews {
@@ -133,6 +131,17 @@
   cursor: pointer;
   border-radius: .75rem;
 }
+/* Visible at rest: the chart/view badge supplies the exact count. */
+.instrument-stack-layer {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--color-gray-500) 45%, transparent);
+  border-radius: .75rem;
+  background: var(--color-white);
+  pointer-events: none;
+  transform: translate(5px, 5px);
+}
+.instrument-stack-layer[data-stack-layer="2"] { transform: translate(10px, 10px); }
 .instrument-preview-face {
   position: relative;
   display: flex;
@@ -185,6 +194,7 @@
   max-height: min(72dvh, 36rem);
   overflow-y: auto;
   overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding: .75rem;
   border: 1px solid var(--color-blue);
   border-radius: 1rem;

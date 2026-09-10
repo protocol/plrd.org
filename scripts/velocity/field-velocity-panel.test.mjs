@@ -71,7 +71,7 @@ for (const { key, label } of FOCUS_AREAS) {
     assert.ok(html.includes(`${label} field velocity</h2>`))
     assert.ok(tree.props.className.includes('area-overview'))
     assert.ok(panelTree.props.className.includes('area-field-velocity'))
-    assert.ok(panelTree.props.className.includes('bg-gray-200'))
+    assert.ok(panelTree.props.className.includes(key === 'neurotech' ? 'bg-gray-100' : 'bg-gray-200'))
     assert.doesNotMatch(panelTree.props.className, /border-y|px-4|bg-gray-50/)
     const css = readFileSync('src/app/globals.css', 'utf8')
     assert.match(css, /\.area-overview\s*\{[^}]*grid-template-columns:\s*minmax\(1\.5rem, 1fr\) minmax\(0, 69rem\) minmax\(1\.5rem, 1fr\)/)
