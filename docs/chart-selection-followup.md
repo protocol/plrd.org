@@ -4,7 +4,7 @@ Application revision: `973291ff011742e2b6d723ac131354208b7c6cad`.
 
 ## Behavior
 
-Hover or keyboard focus spreads real, titled chart previews in place. Each selection opens only its own chart and has a stable fragment URL, Direct link, and Copy link. Touch uses tap to spread, then tap to select. PLRD's two-sided animated chart/source cards remain intact. The selected chart is above the always-visible methodology.
+Hover or keyboard focus spreads real, titled chart previews in place. Each selection opens only its own chart and has a stable fragment URL and a Share control that copies it. Touch uses tap to spread, then tap to select. PLRD's two-sided animated chart/source cards remain intact. The selected chart is above the always-visible methodology.
 
 ## Evidence
 

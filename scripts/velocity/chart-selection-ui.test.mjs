@@ -159,8 +159,8 @@ test('chart URLs preserve query, open fresh, recover area tabs with Back/Forward
     href = window.location.href
     assert.equal(window.location.hash, '#fv/neurotech/performance_curves/tissue-mapped')
     assert.equal(window.location.search, '?qa=1')
-    const direct = document.querySelector('[data-chart-direct]')
-    assert.equal(direct.href, href)
+    assert.equal(document.querySelector('[data-chart-direct]'), null)
+    assert.equal(document.querySelector('[data-chart-copy]').textContent, 'Share')
     let copied
     Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText: async text => { copied = text } } })
     await click(document.querySelector('[data-chart-copy]'))
@@ -260,7 +260,8 @@ test('every available chart has a unique fresh URL; invalid, unavailable and cro
           const dialog = document.querySelector('[role="dialog"]')
           assert.ok(dialog, hash)
           assert.equal(dialog.querySelector('[data-gallery-item]')?.dataset.galleryItem, item.id === 'evidence' ? undefined : item.id)
-          assert.equal(document.querySelector('[data-chart-direct]').hash, hash)
+          assert.equal(document.querySelector('[data-chart-direct]'), null)
+          assert.equal(document.querySelector('[data-chart-copy]').textContent, 'Share')
           assert.ok(document.querySelector('[role="tab"][aria-selected="true"]').textContent.includes(area.label))
           assert.equal(document.getElementById(hash.slice(1)), null, 'no fragment-scroll target')
         } finally { await unmount() }

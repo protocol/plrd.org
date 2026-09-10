@@ -286,8 +286,9 @@ html.dark .chart-deck[data-subdued="true"]::after {
 .chart-fan-plot meter { width: 100%; height: 2rem; }
 .chart-preview-caption { font-size: .6875rem; line-height: 1.4; color: var(--color-gray-600); }
 .chart-preview-reading { padding-block: .5rem; font-size: 1.1rem; }
-.chart-share-controls { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; }
-.chart-share-controls :is(a, button) { padding: .5rem .65rem; min-height: 2.75rem; color: var(--color-blue); background: var(--color-gray-200); border-radius: .5rem; font-size: .8rem; cursor: pointer; }
+.chart-share-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-bottom: .75rem; }
+.chart-share-controls button { padding: .5rem .65rem; min-height: 2.75rem; color: var(--color-blue); background: var(--color-gray-200); border-radius: .5rem; font-size: .8rem; cursor: pointer; }
+.chart-share-controls [data-share-url] { user-select: all; font-size: .75rem; word-break: break-all; }
 .chart-deck :is(a, button):focus-visible { outline: 2px solid var(--color-blue); outline-offset: -3px; border-radius: .75rem; }
 @media (prefers-reduced-motion: reduce) {
   .chart-deck, .chart-deck > .instrument-preview, .chart-fan-card { transition: none; }
