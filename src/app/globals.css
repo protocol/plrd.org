@@ -581,6 +581,17 @@ ul:not([class]) {
   list-style-type: disc;
 }
 
+/* Tailwind Preflight resets ordered lists; restore ordinary article numbering
+   without changing custom classed lists such as .os-list. */
+.page-content ol:not([class]) {
+  list-style-type: decimal;
+  padding-left: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin-left: 1.5rem;
+  margin-bottom: 1em;
+}
+
 ul:not([class]) li li {
   list-style: circle;
 }
