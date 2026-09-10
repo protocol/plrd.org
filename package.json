@@ -8,12 +8,16 @@
     "build": "node scripts/build-content.mjs && next build",
     "start": "next start",
     "generate-jwk": "node scripts/generate-jwk.js",
+    "test:lab": "node --test --test-concurrency=1 scripts/lab-protocol-*.test.mjs scripts/lab-public-feed.test.mjs",
     "test": "node --test scripts/velocity/*.test.mjs scripts/neuro-content.test.mjs scripts/neuro-publication.test.mjs"
   },
   "dependencies": {
+    "@atproto-labs/did-resolver": "0.3.7",
     "@atproto/api": "^0.18.17",
     "@atproto/common-web": "^0.4.13",
     "@atproto/jwk-jose": "^0.1.11",
+    "@atproto/lexicon": "0.6.1",
+    "@atproto/oauth-client-browser": "0.5.4",
     "@atproto/oauth-client-node": "^0.3.15",
     "@atproto/syntax": "^0.4.3",
     "@next/third-parties": "^15.5.20",
