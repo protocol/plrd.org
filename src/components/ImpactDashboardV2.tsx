@@ -11,6 +11,10 @@ import { createPortal } from 'react-dom'
 import { useGalleryDialog } from '@/components/useGalleryDialog'
 import { useGalleryFan } from '@/components/useGalleryFan'
 import { chartHash, parseChartHash } from '@/lib/chart-selection'
+import { inflectionHash, parseInflectionHash } from '@/lib/impact-selection'
+import { useImpactNavigation, openImpactDialog, closeImpactDialog, navigateImpact } from '@/components/useImpactNavigation'
+import ImpactLinkControls from '@/components/ImpactLinkControls'
+import ImpactSectionLink from '@/components/ImpactSectionLink'
 import { instrumentGallery, type GalleryItem } from '@/lib/instrument-gallery'
 import {
   ROLE_META,
@@ -116,61 +120,36 @@ export default function ImpactDashboardV2({
     [visible, marketSignals],
   )
 
-  // Fragments are deliberately not DOM ids: opening a chart never scrolls the
-  // background. History retains Next's own state and the origin/path/query.
-  const ownedChart = useRef<string | null>(null)
-  const navigationData = useRef({ recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples })
-  navigationData.current = { recordsByArea, measurementSeriesByArea, marketSignals, ideaVintageExamples }
-  useEffect(() => {
-    const restore = () => {
-      const route = parseChartHash(window.location.hash)
-      if (route?.instrument) setActive(null)
-      setChartSelection(null)
-      if (!route || (fixedArea && route.area !== fixedArea)) {
-        if (!fixedArea) setFilter(initialArea)
-        return
-      }
-      setFilter(route.area)
-      if (!route.instrument || !route.itemId) return
-      const data = navigationData.current
-      const record = (data.recordsByArea?.[route.area] ?? instrumentsForArea(route.area)).find(r => r.instrument === route.instrument)
-      if (!record) return
-      const markets = INFLECTION_POINTS.filter(p => p.area === route.area).map(p => data.marketSignals[p.title]).filter((market): market is MarketSignal => !!market)
-      const label = FOCUS_AREAS.find(area => area.key === route.area)!.label
-      const { items } = instrumentGallery(record, data.measurementSeriesByArea[route.area] ?? [], markets, data.ideaVintageExamples, label)
-      if (items.some(item => item.id === route.itemId) || (!items.length && route.itemId === 'evidence')) setChartSelection({ instrument: route.instrument, itemId: route.itemId })
-    }
-    const previousScrollRestoration = window.history.scrollRestoration
-    window.history.scrollRestoration = 'manual'
-    restore()
-    window.addEventListener('popstate', restore)
-    window.addEventListener('hashchange', restore)
-    return () => {
-      window.removeEventListener('popstate', restore)
-      window.removeEventListener('hashchange', restore)
-      window.history.scrollRestoration = previousScrollRestoration
-    }
-  }, [fixedArea, initialArea])
-  const selectArea = (area: FocusAreaKey) => {
-    window.history.pushState(window.history.state, '', chartHash(area))
-    setFilter(area)
-    setChartSelection(null)
-    ownedChart.current = null
-  }
-  const openChart = (instrument: InstrumentId, itemId: string) => {
+  // Fragments are not DOM ids: opening a popout never scrolls the background.
+  useImpactNavigation(() => {
+    const route = parseChartHash(window.location.hash)
+    const point = parseInflectionHash(window.location.hash)
     setActive(null)
-    window.history.pushState(window.history.state, '', chartHash(filter, instrument, itemId))
-    ownedChart.current = window.location.href
-    setChartSelection({ instrument, itemId })
+    setChartSelection(null)
+    const queryArea = new URL(window.location.href).searchParams.get('area')
+    const fallback = FOCUS_AREAS.find(area => area.key === queryArea)?.key ?? initialArea
+    const area = point?.area ?? route?.area ?? fallback
+    if (fixedArea && area !== fixedArea) return
+    setFilter(area)
+    if (point) { setActive(point); return }
+    if (!route?.instrument || !route.itemId) return
+    const record = (recordsByArea?.[route.area] ?? instrumentsForArea(route.area)).find(r => r.instrument === route.instrument)
+    if (!record) return
+    const markets = INFLECTION_POINTS.filter(p => p.area === route.area).map(p => marketSignals[p.title]).filter((market): market is MarketSignal => !!market)
+    const label = FOCUS_AREAS.find(area => area.key === route.area)!.label
+    const { items } = instrumentGallery(record, measurementSeriesByArea[route.area] ?? [], markets, ideaVintageExamples, label)
+    if (items.some(item => item.id === route.itemId) || (!items.length && route.itemId === 'evidence')) setChartSelection({ instrument: route.instrument, itemId: route.itemId })
+  })
+  useEffect(() => {
+    const previous = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+    return () => { window.history.scrollRestoration = previous }
+  }, [])
+  const selectArea = (area: FocusAreaKey) => {
+    navigateImpact(chartHash(area))
   }
-  const closeChart = () => {
-    if (ownedChart.current === window.location.href) window.history.back()
-    else {
-      window.history.replaceState(window.history.state, '', chartHash(filter))
-      setChartSelection(null)
-    }
-    ownedChart.current = null
-  }
+  const openChart = (instrument: InstrumentId, itemId: string) => openImpactDialog(chartHash(filter, instrument, itemId))
+  const closeChart = () => closeImpactDialog(chartHash(filter))
 
   return (
     <>
@@ -209,8 +188,8 @@ export default function ImpactDashboardV2({
           <FieldVelocityBox key={filter} records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} restoreCoverFocus={restoreCoverFocus} />
 
           {/* Inflection points — four cards in two rows, with live signals. */}
-          <div className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-            Inflection points we&rsquo;re tracking
+          <div id="inflection-points" className="mt-6 mb-2 scroll-mt-24 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <ImpactSectionLink fragment="#inflection-points">Inflection points we&rsquo;re tracking</ImpactSectionLink>
           </div>
           {visible.length > 0 ? (
             <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
@@ -220,7 +199,7 @@ export default function ImpactDashboardV2({
                   point={p}
                   metrics={liveOutputs[p.title]}
                   signal={marketSignals[p.title]}
-                  onOpen={() => setActive(p)}
+                  onOpen={() => openImpactDialog(inflectionHash(p))}
                 />
               ))}
             </div>
@@ -232,10 +211,11 @@ export default function ImpactDashboardV2({
 
       {active && (
         <InflectionModal
+          key={inflectionHash(active)}
           point={active}
           metrics={liveOutputs[active.title]}
           signal={marketSignals[active.title]}
-          onClose={() => setActive(null)}
+          onClose={() => closeImpactDialog('#inflection-points', active.area)}
         />
       )}
       {velocityInstrument && records.find(r => r.instrument === velocityInstrument) && (
@@ -663,8 +643,6 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
   })
   const galleryRef = useGalleryFan()
   const titleId = useId()
-  const [copyStatus, setCopyStatus] = useState('Copy link')
-  const directUrl = new URL(chartHash(area, record.instrument, itemId), window.location.href).href
   const areaLabel = FOCUS_AREAS.find(f => f.key === area)!.label
   const inst = INSTRUMENT_BY_ID[record.instrument]
   const inventory = instrumentGallery(record, measurements, markets, examples, areaLabel)
@@ -683,11 +661,7 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
           <button type="button" onClick={onClose} aria-label="Close gallery" className="gallery-close">×</button>
         </header>
         <div className="instrument-gallery-scroll">
-          <div className="chart-share-controls">
-            <a data-chart-direct href={directUrl} onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) event.preventDefault() }}>Direct link ↗</a>
-            <button type="button" data-chart-copy onClick={async () => { try { await window.navigator.clipboard.writeText(directUrl); setCopyStatus('Copied') } catch { setCopyStatus('Copy failed — use Direct link') } }}>{copyStatus}</button>
-            <span className="sr-only" role="status">{copyStatus === 'Copy link' ? '' : copyStatus}</span>
-          </div>
+          <ImpactLinkControls hash={chartHash(area, record.instrument, itemId)} chart />
           <div ref={galleryRef} data-columns={columns} className="instrument-gallery-grid">
             {items.map((item, index) => <GalleryFlipCard key={item.id} item={item} record={record} areaLabel={areaLabel} index={index} />)}
           </div>
@@ -944,21 +918,6 @@ function CrowdForecast({ signal, divider = false }: { signal: MarketSignal; divi
   )
 }
 
-function useModalChrome(onClose: () => void) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', onKey)
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = prev
-    }
-  }, [onClose])
-}
-
 function InflectionModal({
   point,
   metrics,
@@ -971,17 +930,14 @@ function InflectionModal({
   onClose: () => void
 }) {
   const fa = FOCUS_AREAS.find((f) => f.key === point.area)!
-  useModalChrome(onClose)
+  const dialogRef = useGalleryDialog(onClose, () => document.getElementById(inflectionSlug(point)))
 
-  return (
+  return createPortal(
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={point.title}
       className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:p-6 lg:p-10"
-      onClick={onClose}
+      onClick={event => { if (event.target === event.currentTarget) onClose() }}
     >
-      <div className="relative my-4 w-full max-w-3xl rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <section ref={dialogRef} role="dialog" aria-modal="true" aria-label={point.title} tabIndex={-1} className="relative my-4 w-full max-w-3xl rounded-2xl bg-white shadow-2xl">
         <button
           type="button"
           onClick={onClose}
@@ -994,6 +950,7 @@ function InflectionModal({
         </button>
 
         <div className="p-6 sm:p-8">
+          <ImpactLinkControls hash={inflectionHash(point)} />
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-500">
             <span className="flex h-5 w-5 items-center justify-center text-gray-400">
               <AreaIcon type={FA_ICON[fa.key]} className="block h-4 w-4" />
@@ -1128,8 +1085,8 @@ function InflectionModal({
             </a>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </div>, document.body,
   )
 }
 

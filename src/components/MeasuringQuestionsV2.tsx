@@ -3,11 +3,16 @@
 // Methodology section: our toolkit and observed field velocity are separate axes,
 // not a causal attribution claim. Both tools and velocity instruments open modals.
 
-import { useEffect, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+import { useGalleryDialog } from '@/components/useGalleryDialog'
+import ImpactLinkControls from '@/components/ImpactLinkControls'
+import ImpactSectionLink from '@/components/ImpactSectionLink'
 import { HAND_COLOR, FIELD_COLOR, TOOLKIT_V2, FIELD_VELOCITY_METHODOLOGY, type ToolkitEntry } from '@/lib/field-velocity'
 import { VELOCITY_INSTRUMENTS, INFLECTION_EXPLAINER } from '@/lib/velocity-instruments'
 import { IdeaVintageExamples, InflectionQuadrant, type IdeaVintageExample } from '@/components/velocity-explainers'
 import InterventionExampleCards from '@/components/InterventionExampleCards'
+import { useImpactNavigation, openImpactDialog, closeImpactDialog } from '@/components/useImpactNavigation'
 
 type DefEntry = { id: string; label: string; subtitle: string; description: string }
 export type { IdeaVintageExample }
@@ -26,6 +31,11 @@ export default function MeasuringQuestionsV2({
   interlude?: ReactNode
 }) {
   const [modal, setModal] = useState<Modal | null>(null)
+  useImpactNavigation(() => {
+    const tool = TOOLKIT_V2.find(entry => window.location.hash === `#intervention/${entry.id}`)
+    const measure = [...VELOCITY_INSTRUMENTS, INFLECTION_EXPLAINER].find(entry => window.location.hash === `#definition/${entry.id}`)
+    setModal(tool ? { kind: 'tool', entry: tool } : measure ? { kind: 'measure', entry: measure } : null)
+  })
 
   return (
     <div>
@@ -36,7 +46,7 @@ export default function MeasuringQuestionsV2({
             <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide" style={{ color: HAND_COLOR }}>
               Our hand
             </div>
-            <h3 className="text-lg font-semibold tracking-tight text-black">PL R&amp;D interventions</h3>
+            <h3 className="text-lg font-semibold tracking-tight text-black"><ImpactSectionLink fragment="#toolkit">PL R&amp;D interventions</ImpactSectionLink></h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-500">
               A fixed toolkit we bring to every field. Pick the ones a field is missing, then push.
             </p>
@@ -49,8 +59,9 @@ export default function MeasuringQuestionsV2({
             {TOOLKIT_V2.map((t) => (
               <button
                 key={t.id}
+                data-impact-trigger={`#intervention/${t.id}`}
                 type="button"
-                onClick={() => setModal({ kind: 'tool', entry: t })}
+                onClick={() => openImpactDialog(`#intervention/${t.id}`)}
                 aria-haspopup="dialog"
                 className="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 text-left transition-all hover:border-gray-300 hover:shadow-sm"
               >
@@ -89,13 +100,13 @@ export default function MeasuringQuestionsV2({
       </div>
 
       {/* Block 2 — observed field velocity, the result we watch */}
-      <section>
+      <section id="observed-velocity" className="scroll-mt-24">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
           <div>
             <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide" style={{ color: FIELD_COLOR }}>
               The field
             </div>
-            <h3 className="text-lg font-semibold tracking-tight text-black">Observed velocity</h3>
+            <h3 className="text-lg font-semibold tracking-tight text-black"><ImpactSectionLink fragment="#observed-velocity">Observed velocity</ImpactSectionLink></h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-500">
               {FIELD_VELOCITY_METHODOLOGY.observedVelocity}
             </p>
@@ -106,8 +117,9 @@ export default function MeasuringQuestionsV2({
               {VELOCITY_INSTRUMENTS.map((m) => (
                 <button
                   key={m.id}
+                  data-impact-trigger={`#definition/${m.id}`}
                   type="button"
-                  onClick={() => setModal({ kind: 'measure', entry: m })}
+                  onClick={() => openImpactDialog(`#definition/${m.id}`)}
                   aria-haspopup="dialog"
                   className="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 text-left transition-all hover:border-gray-300 hover:shadow-sm"
                 >
@@ -125,7 +137,8 @@ export default function MeasuringQuestionsV2({
                   (they never enter a reading record), so they carry a "Marker" tag. */}
               <button
                 type="button"
-                onClick={() => setModal({ kind: 'measure', entry: INFLECTION_EXPLAINER })}
+                data-impact-trigger={`#definition/${INFLECTION_EXPLAINER.id}`}
+                onClick={() => openImpactDialog(`#definition/${INFLECTION_EXPLAINER.id}`)}
                 aria-haspopup="dialog"
                 className="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 text-left transition-all hover:border-gray-300 hover:shadow-sm"
               >
@@ -154,7 +167,7 @@ export default function MeasuringQuestionsV2({
       </section>
 
       {modal && (
-        <InfoModal modal={modal} ideaVintageExamples={ideaVintageExamples} onClose={() => setModal(null)} />
+        <InfoModal key={`${modal.kind}-${modal.entry.id}`} modal={modal} ideaVintageExamples={ideaVintageExamples} onClose={() => closeImpactDialog(modal.kind === 'tool' ? '#toolkit' : '#observed-velocity')} />
       )}
     </div>
   )
@@ -169,18 +182,8 @@ function InfoModal({
   ideaVintageExamples: IdeaVintageExample[]
   onClose: () => void
 }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', onKey)
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = prev
-    }
-  }, [onClose])
+  const hash = `#${modal.kind === 'tool' ? 'intervention' : 'definition'}/${modal.entry.id}`
+  const dialogRef = useGalleryDialog(onClose, () => document.querySelector<HTMLElement>(`[data-impact-trigger="${hash}"]`))
 
   const isTool = modal.kind === 'tool'
   const eyebrow = isTool ? 'Intervention' : 'Field velocity'
@@ -195,15 +198,12 @@ function InfoModal({
   const isIdeaVintage = modal.kind === 'measure' && modal.entry.id === 'idea_vintage'
   const isInflection = modal.kind === 'measure' && modal.entry.id === 'inflection_points'
 
-  return (
+  return createPortal(
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
       className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:p-6 lg:p-10"
-      onClick={onClose}
+      onClick={event => { if (event.target === event.currentTarget) onClose() }}
     >
-      <div className="relative my-4 w-full max-w-3xl rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <section ref={dialogRef} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1} className="relative my-4 w-full max-w-3xl rounded-2xl bg-white shadow-2xl">
         <button
           type="button"
           onClick={onClose}
@@ -216,6 +216,7 @@ function InfoModal({
         </button>
 
         <div className="p-6 sm:p-8">
+          <ImpactLinkControls hash={hash} />
           <div className="mb-1 flex items-center gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: eyebrowColor }}>
               {eyebrow}
@@ -242,7 +243,7 @@ function InfoModal({
           {isIdeaVintage && <IdeaVintageExamples examples={ideaVintageExamples} />}
           {isInflection && <InflectionQuadrant />}
         </div>
-      </div>
-    </div>
+      </section>
+    </div>, document.body,
   )
 }

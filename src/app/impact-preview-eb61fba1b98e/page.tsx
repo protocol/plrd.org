@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Breadcrumb from '@/components/Breadcrumb'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import MeasuringQuestionsV2 from '@/components/MeasuringQuestionsV2'
+import ImpactSectionLink from '@/components/ImpactSectionLink'
 import { HypercertsShowcase } from '@/components/hypercerts/HypercertsShowcase'
 import { fetchResearchRetreatHypercerts } from '@/lib/hypercerts'
 import { fetchLiveOutputs } from '@/lib/field-velocity-live'
@@ -55,22 +56,22 @@ export default async function ImpactPage({ searchParams }: {
             We measure velocity the same way we do the work: as a research program. Whether field
             acceleration works is itself the open question, tested across all four focus areas.
           </p>
-          <a
-            href="#methodology"
+          <ImpactSectionLink
+            fragment="#methodology"
             className="mt-6 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium text-[15px]"
           >
             Learn more about our methodology
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
-          </a>
+          </ImpactSectionLink>
         </div>
       </div>
 
       {/* Field velocity — grey full-bleed section to set it apart from the rest of the site */}
       <section id="field-velocity" className="border-y border-gray-200 bg-gray-100 scroll-mt-24">
         <div className="field-velocity-overview mx-auto px-4 sm:px-6 py-10 lg:py-12">
-          <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2">Field velocity</h2>
+          <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2"><ImpactSectionLink fragment="#field-velocity">Field velocity</ImpactSectionLink></h2>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mb-8">
             Pick a focus area. The summary above reads that field&rsquo;s velocity across the instruments
             that apply to it; the inflection points below are the specific markers we track, each with its
@@ -91,7 +92,7 @@ export default async function ImpactPage({ searchParams }: {
 
       {/* Methodology */}
       <div id="methodology" className="max-w-6xl mx-auto px-6 py-14 lg:py-16 scroll-mt-24">
-        <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2">Our methodology</h2>
+        <h2 className="text-xl lg:text-2xl font-semibold tracking-tight mb-2"><ImpactSectionLink fragment="#methodology">Our methodology</ImpactSectionLink></h2>
         <p className="text-base text-gray-600 leading-relaxed max-w-3xl mb-10">
           {FIELD_VELOCITY_METHODOLOGY.intro}
         </p>
@@ -111,14 +112,14 @@ export default async function ImpactPage({ searchParams }: {
                  negative margins (not a transform) for the break-out — a
                  transformed ancestor would become the containing block for the
                  detail modal's `position: fixed`, trapping it inside this band. */
-              <section className="my-12 w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] border-y border-gray-200 bg-gray-50">
+              <section id="verified-impact" className="scroll-mt-24 my-12 w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] border-y border-gray-200 bg-gray-50">
                 <div className="mx-auto max-w-6xl px-6 py-14 lg:py-16">
                 <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                   <div className="max-w-2xl">
                     <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--impact-hand)' }}>
                       Our hand, as verifiable claims
                     </div>
-                    <h3 className="text-lg font-semibold tracking-tight text-black">Verified Impact</h3>
+                    <h3 className="text-lg font-semibold tracking-tight text-black"><ImpactSectionLink fragment="#verified-impact">Verified Impact</ImpactSectionLink></h3>
                     <p className="mt-2 text-sm leading-relaxed text-gray-500">
                       A{' '}
                       <a
