@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "org.plresearch.lab.app",
+  "description": "Open Lab pilot candidate schema. Not published through Lexicon resolution; public self-reported content, not endorsement or peer review.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": [
+          "community",
+          "createdAt",
+          "title",
+          "url",
+          "description",
+          "field"
+        ],
+        "properties": {
+          "community": {
+            "type": "string",
+            "const": "https://www.plrd.org/lab/"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxGraphemes": 160,
+            "maxLength": 640
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxGraphemes": 1200,
+            "maxLength": 4800
+          },
+          "field": {
+            "type": "string",
+            "enum": [
+              "digital-human-rights",
+              "economies-governance",
+              "ai-robotics",
+              "neurotech",
+              "cross-field"
+            ]
+          },
+          "githubUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          }
+        }
+      }
+    }
+  }
+}

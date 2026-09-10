@@ -1,0 +1,63 @@
+{
+  "lexicon": 1,
+  "id": "org.plresearch.lab.profile",
+  "description": "Open Lab pilot candidate schema. Not published through Lexicon resolution; public self-reported content, not endorsement or peer review.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "required": [
+          "community",
+          "createdAt",
+          "workingOn",
+          "interests",
+          "lookingFor"
+        ],
+        "properties": {
+          "community": {
+            "type": "string",
+            "const": "https://www.plrd.org/lab/"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "workingOn": {
+            "type": "string",
+            "minLength": 1,
+            "maxGraphemes": 1200,
+            "maxLength": 4800
+          },
+          "interests": {
+            "type": "array",
+            "maxLength": 8,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxGraphemes": 60,
+              "maxLength": 240
+            }
+          },
+          "lookingFor": {
+            "type": "string",
+            "minLength": 1,
+            "maxGraphemes": 1200,
+            "maxLength": 4800
+          },
+          "githubUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "scholarUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          }
+        }
+      }
+    }
+  }
+}
