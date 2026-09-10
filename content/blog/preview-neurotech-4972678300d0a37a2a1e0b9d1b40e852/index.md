@@ -16,7 +16,7 @@ unlisted: true
 
 <p>Advances in neuroscience, brain-computer interfaces (BCIs), biologically inspired AI, and whole-brain emulation are accelerating rapidly. Together, they unlock a future where we can better understand intelligence, restore and expand human capabilities, and build entirely new forms of human-machine interaction. However, the field today remains fragmented: key technical, regulatory, infrastructure, and capital bottlenecks continue to slow progress. We aim to change that.</p>
 
-<p>PL Neuro exists to break bottlenecks: to define the milestones neurotech and NeuroAI need, drive the research that shifts what&#x27;s believed possible, and route talent and capital to some of humanity&#x27;s hardest and most important problems.</p>
+<p><a href="https://www.plneuro.xyz/">PL Neuro</a> exists to break bottlenecks: to define the milestones neurotech and NeuroAI need, drive the research that shifts what&#x27;s believed possible, and route talent and capital to some of humanity&#x27;s hardest and most important problems.</p>
 
 <p>We focus on three opportunity spaces that could reshape both neuroscience and computing over the coming decade:</p>
 
@@ -96,6 +96,12 @@ unlisted: true
 
 </ul>
 
+<h3>Inflection Points</h3>
+
+<p>An inflection point is a specific moment when field momentum can shift dramatically to accelerate progress.</p>
+
+<p>Looking forward, clinical capabilities that create demand beyond medical use and an open BCI app ecosystem could greatly accelerate adoption.</p>
+
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-eyebrow">Inflection point #1:</span></div>
 <p class="inflection-title">Clinical BCI Superpower</p>
@@ -151,6 +157,10 @@ unlisted: true
 <li>On neural foundation models, Meta’s <a href="https://ai.meta.com/blog/tribe-v2-brain-predictive-foundation-model/">TRIBE v2</a> predicts human brain responses to sights, sounds, and language. Its ability to predict fMRI responses in new subjects and tasks gives researchers a way to test hypotheses computationally before running additional human experiments.</li>
 
 </ul>
+
+<h3>Inflection Points</h3>
+
+<p>For NeuroAI, learning directly from neural data and achieving major energy savings through brain-inspired computing could mark the next inflection points.</p>
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-eyebrow">Inflection point #1:</span></div>
@@ -209,6 +219,10 @@ unlisted: true
 <li>On sufficiency, the field&#x27;s hardest open question is whether a connectome constrains dynamics tightly enough to simulate. A <a href="https://arxiv.org/abs/2603.25713">recent preprint</a> proposes an ultrastructure-to-dynamics compiler. If mappings like this hold, molecular annotation plus a connectome becomes enough to parameterize a simulation.</li>
 
 </ul>
+
+<h3>Inflection Points</h3>
+
+<p>In whole organism emulation, demonstrating memory retrieval in simulation and completing a whole mouse-brain connectome could substantially accelerate progress.</p>
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-eyebrow">Inflection point #1:</span></div>
