@@ -13,6 +13,6 @@ function ReturnStatus() {
   </main>
 }
 export default function LabOAuthReturnPage() {
-  // Also works before the parent installs the Lab-wide provider; runtime is shared.
+  // The provider shares the Lab runtime and also permits isolated callback rendering.
   return <LabAuthProvider><ReturnStatus /></LabAuthProvider>
 }

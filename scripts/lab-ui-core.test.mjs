@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { source } from "./velocity/test-source-loader.mjs";
 
-test("client adapter fails closed on missing backend, rejects malformed receipts and unsafe URLs", async () => {
+test("client adapter fails closed on missing public backend and absent SDK identity; rejects unsafe URLs", async () => {
   const { createLabClient, safeUrl } = source("lib/lab-client.ts");
   const offline = createLabClient(
     async () => new Response("missing", { status: 404 }),
@@ -11,10 +11,12 @@ test("client adapter fails closed on missing backend, rejects malformed receipts
   assert.equal((await offline.feed()).status, "unavailable");
   await assert.rejects(
     offline.publish("note", { text: "hi" }),
-    /unavailable|failed/i,
+    /Sign in with your Open Lab identity/i,
   );
   const malformed = createLabClient(async () => Response.json({ ok: true }));
-  await assert.rejects(malformed.publish("note", { text: "hi" }), /receipt/i);
+  // HTTP receipts cannot substitute for an injected SDK identity. Exact SDK receipt
+  // validation is exercised by lab-integration-client and lab-protocol-writes.
+  await assert.rejects(malformed.publish("note", { text: "hi" }), /Sign in with your Open Lab identity/i);
   for (const url of [
     "javascript:alert(1)",
     "data:text/html,test",
@@ -25,7 +27,7 @@ test("client adapter fails closed on missing backend, rejects malformed receipts
   assert.equal(safeUrl("https://marimo.io/"), "https://marimo.io/");
 });
 
-test("public adapter preserves source provenance and rejects unusable feed/profile payloads", async () => {
+test("public adapter preserves source provenance; notebook requires an explicit DID", async () => {
   const { createLabClient } = source("lib/lab-client.ts");
   const post = { uri: "at://did:plc:fixture/app.bsky.feed.post/one", text: "Fixture post", author: { did: "did:plc:fixture", handle: "fixture.test", displayName: { invalid: true } }, url: "https://bsky.app/profile/fixture.test/post/one", createdAt: "2026-09-10T12:00:00Z" };
   const c = createLabClient(async () => Response.json({ items: [post], sourceLabel: "Fixture source", sourceUrl: "https://bsky.app/profile/fixture.test/feed/science", status: "live", fetchedAt: "2026-09-10T12:00:00Z" }));
@@ -33,10 +35,10 @@ test("public adapter preserves source provenance and rejects unusable feed/profi
   assert.equal(feed.sourceUrl, "https://bsky.app/profile/fixture.test/feed/science");
   assert.equal(feed.items[0].author.displayName, undefined);
   const malformed = createLabClient(async () => Response.json({ profile: { workingOn: "Fixture", interests: {}, lookingFor: "" }, records: [] }));
-  await assert.rejects(malformed.records(), /read|invalid/i);
+  await assert.rejects(malformed.records(), /explicit Open Lab DID/i);
 });
 
-test("unintegrated UI identity never routes a visitor through legacy CMS OAuth", async () => {
+test("HTTP client never substitutes for the dedicated SDK identity", async () => {
   let calls = 0;
   const client = source("lib/lab-client.ts").createLabClient(async () => {
     calls++;
