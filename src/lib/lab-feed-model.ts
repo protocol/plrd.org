@@ -3,6 +3,8 @@ import { DEMO_PEOPLE, DEMO_PROPOSALS, DEMO_THREADS, type DemoState } from '@/lib
 import type { FollowingState } from '@/lib/lab-following'
 import type { InventionUpdate } from '@/lib/lab-inventions'
 import type { SocialDraft } from '@/lib/lab-social'
+import type { LabRecordView } from '@/lib/lab-protocol'
+import { displayRecord, presentPdsRecord } from '@/lib/lab-record-display'
 export const CASE_DISCIPLINES: Record<string, string[]> = {
   reproducibility: ['ai-robotics', 'cross-field', 'math'],
   'neural-measurement': ['neurotech', 'math', 'cross-field'],
@@ -10,13 +12,14 @@ export const CASE_DISCIPLINES: Record<string, string[]> = {
 }
 export type FeedRow = {
   id: string; ideaId: string; authorId?: string; author: string; title: string; text: string;
-  kind: string; disciplines: string[]; origin: 'demo' | 'editorial' | 'local';
+  kind: string; disciplines: string[]; origin: 'demo' | 'editorial' | 'local' | 'public';
+  publicRecord?: LabRecordView;
   artifactId?: string; threadId?: string; messageId?: string; draftSlot?: string;
   artifact: string; artifactUrl?: string; request: string; stage: string; action: string
 }
 const featured = ['r5', 'n3', 'o4', 'r6', 'n4']
 const prototypeNames: Record<string,string> = {'split-check':'Split-before-fit inspector','duration-note':'Recording-hour calculator','reuse-receipt':'Artifact reuse checker'}
-export function buildFeedRows({ isDemo, demo, drafts, updates = [] }: { isDemo: boolean; demo: DemoState; drafts: SocialDraft[]; updates?: InventionUpdate[] }): FeedRow[] {
+export function buildFeedRows({ isDemo, demo, drafts, updates = [], publicRecords = [] }: { isDemo: boolean; demo: DemoState; drafts: SocialDraft[]; updates?: InventionUpdate[]; publicRecords?: LabRecordView[] }): FeedRow[] {
   const story: FeedRow[] = isDemo ? featured.map(id => {
     const thread = DEMO_THREADS.find(t => t.messages.some(m => m.id === id))!
     const message = thread.messages.find(m => m.id === id)!, proposal = DEMO_PROPOSALS.find(p=>p.id===thread.proposalId)!
@@ -35,7 +38,11 @@ export function buildFeedRows({ isDemo, demo, drafts, updates = [] }: { isDemo: 
     return { id: r.id, ideaId: thread.id, threadId: thread.id, author: 'Your local demo note', authorId: 'demo-visitor', title: prototypeNames[proposal.id], text: r.text, kind: 'Contribution', disciplines: CASE_DISCIPLINES[thread.caseId], origin: 'demo',artifact:proposal.artifact,request:proposal.test,stage:'Local note · not validated',action:'Take a test' }
   }) : drafts.filter(d => d.kind === 'note').map(d => ({ id: `draft:${d.slot}`, ideaId: `draft:${d.slot}`, draftSlot: d.slot, author: 'Your local draft', title: 'An idea on your bench', text: String(d.data.text || ''), kind: 'Local idea', disciplines: [String(d.data.field || 'cross-field')], origin: 'local',artifact:'Unpublished idea draft',request:'Turn this idea into a bounded build or test.',stage:'Idea',action:'Help build' }))
   const making:FeedRow[]=updates.map(u=>({id:`invention:${u.id}`,ideaId:`invention:${u.id}`,author:isDemo?'Your local demo build':'Your local build',title:u.title,text:u.summary,kind:u.kind,disciplines:u.disciplines,origin:'local',artifact:u.artifactUrl?'Linked artifact':'Artifact not linked yet',artifactUrl:u.artifactUrl,request:u.request,stage:`${u.stage} · self-reported, not externally validated`,action:'Share what worked'}))
-  return [...making,...additions, ...(isDemo ? [story[0], editorial[0], story[1], story[2], editorial[1], story[3], editorial[2], story[4]] : editorial)]
+  const publicRows: FeedRow[] = isDemo ? [] : publicRecords.map(record => {
+    const display = displayRecord(presentPdsRecord(record))
+    return { id: record.uri, ideaId: record.uri, authorId: record.authorDid, author: record.authorDid, title: display.title, text: display.rows.map(r => r.value).join(' '), kind: record.kind, disciplines: 'field' in record.data ? [record.data.field] : [], origin: 'public', publicRecord: record, artifact: '', request: '', stage: '', action: 'Inspect public record' }
+  })
+  return [...publicRows,...making,...additions, ...(isDemo ? [story[0], editorial[0], story[1], story[2], editorial[1], story[3], editorial[2], story[4]] : editorial)]
 }
 /** OR within disciplines and across subscriptions; AND with text search and curated view. */
 export function filterFeedRows(rows: FeedRow[], prefs: FollowingState, query: string): FeedRow[] {

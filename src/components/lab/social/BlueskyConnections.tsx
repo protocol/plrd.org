@@ -4,6 +4,8 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useLabIdentity, type LabIdentity } from '@/lib/lab-identity'
 import { createLabProfileReader, labSessionRequestSignal, type LabSession } from '@/lib/lab-auth'
 import { assertLabDid } from '@/lib/lab-protocol'
+import { useLabFollowing } from '@/components/lab/social/useLabFollowing'
+import { useDemoCommunity } from '@/components/lab/demo/DemoCommunityProvider'
 import { safeLabReturnTo, type LabConnectionAction } from '@/lib/lab-oauth-config'
 import { createLabConnectionClient, LabConnectionPermissionError, LabConnectionUnknownError, type LabConnectionReceipt } from '@/lib/lab-connections'
 
@@ -19,10 +21,12 @@ function saveConnectionDraft(did: string, subject: string, action: LabConnection
 
 export default function BlueskyConnections({ personDid }: { personDid?: string }) {
   const identity = useLabIdentity()
+  const demo = useDemoCommunity()
   // No consent or private draft carries across accounts or selected person cards.
-  return <ConnectionPanel key={`${identity.session?.did ?? 'guest'}:${personDid ?? 'lookup'}`} personDid={personDid} identity={identity} />
+  return <ConnectionPanel key={`${demo.mode}:${identity.session?.did ?? 'guest'}:${personDid ?? 'lookup'}`} personDid={personDid} identity={identity} />
 }
 function ConnectionPanel({ personDid, identity }: { personDid?: string; identity: LabIdentity }) {
+  const following = useLabFollowing()
   const [handle, setHandle] = useState('')
   const [loginHandle, setLoginHandle] = useState('')
   const [profile, setProfile] = useState<LabSession | null>(null)
@@ -156,7 +160,12 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
       <strong>{profile.displayName ?? profile.handle}</strong><br />
       <a className="lab-text-button" href={`https://bsky.app/profile/${profile.did}`} target="_blank" rel="noopener noreferrer">@{profile.handle}</a>
       {session && <p>Acting as @{session.handle}</p>}
-      <p>A follow is public and one-way. It may notify this person and be replicated; it is not a mutual connection.</p>
+      {following.mode === 'live' ? <div>
+        <button type="button" className="lab-button lab-quiet" disabled={!following.ready || !!following.error} aria-pressed={following.prefs.people.includes(profile.did)} onClick={() => following.act({ type: 'toggle', kind: 'people', id: profile.did })}>{following.prefs.people.includes(profile.did) ? 'Unfollow in Open Lab' : 'Follow in Open Lab'}</button>
+        <p className="lab-smallprint">Local subscription for this identity in this browser. Supported public Open Lab records appear in the science feed. No Bluesky follow, permission, or notification.</p>
+        {following.error && <p role="alert">{following.error}</p>}
+      </div> : <p>Turn Demo off to follow this real account in your local Open Lab feed. Fictional people stay separate.</p>}
+      <p>A native Bluesky follow is public and one-way. It may notify this person and be replicated; it is not a mutual connection.</p>
       <details data-connection-details style={{ fontSize: 13 }}>
         <summary>Account details</summary>
         <p>Profile identity: <code>{profile.did}</code></p>

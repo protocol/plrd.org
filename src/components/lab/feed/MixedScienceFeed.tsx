@@ -12,6 +12,9 @@ import { DEMO_PEOPLE, emptyDemoState, type DemoPerson } from '@/lib/lab-demo'
 import styles from '@/components/lab/feed/feed.module.css'
 import curationStyles from '@/components/lab/feed/curation.module.css'
 import LabDialog from '@/components/lab/LabDialog'
+import { usePublicFollowing } from '@/components/lab/feed/usePublicFollowing'
+import PublicRecordRow from '@/components/lab/feed/PublicRecordRow'
+import PublicFollowingStatus from '@/components/lab/feed/PublicFollowingStatus'
 export default function MixedScienceFeed() {
   const following = useLabFollowing()
   return <ScienceFeed key={following.scope} />
@@ -32,13 +35,15 @@ function ScienceFeed() {
   const [selected, setSelected] = useState<FeedRow | null>(null), [person, setPerson] = useState<DemoPerson | null>(null)
   const bench=useInventionBench()
   const { prefs } = following
-  const rows = buildFeedRows({ isDemo: demo.isDemo, demo: following.ready ? demo.state : emptyDemoState(), drafts: following.ready ? local.drafts : [], updates: following.ready ? bench.state?.updates : [] })
+  const publicFeed = usePublicFollowing(following)
+  const rows = buildFeedRows({ isDemo: demo.isDemo, demo: following.ready ? demo.state : emptyDemoState(), drafts: following.ready ? local.drafts : [], updates: following.ready ? bench.state?.updates : [], publicRecords: publicFeed.records })
   const filtered = filterFeedRows(rows, prefs, query)
   const chooseDiscipline = (id: string) => following.act({ type: 'filter', feed: prefs.filter.feed, disciplines: prefs.filter.disciplines.includes(id) ? prefs.filter.disciplines.filter(v => v !== id) : [...prefs.filter.disciplines, id] })
   const reset = () => { setQuery(''); if (refinement.current) refinement.current.open = false; following.act({ type: 'filter', feed: 'discover', disciplines: [] }) }
   const suggestions = DEMO_PEOPLE.filter(p => !prefs.people.includes(p.id) && (!prefs.filter.disciplines.length || p.caseIds.some(c => CASE_DISCIPLINES[c].some(t => prefs.filter.disciplines.includes(t))))).slice(0, 3)
   const curation = (
     <aside className={`${styles.context} ${curationOpen ? curationStyles.drawer : curationStyles.desktop}`} aria-label="Curate your science feed">
+      {!demo.isDemo && <section><h2>People you follow locally</h2><p>Real-account subscriptions for this identity and browser. No native Bluesky follow is changed.</p><a href="/lab/people/">Find a public profile →</a>{prefs.people.length ? <ul className={styles.followList}>{prefs.people.map(did => <li key={did}><span style={{ minWidth: 0, overflowWrap: 'anywhere' }}>{did}</span><button disabled={!following.ready} aria-label={`Unfollow person: ${did}`} onClick={() => following.act({ type: 'toggle', kind: 'people', id: did })}>Unfollow</button></li>)}</ul> : <p>No local person subscriptions yet.</p>}</section>}
       <section><h2>Your branches</h2><p>Choose more than one branch of the tech tree. A shared method can connect distant fields.</p><ul className={styles.followList}>{fields.map(f=><li key={f.id}><span>{f.label}</span><button aria-label={`${prefs.disciplines.includes(f.id)?'Unfollow':'Follow'} branch: ${f.label}`} aria-pressed={prefs.disciplines.includes(f.id)} disabled={!following.ready} onClick={()=>following.act({type:'toggle',kind:'disciplines',id:f.id})}>{prefs.disciplines.includes(f.id)?'Following':'+ Follow'}</button></li>)}</ul><button disabled={!following.ready || !prefs.disciplines.length} onClick={()=>following.act({type:'filter',feed:'discover',disciplines:prefs.disciplines})}>Use followed branches as filters</button></section>
       <section><h2>Curated views</h2><p>Views save your selected branch filters, not the branches you follow or your search text. They stay in this browser.</p><form onSubmit={e=>{e.preventDefault();const result=following.act({type:'save-view',name:name.trim(),disciplines:prefs.filter.disciplines});setNotice(result.ok?'View saved in this browser.':result.error||'Not saved.');if(result.ok)setName('')}}><label>Name this view<input aria-label="Name this view" placeholder="e.g. Minds × methods" maxLength={60} value={name} onChange={e=>setName(e.target.value)} /></label><button disabled={!following.ready||!name.trim()||!prefs.filter.disciplines.length}>Save view</button></form><ul className={styles.views}>{prefs.views.map(v=><li key={v.name}><button onClick={()=>following.act({type:'filter',feed:'discover',disciplines:v.disciplines})}>{v.name} <small>{v.disciplines.length} branches</small></button><button aria-label={`Remove view ${v.name}`} onClick={()=>following.act({type:'remove-view',name:v.name})}>×</button></li>)}</ul>{notice&&<p role="status">{notice}</p>}</section>
       {!curationOpen && demo.isDemo && suggestions.length>0 && <section><h2>People around these ideas</h2>{suggestions.map(p=><button className={styles.personSuggestion} key={p.id} aria-label={`View ${p.name}’s profile`} onClick={()=>setPerson(p)}><strong>{p.name}</strong><span>{p.lookingFor}</span></button>)}<a href="/lab/people/">Find people →</a></section>}
@@ -55,7 +60,10 @@ function ScienceFeed() {
       <div className={styles.feedSummary}><span role="status">{filtered.length} activities{prefs.filter.disciplines.length > 1 ? ' · matching any selected branch' : ''}</span><button onClick={reset}>Reset filters</button></div>
       {prefs.filter.feed==='following' && <p className={styles.meta}>Ideas, people, or tech-tree branches you follow, combined without repeats. Follows stay in this browser.</p>}
       {(following.error || local.error) && <p role="alert" className={styles.error}>{following.error || local.error}</p>}
+      {publicFeed.error && <p role="alert" className={styles.error}>{publicFeed.error}</p>}
+      <PublicFollowingStatus feed={publicFeed} />
       {!following.ready && <p role="status">Restoring your identity; samples are available while personal controls wait.</p>}{filtered.map(row => {
+        if (row.publicRecord) return <PublicRecordRow key={row.id} record={row.publicRecord} />
         const author = DEMO_PEOPLE.find(p=>p.id===row.authorId), followed=prefs.ideas.includes(row.ideaId)
         const tags=prefs.ideaTags[row.ideaId]??row.disciplines
         return <article className={styles.row} key={row.id} data-feed-row={row.id}>

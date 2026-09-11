@@ -38,13 +38,15 @@ export function labRecordView(input: { uri: string; cid?: string; value: unknown
 }
 
 // Browser only: never expose a server proxy for visitor-selected DID/PDS URLs.
-export function createLabPublicReader(fetcher: typeof fetch = globalThis.fetch) {
+export function createLabPublicReader(fetcher: typeof fetch = globalThis.fetch, requestSignal?: AbortSignal) {
   const publicFetch: typeof fetch = async (input, init) => {
     if (typeof window === 'undefined') throw new Error('Public PDS reads must run directly in the browser.')
     const url = safeLabHttpsUrl(input instanceof Request ? input.url : String(input))
     const upstreamSignal = init?.signal ?? (input instanceof Request ? input.signal : undefined)
-    const signal = AbortSignal.any([AbortSignal.timeout(12_000), ...(upstreamSignal ? [upstreamSignal] : [])])
+    const signal = AbortSignal.any([AbortSignal.timeout(12_000), ...(upstreamSignal ? [upstreamSignal] : []), ...(requestSignal ? [requestSignal] : [])])
+    signal.throwIfAborted()
     const response = await fetcher(url, { method: 'GET', credentials: 'omit', redirect: 'error', cache: 'no-store', headers: { Accept: 'application/json' }, signal })
+    signal.throwIfAborted()
     const reader = response.body?.getReader()
     if (!reader) return response
     const chunks: Uint8Array[] = []
@@ -52,6 +54,7 @@ export function createLabPublicReader(fetcher: typeof fetch = globalThis.fetch) 
     try {
       while (true) {
         const { done, value } = await reader.read()
+        signal.throwIfAborted()
         if (done) break
         size += value.byteLength
         if (size > 1_048_576) throw new Error('Public response exceeds the 1 MiB limit; request a smaller page.')
@@ -65,8 +68,10 @@ export function createLabPublicReader(fetcher: typeof fetch = globalThis.fetch) 
   }
   const resolver = new DidResolverCommon({ fetch: publicFetch, allowHttp: false })
   async function connect(did: string) {
+    requestSignal?.throwIfAborted()
     assertLabDid(did)
     const doc = await resolver.resolve(did)
+    requestSignal?.throwIfAborted()
     if (doc.id !== did) throw new Error('DID document identity mismatch.')
     const services = doc.service?.filter(s => (s.id === '#atproto_pds' || s.id === `${did}#atproto_pds`) && s.type === 'AtprotoPersonalDataServer')
     if (services?.length !== 1 || typeof services[0].serviceEndpoint !== 'string') throw new Error('DID does not declare exactly one usable PDS.')
