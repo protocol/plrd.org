@@ -99,7 +99,7 @@ export default function RootLayout({
         {/* Apply theme before paint to avoid a flash of the wrong theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+            __html: `(function(){var t;try{t=localStorage.getItem('theme');}catch(e){}var p=window.location.pathname;var lab=p==='/lab'||p.indexOf('/lab/')===0;var d=t==='dark';if(t!=='dark'&&t!=='light'&&!lab){try{d=window.matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){}}document.documentElement.classList.toggle('dark',d);})();`,
           }}
         />
       </head>

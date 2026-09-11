@@ -1,0 +1,21 @@
+.handoff { display: grid; gap: 14px; padding: 20px; margin-block: 8px 16px; background: var(--lab-paper, #f1f4f2); border-block: 1px solid var(--lab-line, #d9dfdb); color: var(--lab-ink, #202729); font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+.handoff p, .heading h3 { margin: 0; }
+.heading { display: flex; align-items: baseline; gap: 12px; justify-content: space-between; flex-wrap: wrap; }
+.heading h3 { font-size: 17px; font-weight: 600; }
+.heading span, .note, .other { color: var(--lab-muted, #596469); font-size: 13px; }
+.destinations { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid var(--lab-line, #d9dfdb); }
+.handoff button { min-height: 42px; padding: 9px 12px; border: 1px solid var(--lab-line, #d9dfdb); border-radius: 6px; background: var(--lab-card, #fff); color: inherit; font: inherit; font-size: 13px; cursor: pointer; }
+.destinations button[aria-pressed=true], .handoff .primary { background: var(--lab-ink, #202729); color: var(--lab-card, #fff); border-color: transparent; }
+.handoff button:disabled { cursor: not-allowed; opacity: .5; }
+.handoff :is(button,a,input,textarea,summary):focus-visible { outline: 3px solid var(--lab-accent, #1982f4); outline-offset: 3px; }
+.actions, .export { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.export { border-top: 1px solid var(--lab-line, #d9dfdb); padding-top: 14px; }
+.export a { margin-left: auto; }
+.external { display: grid; gap: 12px; }
+.external label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
+.external label span { color: var(--lab-muted, #596469); font-weight: 400; }
+.handoff input, .handoff textarea { width: 100%; min-width: 0; background: var(--lab-card, #fff); border: 1px solid var(--lab-line, #d9dfdb); border-radius: 6px; padding: 10px; color: inherit; font: inherit; font-size: 15px; }
+.handoff textarea { margin-top: 10px; resize: vertical; font-family: ui-monospace, monospace; font-size: 12px; }
+.handoff a { text-decoration: underline; text-underline-offset: 3px; }
+.handoff summary { cursor: pointer; font-size: 13px; }
+@media (max-width: 620px) { .handoff { padding: 16px 12px; } .destinations button { flex: 1 1 auto; } .export a { margin-left: 0; } }

@@ -1,0 +1,94 @@
+[
+  {
+    "width": 1440,
+    "scrollWidth": 1425,
+    "route": "/lab/",
+    "activeNavCount": 1,
+    "scopeVisible": true,
+    "accountVisible": true,
+    "searchVisible": true,
+    "sidebarVisible": true,
+    "menuVisible": false,
+    "headingSize": 22,
+    "firstRow": {
+      "x": 281.5,
+      "y": 374.984375,
+      "width": 740,
+      "height": 278.109375,
+      "top": 374.984375,
+      "right": 1021.5,
+      "bottom": 653.09375,
+      "left": 281.5
+    },
+    "profile": true
+  },
+  {
+    "width": 1024,
+    "scrollWidth": 1009,
+    "route": "/lab/",
+    "activeNavCount": 1,
+    "scopeVisible": true,
+    "accountVisible": true,
+    "searchVisible": true,
+    "sidebarVisible": true,
+    "menuVisible": false,
+    "headingSize": 22,
+    "firstRow": {
+      "x": 234,
+      "y": 374.984375,
+      "width": 751,
+      "height": 278.109375,
+      "top": 374.984375,
+      "right": 985,
+      "bottom": 653.09375,
+      "left": 234
+    },
+    "profile": true
+  },
+  {
+    "width": 390,
+    "scrollWidth": 390,
+    "route": "/lab/",
+    "activeNavCount": 1,
+    "scopeVisible": true,
+    "accountVisible": true,
+    "searchVisible": true,
+    "sidebarVisible": false,
+    "menuVisible": true,
+    "headingSize": 20,
+    "firstRow": {
+      "x": 14,
+      "y": 384.1875,
+      "width": 362,
+      "height": 317.9375,
+      "top": 384.1875,
+      "right": 376,
+      "bottom": 702.125,
+      "left": 14
+    },
+    "profile": true
+  },
+  {
+    "width": 320,
+    "scrollWidth": 320,
+    "route": "/lab/",
+    "activeNavCount": 1,
+    "scopeVisible": true,
+    "accountVisible": true,
+    "searchVisible": true,
+    "sidebarVisible": false,
+    "menuVisible": true,
+    "headingSize": 20,
+    "firstRow": {
+      "x": 14,
+      "y": 438.1875,
+      "width": 292,
+      "height": 318.125,
+      "top": 438.1875,
+      "right": 306,
+      "bottom": 756.3125,
+      "left": 14
+    },
+    "profile": true
+  }
+]

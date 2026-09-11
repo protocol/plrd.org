@@ -1,0 +1,9 @@
+/* Composition across peer modules. Keep data/provenance in the owning modules. */
+.open-lab.lab-composed .lab-header-actions { min-width: 0; }
+.open-lab.lab-composed .lab-header-actions button { min-height: 44px; min-width: 44px; }
+.open-lab.lab-composed .lab-community-supplement { margin-block: 18px; min-width: 0; }
+.open-lab.lab-composed .lab-composition-prompt { border-block: 1px solid var(--lab-line); padding-block: 12px; margin-block: 16px; }
+.open-lab.lab-composed .lab-composition-prompt a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-width: 600px) {
+  .open-lab.lab-composed .lab-community-supplement { margin-block: 12px; }
+}
