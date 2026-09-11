@@ -1,0 +1,126 @@
+.scienceTree {
+  --paper: #ffffff; --context: #f4f6f7; --canvas: #f5f8fa; --ink: #19252e;
+  --muted: #566672; --line: #dce3e7; --accent: #145e91; --accent-soft: #e7f2f9;
+  width: 100%; min-width: 0; color: var(--ink); background: var(--paper); color-scheme: light;
+  font-size: 15px; line-height: 1.55;
+}
+:global(.dark) .scienceTree {
+  --paper: #151d24; --context: #1b2730; --canvas: #18232c; --ink: #edf3f7;
+  --muted: #b0bfca; --line: #364853; --accent: #9bd5ff; --accent-soft: #203e52;
+  color-scheme: dark;
+}
+.scienceTree h1, .scienceTree h2, .scienceTree h3, .scienceTree p { margin: 0; }
+.scienceTree h1 { font-size: 22px; line-height: 1.3; font-weight: 650; letter-spacing: -.025em; }
+.scienceTree h2 { font-size: 17px; line-height: 1.4; font-weight: 650; letter-spacing: -.015em; }
+.scienceTree h3 { font-size: 15px; line-height: 1.5; font-weight: 650; }
+.scienceTree button, .scienceTree input { font: inherit; }
+.scienceTree button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--paper); cursor: pointer; }
+.scienceTree button:disabled { opacity: .45; cursor: default; }
+.scienceTree a { color: var(--accent); text-decoration: none; }
+.scienceTree a:hover { text-decoration: underline; }
+.scienceTree :is(a, button, input, summary, [tabindex]):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.scienceTree :is(h2):focus { outline-offset: 5px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 24px 26px 20px; border-bottom: 1px solid var(--line); }
+.header > div > p:last-child { color: var(--muted); margin-top: 8px; }
+.eyebrow { color: var(--muted); font-size: 11px; line-height: 1.6; font-weight: 650; letter-spacing: .095em; margin-bottom: 5px !important; }
+.snapshotLabel { font-size: 12px; text-align: right; color: var(--muted); max-width: 240px; }
+.snapshotLabel span { display: block; margin-top: 3px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 320px); align-items: start; }
+.explorer { min-width: 0; padding: 20px 26px 24px; }
+.searchBar { display: flex; align-items: flex-end; gap: 10px; }
+.searchLabel { display: grid; gap: 5px; flex: 1; min-width: 0; font-weight: 550; }
+.searchLabel input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 6px; padding: 10px 12px; font-weight: 400; }
+.searchLabel input::placeholder { color: var(--muted); }
+.breadcrumb { margin: 12px 0 16px; }
+.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; padding: 0; margin: 0; font-size: 12px; }
+.breadcrumb li { min-width: 0; overflow-wrap: anywhere; }
+.breadcrumb li:not(:last-child)::after { content: '/'; color: var(--muted); padding-left: 6px; }
+.breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; }
+.breadcrumb [aria-current] { color: var(--muted); }
+.branchHeader { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.branchHeader h2 { overflow-wrap: anywhere; }
+.viewSwitch { display: flex; gap: 3px; flex: none; }
+.upLink { min-height: 44px; padding: 8px; display: inline-flex; align-items: center; font-size: 13px; }
+.viewSwitch button[aria-pressed='true'] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.resultCount { color: var(--muted); font-size: 12px; margin: 10px 0 !important; }
+.branchList { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+.branchList li { border-bottom: 1px solid var(--line); }
+.branchList a { display: flex; gap: 14px; align-items: center; padding: 14px 4px; min-height: 72px; color: var(--ink); }
+.branchList a:hover { background: var(--canvas); text-decoration: none; }
+.branchKind { width: 58px; flex: none; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+.branchText { flex: 1; min-width: 0; display: grid; gap: 3px; overflow-wrap: anywhere; }
+.branchText strong { font-size: 15px; font-weight: 600; }
+.branchText > span { font-size: 12px; color: var(--muted); }
+.empty { padding: 30px 20px; border-top: 1px solid var(--line); background: var(--canvas); }
+.empty p { margin: 8px 0 !important; color: var(--muted); max-width: 55ch; }
+.empty a { display: inline-flex; min-height: 44px; align-items: center; }
+.pagination { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin: 14px 0; }
+.pagination span { font-size: 12px; color: var(--muted); }
+.legend { display: flex; gap: 9px; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.legend svg { flex: none; }
+.context { align-self: stretch; min-width: 0; background: var(--context); border-left: 1px solid var(--line); }
+.context > section, .provenance { padding: 20px; border-bottom: 1px solid var(--line); }
+.detail > p:not(.eyebrow) { margin-top: 12px; }
+.detail h2, .questionBrief h2 { overflow-wrap: anywhere; }
+.sourceLink { display: inline-flex; align-items: center; min-height: 44px; font-weight: 550; font-size: 13px; }
+.sourceLinks { display: flex; flex-direction: column; align-items: flex-start; }
+.sourceLinks a { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; overflow-wrap: anywhere; }
+.shareField { display: grid; gap: 6px; font-size: 12px; color: var(--muted); margin-top: 12px; }
+.shareField input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 4px; padding: 8px; font-size: 12px; color: var(--ink); background: var(--paper); }
+.smallNote { font-size: 12px; color: var(--muted); }
+.keywords { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0 8px; }
+.keywords span { font-size: 11px; padding: 2px 6px; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; }
+.provenance summary, .plContext summary, .shareLinks summary { cursor: pointer; min-height: 44px; padding: 9px 0; font-size: 13px; font-weight: 600; }
+.provenance p { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.branchText > .overlayBadge { color: var(--accent); font-size: 11px; }
+.branchList [data-pl-overlay] { border-left: 3px solid var(--accent); padding-left: 10px; }
+.overlayToggle { display: flex; gap: 9px; align-items: center; min-height: 44px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.overlayToggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+.questionList { list-style: none; padding: 0; margin: 6px 0 0; }
+.questionList li { border-top: 1px solid var(--line); }
+.questionList a { display: grid; gap: 3px; padding: 10px 0; min-height: 44px; }
+.questionList span { font-size: 11px; color: var(--muted); }
+.questionList strong { font-size: 13px; font-weight: 550; }
+.questionList [aria-current='true'] { text-decoration: underline; }
+.questionBrief h3 { margin-top: 18px; margin-bottom: 6px; }
+.questionBrief p { font-size: 13px; }
+.questionBrief .smallNote { font-size: 12px; margin-top: 14px; }
+.notice { padding: 10px 12px; background: var(--accent-soft); margin-bottom: 14px !important; font-size: 13px; }
+.graph { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--canvas); }
+.graphTools { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; padding: 8px; border-bottom: 1px solid var(--line); background: var(--paper); }
+.graphTools > div { display: flex; align-items: center; gap: 4px; }
+.graphTools button { min-width: 44px; font-size: 13px; }
+.graphTools output { width: 44px; text-align: center; color: var(--muted); font-size: 12px; }
+.graphViewport { height: 460px; max-width: 100%; overflow: auto; overscroll-behavior: contain; cursor: grab; touch-action: pan-x pan-y; scrollbar-width: thin; }
+.graphViewport:active { cursor: grabbing; }
+.graphExtent { position: relative; }
+.graphScene { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+.graphEdges { position: absolute; inset: 0; pointer-events: none; color: var(--muted); }
+.graphParent { position: absolute; display: flex; flex-direction: column; justify-content: center; gap: 8px; width: 260px; height: 140px; padding: 18px; border: 1px solid var(--accent); border-radius: 8px; background: var(--accent-soft); }
+.graphParent > span { font-size: 11px; color: var(--muted); }
+.graphParent > strong { font-size: 17px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+.graphNodes { list-style: none; padding: 0; margin: 0; }
+.graphNodes li { position: absolute; width: 250px; height: 128px; }
+.graphNodes a { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 6px; height: 100%; padding: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); cursor: pointer; }
+.graphNodes a:hover { border-color: var(--accent); background: var(--accent-soft); text-decoration: none; }
+.graphNodes a > span { font-size: 11px; color: var(--muted); }
+.graphNodes a > span:first-child { text-transform: uppercase; letter-spacing: .025em; }
+.graphNodes a > strong { font-size: 15px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+.graphNodes [data-pl-overlay] { border-left: 4px solid var(--accent); }
+.mapHelp { border-top: 1px solid var(--line); padding: 10px 12px; color: var(--muted); font-size: 12px; }
+@media (min-width: 1500px) { .workspace { grid-template-columns: minmax(0, 1fr) minmax(300px, 350px); } }
+@media (max-width: 1050px) { .workspace { grid-template-columns: minmax(0, 1fr); } .context { border-left: 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .questionBrief { grid-column: 1 / -1; } }
+@media (max-width: 600px) {
+  .header { padding: 18px 16px; display: block; }
+  .snapshotLabel { max-width: none; text-align: left; margin-top: 12px !important; }
+  .explorer { padding: 16px; }
+  .context { display: block; }
+  .context > section, .provenance { padding: 16px; }
+  .searchBar { flex-wrap: wrap; }
+  .searchLabel { flex-basis: 100%; }
+  .branchHeader { flex-wrap: wrap; }
+  .branchKind { display: none; }
+  .branchList a { padding: 12px 0; }
+  .pagination { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { .scienceTree *, .scienceTree *::before, .scienceTree *::after { scroll-behavior: auto; transition: none; animation: none; } }
