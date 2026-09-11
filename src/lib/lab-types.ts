@@ -29,6 +29,7 @@ export type LabRecord = {
 export type Capabilities = {
   canSignIn: boolean;
   canPublish: boolean;
+  canConnect?: boolean;
   mode: "ready" | "unconfigured";
   message?: string;
 };
