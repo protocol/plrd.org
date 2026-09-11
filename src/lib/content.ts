@@ -7,7 +7,14 @@ import areasData from '@/data/generated/areas.json'
 import sectionsData from '@/data/generated/sections.json'
 import depGraphData from '@/data/generated/dependency-graph.json'
 
+export type ContentVisibility = {
+  version: number
+  denied: boolean
+  notBefore: string | null
+}
+
 export type Publication = {
+  visibility: ContentVisibility
   slug: string
   title: string
   date: string
@@ -23,6 +30,7 @@ export type Publication = {
 }
 
 export type Author = {
+  visibility: ContentVisibility
   slug: string
   name: string
   role: string
@@ -37,6 +45,7 @@ export type Author = {
 }
 
 export type Talk = {
+  visibility: ContentVisibility
   slug: string
   title: string
   date: string
@@ -50,6 +59,8 @@ export type Talk = {
 }
 
 export type Tutorial = {
+  markdown: string
+  visibility: ContentVisibility
   slug: string
   title: string
   date: string
@@ -58,6 +69,9 @@ export type Tutorial = {
 }
 
 export type BlogPost = {
+  visibility: ContentVisibility
+  /** Readable build-time rendering of the same native article body. */
+  markdown: string
   slug: string
   title: string
   date: string
@@ -86,6 +100,7 @@ export type BlogPost = {
 }
 
 export type Area = {
+  visibility: ContentVisibility
   slug: string
   title: string
   date: string

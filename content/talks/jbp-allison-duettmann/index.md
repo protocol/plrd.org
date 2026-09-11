@@ -6,7 +6,7 @@ venue_url: "https://www.youtube.com/@JuanBenetPodcast"
 venue_location: "Podcast"
 authors:
   - juan-benet
-  - allison-duettmann
+  - "Allison Duettmann"
 areas:
   - neurotech
 abstract: "Juan Benet speaks with Allison Duettmann, CEO of the Foresight Institute, about why cryonics and mind emulation could mean we don't have to die, how whole-brain emulation and connectomics could keep humans compatible with superintelligent AI, how nanotechnology could rebuild the physical world, and the case for Existential Hope — imagining flourishing futures as a precondition for building them."

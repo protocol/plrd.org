@@ -1,23 +1,41 @@
 [
   {
     "slug": "mir",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-11-02T00:00:00.000Z"
+    },
     "title": "Distributed programming with Mir",
     "date": "2022-11-02T00:00:00.000Z",
     "summary": "Learn how to implement distributed systems using the Mir framework.",
+    "markdown": "",
     "html": ""
   },
   {
     "slug": "resnetlab-on-tour",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-04-06T00:00:00.000Z"
+    },
     "title": "ResNetLab on Tour",
     "date": "2021-04-06T00:00:00.000Z",
     "summary": "Join us to learn everything about IPFS’s content addressing and content routing subsystems, its content exchange strategies, and how IPFS deals with dynamic, mutable content.",
+    "markdown": "",
     "html": ""
   },
   {
     "slug": "scientific-writing-vault",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-07-12T00:00:00.000Z"
+    },
     "title": "Scientific writing vault",
     "date": "2021-07-12T00:00:00.000Z",
     "summary": "Explore a suite of resources to aid researchers in creating and understanding scientific communications.",
+    "markdown": "",
     "html": ""
   }
 ]

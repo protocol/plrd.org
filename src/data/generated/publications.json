@@ -1,6 +1,11 @@
 [
   {
     "slug": "how-to-obtain-complete-human-connectome",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2026-04-24T00:00:00.000Z"
+    },
     "title": "How to Obtain a Complete Human Connectome at Synaptic Resolution Within the Next Decade",
     "date": "2026-04-24T00:00:00.000Z",
     "authors": [
@@ -21,6 +26,11 @@
   },
   {
     "slug": "models-to-markets-bci-neural-data",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2026-03-28T00:00:00.000Z"
+    },
     "title": "Models to Markets: BCI, Neural Data, and Business Innovation in the AI Era",
     "date": "2026-03-28T00:00:00.000Z",
     "authors": [
@@ -41,6 +51,11 @@
   },
   {
     "slug": "molecular-ultrastructure-neural-dynamics",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2026-03-26T00:00:00.000Z"
+    },
     "title": "Compiling Molecular Ultrastructure Into Neural Dynamics",
     "date": "2026-03-26T00:00:00.000Z",
     "authors": [
@@ -85,6 +100,11 @@
   },
   {
     "slug": "pl-bci-roadmap-clinical-revenue",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2026-03-26T00:00:00.000Z"
+    },
     "title": "Smoothing the Path to Clinical Revenue",
     "date": "2026-03-26T00:00:00.000Z",
     "authors": [
@@ -115,6 +135,11 @@
   },
   {
     "slug": "pl-bci-roadmap-overview",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2026-03-26T00:00:00.000Z"
+    },
     "title": "Overview: A Strategic Vision for the Future of Brain–Computer Interfaces",
     "date": "2026-03-26T00:00:00.000Z",
     "authors": [
@@ -145,6 +170,11 @@
   },
   {
     "slug": "cognitive-dark-matter",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2026-03-03T00:00:00.000Z"
+    },
     "title": "Cognitive Dark Matter: Measuring What AI Misses",
     "date": "2026-03-03T00:00:00.000Z",
     "authors": [
@@ -167,6 +197,11 @@
   },
   {
     "slug": "goren2024",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2024-02-01T00:00:00.000Z"
+    },
     "title": "A finality calculator for Filecoin’s Expected Consensus",
     "date": "2024-02-01T00:00:00.000Z",
     "authors": [
@@ -188,6 +223,11 @@
   },
   {
     "slug": "giacomelli2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-08-30T00:00:00.000Z"
+    },
     "title": "Filecoin Proof of Useful Space",
     "date": "2023-08-30T00:00:00.000Z",
     "authors": [
@@ -209,6 +249,11 @@
   },
   {
     "slug": "wang2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-08-14T00:00:00.000Z"
+    },
     "title": "Security analysis of Filecoin's Expected Consensus in the Byzantine vs honest model",
     "date": "2023-08-14T00:00:00.000Z",
     "authors": [
@@ -231,6 +276,11 @@
   },
   {
     "slug": "azouvi2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-04-22T00:00:00.000Z"
+    },
     "title": "Base fee manipulation in Ethereum's EIP-1559 transaction fee mechanism",
     "date": "2023-04-22T00:00:00.000Z",
     "authors": [
@@ -254,6 +304,11 @@
   },
   {
     "slug": "winetraub2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-03-21T00:00:00.000Z"
+    },
     "title": "SpaceVDF: Verifiable delay functions using cryptographic satellites",
     "date": "2023-03-21T00:00:00.000Z",
     "authors": [
@@ -278,6 +333,11 @@
   },
   {
     "slug": "amin2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-03-16T00:00:00.000Z"
+    },
     "title": "LURK: Lambda, the ultimate recursive knowledge",
     "date": "2023-03-16T00:00:00.000Z",
     "authors": [
@@ -304,6 +364,11 @@
   },
   {
     "slug": "gailly2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-02-13T00:00:00.000Z"
+    },
     "title": "tlock: Practical timelock encryption from threshold BLS",
     "date": "2023-02-13T00:00:00.000Z",
     "authors": [
@@ -326,6 +391,11 @@
   },
   {
     "slug": "plnetworkgoods2023",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2023-01-10T00:00:00.000Z"
+    },
     "title": "Generalized Impact Evaluators",
     "date": "2023-01-10T00:00:00.000Z",
     "authors": [],
@@ -345,6 +415,11 @@
   },
   {
     "slug": "azouvi2022b",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-12-13T00:00:00.000Z"
+    },
     "title": "Pikachu: Securing PoS blockchains from long-range attacks by checkpointing into Bitcoin PoW using Taproot",
     "date": "2022-12-13T00:00:00.000Z",
     "authors": [
@@ -366,6 +441,11 @@
   },
   {
     "slug": "monteiro2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-12-13T00:00:00.000Z"
+    },
     "title": "Enriching Kademlia by partitioning",
     "date": "2022-12-13T00:00:00.000Z",
     "authors": [
@@ -391,6 +471,11 @@
   },
   {
     "slug": "psaras2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-11-07T00:00:00.000Z"
+    },
     "title": "To the InterPlanetary File System – and beyond!: Peer-to-peer file sharing would make the Internet far more efficient",
     "date": "2022-11-07T00:00:00.000Z",
     "authors": [
@@ -414,6 +499,11 @@
   },
   {
     "slug": "campanelli2022f",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-11-01T00:00:00.000Z"
+    },
     "title": "Structure-preserving compilers from new notions of obfuscations",
     "date": "2022-11-01T00:00:00.000Z",
     "authors": [
@@ -436,6 +526,11 @@
   },
   {
     "slug": "vukolic2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-10-24T00:00:00.000Z"
+    },
     "title": "Mir-BFT: Scalable and robust BFT for decentralized networks",
     "date": "2022-10-24T00:00:00.000Z",
     "authors": [
@@ -459,6 +554,11 @@
   },
   {
     "slug": "seemann2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-09-28T00:00:00.000Z"
+    },
     "title": "Decentralized hole punching",
     "date": "2022-09-28T00:00:00.000Z",
     "authors": [
@@ -482,6 +582,11 @@
   },
   {
     "slug": "campanelli2022e",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-09-09T00:00:00.000Z"
+    },
     "title": "Impossibilities in succinct arguments: Black-box extraction and more",
     "date": "2022-09-09T00:00:00.000Z",
     "authors": [
@@ -505,6 +610,11 @@
   },
   {
     "slug": "campanelli2022d",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-09-08T00:00:00.000Z"
+    },
     "title": "Curve trees: Practical and transparent zero-knowledge accumulators",
     "date": "2022-09-08T00:00:00.000Z",
     "authors": [
@@ -526,6 +636,11 @@
   },
   {
     "slug": "campanelli2022c",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-08-30T00:00:00.000Z"
+    },
     "title": "Encryption to the future: A paradigm for sending secret messages to future (anonymous) committees",
     "date": "2022-08-30T00:00:00.000Z",
     "authors": [
@@ -550,6 +665,11 @@
   },
   {
     "slug": "trautwein2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-07-26T00:00:00.000Z"
+    },
     "title": "Design and evaluation of IPFS: A storage layer for the decentralized web",
     "date": "2022-07-26T00:00:00.000Z",
     "authors": [
@@ -578,6 +698,11 @@
   },
   {
     "slug": "campanelli2022b",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-07-06T00:00:00.000Z"
+    },
     "title": "Linear-map vector commitments and their practical applications",
     "date": "2022-07-06T00:00:00.000Z",
     "authors": [
@@ -602,6 +727,11 @@
   },
   {
     "slug": "ganesh2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-07-06T00:00:00.000Z"
+    },
     "title": "What makes Fiat–Shamir zkSNARKs (updatable SRS) simulation extractable?",
     "date": "2022-07-06T00:00:00.000Z",
     "authors": [
@@ -626,6 +756,11 @@
   },
   {
     "slug": "zapico2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-07-06T00:00:00.000Z"
+    },
     "title": "Caulk: Lookup arguments in sublinear time",
     "date": "2022-07-06T00:00:00.000Z",
     "authors": [
@@ -651,6 +786,11 @@
   },
   {
     "slug": "davis2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-06-15T00:00:00.000Z"
+    },
     "title": "Influencing NFT pricing on secondary markets: A case study of Vpunks",
     "date": "2022-06-15T00:00:00.000Z",
     "authors": [
@@ -671,6 +811,11 @@
   },
   {
     "slug": "catalano2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-06-02T00:00:00.000Z"
+    },
     "title": "On the impossibility of algebraic vector commitments in pairing-free groups",
     "date": "2022-06-02T00:00:00.000Z",
     "authors": [
@@ -694,6 +839,11 @@
   },
   {
     "slug": "stathakopoulou2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-04-20T00:00:00.000Z"
+    },
     "title": "State machine replication scalability made simple",
     "date": "2022-04-20T00:00:00.000Z",
     "authors": [
@@ -716,6 +866,11 @@
   },
   {
     "slug": "campanelli2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-04-08T00:00:00.000Z"
+    },
     "title": "Witness-authenticated key exchange revisited: Improved models, simpler constructions, extensions to groups",
     "date": "2022-04-08T00:00:00.000Z",
     "authors": [
@@ -740,6 +895,11 @@
   },
   {
     "slug": "delarocha2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-03-11T00:00:00.000Z"
+    },
     "title": "Hierarchical consensus: A horizontal scaling framework for blockchains",
     "date": "2022-03-11T00:00:00.000Z",
     "authors": [
@@ -763,6 +923,11 @@
   },
   {
     "slug": "Azouvi2022a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-01-26T00:00:00.000Z"
+    },
     "title": "Decentralisation conscious players and system reliability",
     "date": "2022-01-26T00:00:00.000Z",
     "authors": [
@@ -784,6 +949,11 @@
   },
   {
     "slug": "Azouvi2022",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2022-01-24T00:00:00.000Z"
+    },
     "title": "Sliding window challenge process for congestion detection",
     "date": "2022-01-24T00:00:00.000Z",
     "authors": [
@@ -807,6 +977,11 @@
   },
   {
     "slug": "vukolic2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-11-23T00:00:00.000Z"
+    },
     "title": "On the future of decentralized computing",
     "date": "2021-11-23T00:00:00.000Z",
     "authors": [
@@ -827,6 +1002,11 @@
   },
   {
     "slug": "azouvi2021a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-11-16T00:00:00.000Z"
+    },
     "title": "Private attacks in longest chain proof-of-stake protocols with single secret leader elections",
     "date": "2021-11-16T00:00:00.000Z",
     "authors": [
@@ -848,6 +1028,11 @@
   },
   {
     "slug": "izabachene2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-09-27T00:00:00.000Z"
+    },
     "title": "MyOPE: Malicious security for oblivious polynomial evaluation",
     "date": "2021-09-27T00:00:00.000Z",
     "authors": [
@@ -871,6 +1056,11 @@
   },
   {
     "slug": "aranha2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-09-21T00:00:00.000Z"
+    },
     "title": "Count me in! Extendability for threshold ring signatures",
     "date": "2021-09-21T00:00:00.000Z",
     "authors": [
@@ -895,6 +1085,11 @@
   },
   {
     "slug": "antunes2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-06-21T00:00:00.000Z"
+    },
     "title": "Pulsarcast: Scalable, reliable pub-sub over P2P nets",
     "date": "2021-06-21T00:00:00.000Z",
     "authors": [
@@ -918,6 +1113,11 @@
   },
   {
     "slug": "psaras2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-06-21T00:00:00.000Z"
+    },
     "title": "The case for AI based Web3 reputation systems",
     "date": "2021-06-21T00:00:00.000Z",
     "authors": [
@@ -942,6 +1142,11 @@
   },
   {
     "slug": "delarocha2021a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-06-11T00:00:00.000Z"
+    },
     "title": "IPFS-FAN: A function-addressable computation network",
     "date": "2021-06-11T00:00:00.000Z",
     "authors": [
@@ -965,6 +1170,11 @@
   },
   {
     "slug": "gailly2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-05-13T00:00:00.000Z"
+    },
     "title": "SnarkPack: Practical SNARK aggregation",
     "date": "2021-05-13T00:00:00.000Z",
     "authors": [
@@ -987,6 +1197,11 @@
   },
   {
     "slug": "ganesh2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-03-18T00:00:00.000Z"
+    },
     "title": "Rinocchio: SNARKs for ring arithmetic",
     "date": "2021-03-18T00:00:00.000Z",
     "authors": [
@@ -1009,6 +1224,11 @@
   },
   {
     "slug": "delarocha2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2021-01-14T00:00:00.000Z"
+    },
     "title": "Accelerating content routing with Bitswap: A multi-path file transfer protocol in IPFS and Filecoin",
     "date": "2021-01-14T00:00:00.000Z",
     "authors": [
@@ -1032,6 +1252,11 @@
   },
   {
     "slug": "ransil2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-12-09T00:00:00.000Z"
+    },
     "title": "Improving system resilience through formal verification of transactive energy controls",
     "date": "2020-12-09T00:00:00.000Z",
     "authors": [
@@ -1054,6 +1279,11 @@
   },
   {
     "slug": "psaras2020b",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-12-07T00:00:00.000Z"
+    },
     "title": "PASTRAMI: Privacy-preserving, auditable, scalable & trustworthy auctions for multiple items",
     "date": "2020-12-07T00:00:00.000Z",
     "authors": [
@@ -1079,6 +1309,11 @@
   },
   {
     "slug": "campanelli2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-12-05T00:00:00.000Z"
+    },
     "title": "Incrementally aggregatable vector commitment techniques and applications to verifiable decentralized storage",
     "date": "2020-12-05T00:00:00.000Z",
     "authors": [
@@ -1104,6 +1339,11 @@
   },
   {
     "slug": "faonio2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-11-17T00:00:00.000Z"
+    },
     "title": "Subversion-resilient enhanced privacy ID",
     "date": "2020-11-17T00:00:00.000Z",
     "authors": [
@@ -1127,6 +1367,11 @@
   },
   {
     "slug": "azouvi2021",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-10-21T00:00:00.000Z"
+    },
     "title": "Winkle: foiling long-range attacks in proof-of-stake systems",
     "date": "2020-10-21T00:00:00.000Z",
     "authors": [
@@ -1149,6 +1394,11 @@
   },
   {
     "slug": "psaras2020a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-10-11T00:00:00.000Z"
+    },
     "title": "Rewarding relays for decentralised NAT traversal using smart contracts",
     "date": "2020-10-11T00:00:00.000Z",
     "authors": [
@@ -1173,6 +1423,11 @@
   },
   {
     "slug": "protocol2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-08-27T00:00:00.000Z"
+    },
     "title": "Engineering Filecoin’s economy",
     "date": "2020-08-27T00:00:00.000Z",
     "authors": [
@@ -1193,6 +1448,11 @@
   },
   {
     "slug": "vyzovitis2020a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-07-06T00:00:00.000Z"
+    },
     "title": "GossipSub: Attack-resilient message propagation in the Filecoin and ETH2.0 networks",
     "date": "2020-07-06T00:00:00.000Z",
     "authors": [
@@ -1218,6 +1478,11 @@
   },
   {
     "slug": "seemann2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-06-12T00:00:00.000Z"
+    },
     "title": "Automating QUIC interoperability testing",
     "date": "2020-06-12T00:00:00.000Z",
     "authors": [
@@ -1239,6 +1504,11 @@
   },
   {
     "slug": "psaras2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-04-27T00:00:00.000Z"
+    },
     "title": "Merkle-CRDTs: Merkle-DAGs meet CRDTs",
     "date": "2020-04-27T00:00:00.000Z",
     "authors": [
@@ -1263,6 +1533,11 @@
   },
   {
     "slug": "vyzovitis2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-04-18T00:00:00.000Z"
+    },
     "title": "Gossipsub-v1.1 evaluation report",
     "date": "2020-04-18T00:00:00.000Z",
     "authors": [
@@ -1288,6 +1563,11 @@
   },
   {
     "slug": "catalano2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-04-08T00:00:00.000Z"
+    },
     "title": "MonZa: Fast maliciously secure two party computation on Z_{2^k}",
     "date": "2020-04-08T00:00:00.000Z",
     "authors": [
@@ -1311,6 +1591,11 @@
   },
   {
     "slug": "santos2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-03-30T00:00:00.000Z"
+    },
     "title": "Censorship-resistant web annotations based on Ethereum and IPFS",
     "date": "2020-03-30T00:00:00.000Z",
     "authors": [
@@ -1333,6 +1618,11 @@
   },
   {
     "slug": "azouvi2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-03-03T00:00:00.000Z"
+    },
     "title": "SoK: Tools for game theoretic models of security for cryptocurrencies",
     "date": "2020-03-03T00:00:00.000Z",
     "authors": [
@@ -1354,6 +1644,11 @@
   },
   {
     "slug": "boneh2020",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2020-01-15T00:00:00.000Z"
+    },
     "title": "Single secret leader election",
     "date": "2020-01-15T00:00:00.000Z",
     "authors": [
@@ -1377,6 +1672,11 @@
   },
   {
     "slug": "chandrasekaran2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-11-20T00:00:00.000Z"
+    },
     "title": "Exploring connections between active learning and model extraction",
     "date": "2019-11-20T00:00:00.000Z",
     "authors": [
@@ -1401,6 +1701,11 @@
   },
   {
     "slug": "giacomelli2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-10-02T00:00:00.000Z"
+    },
     "title": "Efficient UC commitment extension with homomorphism for free (and applications)",
     "date": "2019-10-02T00:00:00.000Z",
     "authors": [
@@ -1426,6 +1731,11 @@
   },
   {
     "slug": "dalrymple2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-09-05T00:00:00.000Z"
+    },
     "title": "Dioptics: A common generalization of open games and gradient-based learners",
     "date": "2019-09-05T00:00:00.000Z",
     "authors": [
@@ -1446,6 +1756,11 @@
   },
   {
     "slug": "ransil2019a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-09-05T00:00:00.000Z"
+    },
     "title": "A dual-process approach for automated knowledge creation",
     "date": "2019-09-05T00:00:00.000Z",
     "authors": [
@@ -1467,6 +1782,11 @@
   },
   {
     "slug": "hammersley2018",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-09-03T00:00:00.000Z"
+    },
     "title": "U.S. energy policy and market design",
     "date": "2019-09-03T00:00:00.000Z",
     "authors": [
@@ -1487,6 +1807,11 @@
   },
   {
     "slug": "gabizon2019a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-08-24T00:00:00.000Z"
+    },
     "title": "PLONK: Permutations over Lagrange-bases for oecumenical noninteractive arguments of knowledge",
     "date": "2019-08-24T00:00:00.000Z",
     "authors": [
@@ -1509,6 +1834,11 @@
   },
   {
     "slug": "ransil2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-07-09T00:00:00.000Z"
+    },
     "title": "A computable multilayer system stack for future-proof interoperability",
     "date": "2019-07-09T00:00:00.000Z",
     "authors": [
@@ -1533,6 +1863,11 @@
   },
   {
     "slug": "gabizon2019",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2019-05-29T00:00:00.000Z"
+    },
     "title": "AuroraLight: Improved prover efficiency and SRS size in a Sonic-like system",
     "date": "2019-05-29T00:00:00.000Z",
     "authors": [
@@ -1553,6 +1888,11 @@
   },
   {
     "slug": "ransil2018c",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2018-12-21T00:00:00.000Z"
+    },
     "title": "Microgrids",
     "date": "2018-12-21T00:00:00.000Z",
     "authors": [
@@ -1573,6 +1913,11 @@
   },
   {
     "slug": "fisch2018",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2018-10-15T00:00:00.000Z"
+    },
     "title": "Scaling proof-of-replication for Filecoin mining",
     "date": "2018-10-15T00:00:00.000Z",
     "authors": [
@@ -1597,6 +1942,11 @@
   },
   {
     "slug": "hammersley2018b",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2018-10-15T00:00:00.000Z"
+    },
     "title": "Smart grid pilot projects",
     "date": "2018-10-15T00:00:00.000Z",
     "authors": [
@@ -1617,6 +1967,11 @@
   },
   {
     "slug": "ransil2018b",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2018-09-27T00:00:00.000Z"
+    },
     "title": "Price signals and demand-side management in the electric distribution and retail system",
     "date": "2018-09-27T00:00:00.000Z",
     "authors": [
@@ -1637,6 +1992,11 @@
   },
   {
     "slug": "ransil2018a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2018-08-23T00:00:00.000Z"
+    },
     "title": "Energy pricing",
     "date": "2018-08-23T00:00:00.000Z",
     "authors": [
@@ -1657,6 +2017,11 @@
   },
   {
     "slug": "fisch2018a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2018-07-14T00:00:00.000Z"
+    },
     "title": "PoReps: Proofs of space on useful data",
     "date": "2018-07-14T00:00:00.000Z",
     "authors": [
@@ -1678,6 +2043,11 @@
   },
   {
     "slug": "benet2017",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2017-07-27T00:00:00.000Z"
+    },
     "title": "Proof of replication",
     "date": "2017-07-27T00:00:00.000Z",
     "authors": [
@@ -1701,6 +2071,11 @@
   },
   {
     "slug": "protocollabs2017",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2017-07-27T00:00:00.000Z"
+    },
     "title": "Power fault tolerance",
     "date": "2017-07-27T00:00:00.000Z",
     "authors": [
@@ -1722,6 +2097,11 @@
   },
   {
     "slug": "protocollabs2017a",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2017-07-19T00:00:00.000Z"
+    },
     "title": "Filecoin: A decentralized storage network",
     "date": "2017-07-19T00:00:00.000Z",
     "authors": [
@@ -1743,6 +2123,11 @@
   },
   {
     "slug": "dias2016",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2016-05-25T00:00:00.000Z"
+    },
     "title": "Distributed web applications with IPFS",
     "date": "2016-05-25T00:00:00.000Z",
     "authors": [
@@ -1764,6 +2149,11 @@
   },
   {
     "slug": "protocollabs2014",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2014-07-15T00:00:00.000Z"
+    },
     "title": "Filecoin: A cryptocurrency operated file storage network",
     "date": "2014-07-15T00:00:00.000Z",
     "authors": [
@@ -1785,6 +2175,11 @@
   },
   {
     "slug": "benet2014",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2014-07-14T00:00:00.000Z"
+    },
     "title": "IPFS - Content addressed, versioned, P2P file system",
     "date": "2014-07-14T00:00:00.000Z",
     "authors": [
