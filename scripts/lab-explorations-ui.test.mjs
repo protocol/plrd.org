@@ -158,6 +158,10 @@ test('all entrance routes render anonymously; every brief has static params and 
   for (const path of ['page.tsx', 'arcade/page.tsx', 'observatory/page.tsx']) {
     const route = source(`app/lab/explorations/${path}`)
     assert.equal(route.metadata.robots.index, false)
+    if (path === 'arcade/page.tsx') {
+      assert.throws(() => route.default(), error => error.digest === 'NEXT_REDIRECT;replace;/lab/apps/;307;')
+      continue
+    }
     const html = renderToStaticMarkup(React.createElement(route.default))
     const doc = new JSDOM(html).window.document
     assert.equal(doc.querySelectorAll('h1').length, 1)

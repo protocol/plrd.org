@@ -24,12 +24,13 @@ test("signal SVG is stable across tiny math-library rounding differences during 
   assert.ok(svg(html) === svg(other), "SVG geometry should be display-rounded, not raw engine-dependent floats");
 });
 
-test("the first screen offers a real experiment, and featured source views carry an actionable brief", () => {
+test("the first screen offers bounded work, and app discovery previews sources before external launch", () => {
   const Provider=source("lib/lab-auth.tsx").LabAuthProvider;
   const html = renderToStaticMarkup(React.createElement(Provider,null,React.createElement(source("components/lab/Landing.tsx").default)));
   assert.ok(new JSDOM(html).window.document.querySelector('[aria-label="Workshop invitation"] button'), "an actual build composer belongs in the first-use invitation");
-  const app = renderToStaticMarkup(React.createElement(source("components/lab/AppsWorkbench.tsx").default));
-  for (const label of ["What exists", "Specific opening", "Inspect or try", "Useful contribution"]) assert.ok(app.includes(label), label);
+  const app = renderToStaticMarkup(React.createElement(Provider,null,React.createElement(source("components/lab/AppsWorkbench.tsx").default)));
+  for (const label of ["Find tools. Keep building.", "View app", "Editorial", "No embedded runtimes"]) assert.ok(app.includes(label), label);
+  assert.equal(new JSDOM(app).window.document.querySelector('iframe,canvas,[data-signal-sandbox]'),null);
   const map = renderToStaticMarkup(React.createElement(source("components/lab/ResearchMap.tsx").default));
   assert.match(map, /Which measurement bottleneck/);
   assert.match(map, /Editorial opening/);

@@ -12,6 +12,9 @@ import { useLabFollowing } from '@/components/lab/social/useLabFollowing'
 import { LAB_SOCIAL_CHANGED } from '@/components/lab/social/useLabSocial'
 import { DEMO_PEOPLE, DEMO_PROPOSALS, DEMO_THREADS, demoPointsRemaining, demoThreadHref } from '@/lib/lab-demo'
 import { artifacts } from '@/lib/lab-data'
+import { APP_CATALOG } from '@/lib/lab-app-catalog'
+import { AppListingContent } from '@/components/lab/AppListing'
+import WorkHandoff from '@/components/lab/WorkHandoff'
 import { DISCIPLINES as fields } from '@/lib/lab-following'
 import type { FeedRow } from '@/lib/lab-feed-model'
 import styles from '@/components/lab/feed/feed.module.css'
@@ -40,9 +43,10 @@ function Detail({ row: originalRow, onClose }: { row: FeedRow; onClose: () => vo
   if (editor) return <RecordEditor kind={row.draftSlot ? 'note' : 'contribution'} draftId={row.draftSlot} initial={artifact ? {targetUrl: artifact.url, field: artifact.field} : {}} onSaved={() => window.dispatchEvent(new Event(LAB_SOCIAL_CHANGED))} onClose={() => { setEditor(false); window.dispatchEvent(new Event(LAB_SOCIAL_CHANGED)) }} />
   return <LabDialog title={row.title} onClose={onClose}><div className={styles.detail}>
     <p className={styles.meta}>{row.origin === 'demo' ? 'Illustrative community story. Invented people and outcomes; not research evidence.' : row.origin === 'local' ? 'Your unpublished local idea. No public record has changed.' : `Editorial selection · ${artifact?.source}`}</p>
+    {artifact?.app && <AppListingContent app={APP_CATALOG.find(a => a.id === artifact.id)!} />}
     <p><strong>{row.stage}</strong></p><p><strong>Artifact:</strong> {row.artifact}</p><p><strong>Bounded next step:</strong> {row.request}</p>
-    <div className={styles.actions}><button className={styles.primary} disabled={!bench.ready} onClick={()=>takeTask()}>Save this test to My bench</button><button disabled={!bench.ready} onClick={()=>takeTask(true)}>Return a result →</button><a href="/lab/collaborate/">Browse other task recipes →</a>{update&&<button aria-label={`Edit build: ${row.title}`} onClick={()=>setEditingBuild(true)}>Edit build</button>}</div>
-    <p className={styles.meta}>No matching run-packet recipe is registered for this test. Other recipes are separate tasks, not a packet for this build.</p>
+    <WorkHandoff row={row} onTake={takeTask} />
+    {update && <div className={styles.actions}><button aria-label={`Edit build: ${row.title}`} onClick={()=>setEditingBuild(true)}>Edit build</button></div>}
     {update&&<InventionMediaPreview items={update.media||[]}/>}
     <SourceResults sourceId={row.ideaId} tasks={bench.ready?bench.state?.tasks||[]:[]}/>
     {proposal ? <><p>{proposal.hypothesis}</p><dl><dt>Useful contribution</dt><dd>{proposal.help}</dd><dt>Outcome and uncertainty</dt><dd>{proposal.outcome}</dd><dt>Stop condition</dt><dd>{proposal.stop}</dd></dl>

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
-import ScienceArcade from '@/components/lab/explorations/ScienceArcade'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
-  title: 'Science Arcade — Open Lab exploration',
-  description: 'An alternative tools-first entrance to Open Lab. Try a deterministic cellular automaton and download a reproducible print.',
+  title: 'Science apps — Open Lab',
+  description: 'Inspect source-linked app listings, then launch tools on their own sites.',
   robots: { index: false, follow: false },
 }
 
-export default function ArcadePage() { return <ScienceArcade /> }
+// Keep old entry links working without mounting the retired embedded experiment.
+export default function ArcadePage() { redirect('/lab/apps/') }

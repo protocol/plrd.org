@@ -1,141 +1,37 @@
-"use client";
-import { useState } from "react";
-import {
-  artifacts,
-  fields,
-  filterArtifacts,
-  fieldLabel,
-  starterDisclosure,
-} from "@/lib/lab-data";
-import RecordEditor from "@/components/lab/RecordEditor";
-import SignalSandbox from "@/components/lab/SignalSandbox";
-import ArtifactBrief from "@/components/lab/ArtifactBrief";
-import { useLabFilters } from "@/components/lab/useLabFilters";
+'use client'
+import { useEffect, useState } from 'react'
+import { fields, fieldLabel, starterDisclosure } from '@/lib/lab-data'
+import { APP_CATALOG, filterApps, type AppListing as Listing } from '@/lib/lab-app-catalog'
+import AppListing, { useAppShelf } from '@/components/lab/AppListing'
+import AppListingEditor from '@/components/lab/AppListingEditor'
+import styles from '@/components/lab/AppListing.module.css'
 export default function AppsWorkbench() {
-  const [submit, setSubmit] = useState(false);
-  const f = useLabFilters();
-  const apps = filterArtifacts(
-    artifacts.filter((a) => a.app),
-    f,
-  );
-  return (
-    <div className="lab-wrap lab-workbench">
-      <div className="lab-workbench-heading">
-        <div>
-          <p className="lab-eyebrow">SCIENCE APPS / THE INSTRUMENT SHELF</p>
-          <h1>
-            Less setup.
-            <br />
-            <em>More discovery.</em>
-          </h1>
-          <p>
-            Useful tools for curious people. Open a notebook, inspect a model,
-            or give your own tool a home.
-          </p>
-        </div>
-        <button className="lab-button" onClick={() => setSubmit(true)}>
-          Submit an app +
-        </button>
-      </div>
-      <SignalSandbox />
-      <section className="lab-app-catalog">
-        <div className="lab-section-heading">
-          <div>
-            <p className="lab-eyebrow">THE EDITORIAL SHELF</p>
-            <h2>Borrow a better instrument.</h2>
-          </div>
-          <p className="lab-smallprint">{starterDisclosure}</p>
-        </div>
-        <div className="lab-catalog-controls">
-          <label className="lab-search">
-            <span aria-hidden="true">⌕</span>
-            <input
-              type="search"
-              aria-label="Search science apps"
-              placeholder="Search tools and capabilities…"
-              value={f.query}
-              onChange={(e) => f.setQuery(e.target.value)}
-            />
-          </label>
-          <label className="lab-field lab-field-filter">
-            Field
-            <select
-              aria-label="Filter apps by field"
-              value={f.field}
-              onChange={(e) => f.setField(e.target.value)}
-            >
-              <option value="all">All fields</option>
-              {fields.map((field) => (
-                <option key={field.id} value={field.id}>
-                  {field.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <span className="lab-result-count" aria-live="polite">
-            {apps.length} tools
-          </span>
-        </div>
-        <div className="lab-app-grid">
-          {apps.map((a, i) => (
-            <article key={a.id} className="lab-app-card">
-              <div className="lab-app-card-top">
-                <span className="lab-app-number">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span>{fieldLabel(a.field)}</span>
-              </div>
-              <h3>{a.title}</h3>
-              <p>{a.description}</p>
-              <ArtifactBrief artifact={a} expanded={a.id === "marimo"} />
-              <div className="lab-app-status">
-                <span>
-                  {a.codeUrl ? "Source available" : "Resource portal"}
-                </span>
-                <span>{a.license || "Check source terms"}</span>
-              </div>
-              <div className="lab-app-links">
-                <a
-                  className="lab-button lab-quiet"
-                  href={a.demoUrl || a.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {a.demoUrl ? "Launch notebook" : "Open project"} ↗
-                </a>
-                {a.codeUrl && (
-                  <a href={a.codeUrl} target="_blank" rel="noopener noreferrer">
-                    Code ↗
-                  </a>
-                )}
-                <a href={a.url} target="_blank" rel="noopener noreferrer">
-                  Source ↗
-                </a>
-              </div>
-              <small>{a.source} · Opens an external site</small>
-            </article>
-          ))}
-        </div>
-        {!apps.length && (
-          <div className="lab-empty">
-            <h3>No tools match that search.</h3>
-            <p>
-              The starter shelf is intentionally small. Try a different field or
-              add a useful tool.
-            </p>
-            <button className="lab-button lab-quiet" onClick={f.reset}>
-              Clear filters
-            </button>
-          </div>
-        )}
-      </section>
-      <div className="lab-contribute-strip">
-        <p>Made something that makes science easier?</p>
-        <button className="lab-text-button" onClick={() => setSubmit(true)}>
-          Put it on the bench ↗
-        </button>
-      </div>
-      {submit && <RecordEditor kind="app" onClose={() => setSubmit(false)} />}
+  const shelf = useAppShelf()
+  return <Catalog key={shelf.scope} shelf={shelf} />
+}
+function Catalog({ shelf }: { shelf: ReturnType<typeof useAppShelf> }) {
+  const [selected, setSelected] = useState<string>(), [editing, setEditing] = useState<Listing | true>(), [query, setQuery] = useState(''), [field, setField] = useState('all'), [view, setView] = useState('all')
+  useEffect(() => { const read = () => { const p = new URLSearchParams(window.location.search); setSelected(p.get('app') || undefined); setQuery(p.get('q') || '') }; read(); window.addEventListener('popstate',read); return () => window.removeEventListener('popstate',read) }, [])
+  const all = [...APP_CATALOG, ...(shelf.state?.listings || [])]
+  const apps = filterApps(all, { query, field }).filter(a => view === 'all' || (view === 'saved' ? shelf.state?.saved.includes(a.id) : a.origin === 'local'))
+  const app = all.find(a => a.id === selected)
+  function select(id?: string) { setSelected(id); const url = new URL(window.location.href); if (id) url.searchParams.set('app',id); else url.searchParams.delete('app'); window.history.replaceState(null,'',url) }
+  return <div className={`lab-wrap ${styles.catalog}`}>
+    <header className={styles.heading}><div><p className={styles.eyebrow}>THE APP SHELF</p><h1>Find tools. Keep building.</h1><p>Preview the use case, inspect the source, then open the app on its own site.</p></div><button className={styles.primary} disabled={!shelf.ready} onClick={() => setEditing(true)}>Add your app</button></header>
+    <div className={styles.context}><p>{starterDisclosure}</p><span>No embedded runtimes. No install flow.</span></div>
+    <div className={styles.controls}>
+      <label className={styles.search}>Search apps<input type="search" aria-label="Search science apps" placeholder="Notebooks, models, neural data…" value={query} onChange={e => setQuery(e.target.value)} /></label>
+      <label>Field<select aria-label="Filter apps by field" value={field} onChange={e => setField(e.target.value)}><option value="all">All fields</option>{fields.map(f => <option key={f.id} value={f.id}>{f.label}</option>)}</select></label>
     </div>
-  );
+    <div className={styles.tabs} aria-label="App collections">{[['all','All tools'],['saved','Saved apps'],['local','Your listings']].map(([id,label]) => <button key={id} aria-pressed={view === id} onClick={() => setView(id)}>{label}</button>)}<span aria-live="polite">{apps.length} {apps.length === 1 ? 'app' : 'apps'}</span></div>
+    <div className={styles.grid}>{apps.map(a => <article key={a.id} className={styles.card} data-app-card>
+      <div className={styles.cardTop}><span className={styles.icon} aria-hidden="true">{a.title.slice(0,2).toUpperCase()}</span><div><h2>{a.title}</h2><p className={styles.meta}>{fieldLabel(a.field)}</p></div></div>
+      <p>{a.description}</p><div className={styles.cardFoot}><span className={styles.meta}>{a.origin === 'local' ? 'Unpublished · yours' : 'Editorial · source-linked'}</span><button aria-label={`View app: ${a.title}`} onClick={() => select(a.id)}>View app →</button></div>
+    </article>)}</div>
+    {!apps.length && <section className={styles.empty}><h2>{view === 'saved' ? 'Your shelf starts here.' : view === 'local' ? 'Give your tool a source-linked home.' : 'No apps match those filters.'}</h2><p>{view === 'saved' ? 'Open a listing and save tools you want to revisit.' : 'This is a small starter collection, not a complete science app index.'}</p><button onClick={() => { setQuery(''); setField('all'); setView('all') }}>Clear filters</button></section>}
+    {shelf.error && <p role="alert">{shelf.error}</p>}
+    {selected && !app && shelf.ready && <p role="alert">This app is not in the current identity’s shelf. No listing was created. <button onClick={() => select()}>Dismiss</button></p>}
+    {app && !editing && <AppListing app={app} onClose={() => select()} onEdit={app.origin === 'local' ? () => setEditing(app) : undefined} />}
+    {editing && <AppListingEditor app={editing === true ? undefined : editing} onClose={() => setEditing(undefined)} />}
+  </div>
 }
