@@ -25,19 +25,21 @@ const fill=async(selector,value)=>{const el=document.querySelector(selector);ass
 beforeEach(()=>{localStorage.clear();for(const owner of [did,other])source('lib/lab-drafts.ts').saveDraft(localStorage,'social',owner,{onboardingSkipped:true});window.history.replaceState(null,'','/lab/');identity={session:{did,handle:'real-person.example.org'},isAuthenticated:true,isLoading:false,oauthSession:null,logout:async()=>{},login:async()=>{}};mock.method(auth,'useLabIdentity',()=>identity);mock.method(globalThis,'fetch',async path=>{assert.ok(['/api/lab/feed/','/api/lab/capabilities/'].includes(path),'No ghost records API or writes');return Response.json(path.includes('feed')?{items:[],status:'empty'}:{canSignIn:false,canPublish:false,mode:'unconfigured'});});root=createRoot(document.getElementById('root'));});
 afterEach(async()=>{await act(()=>root.unmount());mock.restoreAll();});
 
-test('one global demo control scopes the actual feed and supplemental tool discussions',async()=>{
+test('one global demo control scopes feed and discussion while the app catalog stays source-linked',async()=>{
  mock.method(source('lib/lab-protocol.ts'),'listLabRecords',async(owner,kind)=>({authorDid:owner,kind,records:[]}));
- const cases=[['components/lab/Landing.tsx','feed'],['components/lab/FeedWorkbench.tsx','feed'],['app/lab/atlas/page.tsx','duration-denominator'],['app/lab/apps/page.tsx','split-boundary'],['app/lab/collaborate/page.tsx','split-boundary'],['app/lab/profile/page.tsx','bench']];
+ const cases=[['components/lab/Landing.tsx','feed'],['components/lab/FeedWorkbench.tsx','feed'],['app/lab/atlas/page.tsx','duration-denominator'],['app/lab/apps/page.tsx','apps'],['app/lab/collaborate/page.tsx','split-boundary'],['app/lab/profile/page.tsx','bench']];
  for(const [file,kind] of cases){
   const Page=source(file).default;await mount(Shell,{children:React.createElement(Page)});
   const rows=document.querySelectorAll('[data-feed-row]').length;
   if(kind==='feed') {assert.ok(document.querySelector('[aria-label="Mixed science feed"]'));assert.ok(rows>1);assert.equal(document.querySelector('[data-demo-community-panel]'),null);}
+  else if(kind==='apps') {assert.ok(document.querySelector('[aria-label="App collections"]'));assert.equal(document.querySelectorAll('[data-app-card]').length,Object.keys(source('lib/lab-app-catalog.ts').APP_CATALOG).length);assert.equal(document.querySelector('[data-demo-community-panel]'),null);}
   else if(kind==='bench') {assert.ok(document.querySelector('[aria-label="Personal invention bench"]'));assert.ok(!document.querySelector('[aria-label="Fictional demo people"]'),'Bench must not append a duplicate people directory');}
   else {assert.ok(document.querySelector(`[data-thread="${kind}"]`),file);assert.equal(document.querySelectorAll('[aria-label="Demo community discussion"]').length,1,file);}
   if(file.includes('atlas'))assert.equal(document.querySelector('[data-thread="split-boundary"]'),null);
   assert.equal(document.querySelectorAll('[data-lab-scope-control]').length,1);await act(()=>document.querySelector('[data-lab-scope-control]').click());
   await click('Show real / empty view');assert.equal(document.querySelector('[data-thread]'),null);assert.equal(document.querySelector('[aria-label="Fictional demo people"]'),null);
   if(kind==='feed')assert.ok(document.querySelectorAll('[data-feed-row]').length<rows,'Demo off hides synthetic activities, not the real workbench');
+  if(kind==='apps'){assert.equal(document.querySelectorAll('[data-app-card]').length,Object.keys(source('lib/lab-app-catalog.ts').APP_CATALOG).length);assert.equal(document.querySelector('[data-demo-community-panel]'),null);}
   await click('Show demo community');await click('Close dialog');
  }
 });
