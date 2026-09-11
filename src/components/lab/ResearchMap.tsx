@@ -105,7 +105,7 @@ export default function ResearchMap({
               height="28"
               patternUnits="userSpaceOnUse"
             >
-              <circle cx="1" cy="1" r=".7" fill="#b9c3c9" opacity=".2" />
+              <circle cx="1" cy="1" r=".7" fill="var(--lab-muted)" opacity=".2" />
             </pattern>
           </defs>
           <rect width="640" height="445" fill="url(#lab-grid)" />
@@ -117,7 +117,7 @@ export default function ResearchMap({
                 key={a.id}
                 d={`M ${cx} ${cy} Q ${cx} ${y} ${x} ${y}`}
                 fill="none"
-                stroke={selected === a.id ? "#77b7ff" : "#465259"}
+                stroke={selected === a.id ? "var(--lab-blue)" : "var(--lab-line)"}
                 strokeWidth={selected === a.id ? 1.6 : 1}
               />
             );
@@ -126,10 +126,10 @@ export default function ResearchMap({
             const [x, y] = centers[f.id];
             return (
               <g key={f.id}>
-                <circle cx={x} cy={y} r="5" fill="#151d21" stroke="#8b999f" />
+                <circle cx={x} cy={y} r="5" fill="var(--lab-card)" stroke="var(--lab-muted)" />
                 <text
                   x={x}
-                  y={y - 18}
+                  y={f.id === "digital-human-rights" ? y + 22 : y - 18}
                   textAnchor="middle"
                   className="lab-map-field"
                 >
@@ -195,7 +195,7 @@ export default function ResearchMap({
                     cy={y}
                     r="20"
                     fill="none"
-                    stroke="#7dbafd"
+                    stroke="var(--lab-blue)"
                     opacity=".6"
                   />
                 )}
@@ -203,7 +203,7 @@ export default function ResearchMap({
                   cx={x}
                   cy={y}
                   r={active ? 7 : 4.5}
-                  fill={active ? "#77b7ff" : "#e3e8e5"}
+                  fill={active ? "var(--lab-blue)" : "var(--lab-ink)"}
                 />
                 <text x={x} y={y + 35} textAnchor="middle">
                   {a.id === "connectome"

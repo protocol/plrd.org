@@ -173,7 +173,7 @@ export default async function HomePage() {
 
     </div>
 
-    <Link href="/lab/" className="block border-y border-black/10 dark:border-white/15 bg-gray-100 hover:bg-blue/10 transition-colors"><div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap gap-4 items-center justify-between"><div><span className="text-[12px] uppercase tracking-[.16em] text-blue mr-4">Introducing Open Lab</span><span className="font-serif text-[24px]">A place for science before it’s finished.</span></div><span className="text-[15px] font-semibold">Explore the lab →</span></div></Link>
+    <Link href="/lab/" className="block border-y border-black/10 dark:border-white/15 bg-gray-100 hover:bg-blue/10 transition-colors"><div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap gap-4 items-center justify-between"><div><span className="text-[12px] uppercase tracking-[.16em] text-blue mr-4">Introducing Open Lab</span><span className="font-serif text-[24px]">Made something that makes science easier?</span></div><span className="text-[15px] font-semibold">Explore the lab →</span></div></Link>
 
     {/* ── Focus Areas (full-bleed gray) ── */}
     <div id="focus-areas" className="bg-gray-100 scroll-mt-20">
