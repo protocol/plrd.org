@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 import { source } from './velocity/test-source-loader.mjs';
+import { createRequire } from 'node:module';
+createRequire(import.meta.url).extensions['.css'] = () => {};
 const dom = new JSDOM('<div id="root"></div>', { url: 'https://www.plrd.org/lab/bottlenecks/?case=reproducibility' });
 for (const key of ['window', 'document', 'HTMLElement', 'HTMLInputElement', 'HTMLTextAreaElement', 'Event', 'MouseEvent']) globalThis[key] = dom.window[key];
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -35,4 +37,30 @@ test('proposal progressively reveals three coherent steps without unmounting or 
     assert.match(document.querySelector('[data-proposal-progress]').textContent, /1 of 8/);
     assert.ok(document.querySelector('[data-baseline] details'), 'Source context is reachable through progressive disclosure');
   } finally { await React.act(async () => root.unmount()); }
+});
+
+test('discussion disclosure exists only in demo mode and starts closed on the source-backed case', async () => {
+  const identity = source('lib/lab-identity.ts');
+  const provider = source('components/lab/demo/DemoCommunityProvider.tsx');
+  const community = source('components/lab/demo/DemoCommunity.tsx');
+  const original = [identity.useLabIdentity, provider.useDemoCommunity, community.DemoCommunityPanel];
+  let isDemo = false;
+  identity.useLabIdentity = () => ({ session: null, isLoading: false });
+  provider.useDemoCommunity = () => ({ isDemo });
+  community.DemoCommunityPanel = () => React.createElement('p', null, 'Synthetic community-panel fixture');
+  const Experience = source('components/lab/LabBottleneckExperience.tsx').default;
+  const root = createRoot(document.getElementById('root'));
+  try {
+    await React.act(async () => root.render(React.createElement(Experience)));
+    assert.ok(document.querySelector('.bottleneck-community-drawer') === null, 'Demo-only discussion controls must be absent with Demo off');
+    isDemo = true;
+    await React.act(async () => root.render(React.createElement(Experience)));
+    const panel = document.querySelector('.bottleneck-community-drawer');
+    assert.ok(panel);
+    assert.equal(panel.open, false);
+    assert.match(panel.textContent, /Illustrative community story/);
+  } finally {
+    await React.act(async () => root.unmount());
+    [identity.useLabIdentity, provider.useDemoCommunity, community.DemoCommunityPanel] = original;
+  }
 });

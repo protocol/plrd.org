@@ -59,11 +59,11 @@ function ProposalEditor({ item, owner, kind, onPrepareContribution }: { item: Bo
     finally { if (url) URL.revokeObjectURL(url); }
   }
   return <section className="bottleneck-proposal" aria-labelledby="bottleneck-proposal-title">
-    <p className="bottleneck-kicker">Your proposal · separate from the baseline</p>
+    <p className="bottleneck-kicker">Your local proposal</p>
     <h2 id="bottleneck-proposal-title">{kind === 'refinement' ? 'Refine the diagnosis' : 'Design the smallest useful intervention'}</h2>
     <p>A testable invitation, not an assignment. Start small; the evidence and collaborators follow.</p>
     <p className="bottleneck-small" data-proposal-progress>{PROPOSAL_FIELDS.filter(field => draft.fields[field.key].trim()).length} of 8 fields drafted · all eight are required for export; incomplete drafts can be saved.</p>
-    <p className="bottleneck-small">Target: {item.id} · {item.source.revision}</p>
+
     <form onSubmit={event => { event.preventDefault(); save(); }}>
       <div className="bottleneck-fields">
         {proposalSteps.map((step, index) => <details key={step.title} data-proposal-step open={index === 0}>
@@ -78,7 +78,7 @@ function ProposalEditor({ item, owner, kind, onPrepareContribution }: { item: Bo
             }} />
         </label>)}</div></details>)}
       </div>
-      <p className="bottleneck-small">Keep sensitive data out. Device storage is not encrypted; a guest draft is shared by visitors using this browser profile. No funds, assignments, author approval, or actual execution.</p>
+      <details className="bottleneck-source-detail"><summary>Draft target and handling</summary><p className="bottleneck-small">Target: {item.id} · {item.source.revision}</p><p className="bottleneck-small">Keep sensitive data out. Device storage is not encrypted; a guest draft is shared by visitors using this browser profile. No funds, assignments, author approval, or actual execution.</p></details>
       <div className="bottleneck-actions">
         <button type="submit" disabled={blocked}>Save local draft</button>
         <button type="button" onClick={download}>Export proposal JSON</button>
@@ -121,13 +121,14 @@ export default function BottleneckWorkbench({ owner = 'guest', onPrepareContribu
   const [kind, setKind] = useState<ProposalKind>('intervention');
   return <div className="bottleneck-workbench">
     <header className="bottleneck-heading">
-      <p className="bottleneck-kicker">Open Lab / co-creation workbench</p>
+
       <h1>Make a way through.</h1>
       <p>Start from a source-backed problem. Design one useful test, then invite someone to improve it.</p>
-      <details className="bottleneck-method"><summary>How we work together</summary><ol className="bottleneck-loop" aria-label="The collective learning loop">
+      <details className="bottleneck-method"><summary>How this source-backed workbench works</summary><ol className="bottleneck-loop" aria-label="The collective learning loop">
         <li>Diagnose & refine</li><li>Design an intervention</li><li>Rally contributions</li><li>Test outcomes</li><li>Revise or retire</li>
-      </ol></details>
+      </ol>
       <p className="bottleneck-disclosure">Editorial starter · public-source brief, not an imported Console record or an active, validated campaign. The real Console bridge is not live.</p>
+      </details>
     </header>
     <div className="bottleneck-filter">
       <label htmlFor="bottleneck-field">Explore a field</label>
@@ -155,12 +156,12 @@ export default function BottleneckWorkbench({ owner = 'guest', onPrepareContribu
         <p className="bottleneck-small">Reviewed {item.source.reviewedAt} · {item.source.revision}. {item.source.note} No inflection-point mapping is asserted.</p>
         </details>
         <h3>What removal would look like</h3><p>{item.resolutionSignal}</p>
-        <div className="bottleneck-support">
-          <h3>Supporting tools, not active campaigns</h3>
+        <details className="bottleneck-support bottleneck-source-detail">
+          <summary>Tools for doing the work elsewhere</summary>
           <a href="/lab/collaborate/">Prepare a bounded agent work packet ↗</a>
           <a href="/lab/efforts/">Explore the local effort experiment ↗</a>
           <p className="bottleneck-small">These tools do not staff or execute this proposal. No network totals are implied.</p>
-        </div>
+        </details>
       </article>
       <div>
         <div className="bottleneck-mode" aria-label="Proposal type">
