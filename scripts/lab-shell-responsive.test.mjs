@@ -41,6 +41,13 @@ test('public site invitation uses the action-first Open Lab invitation copy', ()
 
 // Run after canonical browser-harness records actual layout probes. Normal test runs
 // still check the CSS contracts; no synthetic geometry is substituted for a browser.
+test('section headings retain the app scale rather than legacy marketing size', () => {
+  const css = readFileSync(path, 'utf8');
+  const rule = /\.open-lab\.lab-app-shell \.lab-section-heading h2\s*\{([^}]+)\}/.exec(css)?.[1];
+  assert.ok(rule, 'Legacy profile section selector needs an equally specific app-scale rule');
+  assert.match(rule, /font-size:\s*17px/);
+});
+
 const probeFile = process.env.LAB_SHELL_PROBE_FILE;
 test('real responsive browser probes have no overflow and retain the scope/account/navigation', {skip:!probeFile}, () => {
   const probes = JSON.parse(readFileSync(probeFile, 'utf8'));

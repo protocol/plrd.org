@@ -121,6 +121,7 @@
 .open-lab.lab-app-shell .lab-welcome > p { font-family: var(--lab-display); font-size: 20px; letter-spacing: -.015em; }
 .open-lab.lab-app-shell .lab-welcome > div { display: flex; gap: 18px; flex-shrink: 0; }
 .open-lab.lab-app-shell .lab-welcome a { font-size: 13px; color: var(--lab-blue); min-height: 44px; display: inline-flex; align-items: center; gap: 6px; }
+.open-lab.lab-app-shell .lab-section-heading h2 { font-size: 17px; }
 .open-lab.lab-app-shell .lab-workbench { padding-top: 24px; padding-bottom: 32px; }
 .open-lab.lab-app-shell .lab-workbench-heading { gap: 16px; margin-bottom: 22px; align-items: center; }
 .open-lab.lab-app-shell .lab-workbench-heading h1 { font-size: 22px; }
