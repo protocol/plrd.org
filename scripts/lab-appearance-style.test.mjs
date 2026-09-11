@@ -95,6 +95,20 @@ test('feed and bench headings stay compact so activity, not display type, leads 
   assert.ok(size('.profileRoot :global(.lab-workbench-heading) h1') <= 22, 'My bench heading still uses marketing display type');
   assert.ok(size('.root h2') <= 18);
 });
+test('bottleneck and effort workbenches stay compact inside the app', () => {
+  const bottleneck = css('src/components/lab/BottleneckWorkbench.css');
+  const effort = css('src/components/lab/EffortBacking.css');
+  const sizes = (sheet, selector) => {
+    const values = [];
+    sheet.walkRules(selector, rule => rule.walkDecls('font-size', d => values.push(d.value)));
+    assert.ok(values.length, `Missing ${selector}`);
+    return values.map(parseFloat);
+  };
+  assert.ok(sizes(bottleneck, '.open-lab .bottleneck-workbench h1').every(n => n <= 22), 'Bottleneck h1 still uses marketing display type');
+  assert.ok(sizes(bottleneck, '.open-lab .bottleneck-workbench h2').every(n => n <= 18), 'Bottleneck h2 still uses marketing display type');
+  assert.ok(sizes(effort, '.effort-backing h1').every(n => n <= 22), 'Effort h1 still uses marketing display type');
+  assert.ok(sizes(effort, '.effort-backing h2').every(n => n <= 18), 'Effort h2 still uses marketing display type');
+});
 
 const declarations = (sheet, selector) => {
   const values = {};
