@@ -56,6 +56,7 @@ test('action navigation selects one destination, and global search and account r
   assert.equal(search.getAttribute('action'), '/lab/feed/'); assert.equal(search.getAttribute('method'), 'get');
   assert.ok(search.querySelector('input[name="q"][type="search"][aria-label]'));
   assert.ok(document.querySelector('button[aria-label="Sign in to Open Lab"]'));
+  assert.ok(document.querySelector('.lab-header-actions a[href="/lab/profile/"][aria-label="My bench"]'), 'Unsigned people still need a persistent profile control');
   identity = {...identity, isAuthenticated:true, session:{did:'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa',handle:'person.example.org',displayName:'Test person'}};
   await mount(Shell);
   assert.ok(document.querySelector('.lab-header-actions a[aria-label="My bench — Test person"]'));

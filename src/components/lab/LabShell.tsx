@@ -160,9 +160,14 @@ function LabChrome({ children }: { children: React.ReactNode }) {
                   <span className="lab-account-avatar" aria-hidden="true">{session?.avatar ? <img src={session.avatar} alt="" /> : name.slice(0, 1).toUpperCase()}</span><span className="lab-account-name">{name}</span>
                 </Link>
               ) : (
-                <button className="lab-account" type="button" aria-label="Sign in to Open Lab" onClick={() => setLoginOpen(true)} disabled={isLoading}>
-                  <span className="lab-account-avatar" aria-hidden="true"><Icon path="M20 21a8 8 0 0 0-16 0M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0" /></span><span className="lab-account-name">{isLoading ? "Connecting…" : "Sign in"}</span>
-                </button>
+                <>
+                  <button className="lab-account" type="button" aria-label="Sign in to Open Lab" onClick={() => setLoginOpen(true)} disabled={isLoading}>
+                    <span className="lab-account-avatar" aria-hidden="true"><Icon path="M20 21a8 8 0 0 0-16 0M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0" /></span><span className="lab-account-name">{isLoading ? "Connecting…" : "Sign in"}</span>
+                  </button>
+                  <Link className="lab-account" href="/lab/profile/" aria-label="My bench">
+                    <span className="lab-account-avatar" aria-hidden="true"><Icon path="M3 10h18v5H3zm2 5v6m14-6v6M8 10V5h8v5" /></span><span className="lab-account-name">My bench</span>
+                  </Link>
+                </>
               )}
             </div>
           </div>

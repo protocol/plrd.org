@@ -91,8 +91,11 @@ test('scoped stylesheet resolves component classes and keeps secondary controls 
 test('field map sits in the compact app, not a second marketing site', () => {
   const observatory = readFileSync('src/components/lab/explorations/Observatory.tsx', 'utf8')
   assert.doesNotMatch(observatory, /routeBar/, 'Field map must not draw a second Open Lab wordmark inside the app shell')
-  assert.doesNotMatch(observatory, /C \/ The work-map entrance/, 'Field map must not keep the exploration-study eyebrow')
+  assert.doesNotMatch(observatory, /The work-map entrance/, 'Field map must not keep the exploration-study eyebrow')
   assert.doesNotMatch(observatory, /Compare entrances/, 'Field map must not advertise a second entrance study')
+  assert.doesNotMatch(observatory, /Science Arcade/, 'Tech tree must not keep a second Science Arcade marketing entrance')
+  assert.doesNotMatch(observatory, /Editorial field notes/, 'Tech tree must not overlay editorial field-notes chrome')
+  assert.doesNotMatch(observatory, /observatoryFooter/, 'Tech tree must not keep a marketing footer under the map')
   const css = readFileSync('src/components/lab/explorations/lab-explorations.module.css', 'utf8')
   const root = postcss.parse(css)
   const header = {}
@@ -108,6 +111,13 @@ test('field map sits in the compact app, not a second marketing site', () => {
       assert.ok(parseFloat(d.value) <= 18, `Responsive field-map center type must stay compact, got ${d.value} in ${rule.params}`)
     }))
   }
+  const map = {}
+  root.walkRules('.frontierMap', rule => {
+    if (rule.parent && rule.parent.type === 'atrule') return
+    rule.walkDecls(d => { map[d.prop] = d.value })
+  })
+  const mapHeight = parseFloat(map.height || '0')
+  assert.ok(mapHeight > 0 && mapHeight <= 480, `Tech-tree map must sit in the app, not a tall marketing canvas, got ${map.height}`)
 })
 
 test('the observatory is a tech tree people choose a branch on', () => {
