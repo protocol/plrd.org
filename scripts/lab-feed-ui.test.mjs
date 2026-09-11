@@ -41,6 +41,12 @@ test('main compact feed: follow/filter, local reply, saved curator view, reload 
  }finally{await React.act(()=>root.unmount())}
 })
 
+test('the global search URL filters the actual default science feed after hydration', async()=>{
+ localStorage.clear();window.history.replaceState(null,'','/lab/feed/?q=Split-before-fit')
+ const C=source('components/lab/feed/MixedScienceFeed.tsx').default,root=createRoot(document.getElementById('root'))
+ try {await React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C))));assert.equal(document.querySelector('[aria-label="Search the feed"]').value,'Split-before-fit');assert.ok(rows().length>0);assert.ok(rows().every(row=>/split-before-fit/i.test(row.textContent)))}finally{await React.act(()=>root.unmount());window.history.replaceState(null,'','/lab/feed/')}
+})
+
 test('FeedWorkbench defaults to the mixed feed while preserving source and record workbenches',async()=>{
  const C=source('components/lab/FeedWorkbench.tsx').default
  const root=createRoot(document.getElementById('root'));localStorage.clear()

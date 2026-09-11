@@ -173,6 +173,25 @@ test('shell mounts the worker onboarding interface once, only after verified ide
   assert.equal(document.querySelectorAll('[data-onboarding-interface]').length, 1);
 });
 
+test('the single demo provider keeps local activity isolated by authenticated DID', async () => {
+  const {useDemoCommunity} = source('components/lab/demo/DemoCommunityProvider.tsx');
+  const Shell = source('components/lab/LabShell.tsx').default;
+  const a = 'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa', b = 'did:plc:bbbbbbbbbbbbbbbbbbbbbbbb';
+  let demo;
+  function Probe() { demo = useDemoCommunity(); return React.createElement('span', null, demo.state.scope); }
+  identity = {...identity,isLoading:false,isAuthenticated:true,session:{did:a,handle:'a.example.org'}};
+  await mount(Shell, {children:React.createElement(Probe)});
+  assert.equal(demo.state.scope,a,'The actual shell must pass its authenticated identity to the demo provider');
+  await act(() => {assert.equal(demo.act({type:'reply',threadId:'split-boundary',text:'A local demo note'}).ok,true)});
+  assert.equal(demo.state.replies.length,1);
+  identity = {...identity,session:{did:b,handle:'b.example.org'}};
+  await mount(Shell, {children:React.createElement(Probe)});
+  assert.equal(demo.state.scope,b); assert.equal(demo.state.replies.length,0);
+  identity = {...identity,session:{did:a,handle:'a.example.org'}};
+  await mount(Shell, {children:React.createElement(Probe)});
+  assert.equal(demo.state.replies[0].text,'A local demo note');
+});
+
 test('home renders the real FeedWorkbench below one slim invitation', async () => {
   await mount(source('components/lab/Landing.tsx').default);
   assert.ok(document.querySelector('.lab-stream'), 'Actual feed is the default home surface');

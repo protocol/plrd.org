@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLabFollowing } from '@/components/lab/social/useLabFollowing'
 import { useLabSocial } from '@/components/lab/social/useLabSocial'
 import { useDemoCommunity } from '@/components/lab/demo/DemoCommunityProvider'
@@ -17,6 +17,11 @@ export default function MixedScienceFeed() {
 function ScienceFeed() {
   const demo = useDemoCommunity(), following = useLabFollowing(), local = useLabSocial(following.owner)
   const [query, setQuery] = useState(''), [name, setName] = useState(''), [notice, setNotice] = useState('')
+  useEffect(() => {
+    const readSearch = () => setQuery((new URLSearchParams(window.location.search).get('q') || '').slice(0, 200))
+    readSearch(); window.addEventListener('popstate', readSearch)
+    return () => window.removeEventListener('popstate', readSearch)
+  }, [])
   const [selected, setSelected] = useState<FeedRow | null>(null), [person, setPerson] = useState<DemoPerson | null>(null)
   const bench=useInventionBench()
   const { prefs } = following

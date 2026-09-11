@@ -35,7 +35,8 @@ function Icon({ path }: { path: string }) {
   return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={path} /></svg>;
 }
 export default function LabShell({ children }: { children: React.ReactNode }) {
-  return <DemoCommunityProvider initialMode="demo"><LabChrome>{children}</LabChrome></DemoCommunityProvider>;
+  const {session} = useLabIdentity();
+  return <DemoCommunityProvider initialMode="demo" storageScope={session?.did || "browser"}><LabChrome>{children}</LabChrome></DemoCommunityProvider>;
 }
 function LabChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
