@@ -164,11 +164,28 @@ for (const dark of [false, true]) {
     }
   });
 }
-test('real feed/composer selectors bind readable tokens including primary and selected button ink', () => {
+test('real feed/composer selectors bind readable tokens including primary and selected button ink', async () => {
   const Composer = source('components/lab/feed/InventionComposer.tsx').default;
-  const markup = renderToStaticMarkup(React.createElement(PathnameContext.Provider, { value: '/lab/' }, React.createElement(Shell, null, React.createElement(Composer, { onClose() {} }))));
-  const composer = new JSDOM(markup).window.document;
-  const input = composer.querySelector('input[aria-label="Build title"]'); assert.ok(input);
+  const tree = () => React.createElement(PathnameContext.Provider, { value: '/lab/' }, React.createElement(Shell, null, React.createElement(Composer, { onClose() {} })));
+  const server = new JSDOM(renderToStaticMarkup(tree())).window.document;
+  assert.equal(server.querySelector('input[aria-label="Build title"]'), null, 'SSR must not expose an unrestored identity-scoped editor');
+  assert.match(server.body.textContent, /Restoring your scoped bench/);
+  const dom = new JSDOM('<div id="root"></div>', {url:'http://localhost/lab/'});
+  const keys = ['window','document','navigator','HTMLElement','HTMLInputElement','HTMLDialogElement','Event','StorageEvent','localStorage','sessionStorage','self','IS_REACT_ACT_ENVIRONMENT','fetch'];
+  const originals = new Map(keys.map(k => [k, Object.getOwnPropertyDescriptor(globalThis, k)]));
+  for (const k of keys.filter(k => !['self','IS_REACT_ACT_ENVIRONMENT','fetch'].includes(k))) Object.defineProperty(globalThis, k, {value:dom.window[k], configurable:true, writable:true});
+  globalThis.self = dom.window;
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+  globalThis.fetch = async () => new Response(JSON.stringify({canSignIn:false,canPublish:false,mode:'unconfigured'}), {headers:{'content-type':'application/json'}});
+  dom.window.HTMLDialogElement.prototype.showModal = function(){ this.open = true; };
+  dom.window.HTMLDialogElement.prototype.close = function(){ this.open = false; };
+  sessionStorage.setItem('open-lab:welcome:v2', 'seen');
+  const {createRoot} = await import('react-dom/client');
+  const root = createRoot(dom.window.document.getElementById('root'));
+  try {
+  await React.act(async () => { root.render(tree()); });
+  const composer = dom.window.document;
+  const input = composer.querySelector('input[aria-label="Build title"]'); assert.ok(input, 'Restored scoped bench must render the actual editor');
   const primary = composer.querySelector('button.primary'); assert.ok(primary);
   const selected = composer.querySelector('.chips button'); assert.ok(selected); selected.setAttribute('aria-pressed', 'true');
   for (const order of [[base, composition, feed, shell], [base, composition, shell, feed]]) {
@@ -188,4 +205,9 @@ test('real feed/composer selectors bind readable tokens including primary and se
   const errors = [];
   feed.walkRules(rule => { if (rule.selector.includes('.detail [role="alert"]')) rule.walkDecls('color', d => errors.push(d.value)); });
   assert.ok(errors.includes('var(--lab-error-ink)'), 'Actual detail/composer role=alert messages need error ink too');
+  } finally {
+    await React.act(async () => { root.unmount(); });
+    dom.window.close();
+    for (const [key, descriptor] of originals) { if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key]; }
+  }
 });
