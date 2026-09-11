@@ -1,0 +1,6 @@
+button.trigger { display:none; }
+aside.drawer { display:grid; width:100%; grid-template-columns:minmax(0,1fr); color:var(--lab-ink); }
+@media (max-width:1199px) {
+  button.trigger { display:inline-flex; align-items:center; justify-content:center; min-height:44px; margin-left:auto; }
+  aside.desktop { display:none; }
+}

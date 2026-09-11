@@ -41,6 +41,35 @@ test('main compact feed: follow/filter, local reply, saved curator view, reload 
  }finally{await React.act(()=>root.unmount())}
 })
 
+test('top-level curation opens discipline follows in a focus-managed drawer',async()=>{
+ localStorage.clear();window.history.replaceState(null,'','/lab/feed/')
+ const C=source('components/lab/FeedWorkbench.tsx').default,root=createRoot(document.getElementById('root'))
+ try {
+ await React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C))))
+ assert.ok(Array.from(document.querySelectorAll('button')).some(x=>x.getAttribute('aria-label')==='Curate the feed'),'Curation must be reachable before scrolling the stream')
+ await click('Curate the feed');assert.ok(document.querySelector('dialog[open]'))
+ assert.match(document.querySelector('dialog[open]').textContent,/Your disciplines/)
+ await click('Follow discipline: Mathematics');await click('Follow discipline: Neuroscience')
+ await click('Close dialog');assert.equal(document.querySelector('dialog[open]'),null)
+ await click('Curate the feed');assert.equal(document.querySelector('dialog[open] [aria-label="Unfollow discipline: Mathematics"]').getAttribute('aria-pressed'),'true')
+ assert.equal(document.querySelector('dialog[open] [aria-label="Unfollow discipline: Neuroscience"]').getAttribute('aria-pressed'),'true')
+ } finally {await React.act(()=>root.unmount())}
+})
+test('curation explicitly turns followed disciplines into a saved filter view',async()=>{
+ localStorage.clear();window.history.replaceState(null,'','/lab/feed/')
+ const C=source('components/lab/FeedWorkbench.tsx').default;let root=createRoot(document.getElementById('root'))
+ const render=()=>React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C))))
+ try {
+ await render();await click('Curate the feed');await click('Follow discipline: Mathematics');await click('Follow discipline: Neuroscience')
+ await click('Use followed disciplines as filters');await fill('Name this view','Minds and methods');await click('Save view')
+ assert.match(document.querySelector('dialog[open]').textContent,/View saved in this browser/)
+ await React.act(()=>root.unmount());root=createRoot(document.getElementById('root'));await render();await click('Curate the feed')
+ const view=Array.from(document.querySelectorAll('dialog[open] button')).find(x=>x.textContent.includes('Minds and methods'))
+ assert.ok(view);assert.match(view.textContent,/2 disciplines/);await React.act(()=>view.click());await click('Close dialog')
+ assert.equal(document.querySelector('[aria-label="Discipline: Mathematics"]').getAttribute('aria-pressed'),'true')
+ assert.equal(document.querySelector('[aria-label="Discipline: Neuroscience"]').getAttribute('aria-pressed'),'true')
+ } finally {await React.act(()=>root.unmount())}
+})
 test('feed refinement starts collapsed and opens through a keyboard-accessible native control',async()=>{
  localStorage.clear();window.history.replaceState(null,'','/lab/feed/')
  const C=source('components/lab/FeedWorkbench.tsx').default,root=createRoot(document.getElementById('root'))

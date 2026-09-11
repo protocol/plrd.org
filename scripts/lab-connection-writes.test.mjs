@@ -31,7 +31,9 @@ function harness(options = {}) {
     const row = rows.get(uri)
     return row ? Response.json({ ...row, ...(options.readPatch ?? {}) }) : Response.json({ error: 'RecordNotFound' }, { status: 400 })
   } }
-  const deps = { loadConfig: async () => ({ ...source('lib/lab-oauth-config.ts').getLabOAuthConfig({ LAB_PUBLIC_URL: origin }), ...(options.configPatch ?? {}) }), storage: store, isCurrent: () => current, lock: async (_key, work) => work(), transport: { timeoutMs: 50 } }
+  // Leave room for cold SDK/body-reader scheduling under shared CI load; the
+  // hanging-write fixture still exercises the real bounded deadline below.
+  const deps = { loadConfig: async () => ({ ...source('lib/lab-oauth-config.ts').getLabOAuthConfig({ LAB_PUBLIC_URL: origin }), ...(options.configPatch ?? {}) }), storage: store, isCurrent: () => current, lock: async (_key, work) => work(), transport: { timeoutMs: 500 } }
   const client = api.createLabConnectionClient(session, deps)
   return { api, client, session, deps, calls, rows, store, setMode: m => { mode = m }, invalidate: () => { current = false } }
 }
