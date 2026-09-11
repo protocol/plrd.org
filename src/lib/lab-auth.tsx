@@ -10,10 +10,35 @@ import { Agent } from '@atproto/api'
 import { boundedLabFetch } from '@/lib/lab-bounded-transport'
 
 export type LabSession = { did: string; handle: string; displayName?: string; avatar?: string }
+// Requests capture this before any SDK await. Abort synchronously, before
+// notifying React or awaiting the SDK's best-effort sign-out.
+const sessionRequests = new WeakMap<object, AbortController>()
+export function labSessionRequestSignal(session: object): AbortSignal {
+  let controller = sessionRequests.get(session)
+  if (!controller) sessionRequests.set(session, controller = new AbortController())
+  return controller.signal
+}
+function abortSessionRequests(session: object | null) {
+  if (!session) return
+  sessionRequests.get(session)?.abort(new DOMException('Account work was canceled.', 'AbortError'))
+  // A later explicit review can start fresh if authorization was canceled but
+  // the original session is still valid. Existing requests retain the old signal.
+  sessionRequests.delete(session)
+}
+// Official SDK fetch option: the final synchronous fence after proof/token/nonce
+// awaits, including SDK retries. No credentials or DPoP are rebuilt here.
+export function createLabOAuthFetch(fetcher: typeof fetch = globalThis.fetch): typeof fetch {
+  return (input, init) => {
+    const signal = init?.signal ?? (input instanceof Request ? input.signal : undefined)
+    signal?.throwIfAborted()
+    return fetcher(input, init)
+  }
+}
 // Public AppView data is presentation, not proof of a person's name or affiliation.
 // Bind the profile to the SDK's DID, and forward-resolve its current handle too.
-export function createLabProfileReader(fetcher: typeof fetch = globalThis.fetch) {
-  const agent = new Agent(boundedLabFetch({ fetchHandler: (path, init) => fetcher(new URL(path, 'https://public.api.bsky.app'), { ...init, method: 'GET', credentials: 'omit', redirect: 'error', cache: 'no-store' }) }))
+export function createLabProfileReader(fetcher: typeof fetch = globalThis.fetch, signal?: AbortSignal) {
+  const transport = boundedLabFetch({ fetchHandler: (path, init) => createLabOAuthFetch(fetcher)(new URL(path, 'https://public.api.bsky.app'), { ...init, method: 'GET', credentials: 'omit', redirect: 'error', cache: 'no-store' }) })
+  const agent = new Agent((path, init) => transport(path, { ...init, signal: AbortSignal.any([...(signal ? [signal] : []), ...(init?.signal ? [init.signal] : [])]) }))
   return async (actor: string): Promise<LabSession> => {
     let did = actor
     if (actor.startsWith('did:')) assertLabDid(actor)
@@ -40,32 +65,36 @@ type LabAuthSnapshot = { session: LabSession | null; oauthSession: OAuthSession 
 type LabSdkClient = Pick<BrowserOAuthClient, 'init' | 'authorize'>
 type LabAuthDependencies = {
   loadConfig: () => Promise<LabOAuthConfig>;
-  loadClient: (config: LabOAuthConfig, onDeleted: (did: string) => void) => Promise<LabSdkClient>;
+  loadClient: (config: LabOAuthConfig, onDeleted: (did: string) => void, fetcher: typeof fetch) => Promise<LabSdkClient>;
   location: () => { origin: string; pathname: string };
   replace: (path: string) => void;
-  loadProfile?: (did: string) => Promise<LabSession>;
+  loadProfile?: (did: string, signal: AbortSignal) => Promise<LabSession>;
 }
 const defaults: LabAuthDependencies = {
   loadConfig: fetchLabCapabilities,
-  loadClient: async (config, onDeleted) => {
+  loadClient: async (config, onDeleted, fetcher) => {
     if (!config.clientId) throw new Error('Open Lab OAuth is not configured.')
     const { BrowserOAuthClient } = await import('@atproto/oauth-client-browser')
-    return BrowserOAuthClient.load({ clientId: config.clientId, handleResolver: 'https://bsky.social', responseMode: 'fragment', onSessionDeleted: onDeleted })
+    return BrowserOAuthClient.load({ clientId: config.clientId, handleResolver: 'https://bsky.social', responseMode: 'fragment', onSessionDeleted: onDeleted, fetch: fetcher })
   },
   location: () => window.location,
   replace: path => window.location.replace(path),
-  loadProfile: did => createLabProfileReader()(did),
+  loadProfile: (did, signal) => createLabProfileReader(undefined, signal)(did),
 }
 const initialSnapshot: LabAuthSnapshot = { session: null, oauthSession: null, isAuthenticated: false, isLoading: true, error: null, capabilities: null }
 
 // The SDK owns PKCE, DPoP, callback validation, refresh, revocation and IndexedDB.
-// This small adapter owns only UI state. Injected transport is a local test seam.
+// This adapter owns UI state and request lifetime. Injected transport is a local test seam.
 export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
   let snapshot = initialSnapshot
   let client: LabSdkClient | undefined
   let initialized: Promise<void> | undefined
   let signingOut = false
   let generation = 0
+  function advanceGeneration() {
+    abortSessionRequests(snapshot.oauthSession)
+    return ++generation
+  }
   const subscribers = new Set<() => void>()
   function update(patch: Partial<LabAuthSnapshot>) {
     snapshot = { ...snapshot, ...patch }
@@ -79,10 +108,10 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
       client = await deps.loadClient(capabilities, did => {
         // With no installed identity this can invalidate a pending restore too.
         if (!snapshot.session || did === snapshot.session.did) {
-          generation++
+          advanceGeneration()
           update({ session: null, oauthSession: null, isAuthenticated: false, isLoading: false, error: signingOut ? null : 'Your Open Lab session ended. Sign in again to publish.' })
         }
-      })
+      }, createLabOAuthFetch())
     }
     return client
   }
@@ -110,7 +139,7 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
             update({ session: { did: result.session.sub, handle: result.session.sub }, oauthSession: result.session, isAuthenticated: true })
             if (operation === generation && deps.loadProfile) {
               try {
-                const profile = await deps.loadProfile(result.session.sub)
+                const profile = await deps.loadProfile(result.session.sub, labSessionRequestSignal(result.session))
                 if (operation === generation && snapshot.oauthSession === result.session && profile.did === result.session.sub) update({ session: profile })
               } catch { /* Public lookup outage never invalidates SDK identity. */ }
             }
@@ -123,7 +152,7 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
     async login(handle: string, returnTo?: string) {
       try { ensureValidHandle(handle) }
       catch { const message = 'Enter your existing AT Protocol handle, without @, whitespace, or a URL.'; update({ error: message }); throw new Error(message) }
-      const operation = ++generation
+      const operation = advanceGeneration()
       update({ error: null, isLoading: true })
       try {
         const sdk = await ready()
@@ -142,7 +171,7 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
       const scope = `${LAB_SIGN_IN_SCOPE} ${labActionScope(kind, action)}`
       const did = snapshot.session?.did
       if (!did) throw new Error('Sign in before authorizing a public action.')
-      const operation = ++generation
+      const operation = advanceGeneration()
       update({ error: null, isLoading: true })
       try {
         const sdk = await ready()
@@ -161,7 +190,7 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
       const scope = `${LAB_SIGN_IN_SCOPE} ${labConnectionScope(action)}`
       const did = snapshot.session?.did
       if (!did) throw new Error('Sign in before authorizing a public follow action.')
-      const operation = ++generation
+      const operation = advanceGeneration()
       update({ error: null, isLoading: true })
       try {
         const sdk = await ready()
@@ -176,7 +205,7 @@ export function createLabAuthRuntime(deps: LabAuthDependencies = defaults) {
       } finally { if (operation === generation) update({ isLoading: false }) }
     },
     async logout() {
-      generation++
+      advanceGeneration()
       const session = snapshot.oauthSession
       update({ session: null, oauthSession: null, isAuthenticated: false, isLoading: false, error: null })
       signingOut = true

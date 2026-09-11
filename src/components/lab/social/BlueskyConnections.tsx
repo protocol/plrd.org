@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useLabIdentity, type LabIdentity } from '@/lib/lab-identity'
-import { createLabProfileReader, type LabSession } from '@/lib/lab-auth'
+import { createLabProfileReader, labSessionRequestSignal, type LabSession } from '@/lib/lab-auth'
 import { assertLabDid } from '@/lib/lab-protocol'
 import { safeLabReturnTo, type LabConnectionAction } from '@/lib/lab-oauth-config'
 import { createLabConnectionClient, LabConnectionPermissionError, LabConnectionUnknownError, type LabConnectionReceipt } from '@/lib/lab-connections'
@@ -34,26 +34,39 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
   const [busy, setBusy] = useState(false)
   const live = useRef(identity)
   live.current = identity
-  const mounted = useRef(true), generation = useRef(0)
+  const mounted = useRef(true), generation = useRef(0), work = useRef(new AbortController())
   const { session, oauthSession, isAuthenticated, isLoading, capabilities } = identity
-  const client = useMemo(() => oauthSession ? createLabConnectionClient(oauthSession, {
+  // A client captures one panel/account lifetime; never revive a canceled client.
+  const client = useMemo(() => oauthSession ? () => createLabConnectionClient(oauthSession, {
     isCurrent: () => mounted.current && live.current.isSessionCurrent(oauthSession),
+    signal: work.current.signal,
   }) : null, [oauthSession])
+  function cancelWork() {
+    generation.current++
+    work.current.abort(new DOMException('Connection panel work was canceled.', 'AbortError'))
+    work.current = new AbortController()
+  }
+  useLayoutEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false; cancelWork() }
+  }, [oauthSession])
   const action: LabConnectionAction = receipt?.status === 'following' ? 'delete' : 'create'
   const verb = action === 'create' ? 'follow' : 'unfollow'
   const active = (operation: number) => mounted.current && operation === generation.current
 
   async function lookup(actor: string) {
-    const operation = ++generation.current
+    cancelWork()
+    const operation = generation.current, connection = client?.()
+    const signal = AbortSignal.any([work.current.signal, ...(oauthSession ? [labSessionRequestSignal(oauthSession)] : [])])
     setBusy(true); setAgreed(false); setPermission(null); setUnknownUri(null); setReceipt(null); setProfile(null); setMessage(null)
     try {
-      const found = await createLabProfileReader()(actor)
+      const found = await createLabProfileReader(undefined, signal)(actor)
       if (!active(operation)) return
       setProfile(found)
-      if (client && found.did !== session?.did && capabilities?.canConnect) {
-        const pending = client.pending(found.did)
+      if (connection && found.did !== session?.did && capabilities?.canConnect) {
+        const pending = connection.pending(found.did)
         if (pending) { setUnknownUri(pending.uri); return }
-        const state = await client.inspect(found.did)
+        const state = await connection.inspect(found.did)
         if (active(operation)) setReceipt(state)
       }
     } catch {
@@ -61,7 +74,6 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
     } finally { if (active(operation)) setBusy(false) }
   }
   useEffect(() => {
-    mounted.current = true
     let actor = personDid
     if (!actor && session?.did) {
       try {
@@ -74,7 +86,6 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
       } catch { setMessage('Your saved connection draft could not be read. Find the person again; nothing will run automatically.') }
     }
     if (actor) void lookup(actor)
-    return () => { mounted.current = false; generation.current++ }
     // A fresh SDK session requires a fresh review, even when the DID is unchanged.
   }, [personDid, client, session?.did])
 
@@ -87,9 +98,10 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
       // Also retain a recoverable target when the existing token already grants
       // this action and no permission-escalation round trip is necessary.
       saveConnectionDraft(session.did, profile.did, action)
+      const connection = client()
       const result = receipt.status === 'following'
-        ? await client.unfollow(profile.did, { ...consent, uri: receipt.record.uri, expectedCid: receipt.record.cid })
-        : await client.follow(profile.did, consent)
+        ? await connection.unfollow(profile.did, { ...consent, uri: receipt.record.uri, expectedCid: receipt.record.cid })
+        : await connection.follow(profile.did, consent)
       if (!active(operation)) return
       setReceipt(result)
       setMessage(result.status === 'following' ? (action === 'delete' ? 'That exact follow was removed, but another follow record remains. Review it before any further change.' : 'Following on Bluesky — verified on your PDS. This is one-way, not a mutual connection.') : 'Not following on Bluesky — verified on your PDS. Existing copies may remain elsewhere.')
@@ -115,22 +127,30 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
     const operation = ++generation.current
     setBusy(true); setAgreed(false); setMessage(null)
     try {
-      const result = await client.recover(profile.did)
+      const result = await client().recover(profile.did)
       if (!active(operation)) return
       setReceipt(result); setUnknownUri(null)
       setMessage(result.status === 'following' ? 'Following on Bluesky — exact public outcome recovered without a new write.' : 'The exact follow was removed — public outcome recovered without a new write.')
     } catch { if (active(operation)) setMessage('Outcome is still unknown. No write was retried. Check this exact record again, or review your Bluesky account; do not clear recovery storage to retry.') }
     finally { if (active(operation)) setBusy(false) }
   }
+  function cancel() {
+    cancelWork()
+    setBusy(false); setAgreed(false); setPermission(null); setReceipt(null)
+    setMessage('Local work canceled. An action already transmitted may still complete; no success or rollback is claimed.')
+    // Local read only. Keep any attempted mutation held for exact recovery.
+    try { setUnknownUri(profile && client ? client().pending(profile.did)?.uri ?? null : null) }
+    catch { setMessage('Local work canceled. Recovery storage could not be read; do not retry a public action.') }
+  }
   const own = profile?.did === session?.did
   return <section id="bluesky-connections" aria-label="Bluesky connections" className="lab-card" style={{ fontSize: 15, minWidth: 0 }}>
     <h2 style={{ fontSize: 20, marginBottom: 12 }}>Connect on Bluesky</h2>
     {!personDid && <form className="lab-form" onSubmit={event => { event.preventDefault(); if (!busy) void lookup(handle) }}>
-      <label>Find a public profile<input aria-label="Bluesky handle to find" value={handle} disabled={busy} onChange={e => { generation.current++; setHandle(e.target.value); setProfile(null); setReceipt(null); setAgreed(false); setPermission(null); setUnknownUri(null); setMessage(null) }} placeholder="name.bsky.social" autoCapitalize="none" autoCorrect="off" spellCheck={false} maxLength={253} required /></label>
+      <label>Find a public profile<input aria-label="Bluesky handle to find" value={handle} disabled={busy} onChange={e => { cancelWork(); setHandle(e.target.value); setProfile(null); setReceipt(null); setAgreed(false); setPermission(null); setUnknownUri(null); setMessage(null) }} placeholder="name.bsky.social" autoCapitalize="none" autoCorrect="off" spellCheck={false} maxLength={253} required /></label>
       <button className="lab-button" disabled={busy || !handle} type="submit">Find person</button>
     </form>}
     <p style={{ fontSize: 13 }}>Public lookup uses Bluesky’s AppView. A display name is not proof of a person’s identity or affiliation.</p>
-    {busy && <p role="status">Checking your connection…</p>}
+    {busy && <div><p role="status">Checking your connection…</p>{!permission && <button type="button" className="lab-button" onClick={cancel}>Cancel pending work</button>}</div>}
     {profile && <div style={{ marginBlock: 12, overflowWrap: 'anywhere' }}>
       {profile.avatar && <img src={profile.avatar} alt="" referrerPolicy="no-referrer" width={40} height={40} style={{ borderRadius: '50%' }} />}
       <strong>{profile.displayName ?? profile.handle}</strong><br />

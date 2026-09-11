@@ -1,4 +1,5 @@
 import { Agent, AppBskyGraphFollow } from '@atproto/api'
+import { labSessionRequestSignal } from '@/lib/lab-auth'
 import { TID } from '@atproto/common-web'
 import { ensureValidRecordKey } from '@atproto/syntax'
 import { boundedLabFetch, type LabTransportOptions } from '@/lib/lab-bounded-transport'
@@ -18,6 +19,7 @@ export class LabConnectionUnknownError extends Error {
 }
 type ConnectionDependencies = {
   isCurrent: () => boolean;
+  signal?: AbortSignal;
   loadConfig?: () => Promise<LabOAuthConfig>;
   storage?: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
   lock?: <T>(key: string, work: () => Promise<T>) => Promise<T>;
@@ -63,13 +65,19 @@ function recordNotFound(error: unknown) { return !!error && typeof error === 'ob
 export function createLabConnectionClient(session: LabOAuthSession, deps: ConnectionDependencies) {
   const key = (subject: string) => `open-lab:connection:v1:${session.sub}:${subject}`
   const store = () => deps.storage ?? window.localStorage
+  const signal = AbortSignal.any([labSessionRequestSignal(session), ...(deps.signal ? [deps.signal] : [])])
   function current() {
     if (typeof window === 'undefined' || !deps.isCurrent()) throw new Error('Your account changed or signed out. Review again.')
+    signal.throwIfAborted()
     assertLabDid(session.sub)
     if (session.did !== session.sub) throw new Error('OAuth session DID mismatch.')
   }
   function target(subject: string) { current(); assertLabDid(subject); if (subject === session.sub) throw new Error('You cannot follow your own account.') }
-  const agent = new Agent({ get did() { return session.did }, fetchHandler: boundedLabFetch({ fetchHandler: (path, init) => { current(); return session.fetchHandler(path, { ...init, redirect: 'error' }) } }, deps.transport) })
+  const bounded = boundedLabFetch({ fetchHandler: (path, init) => { current(); return session.fetchHandler(path, init) } }, deps.transport)
+  const agent = new Agent({ get did() { return session.did }, fetchHandler: (path, init) => {
+    current()
+    return bounded(path, { ...init, redirect: 'error', signal: AbortSignal.any([signal, ...(init?.signal ? [init.signal] : [])]) })
+  } })
   async function authorize(subject: string, action?: LabConnectionAction, consent?: LabConnectionConsent) {
     target(subject)
     if (action && (consent?.public !== true || consent.did !== session.sub || consent.subject !== subject || consent.action !== action)) throw new Error('Explicit public consent for this author, subject and action is required.')
