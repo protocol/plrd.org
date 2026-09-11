@@ -87,3 +87,16 @@ test('scoped stylesheet resolves component classes and keeps secondary controls 
     assert.equal(minHeight, '44px', `${selector} needs an accessible touch target`)
   }
 })
+
+test('field map sits in the compact app, not a second marketing site', () => {
+  const observatory = readFileSync('src/components/lab/explorations/Observatory.tsx', 'utf8')
+  assert.doesNotMatch(observatory, /routeBar/, 'Field map must not draw a second Open Lab wordmark inside the app shell')
+  assert.doesNotMatch(observatory, /C \/ The work-map entrance/, 'Field map must not keep the exploration-study eyebrow')
+  assert.doesNotMatch(observatory, /Compare entrances/, 'Field map must not advertise a second entrance study')
+  const css = readFileSync('src/components/lab/explorations/lab-explorations.module.css', 'utf8')
+  const root = postcss.parse(css)
+  const header = {}
+  root.walkRules('.observatoryHeader h1', rule => rule.walkDecls(d => { header[d.prop] = d.value }))
+  const size = parseFloat(header['font-size'] || '0')
+  assert.ok(size > 0 && size <= 22, `Field-map heading must stay compact, got ${header['font-size']}`)
+})

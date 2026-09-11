@@ -31,8 +31,7 @@ export default function Observatory({ initialQuestion = 'neural-measurements' }:
   }
   return (
     <div className={`${styles.exploration} ${styles.observatory}`}>
-      <nav className={styles.routeBar} aria-label="Exploration navigation"><a href="/lab/" className={styles.wordmark}><img src="/images/pl_logo_mark.svg" alt="" width="22" height="26" /> Open Lab <span>/</span></a><span>Observatory</span><a className={styles.compareLink} href="/lab/explorations/">Compare entrances ↗</a></nav>
-      <header className={styles.observatoryHeader}><div><p className={styles.eyebrow}>C / The work-map entrance</p><h1>Find the question<br /><em>worth getting closer to.</em></h1></div><p>Not a feed to keep up with.<br />A frontier to inspect.<span>Choose an editorial question. See the source, the opening, and what useful evidence could look like.</span></p></header>
+      <header className={styles.observatoryHeader}><div><p className={styles.eyebrow}>FIELD MAP</p><h1>Explore the field</h1></div><p>Choose an editorial question. See the source, the opening, and what useful evidence could look like.</p></header>
       <div className={styles.observatoryConsole}>
         <section className={styles.frontier} aria-labelledby="frontier-title">
           <div className={styles.mapToolbar}><h2 id="frontier-title">Frontier / Computing & human capability</h2><div className={styles.viewSwitch} aria-label="Question layout"><button type="button" aria-pressed={view === 'map'} onClick={() => setView('map')}>Map</button><button type="button" aria-pressed={view === 'list'} onClick={() => setView('list')}>List</button></div></div>

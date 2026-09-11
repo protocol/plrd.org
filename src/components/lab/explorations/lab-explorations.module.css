@@ -123,8 +123,8 @@
 .mapGeometry :is(path, ellipse, line) { stroke: currentColor; }
 .mapGeometry path[data-selected='true'] { stroke: var(--accent); }
 
-.observatoryHeader { display: flex; justify-content: space-between; align-items: end; gap: 24px; padding-block: 24px; }
-.observatoryHeader h1 { font-family: var(--serif); font-size: 32px; font-weight: 400; line-height: 1.02; letter-spacing: -.045em; margin-top: 8px; }
+.observatoryHeader { display: flex; justify-content: space-between; align-items: end; gap: 24px; padding-block: 12px 16px; }
+.observatoryHeader h1 { font-family: Aileron, sans-serif; font-size: 22px; font-weight: 400; line-height: 1.2; letter-spacing: -.02em; margin-top: 4px; }
 .observatoryHeader h1 em { color: var(--accent); }
 .observatoryHeader > p { font-size: 14px; max-width: 34ch; line-height: 1.6; }
 .observatoryHeader > p > span { display: block; font-size: 12px; color: var(--muted); margin-top: 14px; }
