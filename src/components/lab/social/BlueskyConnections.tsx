@@ -135,9 +135,14 @@ function ConnectionPanel({ personDid, identity }: { personDid?: string; identity
       {profile.avatar && <img src={profile.avatar} alt="" referrerPolicy="no-referrer" width={40} height={40} style={{ borderRadius: '50%' }} />}
       <strong>{profile.displayName ?? profile.handle}</strong><br />
       <a className="lab-text-button" href={`https://bsky.app/profile/${profile.did}`} target="_blank" rel="noopener noreferrer">@{profile.handle}</a>
-      <div style={{ fontSize: 12 }}>{profile.did}</div>
-      {session && <p>Acting as @{session.handle}<br /><span style={{ fontSize: 12 }}>{session.did}</span></p>}
-      <p>A follow is public and one-way. It may notify this person and be replicated. It does not create Open Lab membership or a mutual connection.</p>
+      {session && <p>Acting as @{session.handle}</p>}
+      <p>A follow is public and one-way. It may notify this person and be replicated; it is not a mutual connection.</p>
+      <details data-connection-details style={{ fontSize: 13 }}>
+        <summary>Account details</summary>
+        <p>Profile identity: <code>{profile.did}</code></p>
+        {session && <p>Your identity: <code>{session.did}</code></p>}
+        <p>This follows a Bluesky account; it does not create Open Lab membership.</p>
+      </details>
       {own && <p>You are viewing your own account.</p>}
     </div>}
     {!isAuthenticated && <form className="lab-form" onSubmit={event => {

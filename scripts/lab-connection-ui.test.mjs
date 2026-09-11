@@ -47,6 +47,22 @@ test('local injected UI finds a real-profile-shaped result, identifies both DIDs
   assert.match(document.body.textContent, /Following on Bluesky/)
   await h.unmount()
 })
+test('compact connection disclosure keeps public consent visible and technical account details expandable', async () => {
+  setup(); const h = await mount({ personDid: subject })
+  const details = document.querySelector('details[data-connection-details]')
+  assert.ok(details, 'Account identifiers belong in an expandable disclosure')
+  assert.equal(details.open, false)
+  assert.ok(details.textContent.includes(did) && details.textContent.includes(subject))
+  assert.match(details.querySelector('summary').textContent, /Account details/)
+  const confirmation = document.querySelector('input[type=checkbox]').closest('label')
+  assert.equal(confirmation.closest('details'), null)
+  assert.match(confirmation.textContent, /public follow/)
+  assert.match(confirmation.textContent, /may be notified/)
+  assert.equal(button('Confirm public follow').disabled, true)
+  assert.equal(calls.length, 0)
+  await h.unmount()
+})
+
 test('changing a lookup handle discards the old profile and public confirmation', async () => {
   setup(); const h = await mount()
   const input = document.querySelector('[aria-label="Bluesky handle to find"]')
