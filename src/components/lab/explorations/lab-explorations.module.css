@@ -95,9 +95,8 @@
   .nextExperiment > .eyebrow { grid-column: 1 / -1; }
 }
 @media (max-width: 720px) {
-  .arcadeGrid { grid-template-columns: 1fr; padding-top: 32px; gap: 32px; }
+  .arcadeGrid { grid-template-columns: minmax(0, 1fr); padding-top: 32px; gap: 32px; }
   .cabinetIntro h1 { font-size: clamp(46px, 11vw, 68px); }
-  .cabinetIntro h1 br:last-child { display: none; }
   .intro { max-width: 46ch; }
   .cabinetLabel { margin-top: 32px; }
   .benchObject { margin-block: 14px; }
