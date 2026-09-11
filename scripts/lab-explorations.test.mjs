@@ -99,4 +99,25 @@ test('field map sits in the compact app, not a second marketing site', () => {
   root.walkRules('.observatoryHeader h1', rule => rule.walkDecls(d => { header[d.prop] = d.value }))
   const size = parseFloat(header['font-size'] || '0')
   assert.ok(size > 0 && size <= 22, `Field-map heading must stay compact, got ${header['font-size']}`)
+  const center = {}
+  root.walkRules('.mapCenter > strong', rule => rule.walkDecls(d => { center[d.prop] = d.value }))
+  const centerSize = parseFloat(center['font-size'] || '0')
+  assert.ok(centerSize > 0 && centerSize <= 18, `Field-map center type must stay compact, got ${center['font-size']}`)
+  for (const rule of root.nodes.filter(n => n.type === 'atrule' && n.name === 'media')) {
+    rule.walkRules('.mapCenter > strong', r => r.walkDecls('font-size', d => {
+      assert.ok(parseFloat(d.value) <= 18, `Responsive field-map center type must stay compact, got ${d.value} in ${rule.params}`)
+    }))
+  }
+})
+
+test('the observatory is a tech tree people choose a branch on', () => {
+  const observatory = readFileSync('src/components/lab/explorations/Observatory.tsx', 'utf8')
+  const shell = readFileSync('src/components/lab/LabShell.tsx', 'utf8')
+  assert.match(observatory, /Explore the tech tree/)
+  assert.match(observatory, /TECH TREE/)
+  assert.match(observatory, /Choose a branch/)
+  assert.doesNotMatch(observatory, /FIELD MAP/)
+  assert.doesNotMatch(observatory, /Explore the field</)
+  assert.match(shell, /Explore the tech tree/)
+  assert.doesNotMatch(shell, /Explore the field map/)
 })

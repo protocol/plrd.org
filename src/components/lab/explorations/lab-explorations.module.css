@@ -139,7 +139,7 @@
 .mapGeometry { position: absolute; inset: 0; width: 100%; height: calc(100% - 55px); z-index: -1; }
 .mapCenter { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); text-align: center; background: var(--paper); padding: 15px; }
 .mapCenter > span { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .15em; }
-.mapCenter > strong { display: block; font-family: var(--serif); font-size: 29px; font-weight: 400; line-height: 1.08; margin-top: 10px; }
+.mapCenter > strong { display: block; font-family: Aileron, sans-serif; font-size: 18px; font-weight: 600; line-height: 1.2; margin-top: 6px; }
 .mapCenter > small { display: block; font-size: 12px; color: var(--muted); margin-top: 12px; }
 .mapCoordinate { position: absolute; top: 20px; left: 24px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .15em; }
 .questionNodes { list-style: none; margin: 0; padding: 0; }
@@ -199,7 +199,7 @@
   .questionNodes a { padding: 10px; }
   .questionNodes strong { font-size: 19px; }
   .mapCenter { padding: 10px; }
-  .mapCenter > strong { font-size: 25px; }
+  .mapCenter > strong { font-size: 16px; }
   .mapToolbar { padding-inline: 12px; }
   .mapToolbar h2 { font-size: 12px; }
   .frontierMap { height: 660px; }
@@ -214,7 +214,7 @@
   .nodeMethod { font-size: 12px; }
   .frontierMap .questionNodes > li { width: 43%; }
   .questionNodes a { min-height: 155px; }
-  .mapCenter > strong { font-size: 22px; }
+  .mapCenter > strong { font-size: 16px; }
   .questionBrief { padding-inline: 16px; }
 }
 .exploration.observatory .mapToolbar h2, .exploration.observatory .briefSection h3 { font-family: Aileron, sans-serif; font-size: 12px; letter-spacing: .04em; font-weight: 600; }

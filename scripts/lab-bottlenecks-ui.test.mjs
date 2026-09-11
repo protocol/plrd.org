@@ -125,6 +125,7 @@ test('mounted proposal saves, survives reload, and downloads the actual version-
   const m = source('lib/lab-bottlenecks.ts');
   for (const f of m.PROPOSAL_FIELDS) await input(`bottleneck-${f.key}`, `Proposed ${f.key}, including a negative result.`);
   await click('Save local draft');
+  assert.match(text(), /Yay — this is a new beginning of infinity\. Let's go explore it/);
   assert.match(text(), /Saved on this device/);
   await unmount(); await mount();
   assert.equal(document.getElementById('bottleneck-hypothesis').value, 'Proposed hypothesis, including a negative result.');

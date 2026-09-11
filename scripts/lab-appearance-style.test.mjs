@@ -89,6 +89,12 @@ test('app-wide shell headings stay compact so activity, not display type, leads 
   assert.ok(size('.open-lab.lab-app-shell .lab-workbench-heading h1') <= 22);
   assert.ok(size('.open-lab.lab-app-shell .lab-dialog h2') <= 20);
 });
+test('feed and bench headings stay compact so activity, not display type, leads the screen', () => {
+  const size = selector => parseFloat(declarations(feed, selector)['font-size']);
+  assert.ok(size('.root h1') <= 22, 'Feed and people page h1 still uses marketing display type');
+  assert.ok(size('.profileRoot :global(.lab-workbench-heading) h1') <= 22, 'My bench heading still uses marketing display type');
+  assert.ok(size('.root h2') <= 18);
+});
 
 const declarations = (sheet, selector) => {
   const values = {};

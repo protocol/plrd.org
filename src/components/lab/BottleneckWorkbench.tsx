@@ -39,7 +39,7 @@ function ProposalEditor({ item, owner, kind, onPrepareContribution }: { item: Bo
       if (blocked) throw new Error('The saved original is preserved. Reconcile the recovery copy before replacing it outside this workbench.');
       const valid = parseBottleneckDraft(JSON.stringify(next), next);
       window.localStorage.setItem(bottleneckDraftKey(valid), JSON.stringify(valid));
-      setNotice('Saved on this device. Not published or accepted.'); setError('');
+      setNotice("Yay — this is a new beginning of infinity. Let's go explore it. Saved on this device. Not published or accepted."); setError('');
     } catch (e) { setNotice('Current changes are not saved. Export before leaving.'); setError(`Not saved. ${message(e)}`); }
   }
   function download() {

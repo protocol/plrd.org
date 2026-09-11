@@ -136,7 +136,7 @@ function LabChrome({ children }: { children: React.ReactNode }) {
             {navigation.map(([url, label, icon]) => <Link key={url} href={url} aria-current={activeRoute === url ? "page" : undefined} onClick={() => setNavigationOpen(false)}><Icon path={icon} /><span>{label}</span></Link>)}
           </nav>
           <div className="lab-sidebar-footer">
-            <Link href="/lab/explorations/observatory/">Explore the field map <span aria-hidden="true">↗</span></Link>
+            <Link href="/lab/explorations/observatory/">Explore the tech tree <span aria-hidden="true">↗</span></Link>
             <Link href="/lab/efforts/">Efforts experiment <span aria-hidden="true">↗</span></Link>
             <button type="button" onClick={theme} aria-label={`Switch to ${dark ? "light" : "dark"} mode`}><Icon path={dark ? "M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0" : "M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11"} />{dark ? "Light appearance" : "Dark appearance"}</button>
             <Link href="/about/">About PL R&amp;D <span aria-hidden="true">↗</span></Link>
