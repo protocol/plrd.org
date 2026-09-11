@@ -74,6 +74,21 @@ export function configForBrowser(config: LabOAuthConfig, origin: string): LabOAu
   return { ...config, canConnect: config.canConnect === true, canPublish: config.canPublish === true }
 }
 
+// Next may expose its internal listener origin in Request.url. A matching Host
+// and protocol can confirm ONLY the identity already selected from deployment
+// configuration; no forwarded host is ever used to construct an OAuth identity.
+// The browser independently enforces its own window.location.origin as well.
+export function configForRequest(config: LabOAuthConfig, request: Request): LabOAuthConfig {
+  const url = new URL(request.url)
+  if (url.origin === config.origin) return configForBrowser(config, url.origin)
+  if (config.origin && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)) {
+    const expected = new URL(config.origin)
+    const protocol = request.headers.get('x-forwarded-proto') ?? url.protocol.slice(0, -1)
+    if (request.headers.get('host') === expected.host && protocol === expected.protocol.slice(0, -1)) return configForBrowser(config, config.origin)
+  }
+  return unavailable('Sign-in is configured for a different origin. Open the configured Lab origin; drafts stay on this origin.')
+}
+
 export function safeLabReturnTo(input?: string | null): string {
   // Check the original path BEFORE decoding or constructing a URL (which normalizes it).
   if (!input || input.length > 4096 || /[\\\u0000-\u0020\u007f]/.test(input)) return '/lab/'
