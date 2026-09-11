@@ -27,7 +27,7 @@ test("signal SVG is stable across tiny math-library rounding differences during 
 test("the first screen offers a real experiment, and featured source views carry an actionable brief", () => {
   const Provider=source("lib/lab-auth.tsx").LabAuthProvider;
   const html = renderToStaticMarkup(React.createElement(Provider,null,React.createElement(source("components/lab/Landing.tsx").default)));
-  assert.ok(new JSDOM(html).window.document.querySelector('.lab-welcome a[href="/lab/apps/"]'), "real tools belong in the first-use invitation");
+  assert.ok(new JSDOM(html).window.document.querySelector('[aria-label="Workshop invitation"] button'), "an actual build composer belongs in the first-use invitation");
   const app = renderToStaticMarkup(React.createElement(source("components/lab/AppsWorkbench.tsx").default));
   for (const label of ["What exists", "Specific opening", "Inspect or try", "Useful contribution"]) assert.ok(app.includes(label), label);
   const map = renderToStaticMarkup(React.createElement(source("components/lab/ResearchMap.tsx").default));

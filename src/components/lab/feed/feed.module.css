@@ -105,3 +105,19 @@
 .row .request {font-size:13px;color:#425461;margin:6px 0 9px;}
 .row .artifactLine {font-size:12px;color:#566570;margin:6px 0;}
 @media (max-width:700px) {.profileRoot :global(.lab-profile-grid){grid-template-columns:minmax(0,1fr);}}
+/* The activity, not stacked controls, should occupy the first screen. */
+.root > .workshopHeader {display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;}
+.root .workshopHeader h1 {font-size:22px;line-height:1.2;margin:0 0 4px;font-weight:550;}
+.root .workshopHeader p {font-size:14px;line-height:1.4;}
+.workshopHeader > div {min-width:0;}
+.workshopHeader > button {flex-shrink:0;min-height:44px;white-space:nowrap;}
+.refinement {margin:4px 0 0;min-width:0;}
+.refinement > summary {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:6px 0;cursor:pointer;font-size:13px;border-bottom:1px solid #dfe4e6;}
+.refinement > summary span {color:#0969ab;}
+.refinement > summary span::after {content:" +";}
+.refinement[open] > summary span::after {content:" −";}
+.refinement > summary:focus-visible {outline:2px solid #086fc7;outline-offset:3px;}
+.refinement > summary::-webkit-details-marker {display:none;}
+.refinement[open] {padding-bottom:8px;}
+@media (max-width:500px) {.root .workshopHeader h1 {font-size:20px;}.root > .workshopHeader {gap:10px;}.workshopHeader > button {padding-inline:10px;font-size:13px;}}
+

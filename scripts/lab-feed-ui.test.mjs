@@ -17,7 +17,7 @@ let identity={isLoading:false,isAuthenticated:false,session:null}
 source('lib/lab-identity.ts').useLabIdentity=()=>identity
 const D=source('components/lab/demo/DemoCommunityProvider.tsx')
 function Mode(){const d=D.useDemoCommunity();return React.createElement('button',{onClick:()=>d.setMode(d.isDemo?'live':'demo')},'Test mode switch')}
-const click=async label=>{const e=[...document.querySelectorAll('button,a')].find(e=>e.getAttribute('aria-label')===label||e.textContent.trim()===label);assert.ok(e,'Missing action: '+label);await React.act(()=>{e.focus();e.click()});return e}
+const click=async label=>{const e=[...document.querySelectorAll('button,a,summary')].find(e=>e.getAttribute('aria-label')===label||e.textContent.trim()===label);assert.ok(e,'Missing action: '+label);await React.act(()=>{e.focus();e.click()});return e}
 const fill=async(label,value)=>{const e=document.querySelector(`[aria-label="${label}"]`);assert.ok(e,'Missing input '+label);await React.act(()=>{Object.getOwnPropertyDescriptor(e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype,'value').set.call(e,value);e.dispatchEvent(new Event('input',{bubbles:true}))})}
 const rows=()=>[...document.querySelectorAll('[data-feed-row]')]
 test('main compact feed: follow/filter, local reply, saved curator view, reload and mode isolation',async()=>{
@@ -33,12 +33,26 @@ test('main compact feed: follow/filter, local reply, saved curator view, reload 
  await click('Follow idea: Split-before-fit inspector');await click('Following');assert.equal(rows().length,2)
  await click('Discover');const person=await click('View Ada Lovelace’s profile');assert.ok(document.querySelector('dialog[open]'));await click('Follow in demo');await click('Close dialog');assert.equal(document.activeElement,person)
  await click('Contribute: Split-before-fit inspector');await fill('Your contribution','Check fitted rows in a clean environment.');await click('Save demo contribution');assert.match(document.body.textContent,/Saved in this browser/);await click('Close dialog');assert.equal(rows().length,9)
- await click('Discipline: Neuroscience');await click('Discipline: AI & machine learning');await fill('Name this view','Methods bridge');await click('Save view');assert.match(document.body.textContent,/Methods bridge/)
+ await click('Refine the feed');await click('Discipline: Neuroscience');await click('Discipline: AI & machine learning');await fill('Name this view','Methods bridge');await click('Save view');assert.match(document.body.textContent,/Methods bridge/)
  await React.act(()=>root.unmount());root=createRoot(document.getElementById('root'));await render();assert.equal(document.querySelector('[aria-label="Discipline: Neuroscience"]').getAttribute('aria-pressed'),'true');assert.match(document.body.textContent,/Methods bridge/)
  await click('Reset filters');await click('Test mode switch');assert.equal(rows().length,3);assert.doesNotMatch(document.body.textContent,/Ada Lovelace|Check fitted rows/)
  await click('Following');assert.equal(rows().length,0)
  await click('Test mode switch');assert.ok(rows().length>=8)
  }finally{await React.act(()=>root.unmount())}
+})
+
+test('feed refinement starts collapsed and opens through a keyboard-accessible native control',async()=>{
+ localStorage.clear();window.history.replaceState(null,'','/lab/feed/')
+ const C=source('components/lab/FeedWorkbench.tsx').default,root=createRoot(document.getElementById('root'))
+ try {
+ await React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C))))
+ const summary=document.querySelector('summary[aria-label="Refine the feed"]');assert.ok(summary,'Search and discipline controls belong in one optional refinement panel')
+ assert.equal(summary.closest('details').open,false)
+ await React.act(()=>summary.click());assert.equal(summary.closest('details').open,true)
+ assert.ok(summary.closest('details').querySelector('[aria-label="Search the feed"]'))
+ assert.ok(summary.closest('details').querySelector('[aria-label="Discipline: Neuroscience"]'))
+ await React.act(()=>summary.click());assert.equal(summary.closest('details').open,false)
+ } finally {await React.act(()=>root.unmount())}
 })
 
 test('the global search URL filters the actual default science feed after hydration', async()=>{

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLabFollowing } from '@/components/lab/social/useLabFollowing'
 import { useLabSocial } from '@/components/lab/social/useLabSocial'
 import { useDemoCommunity } from '@/components/lab/demo/DemoCommunityProvider'
@@ -17,8 +17,12 @@ export default function MixedScienceFeed() {
 function ScienceFeed() {
   const demo = useDemoCommunity(), following = useLabFollowing(), local = useLabSocial(following.owner)
   const [query, setQuery] = useState(''), [name, setName] = useState(''), [notice, setNotice] = useState('')
+  const refinement = useRef<HTMLDetailsElement>(null)
   useEffect(() => {
-    const readSearch = () => setQuery((new URLSearchParams(window.location.search).get('q') || '').slice(0, 200))
+    const readSearch = () => {
+      const value = (new URLSearchParams(window.location.search).get('q') || '').slice(0, 200)
+      setQuery(value); if (refinement.current) refinement.current.open = Boolean(value)
+    }
     readSearch(); window.addEventListener('popstate', readSearch)
     return () => window.removeEventListener('popstate', readSearch)
   }, [])
@@ -28,13 +32,15 @@ function ScienceFeed() {
   const rows = buildFeedRows({ isDemo: demo.isDemo, demo: following.ready ? demo.state : emptyDemoState(), drafts: following.ready ? local.drafts : [], updates: following.ready ? bench.state?.updates : [] })
   const filtered = filterFeedRows(rows, prefs, query)
   const chooseDiscipline = (id: string) => following.act({ type: 'filter', feed: prefs.filter.feed, disciplines: prefs.filter.disciplines.includes(id) ? prefs.filter.disciplines.filter(v => v !== id) : [...prefs.filter.disciplines, id] })
-  const reset = () => { setQuery(''); following.act({ type: 'filter', feed: 'discover', disciplines: [] }) }
+  const reset = () => { setQuery(''); if (refinement.current) refinement.current.open = false; following.act({ type: 'filter', feed: 'discover', disciplines: [] }) }
   const suggestions = DEMO_PEOPLE.filter(p => !prefs.people.includes(p.id) && (!prefs.filter.disciplines.length || p.caseIds.some(c => CASE_DISCIPLINES[c].some(t => prefs.filter.disciplines.includes(t))))).slice(0, 3)
   return <div className={styles.layout}>
     <section className={styles.stream} aria-label="Mixed science feed">
       <div className={styles.toolbar}><div className={styles.tabs} aria-label="Feed audience">{(['discover','following'] as const).map(view => <button key={view} disabled={!following.ready} aria-pressed={prefs.filter.feed===view} onClick={() => following.act({type:'filter',feed:view,disciplines:prefs.filter.disciplines})}>{view==='discover'?'Discover':'Following'}</button>)}</div><a href="/lab/profile/">My bench →</a></div>
+      <details ref={refinement} className={styles.refinement}><summary aria-label="Refine the feed">{prefs.filter.disciplines.length ? `${prefs.filter.disciplines.length} disciplines selected` : "All disciplines"}<span>Refine feed</span></summary>
       <label className={styles.search}>Search the feed<input type="search" aria-label="Search the feed" placeholder="A question, tool, or useful request…" value={query} onChange={e=>setQuery(e.target.value)} /></label>
       <div className={styles.chips} aria-label="Filter by disciplines">{fields.map(f => <button key={f.id} disabled={!following.ready} aria-label={`Discipline: ${f.label}`} aria-pressed={prefs.filter.disciplines.includes(f.id)} onClick={()=>chooseDiscipline(f.id)}>{f.label}</button>)}</div>
+      </details>
       <div className={styles.feedSummary}><span role="status">{filtered.length} activities{prefs.filter.disciplines.length > 1 ? ' · matching any selected discipline' : ''}</span><button onClick={reset}>Reset filters</button></div>
       {prefs.filter.feed==='following' && <p className={styles.meta}>Ideas, people, or disciplines you follow, combined without repeats. Follows stay in this browser.</p>}
       {(following.error || local.error) && <p role="alert" className={styles.error}>{following.error || local.error}</p>}

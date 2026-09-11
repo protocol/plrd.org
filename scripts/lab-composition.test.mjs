@@ -9,13 +9,14 @@ import { source } from './velocity/test-source-loader.mjs'
 createRequire(import.meta.url).extensions['.css'] = module => { module.exports = {} }
 process.env.__NEXT_TRAILING_SLASH = 'true'
 
-test('the slim invitation leads into real tools and ideas above the actual feed', () => {
+test('the home uses a single compact workshop invitation above the actual feed', () => {
   const Provider=source('lib/lab-auth.tsx').LabAuthProvider
   const html = renderToStaticMarkup(React.createElement(Provider,null,React.createElement(source('components/lab/Landing.tsx').default)))
   const doc = new JSDOM(html).window.document
-  assert.ok(doc.querySelector('.lab-welcome a[href="/lab/apps/"]'))
-  assert.ok(doc.querySelector('.lab-welcome a[href="/lab/bottlenecks/"]'))
-  assert.match(doc.querySelector('.lab-welcome').textContent, /Made something that makes science easier/)
+  const invitation=doc.querySelector('[aria-label="Workshop invitation"]')
+  assert.ok(invitation.querySelector('button[aria-label="What are you making? Show a build →"]'))
+  assert.match(invitation.textContent, /Made something that makes science easier/)
+  assert.equal(doc.querySelector('.lab-welcome'),null)
   assert.ok(doc.querySelector('[aria-label="Mixed science feed"]'));assert.equal(doc.querySelector('.lab-hero'),null)
 })
 
