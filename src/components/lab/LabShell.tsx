@@ -115,7 +115,7 @@ function LabChrome({ children }: { children: React.ReactNode }) {
         </header>
         <main id="lab-main" className="lab-main">
           <div className="lab-wrap lab-composition-banner"><DemoModeBanner /></div>
-          {error && <div className="lab-wrap"><p className="lab-error" role="alert">{error}</p></div>}
+          {error && !(capabilities.mode === "unconfigured" && error === capabilities.message) && <div className="lab-wrap"><p className="lab-error" role="alert">{error}</p></div>}
           {children}
         </main>
         <footer className="lab-footer">

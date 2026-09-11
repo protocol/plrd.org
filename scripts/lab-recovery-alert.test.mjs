@@ -14,14 +14,25 @@ const { createLabAuthRuntime } = source('lib/lab-auth.tsx');
 const identity = source('lib/lab-identity.ts');
 const client = source('lib/lab-client.ts');
 const realClient = client.createLabClient;
-const Shell = source('components/lab/LabShell.tsx').default;
-const Profile = source('components/lab/ProfileWorkbench.tsx').default;
+// LabShell creates its real client at import time. Defer only its fetch boundary
+// so each test's scoped network fixture is used rather than Node's native fetch.
+const nativeFetch = globalThis.fetch;
+globalThis.fetch = (...args) => globalThis.fetch(...args);
+let Shell, Profile;
+try {
+  Shell = source('components/lab/LabShell.tsx').default;
+  Profile = source('components/lab/ProfileWorkbench.tsx').default;
+} finally {
+  globalThis.fetch = nativeFetch;
+}
 const { PathnameContext } = require('next/dist/shared/lib/hooks-client-context.shared-runtime');
 
 // Adapted from the independent security probe: only SDK/network boundaries are
 // synthetic. Actual auth runtime subscriptions drive the actual keyed Bench UI.
-for (const fails of [true, false]) {
-  test(fails ? 'deferred SDK cleanup rejection remains visible after the owner Bench unmounts' : 'clean SDK sign-out leaves no recovery alert', async t => {
+for (const fails of [true, false, 'unconfigured']) {
+  const unavailable = fails === 'unconfigured';
+  test(unavailable ? 'default-off availability guidance stays in the sign-in flow, not a page-wide failure' : fails ? 'deferred SDK cleanup rejection remains visible after the owner Bench unmounts' : 'clean SDK sign-out leaves no recovery alert', async t => {
+    const localConfig = unavailable ? source('lib/lab-oauth-config.ts').getLabOAuthConfig({}) : config;
     const dom = new JSDOM('<div id="root"></div>', { url: origin + '/lab/profile/' });
     const globals = Object.fromEntries(['window', 'document', 'HTMLElement', 'HTMLInputElement', 'HTMLTextAreaElement', 'Event', 'MouseEvent', 'KeyboardEvent', 'StorageEvent', 'localStorage'].map(key => [key, dom.window[key]]));
     Object.assign(globals, { self: dom.window, IS_REACT_ACT_ENVIRONMENT: true });
@@ -40,7 +51,7 @@ for (const fails of [true, false]) {
     window.HTMLDialogElement.prototype.close = function () { this.open = false; };
     t.mock.method(globalThis, 'fetch', async url => {
       assert.equal(url, '/api/lab/capabilities/', 'No live network or mutations');
-      return Response.json(config);
+      return Response.json(localConfig);
     });
 
     let resolveCleanup, rejectCleanup, cleanupCalls = 0;
@@ -49,7 +60,7 @@ for (const fails of [true, false]) {
       return new Promise((resolve, reject) => { resolveCleanup = resolve; rejectCleanup = reject; });
     } };
     const runtime = createLabAuthRuntime({
-      loadConfig: async () => config,
+      loadConfig: async () => localConfig,
       loadClient: async () => ({ init: async () => ({ session: sdkSession }), authorize: async () => { throw Error('Unexpected authorization'); } }),
       location: () => ({ origin, pathname: '/lab/profile/' }),
       replace: () => { throw Error('Unexpected redirect'); },
@@ -68,6 +79,13 @@ for (const fails of [true, false]) {
     await act(async () => {
       root.render(React.createElement(PathnameContext.Provider, { value: '/lab/profile/' }, React.createElement(Shell, null, React.createElement(Profile))));
     });
+    if (unavailable) {
+      assert.equal(runtime.getSnapshot().isAuthenticated, false);
+      assert.equal(runtime.getSnapshot().error, localConfig.message);
+      assert.ok(!document.querySelector('[role="alert"]'), 'Expected default-off configuration is not a page-wide failure');
+      assert.match(document.body.textContent, /Join with Bluesky/);
+      return;
+    }
     const oldBench = document.querySelector('.lab-workbench');
     const shell = document.querySelector('.open-lab');
     const signOut = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Sign out');
