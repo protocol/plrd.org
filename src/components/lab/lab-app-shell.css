@@ -11,6 +11,17 @@
   --lab-line: #dde2e3;
   --lab-blue: #1267bd;
   --lab-soft: #eaf2fa;
+  /* Separate action fill/ink from accent text: dark accents are pale blue. */
+  --lab-input: var(--lab-card);
+  --lab-control-line: #7c8991;
+  --lab-selected-bg: var(--lab-soft);
+  --lab-selected-ink: var(--lab-blue);
+  --lab-selected-line: var(--lab-blue);
+  --lab-primary: var(--lab-blue);
+  --lab-primary-ink: #ffffff;
+  --lab-error-ink: #8e3026;
+  --lab-error-bg: #fff4f0;
+  --lab-error-line: #ad594e;
   color-scheme: light;
   font-size: 15px;
   line-height: 1.5;
@@ -25,6 +36,11 @@
   --lab-line: #354249;
   --lab-blue: #8bbfff;
   --lab-soft: #25394c;
+  --lab-control-line: #71838f;
+  --lab-primary-ink: #171d21;
+  --lab-error-ink: #ffc1b6;
+  --lab-error-bg: #3b2524;
+  --lab-error-line: #d38c80;
   color-scheme: dark;
 }
 .open-lab.lab-app-shell :is(h1, h2, h3) { text-wrap: pretty; }

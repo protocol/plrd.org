@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLabIdentity } from "@/lib/lab-identity";
 import { createLabClient } from "@/lib/lab-client";
 import type { Capabilities } from "@/lib/lab-types";
@@ -14,6 +14,13 @@ import "@/components/lab/lab-app-shell.css";
 const client = createLabClient();
 const WELCOME_KEY = "open-lab:welcome:v2";
 let welcomeSeenWithoutStorage = false;
+function savedAppearance(): "light" | "dark" | null {
+  try {
+    const value = localStorage.getItem("theme");
+    if (value === "light" || value === "dark") return value;
+  } catch { /* An unavailable preference is automatic, not an unreadable app. */ }
+  return null;
+}
 const LabContext = createContext<{
   capabilities: Capabilities;
   openLogin: () => void;
@@ -47,6 +54,35 @@ function LabChrome({ children }: { children: React.ReactNode }) {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const menuRef = useRef<HTMLButtonElement>(null);
   const [dark, setDark] = useState(false);
+  const appearance = useRef<"light" | "dark" | null>(null);
+  useLayoutEffect(() => {
+    // Client entry from marketing must settle before paint, just like the root
+    // boot script on a direct /lab/ load. Never save this implicit light default.
+    const sync = () => {
+      appearance.current = savedAppearance();
+      const next = appearance.current === "dark";
+      document.documentElement.classList.toggle("dark", next);
+      setDark(next);
+    };
+    const storage = (event: StorageEvent) => {
+      if (event.key !== null && event.key !== "theme") return;
+      try { if (event.storageArea && event.storageArea !== localStorage) return; } catch { return; }
+      sync();
+    };
+    sync();
+    window.addEventListener("storage", storage);
+    return () => {
+      window.removeEventListener("storage", storage);
+      // Read the current OS, not the class captured on entry (which may itself
+      // be the direct-load light default). Explicit button choices survive even
+      // if storage rejected the write; they are retained for this shell lifetime.
+      let next = appearance.current === "dark";
+      if (appearance.current === null) {
+        try { next = window.matchMedia("(prefers-color-scheme: dark)").matches; } catch {}
+      }
+      document.documentElement.classList.toggle("dark", next);
+    };
+  }, []);
   const [capabilitiesReady, setCapabilitiesReady] = useState(false);
   const [capabilities, setCapabilities] = useState<Capabilities>({
     canSignIn: false, canPublish: false, mode: "unconfigured", message: "Checking sign-in availability…",
@@ -54,7 +90,6 @@ function LabChrome({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let active = true;
     client.capabilities().then((c) => { if (active) { setCapabilities(c); setCapabilitiesReady(true); } });
-    setDark(document.documentElement.classList.contains("dark"));
     return () => { active = false; };
   }, []);
   useEffect(() => { setNavigationOpen(false); }, [pathname]);
@@ -79,7 +114,8 @@ function LabChrome({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", escape);
   }, [navigationOpen]);
   function theme() {
-    const next = !dark;
+    const next = !document.documentElement.classList.contains("dark");
+    appearance.current = next ? "dark" : "light";
     setDark(next);
     document.documentElement.classList.toggle("dark", next);
     try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
