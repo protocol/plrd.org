@@ -83,8 +83,8 @@ function social() {
 test('starting places prioritize bottlenecks and explain interest/mode choices deterministically', () => {
   const { recommendStartingPlaces } = social()
   const result = recommendStartingPlaces(['neurotech', 'unknown'], 'evidence')
-  assert.equal(result[0].href, '/lab/bottlenecks/?field=neurotech')
-  assert.match(result[0].why, /Neurotech/)
+  assert.equal(result[0].href, '/lab/bottlenecks/?case=reproducibility')
+  assert.match(result[0].why, /Neuroscience/)
   assert.ok(result.some(r => r.href === '/lab/bottlenecks/?case=reproducibility'))
   assert.deepEqual(result, recommendStartingPlaces(['neurotech', 'unknown'], 'evidence'))
   assert.ok(recommendStartingPlaces(['cross-field'], 'tools').some(r => r.href === '/lab/apps/'))

@@ -1,5 +1,7 @@
 import { draftKey, loadDraft, saveDraft } from '@/lib/lab-drafts'
 import { validateLabData } from '@/lib/lab-validation'
+import { LOCAL_INTERESTS, MAX_LOCAL_INTERESTS, localInterestChoices } from '@/lib/lab-interest-taxonomy'
+import { BOTTLENECK_CASES } from '@/lib/lab-bottlenecks'
 
 export const PROFILE_LINKS = [
   { key: 'linkedinUrl', label: 'LinkedIn', example: 'https://www.linkedin.com/in/your-name/', why: 'Give context on your work and collaborations.' },
@@ -82,7 +84,7 @@ export function saveSocialProfile(storage: SocialStore, owner: string, patch: So
   const next = { ...patch }
   if ('interests' in next) {
     const interests = profileInterests(next.interests)
-    if (interests.length > 8 || interests.some(s => [...s].length > 60)) return { ok: false, error: 'Keep up to 8 interests, each at most 60 characters. Existing interests have not been removed.' }
+    if (interests.length > MAX_LOCAL_INTERESTS || interests.some(s => [...s].length > 60)) return { ok: false, error: `Keep up to ${MAX_LOCAL_INTERESTS} interests, each at most 60 characters. Existing interests have not been removed.` }
     // RecordEditor uses EntryValues strings; public profile records use arrays.
     next.interests = interests.join(', ')
   }
@@ -100,7 +102,7 @@ export function localNextActions(state: SocialState): LocalAction[] {
   const actions: LocalAction[] = []
   const completion = profileCompletion(state.profile, state.meta.skippedLinks)
   if (completion.completed < completion.total) actions.push({ id: 'profile', title: 'Complete your profile draft', detail: 'Describe your work and the help you need. Optional links never gate contributions.', href: '/lab/onboarding/#profile-completion' })
-  if (!profileInterests(state.profile.interests).some(i => SOCIAL_INTERESTS.some(s => s.id === i)) && !state.meta.onboardingSkipped) actions.push({ id: 'starting-area', title: 'Choose a starting area', detail: 'Get concrete starting places based on your interests, or skip this prompt.', href: '/lab/onboarding/' })
+  if (!profileInterests(state.profile.interests).some(i => LOCAL_INTERESTS.some(s => s.id === i)) && !state.meta.onboardingSkipped) actions.push({ id: 'starting-area', title: 'Choose a starting area', detail: 'Get concrete starting places based on your interests, or skip this prompt.', href: '/lab/onboarding/' })
   for (const draft of state.drafts) actions.push({
     id: `draft:${draft.slot}`, title: draft.kind === 'contribution' ? 'Review your local evidence proposal' : `Resume your saved ${draft.kind} draft`,
     detail: 'Saved in this browser only. Open My bench to inspect the draft; nothing has been submitted for review.', href: '/lab/profile/', draftSlot: draft.slot,
@@ -108,13 +110,8 @@ export function localNextActions(state: SocialState): LocalAction[] {
   return actions
 }
 
-export const SOCIAL_INTERESTS = [
-  { id: 'digital-human-rights', label: 'Digital Human Rights' },
-  { id: 'economies-governance', label: 'Economies & Governance' },
-  { id: 'ai-robotics', label: 'AI & Robotics' },
-  { id: 'neurotech', label: 'Neurotech' },
-  { id: 'cross-field', label: 'Other / cross-field' },
-] as const
+// Compatibility export, not a second taxonomy or a public-schema enum.
+export const SOCIAL_INTERESTS = LOCAL_INTERESTS
 export const CONTRIBUTION_MODES = [
   { id: 'evidence', label: 'Check evidence' },
   { id: 'tools', label: 'Build tools' },
@@ -123,15 +120,18 @@ export const CONTRIBUTION_MODES = [
 export type ContributionMode = '' | (typeof CONTRIBUTION_MODES)[number]['id']
 export type StartingPlace = { id: string; title: string; href: string; why: string; next: string }
 export function recommendStartingPlaces(interests: string[], mode: ContributionMode): StartingPlace[] {
-  const selected = SOCIAL_INTERESTS.filter(i => interests.includes(i.id))
-  const places: StartingPlace[] = selected.filter(i => i.id !== 'cross-field').map(i => ({
-    id: i.id, title: `${i.label}: find a bottleneck`, href: `/lab/bottlenecks/?field=${i.id}`,
-    why: `You chose ${i.label}. Start with a constraint before choosing a solution.`,
+  const selected = localInterestChoices(interests).filter(i => interests.includes(i.id))
+  // Match actual editorial cases, not the constrained public field mapping.
+  // A local discipline without a case must not become an invented field URL.
+  const places: StartingPlace[] = BOTTLENECK_CASES.filter(c => selected.some(i => i.id === c.focusArea || c.relatedFields.some(f => f === i.id))).map(c => ({
+    id: c.id, title: c.title, href: `/lab/bottlenecks/?case=${encodeURIComponent(c.id)}`,
+    why: `You chose ${selected.filter(i => i.id === c.focusArea || c.relatedFields.some(f => f === i.id)).map(i => i.label).join(', ')}. This editorial starting case helps you inspect a constraint before choosing a solution.`,
     next: 'Inspect the bottleneck, name who is affected, and identify the evidence an intervention would need.',
   }))
-  if (mode === 'evidence' || !places.length) places.push({
-    id: 'reproducibility', title: 'Work through the reproducibility case', href: '/lab/bottlenecks/?case=reproducibility',
-    why: mode === 'evidence' ? 'You want to check evidence. Reproducibility makes assumptions and outcome tests concrete.' : 'A cross-field starting case lets you explore without committing to a field.',
+  const starter = BOTTLENECK_CASES.find(c => c.id === 'reproducibility')
+  if (starter && (mode === 'evidence' || !places.length) && !places.some(p => p.id === starter.id)) places.push({
+    id: starter.id, title: 'Work through the reproducibility case', href: `/lab/bottlenecks/?case=${encodeURIComponent(starter.id)}`,
+    why: selected.length ? `You chose ${selected.map(i => i.label).join(', ')}. No discipline-specific case matches these interests yet; explore this cross-field reproducibility case as a starting exercise, not evidence about your discipline.` : 'A cross-field starting case lets you explore without committing to a field.',
     next: 'Trace a claim to its source; distinguish a proposed intervention from a demonstrated outcome.',
   })
   if (mode === 'tools') places.push({ id: 'apps', title: 'Find a tool that addresses the constraint', href: '/lab/apps/', why: 'You chose building tools. Inspect the source and limits before proposing new infrastructure.', next: 'Try a source-labeled app; describe which bottleneck it could relieve and how you would test that.' })
