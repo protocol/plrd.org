@@ -15,7 +15,7 @@ test('the home uses a single compact workshop invitation above the actual feed',
   const doc = new JSDOM(html).window.document
   const invitation=doc.querySelector('[aria-label="Workshop invitation"]')
   assert.ok(invitation.querySelector('button[aria-label="What are you making? Show a build →"]'))
-  assert.match(invitation.textContent, /Made something that makes science easier/)
+  assert.match(invitation.textContent, /Catch up.*Find what changed/)
   assert.equal(doc.querySelector('.lab-welcome'),null)
   assert.ok(doc.querySelector('[aria-label="Mixed science feed"]'));assert.equal(doc.querySelector('.lab-hero'),null)
 })

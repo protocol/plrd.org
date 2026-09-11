@@ -60,13 +60,13 @@ export default function DailyCatchup({ daily, rows, view, setView, hasFollows, i
     {status === 'incomplete' && <p>Some history or sources could not be fully read. Shown updates remain available; this is not an all-caught-up check.</p>}
     {hasFollows && status !== 'loading' && <button className={styles.followedShortcut} aria-label="Catch up on followed work" disabled={!daily.ready} onClick={onFollowing}>{followedCount} unread from your follows →</button>}
     {!hasFollows && <p>Follow an idea, person, or branch to shape your daily reading. These are {isDemo ? 'illustrative stories and editorial starters' : 'editorial starters and your local work'}, not a live activity timeline.</p>}
-    {hasFollows && <p>Unread means not yet acknowledged here, not necessarily new today. Open the source, take one useful next step, then clear only what you reviewed.</p>}
+
     <div className={styles.dailyActions}><div className={styles.tabs} aria-label="Catch-up view">
       <button aria-pressed={view === 'unread'} onClick={() => setView('unread')}>Not caught up</button>
       <button aria-pressed={view === 'help'} onClick={() => setView('help')}>Needs a hand</button>
       <button aria-pressed={view === 'all'} onClick={() => setView('all')}>All activity</button>
     </div><button aria-label="Mark reviewed caught up" disabled={!daily.ready || !eligible.length} onClick={() => daily.acknowledge(rows)}>Mark reviewed caught up{eligible.length ? ` (${eligible.length})` : ''}</button></div>
-    <details className={styles.dailyExplanation}><summary>What gets marked?</summary><p>Only updates you opened or explicitly marked Reviewed in this view. Hidden updates and changed source versions stay unread. Nothing is published or synced. No dates or community activity are inferred.</p></details>
+    <details className={styles.dailyExplanation}><summary>What gets marked?</summary><p>Unread means not yet acknowledged here, not necessarily new today. Open the source, take one useful next step, then clear only what you reviewed.</p><p>Only updates you opened or explicitly marked Reviewed in this view. Hidden updates and changed source versions stay unread. Nothing is published or synced. No dates or community activity are inferred.</p></details>
     {daily.notice && <p role="status">{daily.notice}</p>}{daily.error && <p role="alert" className={styles.error}>{daily.error}</p>}
   </section>
 }

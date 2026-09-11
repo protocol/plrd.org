@@ -252,6 +252,19 @@
   .open-lab.lab-app-shell .lab-wrap { padding-inline: 14px; }
   .open-lab.lab-app-shell .lab-form-actions > .lab-button { width: 100%; }
 }
+/* A small-phone search remains a real native input, not a clipped placeholder.
+   Focusing it borrows the header width until focus leaves the search form. */
+@media (max-width: 540px) {
+  .open-lab.lab-app-shell .lab-global-search { position: relative; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; gap: 0; }
+  .open-lab.lab-app-shell .lab-global-search > svg { display: block; position: absolute; left: 13px; pointer-events: none; }
+  .open-lab.lab-app-shell .lab-global-search input { width: 44px; padding: 0; color: transparent; cursor: text; }
+  .open-lab.lab-app-shell .lab-global-search input::placeholder { color: transparent; }
+  .open-lab.lab-app-shell .lab-global-search:focus-within { position: absolute; z-index: 2; left: 8px; right: 8px; top: 8px; width: auto; max-width: none; padding-left: 12px; gap: 10px; }
+  .open-lab.lab-app-shell .lab-global-search:focus-within > svg { position: static; }
+  .open-lab.lab-app-shell .lab-global-search:focus-within input { color: var(--lab-ink); flex: 1; width: 100%; }
+  .open-lab.lab-app-shell .lab-global-search:focus-within input::placeholder { color: var(--lab-muted); }
+  .open-lab.lab-app-shell .lab-global-search:focus-within button { display: block; }
+}
 @media (prefers-reduced-motion: reduce) {
   .open-lab.lab-app-shell *, .open-lab.lab-app-shell *::before, .open-lab.lab-app-shell *::after { animation: none; transition: none; scroll-behavior: auto; }
 }

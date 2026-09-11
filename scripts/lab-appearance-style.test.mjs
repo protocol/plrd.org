@@ -80,6 +80,16 @@ test('workshop heading wins at <=22px over the actual shell in either CSS chunk 
     }
   }
 });
+test('small-phone work search is a visible icon that expands to a readable native input on focus', () => {
+  const icon = document.querySelector('.lab-global-search > svg');
+  const input = document.querySelector('.lab-global-search input');
+  for (const width of [320,390]) {
+    assert.equal(winner(icon, 'display', [base, composition, shell], width)?.value, 'block');
+    assert.equal(winner(input, 'color', [base, composition, shell], width)?.value, 'transparent');
+  }
+  assert.equal(declarations(shell, '.open-lab.lab-app-shell .lab-global-search:focus-within').position, 'absolute');
+  assert.equal(declarations(shell, '.open-lab.lab-app-shell .lab-global-search:focus-within input').color, 'var(--lab-ink)');
+});
 test('app-wide shell headings stay compact so activity, not display type, leads the screen', () => {
   const size = selector => parseFloat(declarations(shell, selector)['font-size']);
   assert.ok(size('.open-lab.lab-app-shell h1') <= 22, 'Shell h1 still uses marketing display type');
