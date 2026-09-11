@@ -1,0 +1,58 @@
+[
+  {
+    "route": "/lab/bottlenecks/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "Find the blockage.Make a way through.",
+    "error": false
+  },
+  {
+    "route": "/lab/apps/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "Less setup.More discovery.",
+    "error": false
+  },
+  {
+    "route": "/lab/atlas/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "A map is onlyas good asits evidence.",
+    "error": false
+  },
+  {
+    "route": "/lab/collaborate/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "Bring your agent.Keep your keys.",
+    "error": false
+  },
+  {
+    "route": "/lab/people/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "Find someone to build with.",
+    "error": false
+  },
+  {
+    "route": "/lab/profile/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "My bench",
+    "error": false
+  },
+  {
+    "route": "/lab/explorations/observatory/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "Explore the tech tree",
+    "error": false
+  },
+  {
+    "route": "/lab/efforts/",
+    "width": 320,
+    "scroll": 320,
+    "h1": "What deservesyour support?",
+    "error": false
+  }
+]

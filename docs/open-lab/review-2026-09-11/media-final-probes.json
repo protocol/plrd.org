@@ -1,0 +1,17 @@
+{
+  "images": [
+    {
+      "width": 480,
+      "alt": "Local QA instrument photo, not research evidence"
+    }
+  ],
+  "videos": [
+    {
+      "width": 320,
+      "duration": 1.5,
+      "controls": true
+    }
+  ],
+  "builds": 1,
+  "negative": true
+}

@@ -1,0 +1,97 @@
+{
+  "count": 13,
+  "screenshots": [
+    {
+      "file": "home-1440.png",
+      "sha256": "25155d55a78885cf599103ba79917e4f847472717db1e6a6da25efa48054fdd6",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "home-390.png",
+      "sha256": "f89a2da349da8e4d405a78754f2ed1bc3771feb937154e91c59095781d34ff17",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "home-320.png",
+      "sha256": "40021629b69ae1071f266073ec48e2dbf928704e44e2ad128ed9b880f2410884",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "profile-320.png",
+      "sha256": "e55926bf79625a232d729f4efe4e08bd9595652f969d1657c228d3e4bff8f001",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "observatory-320.png",
+      "sha256": "d13cbbc12bb680a76fd6512fd6c8570aea3e3119c585b2bc5cdfa0fe7628b4e0",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "tech-tree-light-desktop.png",
+      "sha256": "357abb473834fb93dc19bd418b331241db44839dfc4782eb2262ee19d3bc1df3",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "tech-tree-dark-desktop.png",
+      "sha256": "96319480640c164b42d5bd62c9803f1c6a52115b581241317309f6170db4b5c7",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "first-arrival-real-login.png",
+      "sha256": "611b3b3fedf2da97c82e312857a77bbf08185f44998585cc84bd9248b820fee5",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "real-bluesky-profile.png",
+      "sha256": "0a855b933cbf41eeb53bbe4667f6e2f91a94d749cf753c3e82756beae2221077",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "real-public-read-provenance.png",
+      "sha256": "bd949d2277200a313272b70d865a9db40e60f45dfabf2d8120c11c3d2816cca1",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "global-demo-control.png",
+      "sha256": "489c7a42509df517945af98a5c7e111e33990de09acdc382c589cca9629f487f",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "final-media-reopened.png",
+      "sha256": "03791b30403449651f8d3cf8726896fe5e302004d46d221bfd2856f1e5389547",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    },
+    {
+      "file": "homepage-openlab-ad.png",
+      "sha256": "f335e9855a3c9c4cc953e216a24f0be7ccfc557f2d72db4f38d01570b7687639",
+      "source_sha": "4bcbeaf2debd14b7386719f9dc99ff5eae3811e9",
+      "origin": "http://127.0.0.1:3390",
+      "kind": "native-local-browser"
+    }
+  ],
+  "limitations": "Not hosted OAuth/authenticated PDS-write evidence. Own local QA build and media appear on bench/feed."
+}
