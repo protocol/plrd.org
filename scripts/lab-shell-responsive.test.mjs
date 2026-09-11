@@ -26,7 +26,12 @@ test('Observatory has genuine light instrument, node, inspector and input surfac
   assert.equal(declarations('.observatory').background, 'var(--paper)');
   for (const selector of ['.mapCenter','.questionNodes a','.questionBrief','.shareField input']) assert.match(declarations(selector).background, /^var\(/, selector);
   assert.equal(declarations(':global(.dark) .observatory')['color-scheme'], 'dark');
-  assert.equal(declarations('.mapGeometry :is(path, ellipse, line)').stroke, 'var(--line)');
+  assert.equal(declarations('.mapGeometry').color, 'var(--line)');
+  assert.equal(declarations('.mapGeometry :is(path, ellipse, line)').stroke, 'currentColor');
+  assert.equal(declarations('.mapGeometry path[data-selected=\'true\']').stroke, 'var(--accent)');
+  const observatory = readFileSync('src/components/lab/explorations/Observatory.tsx', 'utf8');
+  assert.doesNotMatch(observatory, /stroke=\"#(?:303843|414a56|566270)\"/, 'Field-map geometry must not hardcode dark strokes in light mode');
+  assert.match(observatory, /stroke=\"currentColor\"/, 'Field-map geometry should inherit the light instrument line color');
 });
 
 test('public site invitation uses the action-first Open Lab invitation copy', () => {
