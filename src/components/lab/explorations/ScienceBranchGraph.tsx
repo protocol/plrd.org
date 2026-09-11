@@ -1,11 +1,9 @@
 'use client'
 
-import { useRef, useState, type MouseEvent, type PointerEvent, type KeyboardEvent } from 'react'
-import { getScienceChildren, scienceHref, type ScienceNode } from '@/lib/lab-science-tree'
+import { useEffect, useRef, useState, type MouseEvent, type PointerEvent, type KeyboardEvent } from 'react'
+import { getScienceChildren, scienceGraphFrame, scienceHref, type ScienceNode } from '@/lib/lab-science-tree'
 import tree from '@/components/lab/explorations/science-tree.module.css'
 
-const WIDTH = 860
-const HEIGHT = 580
 const MIN_ZOOM = .75
 const MAX_ZOOM = 1.75
 
@@ -19,7 +17,21 @@ export default function ScienceBranchGraph({ node, children, onSelect, overlayId
   const [zoom, setZoom] = useState(1)
   const viewport = useRef<HTMLDivElement>(null)
   const drag = useRef<{ id: number; x: number; y: number; left: number; top: number } | null>(null)
-  const positions = children.map((child, index) => ({ child, x: index % 2 === 0 ? 16 : 594, y: (HEIGHT - Math.ceil(children.length / 2) * 140) / 2 + Math.floor(index / 2) * 140 }))
+  const [viewportWidth, setViewportWidth] = useState(0)
+  const frame = scienceGraphFrame(children.length, viewportWidth)
+  const { width: WIDTH, height: HEIGHT } = frame
+  const scale = frame.fit * zoom
+  const positions = children.map((child, index) => ({ child, ...frame.positions[index] }))
+  useEffect(() => {
+    const element = viewport.current
+    if (!element) return
+    const measure = () => { if (element.clientWidth > 0) setViewportWidth(element.clientWidth) }
+    measure()
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    observer?.observe(element)
+    window.addEventListener('resize', measure)
+    return () => { observer?.disconnect(); window.removeEventListener('resize', measure) }
+  }, [])
   function pan(x: number, y: number) {
     if (!viewport.current) return
     viewport.current.scrollLeft += x
@@ -60,11 +72,11 @@ export default function ScienceBranchGraph({ node, children, onSelect, overlayId
       <div><button type="button" aria-label="Zoom out" disabled={zoom <= MIN_ZOOM} onClick={() => changeZoom(-.25)}>−</button><output aria-label="Map zoom">{Math.round(zoom * 100)}%</output><button type="button" aria-label="Zoom in" disabled={zoom >= MAX_ZOOM} onClick={() => changeZoom(.25)}>+</button><button type="button" onClick={reset}>Reset view</button></div>
       <div><button type="button" aria-label="Pan left" onClick={() => pan(-160, 0)}>←</button><button type="button" aria-label="Pan up" onClick={() => pan(0, -120)}>↑</button><button type="button" aria-label="Pan down" onClick={() => pan(0, 120)}>↓</button><button type="button" aria-label="Pan right" onClick={() => pan(160, 0)}>→</button></div>
     </div>
-    <div ref={viewport} className={tree.graphViewport} role="region" aria-label="Science branch map" aria-describedby="science-map-help" tabIndex={0} onKeyDown={onKeyDown} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={() => { drag.current = null }}>
-      <div className={tree.graphExtent} style={{ width: WIDTH * zoom, height: HEIGHT * zoom }}>
-        <div className={tree.graphScene} data-science-scene="" style={{ width: WIDTH, height: HEIGHT, transform: `scale(${zoom})` }}>
-          <svg width={WIDTH} height={HEIGHT} aria-hidden="true" className={tree.graphEdges}>{positions.map(({ child, x, y }) => <path data-containment-edge="" key={child.id} d={`M${x < 300 ? 300 : 560} 290 C${x < 300 ? 280 : 580} 290 ${x < 300 ? 280 : 580} ${y + 64} ${x < 300 ? x + 250 : x} ${y + 64}`} fill="none" stroke="currentColor" strokeWidth="1.5" />)}</svg>
-          <div className={tree.graphParent} style={{ left: 300, top: 220 }}><span>{node.kind === 'root' ? 'RESEARCH UNIVERSE' : `CURRENT ${node.kind.toUpperCase()}`}</span><strong>{node.label}</strong><span>{getScienceChildren(node.id).length} direct branches</span></div>
+    <div ref={viewport} className={tree.graphViewport} style={{ height: Math.min(460, HEIGHT * scale + 16) }} role="region" aria-label="Science branch map" aria-describedby="science-map-help" tabIndex={0} onKeyDown={onKeyDown} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={() => { drag.current = null }}>
+      <div className={tree.graphExtent} style={{ width: WIDTH * scale, height: HEIGHT * scale }}>
+        <div className={tree.graphScene} data-science-scene="" style={{ width: WIDTH, height: HEIGHT, transform: `scale(${scale})` }}>
+          <svg width={WIDTH} height={HEIGHT} aria-hidden="true" className={tree.graphEdges}>{positions.map(({ child, x, y }) => <path data-containment-edge="" key={child.id} d={`M${x < 300 ? 300 : 560} ${HEIGHT / 2} C${x < 300 ? 280 : 580} ${HEIGHT / 2} ${x < 300 ? 280 : 580} ${y + 64} ${x < 300 ? x + 250 : x} ${y + 64}`} fill="none" stroke="currentColor" strokeWidth="1.5" />)}</svg>
+          <div className={tree.graphParent} style={{ left: 300, top: HEIGHT / 2 - 70 }}><span>{node.kind === 'root' ? 'RESEARCH UNIVERSE' : `CURRENT ${node.kind.toUpperCase()}`}</span><strong>{node.label}</strong><span>{getScienceChildren(node.id).length} direct branches</span></div>
           <ol aria-label="Science branches" className={tree.graphNodes}>{positions.map(({ child, x, y }) => <li key={child.id} style={{ left: x, top: y }}>
             <a data-science-node={child.id} data-pl-overlay={overlayIds.includes(child.id) ? '' : undefined} href={scienceHref(child.id)} onClick={event => onSelect(event, child.id)}>
               <span>{child.kind}{overlayIds.includes(child.id) ? ' · PL R&D context' : ''}</span><strong>{child.label}</strong><span>{child.kind === 'topic' ? 'Inspect topic' : `${getScienceChildren(child.id).length} branches`} <span aria-hidden="true">→</span></span>

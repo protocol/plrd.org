@@ -40,6 +40,17 @@ for (const node of scienceNodes) {
 }
 for (const children of childrenById.values()) children.sort((a, b) => a.label.localeCompare(b.label, 'en'))
 export const getScienceChildren = (id: string): ScienceNode[] => childrenById.get(id) ?? []
+
+/** Fit readable desktop branches and size the canvas to the actual bounded row count. */
+export function scienceGraphFrame(count: number, viewportWidth: number) {
+  const length = Number.isFinite(count) ? Math.max(0, Math.min(8, Math.floor(count))) : 0
+  const width = 860
+  const height = Math.max(164, Math.ceil(length / 2) * 140 + 24)
+  const fit = Number.isFinite(viewportWidth) && viewportWidth >= 620 ? Math.min(1, (viewportWidth - 16) / width) : 1
+  const positions = Array.from({ length }, (_, index) => ({ x: index % 2 === 0 ? 16 : 594, y: 12 + Math.floor(index / 2) * 140 }))
+  return { width, height, fit, positions }
+}
+
 const searchIndex = scienceNodes.filter(node => node.kind !== 'root').map(node => ({
   node,
   label: node.label.toLocaleLowerCase('en'),

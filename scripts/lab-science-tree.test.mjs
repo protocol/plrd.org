@@ -8,6 +8,21 @@ const model = () => {
   return source('lib/lab-science-tree.ts')
 }
 
+test('branch graph fits laptop panes and packs sparse roots without a blank upper half', () => {
+  const m = model()
+  assert.equal(typeof m.scienceGraphFrame, 'function')
+  const root = m.scienceGraphFrame(4, 841)
+  assert.equal(root.height, 304)
+  assert.ok(root.width * root.fit <= 825)
+  assert.equal(root.positions[0].y, 12)
+  assert.ok(root.positions.every(p => p.y >= 0 && p.y + 128 <= root.height))
+  const full = m.scienceGraphFrame(8, 760)
+  assert.equal(full.height, 584)
+  assert.ok(full.width * full.fit <= 744)
+  assert.ok(full.fit >= .8, 'laptop labels remain readable')
+  assert.equal(m.scienceGraphFrame(4, 320).fit, 1, 'opt-in phone map pans readable nodes; phone defaults to List')
+})
+
 test('global search, source links, breadcrumbs and branch pagination cover the full universe', () => {
   const m = model()
   assert.equal(typeof m.searchScience, 'function', 'full-universe search is missing')
