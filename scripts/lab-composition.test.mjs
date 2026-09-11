@@ -9,12 +9,14 @@ import { source } from './velocity/test-source-loader.mjs'
 createRequire(import.meta.url).extensions['.css'] = module => { module.exports = {} }
 process.env.__NEXT_TRAILING_SLASH = 'true'
 
-test('the main invitation starts at a bottleneck while retaining the experiment entrance', () => {
-  const html = renderToStaticMarkup(React.createElement(source('components/lab/Landing.tsx').default))
+test('the slim invitation leads into real tools and ideas above the actual feed', () => {
+  const Provider=source('lib/lab-auth.tsx').LabAuthProvider
+  const html = renderToStaticMarkup(React.createElement(Provider,null,React.createElement(source('components/lab/Landing.tsx').default)))
   const doc = new JSDOM(html).window.document
-  assert.equal(doc.querySelector('.lab-hero-actions a')?.getAttribute('href'), '/lab/bottlenecks/')
-  assert.match(doc.querySelector('h1').textContent, /bottleneck/i)
-  assert.ok(doc.querySelector('.lab-hero-copy a[href="/lab/apps/#signal-sandbox"]'))
+  assert.ok(doc.querySelector('.lab-welcome a[href="/lab/apps/"]'))
+  assert.ok(doc.querySelector('.lab-welcome a[href="/lab/bottlenecks/"]'))
+  assert.match(doc.querySelector('.lab-welcome').textContent, /Made something that makes science easier/)
+  assert.ok(doc.querySelector('[aria-label="Mixed science feed"]'));assert.equal(doc.querySelector('.lab-hero'),null)
 })
 
 test('login preserves only known demo discussion contexts without normalizing the original', () => {
@@ -28,11 +30,11 @@ test('login preserves only known demo discussion contexts without normalizing th
 
 test('composition responsive overrides outrank base styles regardless of CSS import order', async () => {
  const {readFileSync}=await import('node:fs');
- const css=readFileSync('src/components/lab/lab-composition.css','utf8');
+ const css=readFileSync('src/components/lab/lab-app-shell.css','utf8');
  const shell=readFileSync('src/components/lab/LabShell.tsx','utf8');
- assert.match(shell,/className="open-lab lab-composed"/);
- assert.match(css,/\.open-lab\.lab-composed \.lab-header-inner/);
- assert.match(css,/min-height: 44px/);assert.match(css,/max-width: 600px/);
+ assert.match(shell,/className="open-lab lab-composed lab-app-shell"/);
+ assert.match(css,/\.open-lab\.lab-app-shell/);
+ assert.match(css,/min-height: 44px/);assert.match(css,/@media/);
 });
 
 test('LinkedIn survives profile defaults and public draft preparation with format validation', () => {

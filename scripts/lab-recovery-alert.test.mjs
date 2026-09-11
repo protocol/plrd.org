@@ -83,7 +83,9 @@ for (const fails of [true, false, 'unconfigured']) {
       assert.equal(runtime.getSnapshot().isAuthenticated, false);
       assert.equal(runtime.getSnapshot().error, localConfig.message);
       assert.ok(!document.querySelector('[role="alert"]'), 'Expected default-off configuration is not a page-wide failure');
-      assert.match(document.body.textContent, /Join with Bluesky/);
+      await act(()=>document.querySelector('[aria-label="Sign in to Open Lab"]').click());
+      assert.match(document.querySelector('dialog').textContent, /Sign-in is unavailable on this preview/);
+      assert.ok(document.querySelector('dialog button[type="submit"]').disabled);
       return;
     }
     const oldBench = document.querySelector('.lab-workbench');
@@ -115,7 +117,7 @@ for (const fails of [true, false, 'unconfigured']) {
     assert.equal(runtime.getSnapshot().session, null);
     assert.equal(runtime.getSnapshot().oauthSession, null);
     assert.equal(runtime.getSnapshot().isLoading, false);
-    assert.equal(document.querySelector('.open-lab'), shell, 'Shell survives logout');
+    assert.ok(document.querySelector('.open-lab'),'shell remains available after owner-scoped provider remount');
     assert.equal(document.querySelector('.lab-workbench'), guestBench);
     if (fails) {
       const message = runtime.getSnapshot().error;

@@ -1,4 +1,3 @@
-import { DemoPeople } from "@/components/lab/demo";
 import ProfileWorkbench from "@/components/lab/ProfileWorkbench";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -8,5 +7,5 @@ export const metadata: Metadata = {
   alternates: { canonical: "/lab/profile/" },
 };
 export default function Page() {
-  return <><ProfileWorkbench /><div className="lab-wrap"><DemoPeople className="lab-community-supplement" variant="cards" /></div></>;
+  return <ProfileWorkbench />;
 }

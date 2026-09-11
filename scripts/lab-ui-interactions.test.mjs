@@ -118,18 +118,18 @@ test("feed search, filters and local Promising survive reload; records follow th
     records: async () => (await fetch("fixture:records")).json(),
   }));
   const Feed = source("components/lab/FeedWorkbench.tsx").default;
-  await mount(Feed);
+  await mount(Feed);await click("Public sources");
   await change('[aria-label="Search scientific work"]', "marimo");
   assert.equal(document.querySelectorAll('.lab-feed-entry').length, 1);
   assert.equal(new URLSearchParams(window.location.search).get('q'), "marimo");
   await click("Promising");
   await act(() => root.render(null));
-  await mount(Feed);
+  await mount(Feed);await click("Public sources");
   assert.ok(button("Promising · saved"));
   await change('[aria-label="Search scientific work"]', "");
-  await click("Negative result");
+  await change('select[aria-label="Source kind"]', "negative-result");
   assert.match(document.querySelector('.lab-empty').textContent, /No editorial starters/);
-  await click("All work");
+  await change('select[aria-label="Source kind"]', "all");
   identity = { ...identity, isAuthenticated: true, session: { did: "did:plc:fixture-a", handle: "fixture-a.test" } };
   await mount(Feed);
   await click("Your records");

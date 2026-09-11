@@ -22,20 +22,23 @@ const Shell=source('components/lab/LabShell.tsx').default;
 const click=async text=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.includes(text)||b.getAttribute('aria-label')===text);assert.ok(b,text);await act(()=>b.click());};
 const mount=async (C,props={})=>act(async()=>{root.render(React.createElement(PathnameContext.Provider,{value:window.location.pathname},React.createElement(C,props)));await new Promise(r=>setTimeout(r,10));});
 const fill=async(selector,value)=>{const el=document.querySelector(selector);assert.ok(el,selector);await act(()=>{Object.getOwnPropertyDescriptor(el.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype,'value').set.call(el,value);el.dispatchEvent(new Event('input',{bubbles:true}));});};
-beforeEach(()=>{localStorage.clear();window.history.replaceState(null,'','/lab/');identity={session:{did,handle:'real-person.example.org'},isAuthenticated:true,isLoading:false,oauthSession:null,logout:async()=>{},login:async()=>{}};mock.method(auth,'useLabIdentity',()=>identity);mock.method(globalThis,'fetch',async path=>{assert.ok(['/api/lab/feed/','/api/lab/capabilities/'].includes(path),'No ghost records API or writes');return Response.json(path.includes('feed')?{items:[],status:'empty'}:{canSignIn:false,canPublish:false,mode:'unconfigured'});});root=createRoot(document.getElementById('root'));});
+beforeEach(()=>{localStorage.clear();for(const owner of [did,other])source('lib/lab-drafts.ts').saveDraft(localStorage,'social',owner,{onboardingSkipped:true});window.history.replaceState(null,'','/lab/');identity={session:{did,handle:'real-person.example.org'},isAuthenticated:true,isLoading:false,oauthSession:null,logout:async()=>{},login:async()=>{}};mock.method(auth,'useLabIdentity',()=>identity);mock.method(globalThis,'fetch',async path=>{assert.ok(['/api/lab/feed/','/api/lab/capabilities/'].includes(path),'No ghost records API or writes');return Response.json(path.includes('feed')?{items:[],status:'empty'}:{canSignIn:false,canPublish:false,mode:'unconfigured'});});root=createRoot(document.getElementById('root'));});
 afterEach(async()=>{await act(()=>root.unmount());mock.restoreAll();});
 
-test('supplemental demo discussions lead landing/feed and stay scoped across real tools',async()=>{
+test('one global demo control scopes the actual feed and supplemental tool discussions',async()=>{
  mock.method(source('lib/lab-protocol.ts'),'listLabRecords',async(owner,kind)=>({authorDid:owner,kind,records:[]}));
- const cases=[['components/lab/Landing.tsx','split-boundary'],['components/lab/FeedWorkbench.tsx','split-boundary'],['app/lab/atlas/page.tsx','duration-denominator'],['app/lab/apps/page.tsx','split-boundary'],['app/lab/collaborate/page.tsx','split-boundary'],['app/lab/profile/page.tsx',null]];
- for(const [file,thread] of cases){
+ const cases=[['components/lab/Landing.tsx','feed'],['components/lab/FeedWorkbench.tsx','feed'],['app/lab/atlas/page.tsx','duration-denominator'],['app/lab/apps/page.tsx','split-boundary'],['app/lab/collaborate/page.tsx','split-boundary'],['app/lab/profile/page.tsx','bench']];
+ for(const [file,kind] of cases){
   const Page=source(file).default;await mount(Shell,{children:React.createElement(Page)});
-  if(thread) {assert.ok(document.querySelector(`[data-thread="${thread}"]`),file);assert.equal(document.querySelectorAll('[aria-label="Demo community discussion"]').length,1,file);}
-  else assert.ok(document.querySelector('[aria-label="Fictional demo people"]'),file);
+  const rows=document.querySelectorAll('[data-feed-row]').length;
+  if(kind==='feed') {assert.ok(document.querySelector('[aria-label="Mixed science feed"]'));assert.ok(rows>1);assert.equal(document.querySelector('[data-demo-community-panel]'),null);}
+  else if(kind==='bench') {assert.ok(document.querySelector('[aria-label="Personal invention bench"]'));assert.ok(!document.querySelector('[aria-label="Fictional demo people"]'),'Bench must not append a duplicate people directory');}
+  else {assert.ok(document.querySelector(`[data-thread="${kind}"]`),file);assert.equal(document.querySelectorAll('[aria-label="Demo community discussion"]').length,1,file);}
   if(file.includes('atlas'))assert.equal(document.querySelector('[data-thread="split-boundary"]'),null);
-  if(file.includes('Landing'))assert.ok(document.querySelector('[data-thread]').compareDocumentPosition(document.querySelector('.lab-home-work')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
+  assert.equal(document.querySelectorAll('[data-lab-scope-control]').length,1);await act(()=>document.querySelector('[data-lab-scope-control]').click());
   await click('Show real / empty view');assert.equal(document.querySelector('[data-thread]'),null);assert.equal(document.querySelector('[aria-label="Fictional demo people"]'),null);
-  await click('Show demo community');
+  if(kind==='feed')assert.ok(document.querySelectorAll('[data-feed-row]').length<rows,'Demo off hides synthetic activities, not the real workbench');
+  await click('Show demo community');await click('Close dialog');
  }
 });
 
@@ -87,7 +90,7 @@ test('feed reads the explicit DID through the real notebook adapter and isolates
   return {authorDid:owner,kind,records:kind==='note'?[record]:[],cursor:kind==='note'?'next':undefined};
  });
  const Feed=source('components/lab/FeedWorkbench.tsx').default;
- await mount(Feed);assert.equal(reads.length,5);assert.ok(reads.every(r=>r.owner===did));
+ await mount(Feed);assert.equal(reads.length,0,'The default feed does not eagerly read notebook records');await click('Public sources');assert.equal(reads.length,5);assert.ok(reads.every(r=>r.owner===did));
  identity={...identity,session:{did:other}};await mount(Feed);await click('Your records');
  assert.match(document.body.textContent,/Current account note/);
  assert.match(document.body.textContent,/up to 30 per collection.*more exist/);
@@ -96,12 +99,12 @@ test('feed reads the explicit DID through the real notebook adapter and isolates
  await act(()=>finish());assert.doesNotMatch(document.body.textContent,/LATE OLD ACCOUNT/);
 });
 
-test('composed shell has one demo banner and top-right bell, live switch preserves real drafts and hides restoring inbox',async()=>{
+test('composed shell has one demo control and top-right bell, live switch preserves real drafts and hides restoring inbox',async()=>{
  const drafts=source('lib/lab-drafts.ts');drafts.saveDraft(localStorage,'note',did,{text:'Real private local draft'});
  const before=localStorage.getItem(drafts.draftKey('note',did));
  const Page=source('app/lab/demo/page.tsx').default;
  await mount(Shell,{children:React.createElement(Page)});
- assert.equal(document.querySelectorAll('[aria-label="Community preview mode"]').length,1);
+ assert.equal(document.querySelectorAll('[data-lab-scope-control]').length,1);assert.equal(document.querySelectorAll('[aria-label="Community preview mode"]').length,0);await act(()=>document.querySelector('[data-lab-scope-control]').click());assert.equal(document.querySelectorAll('[aria-label="Community preview mode"]').length,1);
  assert.equal(document.querySelectorAll('[aria-label^="Demo notifications:"]').length,1);
  assert.ok(document.querySelector('.lab-header-actions [aria-label^="Demo notifications:"]'));
  assert.equal(document.querySelectorAll('[aria-label^="Your next actions"]').length,0);
@@ -114,6 +117,6 @@ test('composed shell has one demo banner and top-right bell, live switch preserv
  identity={...identity,isLoading:true};await mount(Shell,{children:React.createElement(Page)});
  assert.equal(document.querySelectorAll('[aria-label^="Your next actions"]').length,0);
  assert.ok(document.querySelector('nav a[href="/lab/bottlenecks/"]'));
- assert.ok(document.querySelector('a[href="/lab/onboarding/"]'));
+ assert.ok(document.querySelector('a[href="/lab/profile/"]'));
  assert.ok(document.querySelector('a[href="/lab/efforts/"]'));
 });

@@ -194,7 +194,7 @@ test('the single demo provider keeps local activity isolated by authenticated DI
 
 test('home renders the real FeedWorkbench below one slim invitation', async () => {
   await mount(source('components/lab/Landing.tsx').default);
-  assert.ok(document.querySelector('.lab-stream'), 'Actual feed is the default home surface');
+  assert.ok(document.querySelector('[aria-label="Mixed science feed"]'), 'Actual feed is the default home surface');
   const invitation = document.querySelector('[aria-label="Open Lab invitation"]');
   assert.ok(invitation);
   assert.match(invitation.textContent, /Made something that makes science easier\?/);
