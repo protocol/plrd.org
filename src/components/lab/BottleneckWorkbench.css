@@ -1,4 +1,24 @@
 /* This lane owns only the bottleneck workbench, never shared Open Lab styles. */
+.open-lab.lab-app-shell .bottleneck-community-drawer { margin-top: 18px; border: 1px solid var(--lab-line); border-radius: 6px; background: var(--lab-card); }
+.open-lab.lab-app-shell .bottleneck-community-drawer > summary { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; padding: 12px 16px; cursor: pointer; font-size: 14px; font-weight: 600; }
+.open-lab.lab-app-shell .bottleneck-community-drawer > summary::before { content: '+'; color: var(--lab-blue); }
+.open-lab.lab-app-shell .bottleneck-community-drawer[open] > summary::before { content: '−'; }
+.open-lab.lab-app-shell .bottleneck-community-drawer small { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--lab-muted); }
+.open-lab.lab-app-shell .bottleneck-community-drawer > div { padding: 0 16px 12px; }
+.open-lab.lab-app-shell .bottleneck-method { margin-block: 8px; font-size: 13px; }
+.open-lab.lab-app-shell .bottleneck-method > summary { cursor: pointer; color: var(--lab-blue); min-height: 36px; padding-block: 8px; }
+.open-lab.lab-app-shell .bottleneck-method .bottleneck-loop { margin: 0; }
+.open-lab.lab-app-shell .bottleneck-baseline { background: var(--lab-soft); padding: 18px; border: 1px solid var(--lab-line); border-radius: 6px; }
+.open-lab.lab-app-shell .bottleneck-source-detail { border-block: 1px solid var(--lab-line); padding-block: 10px; }
+.open-lab.lab-app-shell .bottleneck-source-detail > summary { cursor: pointer; font-size: 14px; font-weight: 600; min-height: 36px; padding-block: 8px; }
+.open-lab.lab-app-shell .bottleneck-fields { gap: 0; margin-block: 16px; border-top: 1px solid var(--lab-line); }
+.open-lab.lab-app-shell [data-proposal-step] { border-bottom: 1px solid var(--lab-line); }
+.open-lab.lab-app-shell [data-proposal-step] > summary { display: flex; align-items: center; gap: 9px; padding: 12px 0; cursor: pointer; font-size: 14px; font-weight: 600; }
+.open-lab.lab-app-shell [data-proposal-step] > summary small { margin-left: auto; white-space: nowrap; }
+.open-lab.lab-app-shell .bottleneck-step-index { flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--lab-soft); color: var(--lab-blue); font-size: 12px; }
+.open-lab.lab-app-shell .bottleneck-step-fields { display: grid; gap: 14px; padding-bottom: 16px; }
+.open-lab.lab-app-shell .bottleneck-step-fields textarea { min-height: 80px; }
+.open-lab.lab-app-shell :is(.bottleneck-community-drawer, .bottleneck-method, .bottleneck-source-detail, [data-proposal-step]) > summary:focus-visible { outline: 2px solid var(--lab-blue); outline-offset: 3px; }
 .open-lab .bottleneck-workbench {
   max-width: 1360px;
   margin: 0 auto;

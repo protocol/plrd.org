@@ -12,6 +12,11 @@ export interface BottleneckWorkbenchProps {
   onPrepareContribution?: (initial: Record<string, string>) => void;
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'That action could not be completed.';
+const proposalSteps = [
+  { title: 'The idea and smallest useful test', keys: ['hypothesis', 'action'] },
+  { title: 'Evidence and a stopping rule', keys: ['successSignal', 'measurement', 'review'] },
+  { title: 'People, safeguards, and the ask', keys: ['consultation', 'risks', 'contributions'] },
+];
 
 function ProposalEditor({ item, owner, kind, onPrepareContribution }: { item: BottleneckCase; owner: string; kind: ProposalKind; onPrepareContribution?: BottleneckWorkbenchProps['onPrepareContribution'] }) {
   const [draft, setDraft] = useState(() => createBottleneckDraft(item.id, owner, kind));
@@ -56,11 +61,14 @@ function ProposalEditor({ item, owner, kind, onPrepareContribution }: { item: Bo
   return <section className="bottleneck-proposal" aria-labelledby="bottleneck-proposal-title">
     <p className="bottleneck-kicker">Your proposal · separate from the baseline</p>
     <h2 id="bottleneck-proposal-title">{kind === 'refinement' ? 'Refine the diagnosis' : 'Design the smallest useful intervention'}</h2>
-    <p>A proposal is a testable invitation, not an assignment. All eight fields are required for export; incomplete drafts can be saved.</p>
+    <p>A testable invitation, not an assignment. Start small; the evidence and collaborators follow.</p>
+    <p className="bottleneck-small" data-proposal-progress>{PROPOSAL_FIELDS.filter(field => draft.fields[field.key].trim()).length} of 8 fields drafted · all eight are required for export; incomplete drafts can be saved.</p>
     <p className="bottleneck-small">Target: {item.id} · {item.source.revision}</p>
     <form onSubmit={event => { event.preventDefault(); save(); }}>
       <div className="bottleneck-fields">
-        {PROPOSAL_FIELDS.map(field => <label key={field.key} htmlFor={`bottleneck-${field.key}`}>
+        {proposalSteps.map((step, index) => <details key={step.title} data-proposal-step open={index === 0}>
+          <summary><span className="bottleneck-step-index">{index + 1}</span>{step.title}<small>{step.keys.filter(key => draft.fields[key as keyof typeof draft.fields].trim()).length}/{step.keys.length}</small></summary>
+          <div className="bottleneck-step-fields">{PROPOSAL_FIELDS.filter(field => step.keys.includes(field.key)).map(field => <label key={field.key} htmlFor={`bottleneck-${field.key}`}>
           <span>{field.label}</span>
           <small id={`bottleneck-${field.key}-hint`}>{field.hint}</small>
           <textarea id={`bottleneck-${field.key}`} aria-describedby={`bottleneck-${field.key}-hint`} maxLength={1000} rows={3}
@@ -68,7 +76,7 @@ function ProposalEditor({ item, owner, kind, onPrepareContribution }: { item: Bo
               const next = { ...draft, fields: { ...draft.fields, [field.key]: event.target.value } };
               setDraft(next); save(next);
             }} />
-        </label>)}
+        </label>)}</div></details>)}
       </div>
       <p className="bottleneck-small">Keep sensitive data out. Device storage is not encrypted; a guest draft is shared by visitors using this browser profile. No funds, assignments, author approval, or actual execution.</p>
       <div className="bottleneck-actions">
@@ -114,11 +122,11 @@ export default function BottleneckWorkbench({ owner = 'guest', onPrepareContribu
   return <div className="bottleneck-workbench">
     <header className="bottleneck-heading">
       <p className="bottleneck-kicker">Open Lab / co-creation workbench</p>
-      <h1>Find the blockage.<br />Make a way through.</h1>
-      <p>Invent together by making the problem precise, the next action small, and the evidence open to challenge. Across PL focus areas and other science.</p>
-      <ol className="bottleneck-loop" aria-label="The collective learning loop">
+      <h1>Make a way through.</h1>
+      <p>Start from a source-backed problem. Design one useful test, then invite someone to improve it.</p>
+      <details className="bottleneck-method"><summary>How we work together</summary><ol className="bottleneck-loop" aria-label="The collective learning loop">
         <li>Diagnose & refine</li><li>Design an intervention</li><li>Rally contributions</li><li>Test outcomes</li><li>Revise or retire</li>
-      </ol>
+      </ol></details>
       <p className="bottleneck-disclosure">Editorial starter · public-source brief, not an imported Console record or an active, validated campaign. The real Console bridge is not live.</p>
     </header>
     <div className="bottleneck-filter">
@@ -139,12 +147,14 @@ export default function BottleneckWorkbench({ owner = 'guest', onPrepareContribu
         <p className="bottleneck-kicker">01 / baseline · unvalidated diagnosis</p>
         <h2 id="bottleneck-title">{item.title}</h2>
         <p>{item.statement}</p>
+        <details className="bottleneck-source-detail"><summary>Source, affected people, and uncertainty</summary>
         <h3>Who is affected?</h3><p>{item.affectedActors}</p>
         <h3>What the source supports</h3><p>{item.evidence}</p>
         <a href={item.source.url} target="_blank" rel="noopener noreferrer">Read the primary source ↗</a>
         <h3>What we do not know</h3><p>{item.uncertainty}</p>
-        <h3>What removal would look like</h3><p>{item.resolutionSignal}</p>
         <p className="bottleneck-small">Reviewed {item.source.reviewedAt} · {item.source.revision}. {item.source.note} No inflection-point mapping is asserted.</p>
+        </details>
+        <h3>What removal would look like</h3><p>{item.resolutionSignal}</p>
         <div className="bottleneck-support">
           <h3>Supporting tools, not active campaigns</h3>
           <a href="/lab/collaborate/">Prepare a bounded agent work packet ↗</a>
