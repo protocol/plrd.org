@@ -39,7 +39,7 @@ function ScienceFeed() {
   const bench=useInventionBench()
   const { prefs } = following
   const publicFeed = usePublicFollowing(following)
-  const rows = buildFeedRows({ isDemo: demo.isDemo, demo: following.ready ? demo.state : emptyDemoState(), drafts: following.ready ? local.drafts : [], updates: following.ready ? bench.state?.updates : [], publicRecords: publicFeed.records })
+  const rows = buildFeedRows({ isDemo: demo.isDemo, demo: following.ready ? demo.state : emptyDemoState(), drafts: following.ready ? local.drafts : [], updates: following.ready ? bench.state?.updates : [], tasks: following.ready ? bench.state?.tasks : [], publicRecords: publicFeed.records })
   const daily = useDailyCatchup(following)
   const [dailyView, setDailyView] = useState<DailyView>('unread')
   const matched = filterFeedRows(rows, prefs, query).filter(row => dailyView !== 'help' || needsAHand(row))

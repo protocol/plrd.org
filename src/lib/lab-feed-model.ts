@@ -1,7 +1,7 @@
 import { artifacts } from '@/lib/lab-data'
 import { DEMO_PEOPLE, DEMO_PROPOSALS, DEMO_THREADS, type DemoState } from '@/lib/lab-demo'
 import type { FollowingState } from '@/lib/lab-following'
-import type { InventionUpdate } from '@/lib/lab-inventions'
+import type { BenchTask, InventionUpdate } from '@/lib/lab-inventions'
 import type { SocialDraft } from '@/lib/lab-social'
 import type { LabRecordView } from '@/lib/lab-protocol'
 import { displayRecord, presentPdsRecord } from '@/lib/lab-record-display'
@@ -14,12 +14,13 @@ export type FeedRow = {
   id: string; ideaId: string; authorId?: string; author: string; title: string; text: string;
   kind: string; disciplines: string[]; origin: 'demo' | 'editorial' | 'local' | 'public';
   publicRecord?: LabRecordView;
+  returnedResultRevision?: string;
   artifactId?: string; threadId?: string; messageId?: string; draftSlot?: string;
   artifact: string; artifactUrl?: string; request: string; stage: string; action: string
 }
 const featured = ['r5', 'n3', 'o4', 'r6', 'n4']
 const prototypeNames: Record<string,string> = {'split-check':'Split-before-fit inspector','duration-note':'Recording-hour calculator','reuse-receipt':'Artifact reuse checker'}
-export function buildFeedRows({ isDemo, demo, drafts, updates = [], publicRecords = [] }: { isDemo: boolean; demo: DemoState; drafts: SocialDraft[]; updates?: InventionUpdate[]; publicRecords?: LabRecordView[] }): FeedRow[] {
+export function buildFeedRows({ isDemo, demo, drafts, updates = [], tasks = [], publicRecords = [] }: { isDemo: boolean; demo: DemoState; drafts: SocialDraft[]; updates?: InventionUpdate[]; tasks?: BenchTask[]; publicRecords?: LabRecordView[] }): FeedRow[] {
   const story: FeedRow[] = isDemo ? featured.map(id => {
     const thread = DEMO_THREADS.find(t => t.messages.some(m => m.id === id))!
     const message = thread.messages.find(m => m.id === id)!, proposal = DEMO_PROPOSALS.find(p=>p.id===thread.proposalId)!
@@ -42,7 +43,14 @@ export function buildFeedRows({ isDemo, demo, drafts, updates = [], publicRecord
     const display = displayRecord(presentPdsRecord(record))
     return { id: record.uri, ideaId: record.uri, authorId: record.authorDid, author: record.authorDid, title: display.title, text: display.rows.map(r => r.value).join(' '), kind: record.kind, disciplines: 'field' in record.data ? [record.data.field] : [], origin: 'public', publicRecord: record, artifact: '', request: '', stage: '', action: 'Inspect public record' }
   })
-  return [...publicRows,...making,...additions, ...(isDemo ? [story[0], editorial[0], story[1], story[2], editorial[1], story[3], editorial[2], story[4]] : editorial)]
+  return [...publicRows,...making,...additions, ...(isDemo ? [story[0], editorial[0], story[1], story[2], editorial[1], story[3], editorial[2], story[4]] : editorial)].map(row => {
+    // Match SourceResults exactly: legacy tasks without sourceId are not inferred
+    // from a title or task ID. Sort a new array; never mutate saved snapshots.
+    const results = tasks.filter(task => task.sourceId === row.ideaId && task.result)
+      .map(task => [task.id, task.result!.note, task.result!.artifactUrl, task.result!.outcome])
+      .sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)
+    return results.length ? { ...row, returnedResultRevision: JSON.stringify(results) } : row
+  })
 }
 /** An explicit help request is not inferred from a question, stage, or tool listing. */
 export function needsAHand(row: FeedRow): boolean {

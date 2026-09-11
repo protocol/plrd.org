@@ -37,6 +37,29 @@ test('provider replies and real local ideas enter their own mode; tags drive cro
  assert.equal(m.filterFeedRows(live,prefs,'duration').length,1)
 })
 
+test('returned-result revisions are exact-source, content-based, order-independent and preserve legacy receipts',()=>{
+ const m=source('lib/lab-feed-model.ts'), d=source('lib/lab-demo.ts'), c=source('lib/lab-catchup.ts')
+ const args={isDemo:true,demo:d.emptyDemoState(),drafts:[]}, initial=m.buildFeedRows(args), row=initial[0]
+ const result={note:'Fixture observation',artifactUrl:'https://example.org/result',outcome:'uncertain'}
+ const task={id:'task-z',sourceId:row.ideaId,title:row.title,request:row.request,artifactUrl:'',result}
+ const legacy={...task,id:row.ideaId,sourceId:undefined}, unrelated={...task,id:'other-task',sourceId:row.ideaId+'-other'}
+ assert.deepEqual(m.buildFeedRows({...args,tasks:[legacy,unrelated,{...task,result:undefined}]}),initial,'No title/task-ID inference, prefix matching, or unfinished-task revision')
+ const oldRevision=JSON.stringify([row.ideaId,row.title,row.text,row.kind,row.origin,row.author,row.artifact,row.artifactUrl??'',row.request,row.stage,row.publicRecord?.cid??''])
+ assert.equal(c.catchupReceipt(row).revision,oldRevision,'No-result receipt format stays byte-compatible')
+ const tasks=[task,{...task,id:'task-a',result:{...result,note:'Another observation'}},legacy,unrelated]
+ const snapshot=JSON.stringify(tasks), revised=m.buildFeedRows({...args,tasks})
+ assert.equal(JSON.stringify(tasks),snapshot,'Feed projection never mutates task snapshots or order')
+ assert.deepEqual(m.buildFeedRows({...args,tasks:[...tasks].reverse()}),revised,'Storage order is not a revision')
+ const receipt=c.catchupReceipt(revised[0])
+ assert.deepEqual(c.catchupReceipt(m.buildFeedRows({...args,tasks:JSON.parse(snapshot)})[0]),receipt,'Identical returned content does not replay')
+ for(const change of [{note:'Changed observation'},{artifactUrl:'https://example.org/revised'},{outcome:'did-not-work'}]) {
+  assert.notDeepEqual(c.catchupReceipt(m.buildFeedRows({...args,tasks:[{...task,result:{...result,...change}},...tasks.slice(1)]})[0]),receipt)
+ }
+ assert.deepEqual(revised.filter(r=>r.ideaId!==row.ideaId),initial.filter(r=>r.ideaId!==row.ideaId))
+ const live={...args,isDemo:false}, editorial=m.buildFeedRows(live)[0]
+ assert.notDeepEqual(c.catchupReceipt(m.buildFeedRows({...live,tasks:[{...task,sourceId:editorial.ideaId}]})[0]),c.catchupReceipt(editorial),'Real-mode exact sources also carry returned evidence')
+})
+
 test('workshop feed centers buildable artifacts and bounded requests, with science taxonomy and historical persona disclosure',()=>{
  const m=source('lib/lab-feed-model.ts'),d=source('lib/lab-demo.ts'),f=source('lib/lab-following.ts')
  assert.ok(f.DISCIPLINES?.some(v=>v.id==='physics'),'Scientific disciplines missing')

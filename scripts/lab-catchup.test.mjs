@@ -33,6 +33,33 @@ test('catch-up records only reviewed exact revisions, persists reload, and never
  assert.equal(m.loadCatchup(s,'guest','demo').state.seen.length,0)
 })
 
+test('F1: acknowledging then returning evidence reopens only the exact source and persists the new acknowledgement', () => {
+ const feed=source('lib/lab-feed-model.ts'), demo=source('lib/lab-demo.ts'), bench=source('lib/lab-inventions.ts'), m=source('lib/lab-catchup.ts'), s=storage()
+ const args={isDemo:true,demo:demo.emptyDemoState(),drafts:[]}
+ const before=feed.buildFeedRows(args), first=before[0], oldReceipt=m.catchupReceipt(first)
+ const task={id:first.ideaId,sourceId:first.ideaId,title:first.title,request:first.request,artifact:first.artifact,artifactUrl:first.artifactUrl||''}
+ assert.equal(bench.changeBench(s,'guest','demo',{type:'take-task',task}).ok,true)
+ assert.equal(m.markCaughtUp(s,'guest','demo',before,before.map(m.catchupReceipt)).count,before.length)
+ const history=s.getItem(m.catchupKey('guest','demo'))
+ const result={note:'Synthetic counterexample found',outcome:'did-not-work',artifactUrl:'https://example.org/failure'}
+ assert.equal(bench.changeBench(s,'guest','demo',{type:'return-result',id:task.id,result}).ok,true)
+ const saved=bench.loadBench(s,'guest','demo').state
+ assert.deepEqual(saved.tasks,[{...task,result}],'Saved task snapshot is unchanged')
+ const after=feed.buildFeedRows({...args,updates:saved.updates,tasks:saved.tasks}), updated=after.find(r=>r.id===first.id)
+ assert.equal(after.length,before.length)
+ assert.notDeepEqual(m.catchupReceipt(updated),oldReceipt,'F1: returned evidence must change the acknowledged source receipt')
+ assert.equal(s.getItem(m.catchupKey('guest','demo')),history,'Returning evidence must not rewrite any acknowledgement history')
+ const state=m.loadCatchup(s,'guest','demo').state
+ assert.deepEqual(after.filter(r=>!m.isCaughtUp(state,r)).map(r=>r.id),before.filter(r=>r.ideaId===first.ideaId).map(r=>r.id))
+ assert.equal(m.markCaughtUp(s,'guest','demo',[updated],[oldReceipt]).count,0,'Stale review cannot acknowledge the new result')
+ assert.equal(m.markCaughtUp(s,'guest','demo',[updated],[m.catchupReceipt(updated)]).count,1)
+ const reloaded=feed.buildFeedRows({...args,...bench.loadBench(s,'guest','demo').state})
+ assert.equal(m.isCaughtUp(m.loadCatchup(s,'guest','demo').state,reloaded.find(r=>r.id===first.id)),true)
+ assert.equal(m.loadCatchup(s,'guest','demo').state.seen.length,before.length)
+ assert.equal(m.loadCatchup(s,'other','demo').state.seen.length,0)
+ assert.equal(m.loadCatchup(s,'guest','live').state.seen.length,0)
+})
+
 test('catch-up writer preserves a full history instead of producing an unreadable 1001-entry store', () => {
  const m = source('lib/lab-catchup.ts'), s = storage(), key = m.catchupKey('guest','live')
  const rows = Array.from({length:1000},(_,i)=>row(`item-${i}`))

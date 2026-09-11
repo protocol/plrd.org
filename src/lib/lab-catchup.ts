@@ -7,7 +7,8 @@ export const catchupKey = (owner: string, mode: FollowingMode) => `open-lab:catc
 export const emptyCatchup = (owner: string, mode: FollowingMode): CatchupState => ({ version: 1, owner, mode, seen: [] })
 /** Source content, not wall-clock time or local curation, defines an update. */
 export function catchupReceipt(row: FeedRow): CatchupReceipt {
-  return { id: row.id, revision: JSON.stringify([row.ideaId, row.title, row.text, row.kind, row.origin, row.author, row.artifact, row.artifactUrl ?? '', row.request, row.stage, row.publicRecord?.cid ?? '']) }
+  // Keep existing receipts byte-for-byte when no source-associated result exists.
+  return { id: row.id, revision: JSON.stringify([row.ideaId, row.title, row.text, row.kind, row.origin, row.author, row.artifact, row.artifactUrl ?? '', row.request, row.stage, row.publicRecord?.cid ?? '', ...(row.returnedResultRevision ? [row.returnedResultRevision] : [])]) }
 }
 export function isCaughtUp(state: CatchupState, row: FeedRow): boolean {
   const receipt = catchupReceipt(row)

@@ -46,6 +46,46 @@ test('needs-a-hand narrows to actual requests and the same saved task returns a 
  await click('All activity');assert.equal(rows().length,8)
 })
 
+test('F1 UI: acknowledge -> return -> new unread -> acknowledge -> reload without replay',async()=>{
+ await render()
+ const title='Split-before-fit inspector', first=rows()[0].dataset.feedRow
+ const unrelated=rows().find(r=>r.querySelector('h2').textContent==='marimo')
+ assert.ok(unrelated)
+ await click('Reviewed: marimo');await click(`Open details: ${title}`)
+ await click('Save this test to My bench');await click('Close dialog');await click('Mark reviewed caught up')
+ assert.equal(rows().length,6);assert.ok(!rows().some(r=>r.dataset.feedRow===first))
+ const bench=source('lib/lab-inventions.ts'), snapshot=bench.loadBench(localStorage,'guest','demo').state.tasks[0]
+ const history=localStorage.getItem(M.catchupKey('guest','demo'))
+ await click(`Return a result: ${title}`)
+ await fill('Result note','Synthetic counterexample: negative control failed.')
+ await fill('Result artifact URL','https://fixture.example/results/counterexample')
+ await click('Outcome: did-not-work');await click('Save result to My bench')
+ assert.equal(rows().length,7,'Only the acknowledged source returns to unread')
+ assert.ok(rows().some(r=>r.dataset.feedRow===first),'Returned evidence must reopen its source')
+ assert.ok(!rows().some(r=>r.dataset.feedRow===unrelated.dataset.feedRow),'Unrelated acknowledgement survives')
+ assert.equal(localStorage.getItem(M.catchupKey('guest','demo')),history)
+ assert.equal(button('Mark reviewed caught up').disabled,true,'Returning is not reviewing the new revision')
+ await click(`Open details: ${title}`)
+ assert.match(document.querySelector('[aria-label="Results for this source"]').textContent,/negative control failed/)
+ await click('Close dialog');await click('Mark reviewed caught up')
+ assert.equal(rows().length,6)
+ const saved=bench.loadBench(localStorage,'guest','demo').state.tasks[0]
+ const {result,...original}=saved;assert.deepEqual(original,snapshot);assert.equal(result.outcome,'did-not-work')
+ await React.act(()=>root.unmount());root=createRoot(document.getElementById('root'));await render()
+ assert.equal(rows().length,6);assert.ok(!rows().some(r=>r.dataset.feedRow===first))
+ assert.deepEqual(bench.loadBench(localStorage,'guest','demo').state.tasks[0],saved)
+ await click('Fixture mode');assert.equal(rows().length,3)
+ assert.equal(bench.loadBench(localStorage,'guest','live').state.tasks.length,0)
+ await click('Fixture mode');assert.equal(rows().length,6)
+ identity={isLoading:false,isAuthenticated:true,session:{did:'did:plc:bbbbbbbbbbbbbbbbbbbbbbbb',handle:'b.example.org'}};await render()
+ assert.equal(rows().length,8,'Another identity cannot inherit returned evidence or acknowledgements')
+ await click(`Open details: ${title}`)
+ assert.equal(document.querySelector('[aria-label="Results for this source"]'),null)
+ await click('Close dialog')
+ identity={isLoading:false,isAuthenticated:false,session:null};await render()
+ assert.equal(rows().length,6,'Returning to the original scope restores the acknowledged result revision')
+})
+
 test('catch-up, reviewed selections, and bench drawers stay isolated across restored identities',async()=>{
  const a={did:'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa',handle:'a.example.org'}, b={did:'did:plc:bbbbbbbbbbbbbbbbbbbbbbbb',handle:'b.example.org'}
  identity={isLoading:false,isAuthenticated:true,session:a}
