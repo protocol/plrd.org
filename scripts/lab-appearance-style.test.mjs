@@ -80,6 +80,15 @@ test('workshop heading wins at <=22px over the actual shell in either CSS chunk 
     }
   }
 });
+test('app-wide shell headings stay compact so activity, not display type, leads the screen', () => {
+  const size = selector => parseFloat(declarations(shell, selector)['font-size']);
+  assert.ok(size('.open-lab.lab-app-shell h1') <= 22, 'Shell h1 still uses marketing display type');
+  assert.ok(size('.open-lab.lab-app-shell h2') <= 18);
+  assert.ok(size('.open-lab.lab-app-shell h3') <= 16);
+  assert.ok(size('.open-lab.lab-app-shell .lab-brand > span') <= 18);
+  assert.ok(size('.open-lab.lab-app-shell .lab-workbench-heading h1') <= 22);
+  assert.ok(size('.open-lab.lab-app-shell .lab-dialog h2') <= 20);
+});
 
 const declarations = (sheet, selector) => {
   const values = {};
