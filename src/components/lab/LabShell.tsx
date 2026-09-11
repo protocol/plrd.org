@@ -31,7 +31,7 @@ export default function LabShell({ children }: { children: React.ReactNode }) {
 }
 function LabChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { isAuthenticated, session, isLoading } = useLabIdentity();
+  const { isAuthenticated, session, isLoading, error } = useLabIdentity();
   const demo = useDemoCommunity();
   const [loginOpen, setLoginOpen] = useState(false);
   const [dark, setDark] = useState(false);
@@ -115,6 +115,7 @@ function LabChrome({ children }: { children: React.ReactNode }) {
         </header>
         <main id="lab-main" className="lab-main">
           <div className="lab-wrap lab-composition-banner"><DemoModeBanner /></div>
+          {error && <div className="lab-wrap"><p className="lab-error" role="alert">{error}</p></div>}
           {children}
         </main>
         <footer className="lab-footer">
