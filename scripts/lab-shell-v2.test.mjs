@@ -44,8 +44,8 @@ afterEach(async () => {await act(() => root.unmount()); mock.restoreAll();});
 test('action navigation selects one destination, and global search and account remain accessible', async () => {
   const Shell = source('components/lab/LabShell.tsx').default;
   sessionStorage.setItem('open-lab:welcome:v2', 'seen');
-  const destinations = [['/lab/', 'Follow science'], ['/lab/bottlenecks/', 'Work on ideas'], ['/lab/apps/', 'Try tools'], ['/lab/atlas/', 'Improve the Atlas'], ['/lab/collaborate/', 'Pool your efforts'], ['/lab/people/', 'Find people'], ['/lab/profile/', 'My bench']];
-  for (const route of ['/lab/', '/lab/feed/', '/lab/bottlenecks/', '/lab/people/']) {
+  const destinations = [['/lab/', 'Catch up'], ['/lab/bottlenecks/', 'Work on ideas'], ['/lab/apps/', 'Find tools'], ['/lab/explorations/observatory/', 'Explore the tech tree'], ['/lab/collaborate/', 'Contribute'], ['/lab/people/', 'Find people'], ['/lab/profile/', 'My bench']];
+  for (const route of ['/lab/', '/lab/feed/', '/lab/bottlenecks/', '/lab/people/', '/lab/explorations/observatory/']) {
     window.history.replaceState(null, '', route); await mount(Shell);
     const nav = document.querySelector('nav[aria-label="Open Lab"]'); assert.ok(nav);
     assert.deepEqual([...nav.querySelectorAll('a')].map(a => [a.getAttribute('href'), a.textContent.trim()]), destinations);
@@ -53,8 +53,15 @@ test('action navigation selects one destination, and global search and account r
     assert.equal(selected[0].getAttribute('href'), route === '/lab/feed/' ? '/lab/' : route);
   }
   const search = document.querySelector('form[role="search"]'); assert.ok(search);
+  for (const route of ['/lab/atlas/', '/lab/efforts/']) {
+    window.history.replaceState(null, '', route); await mount(Shell);
+    const selected = document.querySelectorAll('#lab-sidebar [aria-current="page"]');
+    assert.equal(selected.length, 1); assert.equal(selected[0].getAttribute('href'), route);
+  }
   assert.equal(search.getAttribute('action'), '/lab/feed/'); assert.equal(search.getAttribute('method'), 'get');
   assert.ok(search.querySelector('input[name="q"][type="search"][aria-label]'));
+  assert.equal(search.querySelector('input').getAttribute('aria-label'), 'Search work');
+  assert.equal(search.querySelector('input').getAttribute('placeholder'), 'Search feed ideas, tools, and requests');
   assert.ok(document.querySelector('button[aria-label="Sign in to Open Lab"]'));
   assert.ok(document.querySelector('.lab-header-actions a[href="/lab/profile/"][aria-label="My bench"]'), 'Unsigned people still need a persistent profile control');
   identity = {...identity, isAuthenticated:true, session:{did:'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa',handle:'person.example.org',displayName:'Test person'}};
@@ -198,7 +205,7 @@ test('home renders the real FeedWorkbench below one slim invitation', async () =
   assert.ok(document.querySelector('[aria-label="Mixed science feed"]'), 'Actual feed is the default home surface');
   const invitation = document.querySelector('[aria-label="Workshop invitation"]');
   assert.ok(invitation, 'A single compact workshop header owns the invitation and composer');
-  assert.match(invitation.textContent, /Made something that makes science easier\?/);
+  assert.match(invitation.textContent, /Catch up.*Find what changed/);
   assert.ok(invitation.querySelector('button[aria-label="What are you making? Show a build →"]'));
   assert.equal(document.querySelector('.lab-welcome'), null, 'No second marketing invitation above the feed');
   assert.equal(document.querySelector('.lab-hero'), null);

@@ -30,11 +30,11 @@ const LabContext = createContext<{
 });
 export const useLab = () => useContext(LabContext);
 const navigation = [
-  ["/lab/", "Follow science", "M4 5h16M4 12h10M4 19h16"],
+  ["/lab/", "Catch up", "M4 5h16M4 12h10M4 19h16"],
   ["/lab/bottlenecks/", "Work on ideas", "M9 18h6m-6 3h6M8 14a6 6 0 1 1 8 0l-1 1v2H9v-2z"],
-  ["/lab/apps/", "Try tools", "M9 3v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V3M8 3h8M7 15h10"],
-  ["/lab/atlas/", "Improve the Atlas", "m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zm6-3v15m6-12v15"],
-  ["/lab/collaborate/", "Pool your efforts", "M12 3v18M3 12h18M5.6 5.6l12.8 12.8M5.6 18.4 18.4 5.6"],
+  ["/lab/apps/", "Find tools", "M9 3v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V3M8 3h8M7 15h10"],
+  ["/lab/explorations/observatory/", "Explore the tech tree", "M12 3v6M5 16v-5h14v5M3 16h4v5H3zm14 0h4v5h-4zM10 3h4v4h-4z"],
+  ["/lab/collaborate/", "Contribute", "M12 3v18M3 12h18M5.6 5.6l12.8 12.8M5.6 18.4 18.4 5.6"],
   ["/lab/people/", "Find people", "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M15 3a4 4 0 0 1 0 8m7 10v-2a4 4 0 0 0-3-3.9M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0"],
   ["/lab/profile/", "My bench", "M3 10h18v5H3zm2 5v6m14-6v6M8 10V5h8v5"],
 ];
@@ -136,8 +136,8 @@ function LabChrome({ children }: { children: React.ReactNode }) {
             {navigation.map(([url, label, icon]) => <Link key={url} href={url} aria-current={activeRoute === url ? "page" : undefined} onClick={() => setNavigationOpen(false)}><Icon path={icon} /><span>{label}</span></Link>)}
           </nav>
           <div className="lab-sidebar-footer">
-            <Link href="/lab/explorations/observatory/">Explore the tech tree <span aria-hidden="true">↗</span></Link>
-            <Link href="/lab/efforts/">Efforts experiment <span aria-hidden="true">↗</span></Link>
+            <Link href="/lab/atlas/" aria-current={activeRoute === "/lab/atlas/" ? "page" : undefined}>Improve the Atlas <span aria-hidden="true">→</span></Link>
+            <Link href="/lab/efforts/" aria-current={activeRoute === "/lab/efforts/" ? "page" : undefined}>Efforts experiment <span aria-hidden="true">→</span></Link>
             <button type="button" onClick={theme} aria-label={`Switch to ${dark ? "light" : "dark"} mode`}><Icon path={dark ? "M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0" : "M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11"} />{dark ? "Light appearance" : "Dark appearance"}</button>
             <Link href="/about/">About PL R&amp;D <span aria-hidden="true">↗</span></Link>
           </div>
@@ -147,7 +147,7 @@ function LabChrome({ children }: { children: React.ReactNode }) {
             <button ref={menuRef} className="lab-icon-button lab-nav-toggle" type="button" aria-label="Toggle navigation" aria-controls="lab-sidebar" aria-expanded={navigationOpen} onClick={() => setNavigationOpen(v => !v)}><Icon path="M4 6h16M4 12h16M4 18h16" /></button>
             <form action="/lab/feed/" method="get" role="search" className="lab-global-search">
               <Icon path="m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0" />
-              <input type="search" name="q" aria-label="Search Open Lab" placeholder="Search science, tools, and ideas" />
+              <input type="search" name="q" aria-label="Search work" placeholder="Search feed ideas, tools, and requests" />
               <button type="submit" aria-label="Search"><span aria-hidden="true">↵</span></button>
             </form>
             <button className="lab-scope-control" data-lab-scope-control type="button" aria-label={`Demo ${demo.isDemo ? "on: example activity" : "off: real and local work"}. Change scope`} aria-haspopup="dialog" aria-expanded={demoOpen} disabled={!demo.ready} onClick={() => { setNavigationOpen(false); setDemoOpen(true); }}>

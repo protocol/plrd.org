@@ -1,5 +1,6 @@
 button.trigger { display:none; }
-aside.drawer { display:grid; width:100%; grid-template-columns:minmax(0,1fr); color:var(--lab-ink); }
+aside.drawer { display:grid; width:100%; grid-template-columns:minmax(0,1fr); color:var(--lab-ink); border:0; padding:14px; gap:12px; }
+aside.desktop { align-self:stretch; }
 @media (max-width:1199px) {
   button.trigger { display:inline-flex; align-items:center; justify-content:center; min-height:44px; margin-left:auto; }
   aside.desktop { display:none; }

@@ -9,7 +9,7 @@ test('app shell uses a compact scoped responsive layout with drawer and centered
   const css = readFileSync(path, 'utf8'); const root = postcss.parse(css);
   const rules = []; root.walkRules(rule => rules.push(rule));
   assert.ok(rules.every(rule => rule.selector.includes('.lab-app-shell') || rule.parent.name === 'keyframes'), 'Styles must stay inside the app shell');
-  for (const token of ['--lab-nav-width: 210px','--lab-feed-width: 740px','--lab-context-width: 280px']) assert.ok(css.includes(token), token);
+  for (const token of ['--lab-nav-width: 224px','--lab-feed-width: 1100px','--lab-context-width: 300px','--lab-content-width: 1600px']) assert.ok(css.includes(token), token);
   assert.match(css, /\.lab-sidebar\s*\{[^}]*position:\s*fixed/);
   assert.match(css, /\[data-variant="drawer"\]\s*\{[^}]*height:\s*100dvh/);
   assert.match(css, /\[data-variant="centered"\]/);

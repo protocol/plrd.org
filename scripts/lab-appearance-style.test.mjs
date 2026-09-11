@@ -69,7 +69,7 @@ function winner(element, prop, sheets, width) {
 }
 test('workshop heading wins at <=22px over the actual shell in either CSS chunk order, including mobile', () => {
   const h1 = document.querySelector('h1');
-  assert.equal(h1.textContent, 'The workshop');
+  assert.equal(h1.textContent, 'Catch up');
   assert.ok(h1.closest('[aria-label="Workshop invitation"]'));
   for (const order of [[base, composition, feed, shell], [base, composition, shell, feed]]) {
     for (const width of [1440, 800, 390]) {

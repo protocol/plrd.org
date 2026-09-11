@@ -31,7 +31,7 @@ export function buildFeedRows({ isDemo, demo, drafts, updates = [], publicRecord
   }) : []
   const editorial: FeedRow[] = ['marimo', 'cadcad', 'connectome'].map(id => {
     const a = artifacts.find(a => a.id === id)!
-    return { id: `artifact:${id}`, ideaId: `artifact:${id}`, artifactId: id, author: a.source, title: a.title, text: a.description, kind: a.type === 'tool' ? 'Tool' : 'Research question', disciplines: [a.field], origin: 'editorial', artifact:a.codeUrl?'Code + documentation':'Research perspective',artifactUrl:a.url,request:a.prompt,stage:a.type==='tool'?'Public tool · inspect its limits':'Idea · not an achieved invention',action:a.type==='tool'?'Try prototype':'Help build' }
+    return { id: `artifact:${id}`, ideaId: `artifact:${id}`, artifactId: id, author: a.source, title: a.title, text: a.description, kind: a.type === 'tool' ? 'Tool' : 'Research question', disciplines: [a.field], origin: 'editorial', artifact:a.codeUrl?'Code + documentation':'Research perspective',artifactUrl:a.url,request:a.prompt,stage:a.type==='tool'?'Public tool · inspect its limits':'Idea · not an achieved invention',action:a.type==='tool'?'View app':'Help build' }
   })
   const additions: FeedRow[] = isDemo ? [...demo.replies].reverse().map(r => {
     const thread = DEMO_THREADS.find(t => t.id === r.threadId)!, proposal=DEMO_PROPOSALS.find(p=>p.id===thread.proposalId)!
@@ -43,6 +43,10 @@ export function buildFeedRows({ isDemo, demo, drafts, updates = [], publicRecord
     return { id: record.uri, ideaId: record.uri, authorId: record.authorDid, author: record.authorDid, title: display.title, text: display.rows.map(r => r.value).join(' '), kind: record.kind, disciplines: 'field' in record.data ? [record.data.field] : [], origin: 'public', publicRecord: record, artifact: '', request: '', stage: '', action: 'Inspect public record' }
   })
   return [...publicRows,...making,...additions, ...(isDemo ? [story[0], editorial[0], story[1], story[2], editorial[1], story[3], editorial[2], story[4]] : editorial)]
+}
+/** An explicit help request is not inferred from a question, stage, or tool listing. */
+export function needsAHand(row: FeedRow): boolean {
+  return row.kind === 'Help wanted' || row.kind === 'help-wanted'
 }
 /** OR within disciplines and across subscriptions; AND with text search and curated view. */
 export function filterFeedRows(rows: FeedRow[], prefs: FollowingState, query: string): FeedRow[] {

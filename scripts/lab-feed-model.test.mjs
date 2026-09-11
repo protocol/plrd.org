@@ -43,7 +43,7 @@ test('workshop feed centers buildable artifacts and bounded requests, with scien
  assert.equal(f.protocolFieldForDiscipline('physics'),'cross-field')
  const rows=m.buildFeedRows({isDemo:true,demo:d.emptyDemoState(),drafts:[]})
  assert.ok(rows.every(r=>r.artifact && r.request && r.stage))
- assert.ok(rows.some(r=>r.action==='Try prototype'))
+ assert.ok(rows.some(r=>r.action==='View app'))
  assert.ok(rows.some(r=>r.action==='Take a test'))
  const prefs={...f.emptyFollowing('guest','demo'),filter:{feed:'discover',disciplines:['physics']}}
  assert.equal(m.filterFeedRows(rows,prefs,'').length,0)
