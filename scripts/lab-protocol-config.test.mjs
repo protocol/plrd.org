@@ -27,7 +27,7 @@ test('metadata and capabilities routes share a public identity without request-h
   } finally { if (before === undefined) delete process.env.LAB_PUBLIC_URL; else process.env.LAB_PUBLIC_URL = before }
 })
 
-test('explicit HTTPS public identity declares only the five exact collection write scopes', () => {
+test('explicit HTTPS public identity declares native follow plus five exact Lab collection scopes', () => {
   const { getLabOAuthConfig } = source('lib/lab-oauth-config.ts')
   const result = getLabOAuthConfig({ LAB_PUBLIC_URL: 'https://lab-preview.example.org', LAB_ENABLE_PUBLISH: 'true' })
   assert.equal(result.mode, 'ready')
@@ -39,7 +39,7 @@ test('explicit HTTPS public identity declares only the five exact collection wri
   assert.equal(m.token_endpoint_auth_method, 'none')
   assert.equal(m.dpop_bound_access_tokens, true)
   assert.equal(m.application_type, 'web')
-  assert.deepEqual(m.scope.split(' '), ['atproto', ...['profile','note','app','contribution','participation'].map(k => `repo:org.plresearch.lab.${k}?action=create${k === 'profile' ? '&action=update' : ''}&action=delete`)])
+  assert.deepEqual(m.scope.split(' '), ['atproto', 'repo:app.bsky.graph.follow?action=create&action=delete', ...['profile','note','app','contribution','participation'].map(k => `repo:org.plresearch.lab.${k}?action=create${k === 'profile' ? '&action=update' : ''}&action=delete`)])
   assert.equal(JSON.stringify(result).includes('secret'), false)
 })
 
