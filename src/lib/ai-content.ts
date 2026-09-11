@@ -70,7 +70,12 @@ function hasForbiddenRouteReference(text: string): boolean {
   // Inspect route references, not ordinary published words such as API, preview or edit.
   const references = text.match(/(?:https?:\/\/|\/)[^\s<>"'`)\]]+/gi) || []
   return references.some(reference => {
-    try { return FORBIDDEN.test(decodeURIComponent(reference)) }
+    try {
+      const decoded = decodeURIComponent(reference)
+      const url = new URL(decoded, BASE)
+      const ownSite = ['www.plrd.org', 'plrd.org', 'www.plresearch.org', 'plresearch.org'].includes(url.hostname)
+      return FORBIDDEN.test(decoded) || (ownSite && /^\/lab(?:\/|$)/i.test(url.pathname))
+    }
     catch { return true }
   })
 }

@@ -75,8 +75,6 @@ test('private route references stay excluded from public prose and source links'
     const url = `https://www.plrd.org${route}`
     const linked = { ...seed, sources: [...seed.sources, { label: 'Private source', url }] }
     assert.equal(createAiAccess([linked]).detail(seed.kind, seed.slug).status, 404, url)
-    // /lab/ is denied by the existing local URL allowlist, not the prose blacklist.
-    if (route === '/lab/') continue
     for (const field of ['title', 'summary', 'body']) {
       const api = createAiAccess([{ ...seed, [field]: `See [source](${url}) and ${route}` }])
       assert.equal(api.detail(seed.kind, seed.slug).status, 404, `${field}: ${route}`)
