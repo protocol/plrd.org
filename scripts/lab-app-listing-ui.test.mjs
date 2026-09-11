@@ -16,6 +16,17 @@ const D=source('components/lab/demo/DemoCommunityProvider.tsx')
 function Mode(){const d=D.useDemoCommunity();return React.createElement('button',{onClick:()=>d.setMode(d.isDemo?'live':'demo')},'Switch mode')}
 const click=async label=>{const e=[...document.querySelectorAll('button,a,summary')].find(e=>e.getAttribute('aria-label')===label||e.textContent.trim()===label);assert.ok(e,'Missing action '+label);await React.act(()=>{e.focus();e.click()});return e}
 const fill=async(label,value)=>{const e=document.querySelector(`[aria-label="${label}"]`);assert.ok(e,'Missing input '+label);await React.act(()=>{Object.getOwnPropertyDescriptor(e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype,'value').set.call(e,value);e.dispatchEvent(new Event('input',{bubbles:true}))})}
+test('the actual apps route leads with discovery, with illustrative discussion only on demand',async()=>{
+ localStorage.clear();window.history.replaceState(null,'','/lab/apps/')
+ const C=source('app/lab/apps/page.tsx').default,root=createRoot(document.getElementById('root'))
+ try {
+  await React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C))))
+  const card=document.querySelector('[data-app-card]');assert.ok(card)
+  const panel=document.querySelector('.lab-community-supplement')
+  if(panel){assert.ok(panel.closest('details'));assert.equal(panel.closest('details').open,false);assert.ok(card.compareDocumentPosition(panel)&window.Node.DOCUMENT_POSITION_FOLLOWING)}
+  assert.equal(document.querySelector('h1').textContent,'Find tools. Keep building.')
+ }finally{await React.act(()=>root.unmount())}
+})
 test('open local listing details and editor drafts never cross identity or Demo scopes',async()=>{
  localStorage.clear();window.history.replaceState(null,'','/lab/apps/')
  const c=source('lib/lab-app-catalog.ts'),ownerA='did:plc:fixturea',ownerB='did:plc:fixtureb'

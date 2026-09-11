@@ -18,9 +18,10 @@ test('branch graph fits laptop panes and packs sparse roots without a blank uppe
   assert.ok(root.positions.every(p => p.y >= 0 && p.y + 128 <= root.height))
   const full = m.scienceGraphFrame(8, 760)
   assert.equal(full.height, 584)
-  assert.ok(full.width * full.fit <= 744)
-  assert.ok(full.fit >= .8, 'laptop labels remain readable')
-  assert.equal(m.scienceGraphFrame(4, 320).fit, 1, 'opt-in phone map pans readable nodes; phone defaults to List')
+  assert.ok(full.fit >= .94, 'preserve at least 14.1px titles, then pan rather than shrinking to fit')
+  assert.equal(m.scienceGraphFrame(4, 619).fit, m.scienceGraphFrame(4, 620).fit, 'one-pixel wider pane cannot shrink labels abruptly')
+  assert.ok(m.scienceGraphFrame(4, 620).fit >= .94)
+  assert.ok(m.scienceGraphFrame(4, 320).fit >= .94, 'opt-in phone map pans readable nodes; phone defaults to List')
 })
 
 test('global search, source links, breadcrumbs and branch pagination cover the full universe', () => {

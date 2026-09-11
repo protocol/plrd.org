@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
 import { source } from './velocity/test-source-loader.mjs'
+import { JSDOM } from 'jsdom'
 const store=()=>{const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v),m}}
 test('catalog is a source-attributed external shelf, not an embedded runtime or invented community',()=>{
  assert.ok(existsSync('src/lib/lab-app-catalog.ts'),'External app catalog model missing')
@@ -13,6 +14,21 @@ test('catalog is a source-attributed external shelf, not an embedded runtime or 
   assert.equal(c.safeAppUrl(url,true),false,url)
  }
  assert.equal(c.safeAppUrl('https://github.com/marimo-team/marimo',true),true)
+})
+test('HTTPS validation agrees with actual HTTPS-document anchors and preserves ambiguous stored input',()=>{
+ const c=source('lib/lab-app-catalog.ts'),s=store(),owner='authority',mode='live',key=c.appShelfKey(owner,mode)
+ const dom=new JSDOM('<a></a>',{url:'https://openlab.example/lab/apps/'})
+ for(const url of ['https:github.com/owner/repo','https:/github.com/owner/repo','https:///github.com/owner/repo','https://github.com\\owner/repo']) {
+  assert.equal(c.safeAppUrl(url,true),false,url)
+  const listing={...c.APP_CATALOG[0],id:'local:authority',origin:'local',launchUrl:url,sourceUrl:url,codeUrl:url}
+  assert.equal(c.changeAppShelf(s,owner,mode,{type:'listing',listing}).ok,false)
+  assert.equal(s.getItem(key),null)
+  const raw=JSON.stringify({version:1,owner,mode,saved:[],reviews:{},listings:[listing]});s.setItem(key,raw)
+  assert.ok(c.loadAppShelf(s,owner,mode).error)
+  assert.equal(c.changeAppShelf(s,owner,mode,{type:'save',id:'marimo'}).ok,false);assert.equal(s.getItem(key),raw);s.m.delete(key)
+ }
+ const url='https://github.com/owner/repo';assert.equal(c.safeAppUrl(url,true),true)
+ const a=dom.window.document.querySelector('a');a.setAttribute('href',url);assert.equal(new URL(a.href).hostname,'github.com');assert.equal(a.href,url)
 })
 test('app shelf writer and reader agree at entry and serialized-size limits without overwriting originals',()=>{
  const c=source('lib/lab-app-catalog.ts'),s=store(),owner='bounds',mode='live',key=c.appShelfKey(owner,mode)

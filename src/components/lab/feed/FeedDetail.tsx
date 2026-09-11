@@ -41,11 +41,12 @@ function Detail({ row: originalRow, onClose }: { row: FeedRow; onClose: () => vo
   if(editingBuild&&update)return <InventionComposer updateId={update.id} onClose={()=>setEditingBuild(false)}/>
   if(returning)return <ReturnResult taskId={row.ideaId} scope={bench.scope} onClose={()=>setReturning(false)}/>
   if (editor) return <RecordEditor kind={row.draftSlot ? 'note' : 'contribution'} draftId={row.draftSlot} initial={artifact ? {targetUrl: artifact.url, field: artifact.field} : {}} onSaved={() => window.dispatchEvent(new Event(LAB_SOCIAL_CHANGED))} onClose={() => { setEditor(false); window.dispatchEvent(new Event(LAB_SOCIAL_CHANGED)) }} />
+  const app = artifact?.app ? APP_CATALOG.find(a => a.id === artifact.id) : undefined
+  const work = <><p><strong>{row.stage}</strong></p><p><strong>Artifact:</strong> {row.artifact}</p><p><strong>Bounded next step:</strong> {row.request}</p><WorkHandoff row={row} onTake={takeTask} /></>
   return <LabDialog title={row.title} onClose={onClose}><div className={styles.detail}>
     <p className={styles.meta}>{row.origin === 'demo' ? 'Illustrative community story. Invented people and outcomes; not research evidence.' : row.origin === 'local' ? 'Your unpublished local idea. No public record has changed.' : `Editorial selection · ${artifact?.source}`}</p>
-    {artifact?.app && <AppListingContent app={APP_CATALOG.find(a => a.id === artifact.id)!} />}
-    <p><strong>{row.stage}</strong></p><p><strong>Artifact:</strong> {row.artifact}</p><p><strong>Bounded next step:</strong> {row.request}</p>
-    <WorkHandoff row={row} onTake={takeTask} />
+    {app && <AppListingContent app={app} />}
+    {app ? <details><summary>Contribute a test or result</summary>{work}</details> : work}
     {update && <div className={styles.actions}><button aria-label={`Edit build: ${row.title}`} onClick={()=>setEditingBuild(true)}>Edit build</button></div>}
     {update&&<InventionMediaPreview items={update.media||[]}/>}
     <SourceResults sourceId={row.ideaId} tasks={bench.ready?bench.state?.tasks||[]:[]}/>
@@ -57,7 +58,7 @@ function Detail({ row: originalRow, onClose }: { row: FeedRow; onClose: () => vo
       </form>
       {demo.state.replies.filter(r => r.threadId === thread!.id).map(r => <p className={styles.localNote} key={r.id}><strong>Your local demo note</strong><br />{r.text}</p>)}
       <details><summary>Signal interest with your demo point budget</summary><p>{demoPointsRemaining(demo.state)} points remaining. Not money, peer review, or impact certification.</p><div className={styles.actions}><button disabled={!demoPointsRemaining(demo.state)} onClick={() => demo.act({type:'allocate',proposalId:proposal.id,delta:1})}>Allocate 1 demo point</button><button disabled={!demo.state.allocations[proposal.id]} onClick={() => demo.act({type:'allocate',proposalId:proposal.id,delta:-1})}>Reclaim 1 point</button></div></details>
-    </> : <><p>{row.text}</p>{artifact && <><p>{artifact.prompt}</p><div className={styles.actions}><a href={artifact.url} target="_blank" rel="noopener noreferrer">Open source ↗</a>{artifact.codeUrl && <a href={artifact.codeUrl} target="_blank" rel="noopener noreferrer">Source code ↗</a>}<a href="/lab/apps/">Useful tools →</a></div></>}
+    </> : <>{!app && <p>{row.text}</p>}{artifact && !app && <><p>{artifact.prompt}</p><div className={styles.actions}><a href={artifact.url} target="_blank" rel="noopener noreferrer">Open source ↗</a>{artifact.codeUrl && <a href={artifact.codeUrl} target="_blank" rel="noopener noreferrer">Source code ↗</a>}<a href="/lab/apps/">Useful tools →</a></div></>}
       {row.artifactUrl && !artifact && <a href={row.artifactUrl} target="_blank" rel="noopener noreferrer">Open artifact ↗</a>}
       {(artifact || row.draftSlot) && <button className={styles.primary} onClick={() => setEditor(true)}>{row.draftSlot ? 'Continue idea draft' : 'Draft an evidence contribution'}</button>}
     </>}

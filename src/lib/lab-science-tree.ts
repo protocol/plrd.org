@@ -46,7 +46,8 @@ export function scienceGraphFrame(count: number, viewportWidth: number) {
   const length = Number.isFinite(count) ? Math.max(0, Math.min(8, Math.floor(count))) : 0
   const width = 860
   const height = Math.max(164, Math.ceil(length / 2) * 140 + 24)
-  const fit = Number.isFinite(viewportWidth) && viewportWidth >= 620 ? Math.min(1, (viewportWidth - 16) / width) : 1
+  // Keep 15px node titles at >=14.1px. Narrow panes pan instead of sacrificing legibility.
+  const fit = Number.isFinite(viewportWidth) && viewportWidth > 0 ? Math.max(.94, Math.min(1, (viewportWidth - 16) / width)) : 1
   const positions = Array.from({ length }, (_, index) => ({ x: index % 2 === 0 ? 16 : 594, y: 12 + Math.floor(index / 2) * 140 }))
   return { width, height, fit, positions }
 }

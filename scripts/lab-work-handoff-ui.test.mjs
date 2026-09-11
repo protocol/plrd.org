@@ -27,7 +27,15 @@ test('exact feed task is copied for an own agent, exported for GitHub, then retu
  await click('Use my agent');await click('Copy brief');assert.ok(copied.includes(row.ideaId));assert.ok(copied.includes(row.request));assert.match(copied,/Stop condition/)
  assert.equal(b.loadBench(localStorage,'guest','demo').state.tasks[0].sourceId,row.ideaId)
  await click('Work on GitHub');await fill('GitHub destination URL','https://github.com.evil.test/research');await click('Copy brief');assert.match(document.querySelector('[data-work-handoff]').textContent,/GitHub URL/)
- await fill('GitHub destination URL','https://github.com/example/research/issues/42');await click('Download brief');assert.match(downloaded,/\.txt$/);assert.match(await blob.text(),/issues\/42/)
+ for (const url of ['https:github.com/owner/repo','https:/github.com/owner/repo','https://github.com\\owner/repo']) {
+  await fill('GitHub destination URL',url)
+  assert.equal([...document.querySelectorAll('a')].find(a=>a.textContent.includes('Open your selected GitHub')),undefined)
+  assert.match(document.querySelector('[data-work-handoff] [role="alert"]').textContent,/GitHub URL/)
+  assert.equal([...document.querySelectorAll('button')].find(b=>b.textContent==='Copy brief').disabled,true)
+ }
+ await fill('GitHub destination URL','https://github.com/example/research/issues/42')
+ assert.equal([...document.querySelectorAll('a')].find(a=>a.textContent.includes('Open your selected GitHub')).href,'https://github.com/example/research/issues/42')
+ await click('Download brief');assert.match(downloaded,/\.txt$/);assert.match(await blob.text(),/issues\/42/)
  await click('Return a result →');await fill('Result note','Counterexample: held-out rows reached preprocessing.');await fill('Result artifact URL','https://example.org/failure');await click('Outcome: did-not-work');await click('Save result to My bench')
  assert.match(document.querySelector('[aria-label="Results for this source"]').textContent,/Counterexample/)
  assert.equal(b.loadBench(localStorage,'guest','demo').state.tasks.length,1);assert.equal(network,0)
@@ -49,5 +57,5 @@ test('export rereads the bench, keeps saved goals/results and refuses a newly co
 })
 test('tool feed details lead with the actual app listing and retain bounded contribution work',async()=>{
  localStorage.clear();const row=rows().find(r=>r.artifactId==='marimo'),C=source('components/lab/feed/FeedDetail.tsx').default,root=createRoot(document.getElementById('root'))
- try{await React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C,{row,onClose:()=>{}}))));assert.ok(document.querySelector('[data-app-launch]'));assert.ok(document.querySelector('[data-work-handoff]'));assert.equal(document.querySelector('iframe,canvas'),null)}finally{await React.act(()=>root.unmount())}
+ try{await React.act(()=>root.render(React.createElement(D.DemoCommunityProvider,null,React.createElement(C,{row,onClose:()=>{}}))));assert.ok(document.querySelector('[data-app-launch]'));assert.ok(document.querySelector('[data-work-handoff]'));assert.equal(document.querySelector('[data-work-handoff]').closest('details')?.open,false);assert.equal([...document.querySelectorAll('a')].find(a=>a.textContent==='Open source ↗'),undefined);assert.equal(document.querySelector('iframe,canvas'),null)}finally{await React.act(()=>root.unmount())}
 })

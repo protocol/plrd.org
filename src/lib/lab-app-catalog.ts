@@ -7,7 +7,7 @@ export type AppListing = {
 }
 /** Reject before URL normalization: browsers otherwise erase whitespace/control characters. */
 export function safeAppUrl(value: unknown, githubOnly = false): value is string {
-  if (typeof value !== 'string' || !value || value.length > 2048 || /[\s\u0000-\u001f\u007f]|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(value)) return false
+  if (typeof value !== 'string' || !/^https:\/\/[^/\\]/i.test(value) || value.includes('\\') || value.length > 2048 || /[\s\u0000-\u001f\u007f]|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(value)) return false
   try {
     const url = new URL(value)
     return url.protocol === 'https:' && !url.username && !url.password && (!githubOnly || url.hostname === 'github.com')
