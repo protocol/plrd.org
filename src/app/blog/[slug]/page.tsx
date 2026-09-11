@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { blogPosts } from '@/lib/content'
+import { siteConfig } from '@/lib/site-config'
 import { formatDate } from '@/lib/format'
 import AuthorCard from '@/components/AuthorCard'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -44,6 +45,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.date || undefined,
       authors: post.authors,
       images: post.coverImage ? [post.coverImage] : undefined,
+    },
+    // Override inherited site copy/image on X as well as Open Graph.
+    twitter: {
+      card: 'summary_large_image',
+      site: siteConfig.twitterUser,
+      title: post.title,
+      description: metaDescription,
+      images: [post.coverImage || siteConfig.avatar],
     },
   }
 }
