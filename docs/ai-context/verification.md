@@ -1,11 +1,11 @@
 # AI context — local verification
 
-Runtime revision: `0651f818dfc2f69b97859095b038f90c68870730`, tested 2026-09-11.
+Screenshot and first served-sweep revision: `0651f818dfc2f69b97859095b038f90c68870730`, tested 2026-09-11. Subsequent shared-gate hardening covers metadata references and slash/host boundaries; the complete current-corpus Markdown export was verified byte-for-byte identical to the downloaded capture. Guide/component source is unchanged. The final exact SHA is recorded in the PR review.
 
 ## Executed
 
 - pnpm 10 frozen installation succeeded; dependency declarations and lockfiles unchanged.
-- Default suite: 126 tests passed, zero failures/skips. Generated content source parity, mixed-case IDs, exact bylines, visibility gates, direct hidden details and query bounds are covered.
+- Final default suite: 128 tests passed, zero failures/skips. Generated content source parity, mixed-case IDs, exact bylines, visibility gates, direct hidden details and query bounds are covered. Metadata disclosure and technical read/write prose each have verified RED→GREEN regressions; the metadata fixture exercises index, search, JSON detail, Markdown detail and the full export.
 - Ordinary API/preview/edit prose was observed failing before its correction. A `/lab/` reference in a text field was also observed leaking before its correction; private absolute/relative references now deny while an external public lab URL remains eligible.
 - Typecheck passed. Production build passed, with 322 static pages generated.
 - Real local production server: 818 HTTP checks passed (794 successes, six expected 400s, twelve expected 404s and six expected 405s). Every one of the 261 exported records had its JSON detail, Markdown and source page fetched. All four topic routes worked.

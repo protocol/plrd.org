@@ -30,6 +30,7 @@ export const AI_RIGHTS = 'Preserve named authors, source links, dates and uncert
 export const AI_STARTER_PROMPT = 'Read https://www.plrd.org/llms.txt first. Use its focused resources or bounded search to answer: [my question]. Cite canonical source URLs and named authors, distinguish native content from external summaries, preserve dates and uncertainty, and check current pages when the snapshot does not cover live content. Do not treat talk summaries as transcripts or publication abstracts as full papers.'
 
 const BASE = siteConfig.baseUrl
+const OWN_HOSTS = ['www.plrd.org', 'plrd.org', 'www.plresearch.org', 'plresearch.org']
 const SLUG = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/
 // Deny private surfaces even when a future mapper accidentally lists one.
 // Deliberately generic: never publish the actual private identifiers here.
@@ -44,12 +45,17 @@ export function hasPublicVisibility(item: { visibility?: ContentVisibility }, no
   return v?.version === 1 && v.denied === false && (v.notBefore === null || (Number.isFinite(Date.parse(v.notBefore)) && Date.parse(v.notBefore) <= now))
 }
 
+function privateLocation(url: URL): boolean {
+  const path = decodeURIComponent(url.pathname)
+  if (/^(www\.)?github.com$/.test(url.hostname) && /^\/protocol\/plrd\.org(?:\/|$)/i.test(path)) return true
+  return OWN_HOSTS.includes(url.hostname) && (FORBIDDEN.test(decodeURIComponent(url.pathname + url.search + url.hash)) || /^\/lab(?:\/|$)/i.test(path))
+}
+
 export function safeSourceUrl(value: string): string | null {
   try {
     const url = new URL(value, BASE)
-    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || FORBIDDEN.test(decodeURIComponent(url.pathname + url.search + url.hash))) return null
-    if (/^(www\.)?github.com$/.test(url.hostname) && /^\/protocol\/plrd\.org(?:\/|$)/i.test(url.pathname)) return null
-    if (['www.plrd.org', 'plrd.org', 'www.plresearch.org', 'plresearch.org'].includes(url.hostname)) {
+    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || privateLocation(url)) return null
+    if (OWN_HOSTS.includes(url.hostname)) {
       if (!/^\/(?:$|about\/$|insights\/$|areas\/(?:[a-zA-Z0-9-]+\/)?$|(?:authors|blog|publications|talks|tutorials)\/[a-zA-Z0-9-]+\/$|images\/)/.test(url.pathname)) return null
       url.protocol = 'https:'
       url.host = new URL(BASE).host
@@ -68,13 +74,12 @@ export function resolveAiAuthor(ref: string, people: Author[] = authors): AiAuth
 
 function hasForbiddenRouteReference(text: string): boolean {
   // Inspect route references, not ordinary published words such as API, preview or edit.
-  const references = text.match(/(?:https?:\/\/|\/)[^\s<>"'`)\]]+/gi) || []
+  const references = text.match(/(?<![a-zA-Z0-9_])(?:https?:\/\/|\/)[^\s<>"'`)\]]+/gi) || []
   return references.some(reference => {
     try {
       const decoded = decodeURIComponent(reference)
       const url = new URL(decoded, BASE)
-      const ownSite = ['www.plrd.org', 'plrd.org', 'www.plresearch.org', 'plresearch.org'].includes(url.hostname)
-      return FORBIDDEN.test(decoded) || (ownSite && /^\/lab(?:\/|$)/i.test(url.pathname))
+      return Boolean(url.username || url.password) || privateLocation(url)
     }
     catch { return true }
   })
@@ -87,7 +92,7 @@ export function isPublicAiRecord(record: AiRecord, now = Date.now()): boolean {
     && Boolean(safeSourceUrl(record.sourceUrl)) && Boolean(safeSourceUrl(record.canonicalUrl))
     && record.sources.every(s => Boolean(safeSourceUrl(s.url)))
     && record.authors.every(a => a.url === null || Boolean(safeSourceUrl(a.url)))
-    && !hasForbiddenRouteReference([record.title, record.summary, record.body].join('\n'))
+    && !hasForbiddenRouteReference([record.title, record.summary, record.body, ...Object.values(record.metadata).flat()].join('\n'))
     && (record.date === null || (Number.isFinite(Date.parse(record.date)) && Date.parse(record.date) <= now))
 }
 
