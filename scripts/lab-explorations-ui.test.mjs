@@ -63,6 +63,19 @@ test('Arcade changes its actual plot and downloads the current settings and resu
   assert.ok(view.querySelector('a[href="/lab/"]'))
 })
 
+test('small screens start with an uncluttered question list and can explicitly choose the map', async t => {
+  const original = window.matchMedia;
+  window.matchMedia = () => ({matches:true});
+  t.after(() => { window.matchMedia = original; });
+  const view = await mount(t, 'Observatory');
+  assert.equal(button(view, 'List').getAttribute('aria-pressed'), 'true');
+  assert.equal(view.querySelectorAll('a[data-question]').length, 4);
+  assert.equal(view.querySelector('.mapCenter'), null, 'Decorative text must not compete with question cards');
+  await click(button(view, 'Map'));
+  assert.equal(button(view, 'Map').getAttribute('aria-pressed'), 'true');
+  assert.equal(view.querySelector('.mapCenter'), null);
+});
+
 test('Observatory selection updates a shareable route and supports history and list navigation', async t => {
   window.history.replaceState({}, '', '/lab/explorations/observatory/neural-measurements/')
   const view = await mount(t, 'Observatory', { initialQuestion: 'neural-measurements' })

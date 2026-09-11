@@ -202,7 +202,10 @@
   .mapCenter > strong { font-size: 16px; }
   .mapToolbar { padding-inline: 12px; }
   .mapToolbar h2 { font-size: 12px; }
-  .frontierMap { height: 420px; }
+  /* List is the compact default; an explicitly selected map needs room for labels. */
+  .frontierMap { height: 600px; }
+  .frontierMap .questionNodes { bottom: 95px; }
+  .frontierMap .mapGeometry { height: calc(100% - 95px); }
   .mapLegend { font-size: 12px; padding-inline: 12px; }
   .mapFootnote { padding-inline: 12px; }
   .observatoryFooter { display: block; }
