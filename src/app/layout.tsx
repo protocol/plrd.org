@@ -96,6 +96,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <link rel="describedby" type="text/plain" href="/llms.txt" />
         {/* Apply theme before paint to avoid a flash of the wrong theme */}
         <script
           dangerouslySetInnerHTML={{

@@ -1,6 +1,11 @@
 [
   {
     "slug": "abby-silin",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Abby Silin",
     "role": "Research Administrator",
     "groups": [
@@ -28,6 +33,11 @@
   },
   {
     "slug": "adam-marblestone",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Adam Marblestone",
     "role": "Research Advisor",
     "groups": [
@@ -83,6 +93,11 @@
   },
   {
     "slug": "adrian-lanzafame",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Adrian Lanzafame",
     "role": "Research Engineer",
     "groups": [
@@ -116,6 +131,11 @@
   },
   {
     "slug": "akosh-farkash",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Akosh Farkash",
     "role": "Research Engineer",
     "groups": [
@@ -159,6 +179,11 @@
   },
   {
     "slug": "alan-ransil",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Alan Ransil",
     "role": "Team Lead",
     "groups": [
@@ -211,6 +236,11 @@
   },
   {
     "slug": "alejandro-ranchalpedrosa",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Alejandro Ranchal-Pedrosa",
     "role": "Research Scientist",
     "groups": [
@@ -282,6 +312,11 @@
   },
   {
     "slug": "alex-terrazas",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Alex Terrazas",
     "role": "Technical Program Manager",
     "groups": [
@@ -330,6 +365,11 @@
   },
   {
     "slug": "alfonso-delarocha",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Alfonso de la Rocha",
     "role": "Research Engineer",
     "groups": [
@@ -386,6 +426,11 @@
   },
   {
     "slug": "anca-nitulescu",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Anca Nitulescu",
     "role": "Research Scientist",
     "groups": [
@@ -451,6 +496,11 @@
   },
   {
     "slug": "andrei-tonkikh",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Andrei Tonkikh",
     "role": "Summer Fellow",
     "groups": [
@@ -516,6 +566,11 @@
   },
   {
     "slug": "ariel-gabizon",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Ariel Gabizon",
     "role": "Research Scientist",
     "groups": [
@@ -556,6 +611,11 @@
   },
   {
     "slug": "axel-cortes-cubero",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Axel Cortés Cubero",
     "role": "Research Scientist",
     "groups": [
@@ -606,6 +666,11 @@
   },
   {
     "slug": "ben-fisch",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Ben Fisch",
     "role": "",
     "groups": [],
@@ -619,6 +684,11 @@
   },
   {
     "slug": "brian-vohaska",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Brian Vohaska",
     "role": "Research Scientist",
     "groups": [
@@ -648,6 +718,11 @@
   },
   {
     "slug": "britt-yazel",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Britt Yazel",
     "role": "Research Program Manager",
     "groups": [
@@ -690,6 +765,11 @@
   },
   {
     "slug": "chhimed-kunzang",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Chhi'mèd Künzang",
     "role": "Research Engineer",
     "groups": [],
@@ -718,6 +798,11 @@
   },
   {
     "slug": "dandelion-mane",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Dandelion Mane",
     "role": "Research Engineer",
     "groups": [],
@@ -759,6 +844,11 @@
   },
   {
     "slug": "dario-catalano",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Dario Catalano",
     "role": "Research Advisor",
     "groups": [
@@ -808,6 +898,11 @@
   },
   {
     "slug": "david-markowitz",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "David A. Markowitz",
     "role": "Neuro Advisor",
     "groups": [
@@ -825,6 +920,11 @@
   },
   {
     "slug": "david-dalrymple",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "David Dalrymple",
     "role": "Research Scientist",
     "groups": [
@@ -879,6 +979,11 @@
   },
   {
     "slug": "david-dao",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "David Dao",
     "role": "Economies & Governance Co-Lead",
     "groups": [
@@ -923,6 +1028,11 @@
   },
   {
     "slug": "david-dias",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "David Dias",
     "role": "Research Director",
     "groups": [
@@ -973,6 +1083,11 @@
   },
   {
     "slug": "denis-kolegov",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Denis Kolegov",
     "role": "Research Engineer",
     "groups": [
@@ -1019,6 +1134,11 @@
   },
   {
     "slug": "dennis-trautwein",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Dennis Trautwein",
     "role": "Research Engineer",
     "groups": [
@@ -1073,6 +1193,11 @@
   },
   {
     "slug": "doris-tsao",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Doris Tsao",
     "role": "Neuro Advisor",
     "groups": [
@@ -1090,6 +1215,11 @@
   },
   {
     "slug": "edward-chang",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Edward Chang, M.D.",
     "role": "Neuro Advisor",
     "groups": [
@@ -1107,6 +1237,11 @@
   },
   {
     "slug": "evan-miyazono",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Evan Miyazono",
     "role": "Research Team Lead",
     "groups": [],
@@ -1153,6 +1288,11 @@
   },
   {
     "slug": "friedel-ziegelmayer",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Friedel Ziegelmayer",
     "role": "Research Engineer",
     "groups": [
@@ -1193,6 +1333,11 @@
   },
   {
     "slug": "greg-wayne",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Greg Wayne, Ph.D.",
     "role": "Neuro Advisor",
     "groups": [
@@ -1210,6 +1355,11 @@
   },
   {
     "slug": "guillaume-michel",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Guillaume Michel",
     "role": "Research Engineer",
     "groups": [
@@ -1261,6 +1411,11 @@
   },
   {
     "slug": "guy-goren",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Guy Goren",
     "role": "Research Scientist",
     "groups": [
@@ -1306,6 +1461,11 @@
   },
   {
     "slug": "guy-wuollet",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Guy Wuollet",
     "role": "Research Assistant",
     "groups": [],
@@ -1350,6 +1510,11 @@
   },
   {
     "slug": "henri-stern",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Henri Stern",
     "role": "Research Scientist",
     "groups": [
@@ -1396,6 +1561,11 @@
   },
   {
     "slug": "henrique-moniz",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Henrique Moniz",
     "role": "Research Engineer",
     "groups": [
@@ -1444,6 +1614,11 @@
   },
   {
     "slug": "ilan-gur",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Ilan Gur",
     "role": "Neuro Advisor",
     "groups": [
@@ -1461,6 +1636,11 @@
   },
   {
     "slug": "ioannis-caragiannis",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Ioannis Caragiannis",
     "role": "Research Advisor",
     "groups": [
@@ -1510,6 +1690,11 @@
   },
   {
     "slug": "irene-giacomelli",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Irene Giacomelli",
     "role": "Research Scientist",
     "groups": [
@@ -1564,6 +1749,11 @@
   },
   {
     "slug": "james-tunningley",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "James Tunningley",
     "role": "Economies & Governance Co-Lead",
     "groups": [
@@ -1592,6 +1782,11 @@
   },
   {
     "slug": "jeromy-johnson",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Jeromy Johnson",
     "role": "Research Engineer",
     "groups": [],
@@ -1633,6 +1828,11 @@
   },
   {
     "slug": "joe-zimmerman",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Joe Zimmerman",
     "role": "Research Scientist",
     "groups": [],
@@ -1674,6 +1874,11 @@
   },
   {
     "slug": "joel-gustafson",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Joel Gustafson",
     "role": "Research Scientist",
     "groups": [
@@ -1714,6 +1919,11 @@
   },
   {
     "slug": "jonathan-gross",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Jonathan Gross",
     "role": "Research Administrator",
     "groups": [],
@@ -1748,6 +1958,11 @@
   },
   {
     "slug": "jorge-soares",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Jorge M. Soares",
     "role": "Technical Program Manager",
     "groups": [
@@ -1813,6 +2028,11 @@
   },
   {
     "slug": "joseph-bonneau",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Joseph Bonneau",
     "role": "",
     "groups": [],
@@ -1826,6 +2046,11 @@
   },
   {
     "slug": "juan-benet",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Juan Benet",
     "role": "Founder and CEO",
     "groups": [],
@@ -1871,6 +2096,11 @@
   },
   {
     "slug": "karola-kirsanow",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Karola Kirsanow",
     "role": "Research Program Manager",
     "groups": [
@@ -1926,6 +2156,11 @@
   },
   {
     "slug": "liam-ohagan",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Liam O'Hagan",
     "role": "Social Media Manager",
     "groups": [
@@ -1964,6 +2199,11 @@
   },
   {
     "slug": "luca-nizzardo",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Luca Nizzardo",
     "role": "Research Scientist",
     "groups": [
@@ -2022,6 +2262,11 @@
   },
   {
     "slug": "lukas-bresser",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Lukas Bresser",
     "role": "Operations Lead",
     "groups": [
@@ -2062,6 +2307,11 @@
   },
   {
     "slug": "marko-vukolic",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Marko Vukolić",
     "role": "Research Scientist",
     "groups": [
@@ -2120,6 +2370,11 @@
   },
   {
     "slug": "marten-seemann",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Marten Seemann",
     "role": "Research Engineer",
     "groups": [],
@@ -2158,6 +2413,11 @@
   },
   {
     "slug": "matej-pavlovic",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Matej Pavlovic",
     "role": "Research Scientist",
     "groups": [
@@ -2208,6 +2468,11 @@
   },
   {
     "slug": "matteo-campanelli",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Matteo Campanelli",
     "role": "Research Scientist",
     "groups": [
@@ -2264,6 +2529,11 @@
   },
   {
     "slug": "matthew-botvinick",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Matthew Botvinick",
     "role": "Neuro Advisor",
     "groups": [
@@ -2281,6 +2551,11 @@
   },
   {
     "slug": "max-hodak",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Max Hodak",
     "role": "Neuro Advisor",
     "groups": [
@@ -2298,6 +2573,11 @@
   },
   {
     "slug": "michael-hammersley",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Michael Hammersley",
     "role": "Research Scientist",
     "groups": [
@@ -2339,6 +2619,11 @@
   },
   {
     "slug": "molly-mackinlay",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Molly Mackinlay",
     "role": "Engineering & Research Lead",
     "groups": [
@@ -2362,6 +2647,11 @@
   },
   {
     "slug": "nadia-eghbal",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Nadia Eghbal",
     "role": "Research Scientist",
     "groups": [
@@ -2408,6 +2698,11 @@
   },
   {
     "slug": "nicola-greco",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Nicola Greco",
     "role": "Research Scientist",
     "groups": [
@@ -2457,6 +2752,11 @@
   },
   {
     "slug": "nicolas-gailly",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Nicolas Gailly",
     "role": "Research Scientist",
     "groups": [
@@ -2498,6 +2798,11 @@
   },
   {
     "slug": "patrick-woodhead",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Patrick Woodhead",
     "role": "Technical Program Manager",
     "groups": [
@@ -2543,6 +2848,11 @@
   },
   {
     "slug": "petar-maymounkov",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Petar Maymounkov",
     "role": "Research Scientist",
     "groups": [],
@@ -2601,6 +2911,11 @@
   },
   {
     "slug": "raymond-cheng",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Raymond Cheng",
     "role": "Startup Operator",
     "groups": [
@@ -2671,6 +2986,11 @@
   },
   {
     "slug": "rosario-gennaro",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Rosario Gennaro",
     "role": "Research Scientist",
     "groups": [
@@ -2726,6 +3046,11 @@
   },
   {
     "slug": "samuel-tang",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Samuel Tang",
     "role": "Associate Research Program Manager",
     "groups": [],
@@ -2764,6 +3089,11 @@
   },
   {
     "slug": "sarah-azouvi",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Sarah Azouvi",
     "role": "Research Scientist",
     "groups": [
@@ -2801,6 +3131,11 @@
   },
   {
     "slug": "sean-escola",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Sean Escola",
     "role": "Neurotech Lead",
     "groups": [
@@ -2824,6 +3159,11 @@
   },
   {
     "slug": "sergey-fedorov",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Sergey Fedorov",
     "role": "Research Engineer",
     "groups": [
@@ -2875,6 +3215,11 @@
   },
   {
     "slug": "silvia-bessa",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Sílvia Bessa",
     "role": "Research Program Manager",
     "groups": [
@@ -2922,6 +3267,11 @@
   },
   {
     "slug": "tom-mellan",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Tom Mellan",
     "role": "Research Scientist",
     "groups": [
@@ -2975,6 +3325,11 @@
   },
   {
     "slug": "trent-davis",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Trent Davis",
     "role": "Research Marketing Lead",
     "groups": [
@@ -3034,6 +3389,11 @@
   },
   {
     "slug": "vasilis-giotsas",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Vasilis Giotsas",
     "role": "Research Engineer",
     "groups": [
@@ -3091,6 +3451,11 @@
   },
   {
     "slug": "vivien-quema",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Vivien Quéma",
     "role": "Research Advisor",
     "groups": [
@@ -3129,6 +3494,11 @@
   },
   {
     "slug": "volker-mische",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Volker Mische",
     "role": "Research Engineer",
     "groups": [
@@ -3167,6 +3537,11 @@
   },
   {
     "slug": "will-scott",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Will Scott",
     "role": "Digital Human Rights Lead",
     "groups": [],
@@ -3220,6 +3595,11 @@
   },
   {
     "slug": "willes-lau",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Willes Lau",
     "role": "Research Engineer",
     "groups": [
@@ -3259,6 +3639,11 @@
   },
   {
     "slug": "xuechao-wang",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Xuechao Wang",
     "role": "Visiting Researcher",
     "groups": [
@@ -3315,6 +3700,11 @@
   },
   {
     "slug": "yann-vonlanthen",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Yann Vonlanthen",
     "role": "Summer Fellow",
     "groups": [
@@ -3373,6 +3763,11 @@
   },
   {
     "slug": "yiannis-psaras",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Yiannis Psaras",
     "role": "Research Scientist",
     "groups": [
@@ -3417,6 +3812,11 @@
   },
   {
     "slug": "yolan-romailler",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Yolan Romailler",
     "role": "Research Engineer",
     "groups": [
@@ -3472,6 +3872,11 @@
   },
   {
     "slug": "zixuan-zhang",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": null
+    },
     "name": "Zixuan (ZX) Zhang",
     "role": "Research Scientist",
     "groups": [

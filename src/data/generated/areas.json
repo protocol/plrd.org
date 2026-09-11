@@ -1,6 +1,11 @@
 [
   {
     "slug": "ai-robotics",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2024-03-15T00:00:00.000Z"
+    },
     "title": "AI & Robotics",
     "date": "2024-03-15T00:00:00.000Z",
     "summary": "Building open compute, coordination, data, and economic rails for autonomous agents and embodied AI.",
@@ -12,6 +17,11 @@
   },
   {
     "slug": "digital-human-rights",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2024-03-15T00:00:00.000Z"
+    },
     "title": "Digital Human Rights",
     "date": "2024-03-15T00:00:00.000Z",
     "summary": "Building open, verifiable, censorship-resistant infrastructure for human freedom & agency in the digital age.",
@@ -23,6 +33,11 @@
   },
   {
     "slug": "economies-governance",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2024-03-15T00:00:00.000Z"
+    },
     "title": "Economies & Governance",
     "date": "2024-03-15T00:00:00.000Z",
     "summary": "Building programmable infrastructure for more efficient, equitable coordination at global scale.",
@@ -32,6 +47,11 @@
   },
   {
     "slug": "neurotech",
+    "visibility": {
+      "version": 1,
+      "denied": false,
+      "notBefore": "2024-03-15T00:00:00.000Z"
+    },
     "title": "Neurotech",
     "date": "2024-03-15T00:00:00.000Z",
     "summary": "Accelerating brain-computer interfaces (BCI), whole-organism emulation (WOE), & NeuroAI to expand human cognition.",

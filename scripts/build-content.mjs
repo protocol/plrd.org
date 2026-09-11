@@ -3,6 +3,8 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import remarkHtml from 'remark-html'
+import { readableMarkdown } from './readable-markdown.mjs'
+import { contentVisibility } from './content-visibility.mjs'
 
 const ROOT = process.cwd()
 const CONTENT_DIR = path.join(ROOT, 'content')
@@ -14,6 +16,12 @@ const processor = remark().use(remarkHtml, { sanitize: false })
 function renderMd(md) {
   if (!md || !md.trim()) return ''
   return processor.processSync(md).toString()
+}
+
+function publicBody(item, collection) {
+  const visibility = contentVisibility(item)
+  if (visibility.denied || (visibility.notBefore && Date.parse(visibility.notBefore) > Date.now()) || item.external_url) return ''
+  return readableMarkdown(renderMd(item.content), `https://www.plrd.org/${collection}/${item.slug}/`)
 }
 
 function readDir(dir) {
@@ -32,13 +40,13 @@ function readDir(dir) {
       if (filePath) {
         const raw = fs.readFileSync(filePath, 'utf-8')
         const { data, content } = matter(raw)
-        items.push({ slug: entry.name, ...data, content: content.trim() })
+        items.push({ ...data, slug: entry.name, content: content.trim() })
       }
     } else if (entry.name.endsWith('.md') && !entry.name.startsWith('_index')) {
       const raw = fs.readFileSync(path.join(fullPath, entry.name), 'utf-8')
       const { data, content } = matter(raw)
       const slug = entry.name.replace(/\.md$/, '')
-      items.push({ slug, ...data, content: content.trim() })
+      items.push({ ...data, slug, content: content.trim() })
     }
   }
   return items
@@ -58,6 +66,7 @@ function buildPublications() {
     .filter((p) => !p.unaffiliated)
     .map((p) => ({
       slug: p.slug,
+      visibility: contentVisibility(p),
       title: p.title || '',
       date: p.date || '',
       authors: p.authors || [],
@@ -86,6 +95,7 @@ function buildAuthors() {
     }
     return {
       slug: a.slug,
+      visibility: contentVisibility(a),
       name: a.name || '',
       role: a.role || '',
       groups: a.groups || [],
@@ -105,6 +115,7 @@ function buildAuthors() {
 function buildTalks() {
   const items = readDir('talks').map((t) => ({
     slug: t.slug,
+    visibility: contentVisibility(t),
     title: t.title || '',
     date: t.date || '',
     venue: t.venue || '',
@@ -122,9 +133,11 @@ function buildTalks() {
 function buildTutorials() {
   const items = readDir('tutorials').map((t) => ({
     slug: t.slug,
+    visibility: contentVisibility(t),
     title: t.title || '',
     date: t.date || '',
     summary: t.summary || '',
+    markdown: publicBody(t, 'tutorials'),
     html: renderMd(t.content),
   }))
   return items
@@ -247,6 +260,7 @@ async function buildBlog() {
 
     out.push({
       slug: b.slug,
+      visibility: contentVisibility(b),
       title: b.title || '',
       date: b.date || '',
       summary: b.summary || '',
@@ -256,6 +270,7 @@ async function buildBlog() {
       external_url: b.external_url || '',
       coverImage,
       html: renderMd(b.content),
+      markdown: publicBody(b, 'blog'),
       unlisted: b.unlisted === true,
     })
   }
@@ -314,6 +329,7 @@ function buildDependencyGraph() {
 function buildAreas() {
   const items = readDir('areas').map((a) => ({
     slug: a.slug,
+    visibility: contentVisibility(a),
     title: a.title || '',
     date: a.date || '',
     summary: a.summary || '',

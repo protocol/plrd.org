@@ -41,6 +41,7 @@ export default function SiteFooter() {
               <li><Link href="/about/" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">About us</Link></li>
               <li><Link href="/insights/" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">Insights</Link></li>
               <li><Link href="/authors/" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">Team</Link></li>
+              <li><Link href="/ai/" className="text-sm text-[#cfd1da] hover:text-white transition-colors block py-1">Use with AI</Link></li>
             </ul>
           </div>
 
