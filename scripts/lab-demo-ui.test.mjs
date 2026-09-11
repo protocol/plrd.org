@@ -24,21 +24,21 @@ async function harness(run, url='http://localhost/lab/demo/') {
 test('real components: fictional profile, local thread reply, save, support, read/dismiss, live switch and reset', async()=>harness(async({dom,React,render,reload,click})=>{
   dom.window.localStorage.setItem('open-lab:draft:real:note','untouched'); await render();
   assert.match(document.body.textContent,/Fictional people/);
-  const opener=await click('View Mira Sen’s demo profile');
+  const opener=await click('View Ada Lovelace’s demo profile');
   assert.match(document.querySelector('[role="dialog"]').textContent,/Research software maintainer/);
   await click('Follow in demo');
   await React.act(()=>document.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true})));
   assert.equal(document.querySelector('[role="dialog"]'),null);assert.ok(document.activeElement===opener, 'Escape returns focus to profile trigger');
   await click('Open discussion: What would actually catch the leak?');
   assert.match(document.body.textContent,/false alarm/i);
-  await click('Reply to Ellis Vale: r6');
+  await click('Reply to Hedy Lamarr: r6');
   const textarea=document.querySelector('textarea');
   await React.act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLTextAreaElement.prototype,'value').set.call(textarea,'<b>A narrower local test</b>');textarea.dispatchEvent(new dom.window.Event('input',{bubbles:true}));});
   await click('Save demo reply');
   assert.match(document.body.textContent,/<b>A narrower local test<\/b>/);assert.equal(document.querySelector('b'),null);
   await click('Save discussion');await click('Allocate 1 demo point');
   await click('Demo notifications: 3 unread');
-  await click('Dismiss: Sana kept an unknown instead of estimating missing hours.');
+  await click('Dismiss: Marie kept an unknown instead of estimating missing hours.');
   const link=[...document.querySelectorAll('a')].find(a=>a.textContent.includes('Inspect the revised test'));
   assert.match(link.getAttribute('href'),/^\/lab\/demo\/\?discussion=split-boundary/);
   await React.act(()=>link.click());
@@ -47,12 +47,12 @@ test('real components: fictional profile, local thread reply, save, support, rea
   assert.ok(document.querySelector('[data-thread="split-boundary"] textarea'), 'notification permalink reopens discussion after reload');
   assert.match(document.body.textContent,/<b>A narrower local test<\/b>/);
   assert.match(document.body.textContent,/Saved discussion/);assert.match(document.body.textContent,/4 fictional points/);
-  await click('View Mira Sen’s demo profile');assert.match(document.querySelector('[role="dialog"]').textContent,/Following in demo/);await click('Close dialog');
+  await click('View Ada Lovelace’s demo profile');assert.match(document.querySelector('[role="dialog"]').textContent,/Following in demo/);await click('Close dialog');
   assert.ok(document.querySelector('[aria-label="Demo notifications: 1 unread"]'));
   await click('Show real / empty view');
-  assert.doesNotMatch(document.body.textContent,/Mira Sen|fictional points|What would actually catch/);
+  assert.doesNotMatch(document.body.textContent,/Ada Lovelace|fictional points|What would actually catch/);
   assert.equal(document.querySelector('[aria-label^="Demo notifications:"]'),null);
-  await reload();assert.doesNotMatch(document.body.textContent,/Mira Sen/);
+  await reload();assert.doesNotMatch(document.body.textContent,/Ada Lovelace/);
   await click('Show demo community');await click('Reset demo');
   await click('Cancel');
   assert.equal(JSON.parse(dom.window.localStorage.getItem('app-demo:community:v1:browser')).replies.length,1);
@@ -79,7 +79,7 @@ test('notification can reopen the same collapsed target; dialogs trap Tab; corru
   await click('Close discussion: What would actually catch the leak?');
   await click('Demo notifications: 2 unread'); await click('Inspect the revised test →');
   assert.ok(document.querySelector('[data-thread="split-boundary"] textarea'), 'same notification reopens a collapsed discussion');
-  await click('View Mira Sen’s demo profile');
+  await click('View Ada Lovelace’s demo profile');
   const dialog=document.querySelector('[role="dialog"]'); const first=dialog.querySelector('button');
   first.focus();
   await React.act(()=>document.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true,cancelable:true})));
@@ -100,7 +100,7 @@ test('provider remount isolates event scopes and storage events synchronize view
   await render({storageScope:'alpha'});assert.match(document.body.textContent,/Saved discussion/);
   dom.window.localStorage.setItem('app-demo:mode:v1','live');
   await React.act(()=>dom.window.dispatchEvent(new dom.window.StorageEvent('storage',{key:'app-demo:mode:v1',newValue:'live'})));
-  assert.doesNotMatch(document.body.textContent,/Mira Sen|fictional points/);
+  assert.doesNotMatch(document.body.textContent,/Ada Lovelace|fictional points/);
 }));
 
 test('unknown discussion does not pretend a target exists',async()=>harness(async({render})=>{

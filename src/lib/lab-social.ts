@@ -27,11 +27,11 @@ export function profileCompletion(profile: SocialProfile, skippedLinks: string[]
 
 export type SocialProfile = Record<string, unknown>
 export type SocialStore = Pick<Storage, 'getItem' | 'setItem' | 'length' | 'key'>
-export type SocialMeta = { mode: ContributionMode; onboardingSkipped: boolean; skippedLinks: string[]; read: string[]; dismissed: string[] }
+export type SocialMeta = { mode: ContributionMode; onboardingSkipped: boolean; onboardingCompleted: boolean; localDisplayName: string; skippedLinks: string[]; read: string[]; dismissed: string[] }
 export type SocialDraft = { slot: string; kind: string; data: SocialProfile; savedAt?: string }
 export type SocialState = { profile: SocialProfile; meta: SocialMeta; drafts: SocialDraft[]; error: string }
 export type SocialSaveResult = { ok: boolean; error?: string }
-const emptyMeta = (): SocialMeta => ({ mode: '', onboardingSkipped: false, skippedLinks: [], read: [], dismissed: [] })
+const emptyMeta = (): SocialMeta => ({ mode: '', onboardingSkipped: false, onboardingCompleted: false, localDisplayName: '', skippedLinks: [], read: [], dismissed: [] })
 export const emptySocialState = (): SocialState => ({ profile: {}, meta: emptyMeta(), drafts: [], error: '' })
 export function profileInterests(value: unknown): string[] {
   return [...new Set((Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : []).filter((s): s is string => typeof s === 'string').map(s => s.trim()).filter(Boolean))]
@@ -41,8 +41,9 @@ function parseMeta(data: SocialProfile | null): SocialMeta {
   if (!data) return emptyMeta()
   const meta = { ...emptyMeta(), ...data }
   if (!['', 'evidence', 'tools', 'intervention'].includes(String(meta.mode)) || typeof meta.onboardingSkipped !== 'boolean' ||
+    typeof meta.onboardingCompleted !== 'boolean' || typeof meta.localDisplayName !== 'string' || meta.localDisplayName.length > 80 ||
     !['skippedLinks', 'read', 'dismissed'].every(k => Array.isArray(meta[k as keyof SocialMeta]) && (meta[k as keyof SocialMeta] as unknown[]).length <= 1000 && (meta[k as keyof SocialMeta] as unknown[]).every(v => typeof v === 'string' && v.length <= 4096))) throw Error('Invalid local preferences')
-  return { mode: meta.mode, onboardingSkipped: meta.onboardingSkipped, skippedLinks: meta.skippedLinks, read: meta.read, dismissed: meta.dismissed }
+  return { mode: meta.mode, onboardingSkipped: meta.onboardingSkipped, onboardingCompleted: meta.onboardingCompleted, localDisplayName: meta.localDisplayName, skippedLinks: meta.skippedLinks, read: meta.read, dismissed: meta.dismissed }
 }
 export function loadSocialState(storage: SocialStore, owner = 'guest'): SocialState {
   const state = emptySocialState()

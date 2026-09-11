@@ -1,5 +1,9 @@
 "use client";
 import Link from "next/link";
+import FollowingBench from "@/components/lab/feed/FollowingBench";
+import InventionBench from "@/components/lab/feed/InventionBench";
+import { useLabSocial, LAB_SOCIAL_CHANGED } from "@/components/lab/social/useLabSocial";
+import styles from "@/components/lab/feed/feed.module.css";
 import { useEffect, useRef, useState } from "react";
 import { useLabIdentity } from "@/lib/lab-identity";
 import { useLab } from "@/components/lab/LabShell";
@@ -22,6 +26,7 @@ export default function ProfileWorkbench() {
 function Bench() {
   const { session, oauthSession, isAuthenticated, isLoading, logout, authorizeWrite } = useLabIdentity();
   const { openLogin, capabilities } = useLab();
+  const social = useLabSocial(session?.did || "guest");
   const [editor, setEditor] = useState<RecordKind | null>(null);
   const [draftId, setDraftId] = useState<string | undefined>();
   const [drafts, setDrafts] = useState<
@@ -34,6 +39,7 @@ function Bench() {
   const [error, setError] = useState("");
   const [publicStatus, setPublicStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [revision, setRevision] = useState(0);
+  useEffect(() => { const refresh = () => setRevision(n => n + 1); window.addEventListener(LAB_SOCIAL_CHANGED, refresh); return () => window.removeEventListener(LAB_SOCIAL_CHANGED, refresh); }, []);
   const [deleting, setDeleting] = useState<LabRecordView | null>(null);
   const [deleteConsent, setDeleteConsent] = useState(false);
   const [deleteBusy, setDeleteBusy] = useState(false);
@@ -125,18 +131,13 @@ function Bench() {
       }
     : {};
   return (
-    <div className="lab-wrap lab-workbench">
+    <div className={`lab-wrap lab-workbench ${styles.profileRoot}`}>
       <div className="lab-workbench-heading">
         <div>
           <p className="lab-eyebrow">MY BENCH / ROOM FOR THE UNFINISHED</p>
-          <h1>
-            Your work.
-            <br />
-            <em>Your way in.</em>
-          </h1>
+          <h1>My bench</h1>
           <p>
-            A place to keep drafts, return to a promising idea, and tell people
-            what you’re figuring out.
+            Keep a build, take a bounded test, and bring back what happened.
           </p>
         </div>
         {!isAuthenticated && (
@@ -148,6 +149,7 @@ function Bench() {
       <aside className="lab-composition-prompt"><h2>Give someone a useful way to help.</h2><p>Choose interests and a contribution style. Optional LinkedIn, Scholar, or GitHub links give context—not verified credentials, expertise scores, or access requirements.</p><Link href="/lab/onboarding/#profile-completion">Complete your profile and starting choices →</Link><p className="lab-smallprint">These choices share your local profile draft. Publishing still requires a separate review and explicit consent here.</p></aside>
       <div className="lab-profile-grid">
         <section className="lab-profile-card">
+          {session?.avatar && safeUrl(session.avatar) && <img className={styles.identityAvatar} src={session.avatar} alt="Imported account avatar" />}
           <div className="lab-profile-monogram" aria-hidden="true">
             {session?.displayName?.[0] || session?.handle?.[0] || "↗"}
           </div>
@@ -161,6 +163,8 @@ function Bench() {
               session?.handle ||
               "Make yourself at home."}
           </h2>
+          {social.meta.localDisplayName && <p className="lab-smallprint">Local display name: {social.meta.localDisplayName}. Your imported account identity above is unchanged.</p>}
+          {session?.did && <p><a href={`https://bsky.app/profile/${encodeURIComponent(session.did)}`} target="_blank" rel="noopener noreferrer">Open actual Bluesky profile ↗</a></p>}
           {session?.handle && !session.handle.startsWith("did:") && <p>@{session.handle}</p>}
           {session?.did && (
             <div className="lab-identity">
@@ -233,6 +237,9 @@ function Bench() {
           )}
         </section>
         <div className="lab-bench-content">
+          <InventionBench />
+          <FollowingBench />
+          {social.error && <p className="lab-error" role="alert">{social.error}</p>}
           {error && (
             <p className="lab-error" role="alert">
               {error}
