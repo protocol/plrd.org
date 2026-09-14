@@ -72,6 +72,14 @@ The generated JSON files are **checked into git** because Vercel needs them at b
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add and edit content.
 
+### Insights Radar
+
+The Radar on `/insights/` uses repository content only: the newest talks, publications, and listed blog posts from `src/lib/content.ts`, plus one hand-picked field signal from `src/lib/radar-signals.ts`. It selects up to six items by recency, displays PL R&D content before the field signal, and labels the edition with the newest selected item's month. The existing collapsible/swipeable UI is unchanged.
+
+There is no external Radar feed fetch or Curator configuration. External story links in the local content remain links, not ingestion. The page's separate editable-copy CMS integration is unchanged.
+
+Run `node --test scripts/radar-local.test.mjs` for the Radar regression tests; they also run with `npm test` or `pnpm test`.
+
 ## Key Routes
 
 | Route | Description |
