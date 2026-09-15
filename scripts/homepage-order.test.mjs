@@ -18,6 +18,26 @@ function text(node) {
   return node && typeof node === 'object' ? text(node.props?.children) : ''
 }
 
+test('homepage invites visitors to the standalone Open Lab between the hero and focus areas', async (t) => {
+  // Only the remote editable-copy boundary is mocked; inspect the real homepage.
+  t.mock.method(globalThis, 'fetch', async () => Response.json({
+    data: { orgPlresearchPage: { edges: [] } },
+  }))
+  const nodes = elements(await HomePage())
+  const banners = nodes.filter((node) => node.type === 'a' && text(node).includes('Introducing Open Lab'))
+  assert.equal(banners.length, 1, 'render exactly one native Open Lab invitation link')
+  const banner = banners[0]
+  assert.equal(banner.props.href, 'https://open-lab-two.vercel.app/', 'navigate directly to the separate app origin')
+  assert.equal(banner.props.onClick, undefined, 'preserve native navigation without JavaScript interception')
+  assert.equal(banner.props.target, undefined, 'navigate in the current tab by default')
+  assert.ok(text(banner).includes('Made something that makes science easier?'))
+  assert.ok(text(banner).includes('Explore the lab →'))
+  const heroIndex = nodes.findIndex((node) => node.type === 'h1')
+  const focusIndex = nodes.findIndex((node) => node.props?.id === 'focus-areas')
+  assert.ok(heroIndex >= 0 && nodes.indexOf(banner) > heroIndex, 'invitation follows the hero')
+  assert.ok(focusIndex > nodes.indexOf(banner), 'invitation precedes focus areas')
+})
+
 test('homepage places the existing latest carousel between focus areas and the innovation-chasm graphic', async (t) => {
   // Only the remote editable-copy boundary is mocked; render the real homepage.
   t.mock.method(globalThis, 'fetch', async () => Response.json({
