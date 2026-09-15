@@ -179,7 +179,7 @@ export default async function HomePage() {
     >
       <div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap gap-4 items-center justify-between">
         <div>
-          <span className="text-[12px] uppercase tracking-[.16em] text-blue mr-4">Introducing Open Lab</span>
+          <span className="text-[12px] uppercase tracking-[.16em] text-dark-blue dark:text-blue mr-4">Introducing Open Lab</span>
           <span className="font-serif text-[24px]">Made something that makes science easier?</span>
         </div>
         <span className="text-[15px] font-semibold">Explore the lab →</span>
