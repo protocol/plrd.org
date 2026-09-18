@@ -11,7 +11,7 @@ function elements(node) {
   return [node, ...elements(node.props?.children)]
 }
 
-test('team page offers both exact job listings after the profiles, outside the selected tab', async (t) => {
+test('team page offers one generic job-board link after the profiles, outside the selected tab', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => Response.json({ data: { orgPlresearchPage: { edges: [] } } }))
   const nodes = elements(await AuthorsPage())
   const profiles = nodes.findIndex(node => node.type?.name === 'AuthorsTabs')
@@ -21,18 +21,12 @@ test('team page offers both exact job listings after the profiles, outside the s
   const doc = new JSDOM(renderToStaticMarkup(element)).window.document
   const section = doc.querySelector('section')
   assert.equal(doc.getElementById(section.getAttribute('aria-labelledby')).textContent, 'Join our team')
-  const cards = [...section.querySelectorAll('article')]
-  assert.equal(cards.length, 2)
-  const expected = [
-    ['Philanthropic Fundraising Lead', 'manual-pl-philanthropic-fundraising-lead'],
-    ['Program Manager, Neurotech', 'clneurotechpgm91537777x'],
-  ]
-  cards.forEach((card, index) => {
-    assert.equal(card.querySelector('h3').textContent, expected[index][0])
-    const link = card.querySelector('a')
-    assert.equal(link.href, `https://os.pl.xyz/jobs/openings/${expected[index][1]}?utm_source=job_refer_share&utm_medium=copy_link`)
-    assert.match(link.textContent, /View role and apply/)
-    assert.ok(link.getAttribute('aria-label').includes(expected[index][0]))
-    assert.ok(card.querySelector('p').textContent.length > 100)
-  })
+  assert.equal(section.querySelectorAll('article').length, 0)
+  const links = [...section.querySelectorAll('a')]
+  assert.equal(links.length, 1)
+  assert.equal(links[0].href, 'https://os.pl.xyz/jobs')
+  assert.equal(links[0].textContent.trim(), 'See open roles →')
+  assert.match(section.querySelector('p').textContent, /Protocol Labs/)
+  assert.doesNotMatch(section.textContent, /Philanthropic Fundraising Lead|Program Manager|funding and programs/)
+  assert.equal(links[0].querySelector('span').getAttribute('aria-hidden'), 'true')
 })
