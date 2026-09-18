@@ -1,26 +1,24 @@
-# Team page hiring CTA — verification
+# Team hiring link — compact layout verification
 
-Runtime revision: `469beac`. Later evidence commits do not change runtime/test source.
+Runtime revision: `1b38994`. Following evidence-only commit leaves runtime unchanged.
 
-## Scope
+## Requested correction
 
-Replaces the two specific role cards with a generic **Join our team** section and one **See open roles →** link to https://os.pl.xyz/jobs. Copy explicitly describes opportunities across the Protocol Labs network, matching the destination's scope. The section remains after the profiles and outside team-tab state. No CMS writes, authentication changes, dependencies, merge, or production deployment.
+The generic hiring link should be subtle and sit closer to the team profiles, not read as a separate large section. Removed the stacked leadership-grid bottom margin and page padding; kept a small divider and a compact row. Heading is 20px, supporting copy 14px. Desktop link sits on the right; mobile stacks naturally. Job board URL remains https://os.pl.xyz/jobs.
 
-## Current checks
+## Checks
 
-- Revised regression failed against the old cards (2 articles instead of 0), then passed. Full `npm test`: 118 passed, 0 failed.
-- `npx tsc --noEmit`: passed.
-- Production build compiled and typechecked, but twice failed during static generation with `spawn /usr/local/bin/node EAGAIN`; the retry also reported worker cleanup `EPERM`. Local production build is NOT claimed passed for this revision. Frozen pnpm install passed in the preceding iteration; no package/lock changes here.
-- Actual local **development** route in headed Chrome at 1440, 390, and 320px: exactly one board link, no role cards; CTA entirely within client width and visible viewport.
-- Native clicks on Advisors, Alumni, and Leadership preserve the single link.
-- Native keyboard navigation back to CTA: focus-visible and 2px outline.
-- Native click on CTA reaches https://os.pl.xyz/jobs with title Jobs | Protocol Labs Directory. The public PL Join page points to directory.plnetwork.io/jobs, whose 301 redirects to this exact destination. Destination displays the network-wide board.
-- Known page-level 15px overflow remains at desktop-emulated 320px (305px client width, 320px scroll width); the new CTA ends at 138.55px and is not clipped. Not physical-phone testing.
+- Native layout regression RED on preceding revision: grid-to-heading gap 257px, heading 40px, section height 347px.
+- GREEN at 1440/390/320px: gap 57px and heading 20px throughout; section 124.75px desktop and 199.5px mobile. Link is entirely inside client width and retains its 44px hit area.
+- Full npm test and npx tsc --noEmit pass. No dependency changes.
+- Native Advisors / Alumni / Leadership clicks preserve exactly one job-board link.
+- Keyboard focus-visible still has a 2px outline.
+- Actual local development screenshots: compact-1440.png, compact-390.png, compact-320.png. Not production or hosted-preview captures.
+- Known preexisting document-level overflow at desktop-emulated 320px remains (320px scroll width versus 305px client width); hiring row stays in bounds. No physical-phone claim.
+- This turn did not rerun the local production build (the previous attempt hit process exhaustion); hosted Vercel status is tracked separately.
 
 ## Fresh skeptical review
 
-PASS for requested scoped change. Reviewed component and regression diff plus actual desktop/mobile screenshots: two role entries and their specific descriptions/URLs are removed; the one ordinary anchor retains keyboard focus and a 44px hit area; descriptive copy matches the board's network scope; no auth/CMS/route changes. Both images show readable complete section content with inherited generous profile/footer spacing. Local production-build limitation remains explicit above; hosted CI is reported separately in the PR.
+PASS for this scoped correction: inspected the exact component/spacing diff and actual desktop/mobile screenshots. Hiring text is subordinate to the profiles, aligns to the same left edge, and sits beneath the final row without the previous large empty band. Desktop CTA is horizontally balanced; mobile copy wraps legibly and link is unclipped. Heading, destination, tabs and keyboard access remain intact. No CMS/auth changes or production publication.
 
-## Evidence
-
-`generic-1440.png`, `generic-390.png`, and `generic-320.png` are actual local development screenshots, NOT production or hosted-preview screenshots. `browser-checks.json` contains current measurements, tab checks and focus results. Earlier two-role screenshots were superseded.
+Replay: `QA_ORIGIN=http://127.0.0.1:<port> QA_OUT=<evidence-directory> BU_NAME=<thread> browser-harness < scripts/team-compact-browser.py`.
