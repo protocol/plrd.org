@@ -1,0 +1,77 @@
+[
+  {
+    "width": 1440,
+    "clientWidth": 1425,
+    "scrollWidth": 1425,
+    "text": "Join our team\n\nHelp frontier research reach the world. Explore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "cards": 0,
+    "rect": {
+      "x": 160.5,
+      "y": 617.4375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 617.4375,
+      "right": 275.046875,
+      "bottom": 661.4375,
+      "left": 160.5
+    }
+  },
+  {
+    "width": 390,
+    "clientWidth": 375,
+    "scrollWidth": 375,
+    "text": "Join our team\n\nHelp frontier research reach the world. Explore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "cards": 0,
+    "rect": {
+      "x": 24,
+      "y": 560.09375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 560.09375,
+      "right": 138.546875,
+      "bottom": 604.09375,
+      "left": 24
+    }
+  },
+  {
+    "width": 320,
+    "clientWidth": 305,
+    "scrollWidth": 320,
+    "text": "Join our team\n\nHelp frontier research reach the world. Explore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "cards": 0,
+    "rect": {
+      "x": 24,
+      "y": 552.84375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 552.84375,
+      "right": 138.546875,
+      "bottom": 596.84375,
+      "left": 24
+    }
+  },
+  {
+    "active": "Advisors",
+    "links": 1
+  },
+  {
+    "active": "Alumni",
+    "links": 1
+  },
+  {
+    "active": "Leadership",
+    "links": 1
+  },
+  {
+    "text": "See open roles \u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "focusVisible": true,
+    "outline": "2px"
+  }
+]
