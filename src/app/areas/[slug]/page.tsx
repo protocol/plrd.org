@@ -298,9 +298,9 @@ export default async function AreaPage({ params }: Props) {
             className="group grid sm:grid-cols-2 items-center gap-5 p-5 max-w-3xl bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:border-blue/30 hover:shadow-md transition-all no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
           >
             <div className="min-w-0">
-              <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Research map</div>
+              <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Interactive atlas</div>
               <h3 className="text-base font-medium text-black group-hover:text-blue transition-colors mb-2">Neuro Atlas</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">Explore neural datasets, recording methods, and the tools used to study the brain.</p>
+              <p className="text-sm text-gray-500 leading-relaxed">Follow neurotechnology milestones, explore BCI funding, and track the field’s progress.</p>
               <span className="inline-flex items-center gap-2 text-sm text-blue mt-4">Open Neuro Atlas <span aria-hidden="true">→</span></span>
             </div>
             <figure className="min-w-0">

@@ -19,6 +19,8 @@ test('Neurotech Explore has one accessible static preview after strategy and bef
   const { document } = new JSDOM(renderToStaticMarkup(section)).window
   assert.equal(document.querySelector('h2').textContent, 'Explore')
   assert.equal(document.querySelector('h3').textContent, 'Neuro Atlas')
+  assert.equal(document.querySelector('p').textContent, 'Follow neurotechnology milestones, explore BCI funding, and track the field’s progress.')
+  assert.match(document.body.textContent, /Interactive atlas/)
   const image = document.querySelector('img')
   assert.equal(image.getAttribute('src'), '/images/neuro-atlas-preview.png')
   assert.match(image.getAttribute('alt'), /Neuro Atlas/)
