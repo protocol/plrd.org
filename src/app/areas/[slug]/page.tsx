@@ -289,6 +289,35 @@ export default async function AreaPage({ params }: Props) {
 
       {/* Field velocity is preview-only until a separate public launch. */}
 
+      {slug === 'neurotech' && (
+        <section aria-labelledby="neuro-atlas-explore" className="mb-12">
+          <h2 id="neuro-atlas-explore" className="text-sm text-gray-500 uppercase tracking-wide mb-6">Explore</h2>
+          {/* A normal anchor deliberately leaves the PLRD Next.js app. */}
+          <a
+            href="/neuro-atlas/"
+            className="group grid sm:grid-cols-2 items-center gap-5 p-5 max-w-3xl bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:border-blue/30 hover:shadow-md transition-all no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
+          >
+            <div className="min-w-0">
+              <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Research map</div>
+              <h3 className="text-base font-medium text-black group-hover:text-blue transition-colors mb-2">Neuro Atlas</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">Explore neural datasets, recording methods, and the tools used to study the brain.</p>
+              <span className="inline-flex items-center gap-2 text-sm text-blue mt-4">Open Neuro Atlas <span aria-hidden="true">→</span></span>
+            </div>
+            <figure className="min-w-0">
+              <div className="aspect-[16/10] overflow-hidden rounded-lg border border-gray-200 bg-white">
+                <img
+                  src="/images/neuro-atlas-preview.png"
+                  alt="Neuro Atlas interface preview"
+                  loading="lazy"
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+              <figcaption className="text-xs text-gray-500 mt-2">Static interface preview</figcaption>
+            </figure>
+          </a>
+        </section>
+      )}
+
       {/* Insights — latest posts, publications, and talks for this focus area */}
       {areaInsights.length > 0 && (
         <div className="mb-10">

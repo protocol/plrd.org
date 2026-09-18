@@ -6,6 +6,29 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    const value = process.env.NEURO_ATLAS_ORIGIN ?? 'https://neuro-atlas-app.vercel.app'
+    let url: URL
+    try {
+      url = new URL(value)
+    } catch {
+      throw new Error('NEURO_ATLAS_ORIGIN must be an HTTPS origin without credentials, path, query or fragment')
+    }
+    // Compare the original input, not just URL.pathname: URL parsing normalizes
+    // dot segments, whitespace and backslashes that must not be accepted here.
+    const loopback = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)
+    const localQA = process.env.NEURO_ATLAS_LOCAL_QA === '1'
+      && !['VERCEL', 'VERCEL_ENV', 'VERCEL_URL'].some((key) => process.env[key] !== undefined)
+    const allowedProtocol = url.protocol === 'https:' || (url.protocol === 'http:' && loopback && localQA)
+    if ((value !== url.origin && value !== `${url.origin}/`) || !allowedProtocol || (loopback && !localQA)) {
+      throw new Error('NEURO_ATLAS_ORIGIN must be an HTTPS origin without credentials, path, query or fragment; loopback requires NEURO_ATLAS_LOCAL_QA=1 outside Vercel')
+    }
+    const origin = url.origin
+    return [
+      { source: '/neuro-atlas', destination: `${origin}/neuro-atlas` },
+      { source: '/neuro-atlas/:path*', destination: `${origin}/neuro-atlas/:path*` },
+    ]
+  },
   async redirects() {
     return [
       // Preserve shared preview links when the approved Neuro article goes live.

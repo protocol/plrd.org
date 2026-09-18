@@ -54,6 +54,14 @@ export default function AreaHeroActions({
           </svg>
         </a>
       )}
+      {areaSlug === 'neurotech' && (
+        <a
+          href="/neuro-atlas/"
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-blue rounded-full hover:bg-blue/5 transition-colors font-medium focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
+        >
+          Neuro Atlas <span aria-hidden="true">→</span>
+        </a>
+      )}
     </div>
   )
 }
