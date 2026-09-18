@@ -19,7 +19,7 @@ const CONSENT_REQUIRED_COUNTRIES = new Set([
 const REGION_COOKIE = 'pl-consent-region'
 
 export function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname === '/neuro-atlas' || req.nextUrl.pathname.startsWith('/neuro-atlas/')) {
+  if (/^\/neuro-atlas(?:\/|$)/i.test(req.nextUrl.pathname)) {
     // A separate deployment does not need PLRD session or consent cookies.
     // Keep Authorization intact: Atlas's existing hosted Basic gate still applies.
     const headers = new Headers(req.headers)
@@ -47,6 +47,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Atlas assets also need cookie stripping; existing PLRD matching is unchanged.
-  matcher: ['/neuro-atlas/:path*', '/((?!api|_next/static|_next/image|favicon.ico|.*\\.[\\w]+$).*)'],
+  // Next external rewrites are case-insensitive, including static assets.
+  // Mirror that namespace here without broadening ordinary PLRD matching.
+  matcher: ['/:atlas([nN][eE][uU][rR][oO]-[aA][tT][lL][aA][sS])/:path*', '/((?!api|_next/static|_next/image|favicon.ico|.*\\.[\\w]+$).*)'],
 }

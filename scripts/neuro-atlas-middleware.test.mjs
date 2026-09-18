@@ -6,7 +6,8 @@ import { source } from './velocity/test-source-loader.mjs'
 
 const { middleware, config } = source('middleware.ts')
 const { COOKIE_CONSENT_ENABLED } = source('lib/cookie-consent.ts')
-const atlasPaths = ['/neuro-atlas', '/neuro-atlas/', '/neuro-atlas/methods/', '/neuro-atlas/_next/static/chunks/app.js', '/neuro-atlas/fonts/test.woff2', '/neuro-atlas/data.csv']
+// Next external rewrites match case-insensitively; isolation must cover that same set.
+const atlasPaths = ['/neuro-atlas', '/neuro-atlas/', '/neuro-atlas/methods/', '/neuro-atlas/_next/static/chunks/app.js', '/neuro-atlas/fonts/test.woff2', '/neuro-atlas/data.csv', '/Neuro-Atlas/', '/NEURO-ATLAS/milestones', '/NeUrO-aTlAs/_next/static/chunks/app.js', '/NEURO-ATLAS/logos/test.png']
 
 test('Atlas namespace strips inbound cookies but preserves Basic Authorization on every route and asset', () => {
   for (const path of atlasPaths) {
