@@ -1,189 +1,76 @@
 [
   {
-    "innerWidth": 1440,
+    "width": 1440,
     "clientWidth": 1425,
     "scrollWidth": 1425,
-    "section": {
-      "x": 136.5,
-      "y": 47.4375,
-      "width": 1152,
-      "height": 603,
-      "right": 1288.5,
-      "bottom": 650.4375
-    },
-    "cards": [
-      {
-        "x": 160.5,
-        "y": 270.4375,
-        "width": 540,
-        "height": 284,
-        "right": 700.5,
-        "bottom": 554.4375
-      },
-      {
-        "x": 724.5,
-        "y": 270.4375,
-        "width": 540,
-        "height": 284,
-        "right": 1264.5,
-        "bottom": 554.4375
-      }
-    ],
-    "links": [
-      {
-        "href": "https://os.pl.xyz/jobs/openings/manual-pl-philanthropic-fundraising-lead?utm_source=job_refer_share&utm_medium=copy_link",
-        "label": "View role and apply: Philanthropic Fundraising Lead",
-        "rect": {
-          "x": 193.5,
-          "y": 477.4375,
-          "width": 145.046875,
-          "height": 44,
-          "right": 338.546875,
-          "bottom": 521.4375
-        }
-      },
-      {
-        "href": "https://os.pl.xyz/jobs/openings/clneurotechpgm91537777x?utm_source=job_refer_share&utm_medium=copy_link",
-        "label": "View role and apply: Program Manager, Neurotech",
-        "rect": {
-          "x": 757.5,
-          "y": 477.4375,
-          "width": 145.046875,
-          "height": 44,
-          "right": 902.546875,
-          "bottom": 521.4375
-        }
-      }
-    ]
+    "text": "Join our team\n\nHelp frontier research reach the world. Explore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "cards": 0,
+    "rect": {
+      "x": 160.5,
+      "y": 617.4375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 617.4375,
+      "right": 275.046875,
+      "bottom": 661.4375,
+      "left": 160.5
+    }
   },
   {
-    "innerWidth": 390,
+    "width": 390,
     "clientWidth": 375,
     "scrollWidth": 375,
-    "section": {
-      "x": 0,
-      "y": 63.09375,
-      "width": 375,
-      "height": 1147,
-      "right": 375,
-      "bottom": 1210.09375
-    },
-    "cards": [
-      {
-        "x": 24,
-        "y": 312.09375,
-        "width": 327,
-        "height": 402,
-        "right": 351,
-        "bottom": 714.09375
-      },
-      {
-        "x": 24,
-        "y": 738.09375,
-        "width": 327,
-        "height": 376,
-        "right": 351,
-        "bottom": 1114.09375
-      }
-    ],
-    "links": [
-      {
-        "href": "https://os.pl.xyz/jobs/openings/manual-pl-philanthropic-fundraising-lead?utm_source=job_refer_share&utm_medium=copy_link",
-        "label": "View role and apply: Philanthropic Fundraising Lead",
-        "rect": {
-          "x": 49,
-          "y": 645.09375,
-          "width": 145.046875,
-          "height": 44,
-          "right": 194.046875,
-          "bottom": 689.09375
-        }
-      },
-      {
-        "href": "https://os.pl.xyz/jobs/openings/clneurotechpgm91537777x?utm_source=job_refer_share&utm_medium=copy_link",
-        "label": "View role and apply: Program Manager, Neurotech",
-        "rect": {
-          "x": 49,
-          "y": 1045.09375,
-          "width": 145.046875,
-          "height": 44,
-          "right": 194.046875,
-          "bottom": 1089.09375
-        }
-      }
-    ]
+    "text": "Join our team\n\nHelp frontier research reach the world. Explore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "cards": 0,
+    "rect": {
+      "x": 24,
+      "y": 560.09375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 560.09375,
+      "right": 138.546875,
+      "bottom": 604.09375,
+      "left": 24
+    }
   },
   {
-    "innerWidth": 320,
+    "width": 320,
     "clientWidth": 305,
     "scrollWidth": 320,
-    "section": {
-      "x": 0,
-      "y": 62.84375,
-      "width": 320,
-      "height": 1199,
-      "right": 320,
-      "bottom": 1261.84375
-    },
-    "cards": [
-      {
-        "x": 24,
-        "y": 311.84375,
-        "width": 272,
-        "height": 428,
-        "right": 296,
-        "bottom": 739.84375
-      },
-      {
-        "x": 24,
-        "y": 763.84375,
-        "width": 272,
-        "height": 402,
-        "right": 296,
-        "bottom": 1165.84375
-      }
-    ],
-    "links": [
-      {
-        "href": "https://os.pl.xyz/jobs/openings/manual-pl-philanthropic-fundraising-lead?utm_source=job_refer_share&utm_medium=copy_link",
-        "label": "View role and apply: Philanthropic Fundraising Lead",
-        "rect": {
-          "x": 49,
-          "y": 670.84375,
-          "width": 145.046875,
-          "height": 44,
-          "right": 194.046875,
-          "bottom": 714.84375
-        }
-      },
-      {
-        "href": "https://os.pl.xyz/jobs/openings/clneurotechpgm91537777x?utm_source=job_refer_share&utm_medium=copy_link",
-        "label": "View role and apply: Program Manager, Neurotech",
-        "rect": {
-          "x": 49,
-          "y": 1096.84375,
-          "width": 145.046875,
-          "height": 44,
-          "right": 194.046875,
-          "bottom": 1140.84375
-        }
-      }
-    ]
+    "text": "Join our team\n\nHelp frontier research reach the world. Explore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "cards": 0,
+    "rect": {
+      "x": 24,
+      "y": 552.84375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 552.84375,
+      "right": 138.546875,
+      "bottom": 596.84375,
+      "left": 24
+    }
   },
   {
     "active": "Advisors",
-    "cards": 2
+    "links": 1
   },
   {
     "active": "Alumni",
-    "cards": 2
+    "links": 1
   },
   {
     "active": "Leadership",
-    "cards": 2
+    "links": 1
   },
   {
-    "label": "View role and apply: Program Manager, Neurotech",
+    "text": "See open roles \u2192",
+    "href": "https://os.pl.xyz/jobs",
     "focusVisible": true,
     "outline": "2px"
   }

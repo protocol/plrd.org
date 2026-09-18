@@ -1,29 +1,26 @@
-# Team page openings — verification
+# Team page hiring CTA — verification
 
-Runtime revision: `3bbdae3` (subsequent changes in this PR are evidence only).
+Runtime revision: `469beac`. Later evidence commits do not change runtime/test source.
 
 ## Scope
 
-Adds a static, curated hiring section after the existing team profiles on `/authors/`, outside the Leadership / Advisors / Alumni tab state. No CMS writes, authentication changes, new dependencies, or production deployment. The Directory listings remain the application source of truth; this is not a synchronized job feed.
+Replaces the two specific role cards with a generic **Join our team** section and one **See open roles →** link to https://os.pl.xyz/jobs. Copy explicitly describes opportunities across the Protocol Labs network, matching the destination's scope. The section remains after the profiles and outside team-tab state. No CMS writes, authentication changes, dependencies, merge, or production deployment.
 
-## Checks
+## Current checks
 
-- `npx --yes pnpm@10 install --frozen-lockfile`: passed.
-- Regression first failed on baseline because the hiring section was absent, then passed with the implementation.
-- `npm test`: 118 passed, 0 failed.
+- Revised regression failed against the old cards (2 articles instead of 0), then passed. Full `npm test`: 118 passed, 0 failed.
 - `npx tsc --noEmit`: passed.
-- `UV_THREADPOOL_SIZE=1 NEXT_TELEMETRY_DISABLED=1 taskset -c 0,1 npm run build`: passed. Existing tooling deprecation warnings and a Ma Earth closed-round fallback message were emitted; they are unrelated to this section.
-- Actual production build served at loopback `/authors/`; headed Chrome checks at 1440, 390, and 320px. Cards align in two columns on desktop and stack on mobile. New card contents stay within the available width. The 320px desktop-emulated viewport reports a 305px client width and 320px document scroll width (15px horizontal overflow); both new cards end at 296px, inside the client width. The page-level overflow is not diagnosed or changed by this scoped PR.
-- Native clicks on Advisors, Alumni, and Leadership preserve both hiring cards.
-- Native Tab reaches the second role CTA with a role-specific accessible name and visible 2px outline.
-- Both exact supplied Directory URLs, including query parameters, resolve to the intended role pages.
-- Native theme toggle verified light/dark rendering. No auth or application submission performed.
-- Independent source-review critic: PASS. Parent inspected actual screenshots and ran native checks separately.
+- Production build compiled and typechecked, but twice failed during static generation with `spawn /usr/local/bin/node EAGAIN`; the retry also reported worker cleanup `EPERM`. Local production build is NOT claimed passed for this revision. Frozen pnpm install passed in the preceding iteration; no package/lock changes here.
+- Actual local **development** route in headed Chrome at 1440, 390, and 320px: exactly one board link, no role cards; CTA entirely within client width and visible viewport.
+- Native clicks on Advisors, Alumni, and Leadership preserve the single link.
+- Native keyboard navigation back to CTA: focus-visible and 2px outline.
+- Native click on CTA reaches https://os.pl.xyz/jobs with title Jobs | Protocol Labs Directory. The public PL Join page points to directory.plnetwork.io/jobs, whose 301 redirects to this exact destination. Destination displays the network-wide board.
+- Known page-level 15px overflow remains at desktop-emulated 320px (305px client width, 320px scroll width); the new CTA ends at 138.55px and is not clipped. Not physical-phone testing.
 
-## Editorial note
+## Fresh skeptical review
 
-The Neuro listing headline is **Program Manager, Neurotech**, while its body uses **PL Neuro Operations Lead**. The card deliberately follows the listing headline; this PR does not alter the external listing.
+PASS for requested scoped change. Reviewed component and regression diff plus actual desktop/mobile screenshots: two role entries and their specific descriptions/URLs are removed; the one ordinary anchor retains keyboard focus and a 44px hit area; descriptive copy matches the board's network scope; no auth/CMS/route changes. Both images show readable complete section content with inherited generous profile/footer spacing. Local production-build limitation remains explicit above; hosted CI is reported separately in the PR.
 
 ## Evidence
 
-All screenshots are local production-build captures, not a hosted Vercel or live production verification. `browser-checks.json` records dimensions, exact hrefs, tab state, and keyboard focus. Mobile captures show the first and second card separately so both remain legible.
+`generic-1440.png`, `generic-390.png`, and `generic-320.png` are actual local development screenshots, NOT production or hosted-preview screenshots. `browser-checks.json` contains current measurements, tab checks and focus results. Earlier two-role screenshots were superseded.
