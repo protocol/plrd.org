@@ -31,7 +31,7 @@ export default function AuthorsTabs({ heroTitle, heroSubtitle, leadershipBlurb, 
   const [activeTab, setActiveTab] = useState('leadership')
 
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-8 pb-24">
+    <div className="max-w-6xl mx-auto px-6 pt-8 pb-8">
       <div className="empty:hidden mb-4">
         <PageEditHistoryByline rkey="authors" />
       </div>
@@ -66,7 +66,7 @@ export default function AuthorsTabs({ heroTitle, heroSubtitle, leadershipBlurb, 
       {activeTab === 'leadership' && (
         <div>
           <MarkdownContent content={leadershipBlurb} className="text-sm text-gray-500 uppercase tracking-wide mb-12 [&_p]:mb-0" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {leadership.map(author => (
               <LeaderCard key={author.slug} author={author} />
             ))}
