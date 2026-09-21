@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  async headers() {
+    // Route-level headers survive the external proxy response, including 401s.
+    return [{
+      source: '/neuro-atlas/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    }]
+  },
   async rewrites() {
     const value = process.env.NEURO_ATLAS_ORIGIN ?? 'https://neuro-atlas-app.vercel.app'
     let url: URL

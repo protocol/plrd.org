@@ -25,7 +25,7 @@ export function middleware(req: NextRequest) {
     const headers = new Headers(req.headers)
     headers.delete('cookie')
     const response = NextResponse.next({ request: { headers } })
-    // Applied before the external rewrite, including upstream Basic-auth 401s.
+    // Defense in depth; next.config headers owns the final external response.
     response.headers.set('X-Robots-Tag', 'noindex, nofollow')
     return response
   }
