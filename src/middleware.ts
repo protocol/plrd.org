@@ -25,7 +25,7 @@ export function middleware(req: NextRequest) {
     const headers = new Headers(req.headers)
     headers.delete('cookie')
     const response = NextResponse.next({ request: { headers } })
-    // Defense in depth; next.config headers owns the final external response.
+    // Defense in depth; Atlas emits authoritative noindex response headers.
     response.headers.set('X-Robots-Tag', 'noindex, nofollow')
     return response
   }

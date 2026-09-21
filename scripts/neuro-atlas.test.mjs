@@ -55,8 +55,8 @@ test('loopback is opt-in local QA even for production builds, never hosted or re
   }
 })
 
-test('Atlas noindex is a route response header, not only a middleware passthrough header', async () => {
-  assert.equal(typeof config.headers, 'function', 'external rewrites must retain noindex on their final response')
+test('Atlas namespace declares a defense-in-depth route header', async () => {
+  assert.equal(typeof config.headers, 'function', 'scoped response-header policy must be configured')
   assert.deepEqual(await config.headers(), [{
     source: '/neuro-atlas/:path*',
     headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],

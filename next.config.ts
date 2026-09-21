@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   async headers() {
-    // Route-level headers survive the external proxy response, including 401s.
+    // Defense in depth; Atlas must emit noindex itself for external responses.
     return [{
       source: '/neuro-atlas/:path*',
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
