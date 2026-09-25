@@ -85,7 +85,14 @@ for width in [1440, 1146, 1024, 768, 640, 390, 320]:
         if not state['selected'] or state['hidden'] or not state['othersHidden']:
             failures.append(f'{width}: {label} tab failed {state}')
 
+    click_center(methodology_tab('Diagnose'))
+    diagnose_text = js("document.getElementById('diagnose')?.innerText || ''")
+    if 'Identify the bottlenecks' not in diagnose_text or diagnose_text.find('Six ways to read field velocity') > diagnose_text.find('Identify the bottlenecks'):
+        failures.append(f'{width}: Diagnose should lead with field velocity before bottlenecks')
     click_center(methodology_tab('Intervene'))
+    intervene_text = js("document.getElementById('intervene')?.innerText || ''")
+    if 'Culture' not in intervene_text or 'Documenting our hand' not in intervene_text:
+        failures.append(f'{width}: Intervene missing culture layer or documenting our hand')
     for index in range(6):
         rect = js(f"""(() => {{
           const e = document.querySelectorAll('#intervene summary')[{index}];
@@ -120,6 +127,13 @@ for width in [1440, 1146, 1024, 768, 640, 390, 320]:
           return e.getBoundingClientRect().toJSON();
         })()""")
         capture_screenshot(path=str(out / f'field-velocity-{width}.png'))
+        click_center(methodology_tab('Learn'))
+        js("""(() => {
+          const e = [...document.querySelectorAll('#learn h3')].find(h => /convince us the field has changed/.test(h.textContent));
+          e?.scrollIntoView({block:'start', behavior:'instant'});
+          return e?.getBoundingClientRect().toJSON();
+        })()""")
+        capture_screenshot(path=str(out / f'learn-inflections-{width}.png'))
 
 (out / 'results.json').write_text(json.dumps({'origin': origin, 'results': results, 'failures': failures}, indent=2))
 print(json.dumps({'results': results, 'failures': failures}, indent=2))

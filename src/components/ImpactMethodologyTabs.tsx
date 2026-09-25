@@ -7,7 +7,7 @@ const TABS = [
   {
     id: 'diagnose',
     label: 'Diagnose',
-    blurb: 'Name the binding constraint, then read field velocity.',
+    blurb: 'Read field velocity, then name the binding constraint.',
   },
   {
     id: 'intervene',
@@ -17,7 +17,7 @@ const TABS = [
   {
     id: 'learn',
     label: 'Learn',
-    blurb: 'Update the diagnosis and run the cycle again.',
+    blurb: 'Update the diagnosis against inflection points, and run the cycle again.',
   },
 ] as const
 
@@ -26,13 +26,16 @@ type TabId = (typeof TABS)[number]['id']
 const HASH_TO_TAB: Record<string, TabId> = {
   diagnose: 'diagnose',
   observe: 'diagnose',
+  fv: 'diagnose',
   'field-velocity': 'diagnose',
   methodology: 'diagnose',
-  toolkit: 'diagnose',
+  toolkit: 'intervene',
   intervene: 'intervene',
+  'verified-impact': 'intervene',
   learn: 'learn',
   compound: 'learn',
-  'verified-impact': 'learn',
+  inflection: 'learn',
+  'inflection-points': 'learn',
 }
 
 function tabFromLocation(): TabId {
