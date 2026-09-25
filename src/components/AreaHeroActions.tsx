@@ -15,6 +15,8 @@ type AreaHeroActionsProps = {
   areaSlug: string
   showOpportunitySpaces: boolean
   opportunityHref: string
+  showInterventions?: boolean
+  interventionsHref?: string
   className?: string
 }
 
@@ -22,11 +24,13 @@ export default function AreaHeroActions({
   areaSlug,
   showOpportunitySpaces,
   opportunityHref,
+  showInterventions = true,
+  interventionsHref = '#interventions',
   className = 'relative z-10 flex flex-wrap gap-4 mb-10',
 }: AreaHeroActionsProps) {
   const areaWebsite = getAreaWebsiteLink(areaSlug)
 
-  if (!showOpportunitySpaces && !areaWebsite) return null
+  if (!showOpportunitySpaces && !showInterventions && !areaWebsite) return null
 
   return (
     <div className={className}>
@@ -36,6 +40,17 @@ export default function AreaHeroActions({
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue text-white rounded-full hover:bg-blue/90 transition-colors font-medium"
         >
           Opportunity Spaces
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m0 0l-6-6m6 6l6-6" />
+          </svg>
+        </a>
+      )}
+      {showInterventions && (
+        <a
+          href={interventionsHref}
+          className="inline-flex items-center gap-2 px-5 py-2.5 border border-blue text-blue rounded-full hover:bg-blue/5 transition-colors font-medium"
+        >
+          Interventions
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m0 0l-6-6m6 6l6-6" />
           </svg>

@@ -9,6 +9,7 @@ import AreaHeroGraphic from '@/components/AreaHeroGraphic'
 import { AreaIcon } from '@/components/AreaIcons'
 import MarkdownContent from '@/components/MarkdownContent'
 import FA2LiveStatsBand from '@/components/FA2LiveStatsBand'
+import FocusAreaInterventions from '@/components/FocusAreaInterventions'
 import opportunityData from '@/data/fa2/opportunityspaces.json'
 import { FOCUS_AREA_DESCRIPTIONS } from '@/lib/focus-area-descriptions'
 import { fetchPage, getSection, fetchOpportunitySpaces } from '@/lib/indexer'
@@ -106,6 +107,15 @@ export default async function FA2MainPage() {
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue text-white rounded-full hover:bg-blue/90 transition-colors font-medium"
           >
             Opportunity Spaces
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m0 0l-6-6m6 6l6-6" />
+            </svg>
+          </a>
+          <a
+            href="#interventions"
+            className="inline-flex items-center gap-2 px-5 py-2.5 border border-blue text-blue rounded-full hover:bg-blue/5 transition-colors font-medium"
+          >
+            Interventions
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m0 0l-6-6m6 6l6-6" />
             </svg>
@@ -256,6 +266,8 @@ export default async function FA2MainPage() {
       </section>
 
       {/* Field velocity is preview-only until a separate public launch. */}
+
+      <FocusAreaInterventions area="economies-governance" />
 
       {/* Explore */}
       <h2 className="text-sm text-gray-500 uppercase tracking-wide mb-6">Explore</h2>

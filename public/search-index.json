@@ -1883,6 +1883,125 @@
     "relpermalink": "/areas/"
   },
   {
+    "title": "Interventions",
+    "summary": "Browse PL R&D interventions across four focus areas",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/"
+  },
+  {
+    "title": "Intervention methodology",
+    "summary": "How PL R&D chooses interventions: map the field, name the bottleneck, intervene, and examine the evidence",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/methodology/"
+  },
+  {
+    "title": "Sovereign AI acceleration program",
+    "summary": "Help national institutions turn open models into useful, locally maintained AI capability.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/sovereign-ai/"
+  },
+  {
+    "title": "Public AI evaluation commons",
+    "summary": "Give public institutions credible evidence for AI adoption decisions.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/evaluation-commons/"
+  },
+  {
+    "title": "Broad Listening & Simocracy deployment program",
+    "summary": "Make participatory decision tools easier to adopt, evaluate, and maintain.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/broad-listening/"
+  },
+  {
+    "title": "AI4PG research convenings & funder collaboration",
+    "summary": "Turn public-goods research conversations into sustained collaborations.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/ai4pg/"
+  },
+  {
+    "title": "AI4COP international collaboration program",
+    "summary": "Develop shared research and evaluated AI tools for environmental institutions.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/ai4cop/"
+  },
+  {
+    "title": "Evidence, evaluation & outcomes research program",
+    "summary": "Make credible evaluation more useful and affordable.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/evidence-research/"
+  },
+  {
+    "title": "Sovereign compute & infrastructure alliance",
+    "summary": "Turn country requirements into usable compute access and technical capability.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/compute-alliance/"
+  },
+  {
+    "title": "Economies & Governance Fellowship",
+    "summary": "Help a senior cross-institutional cohort advance shared missions.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/eg-fellowship/"
+  },
+  {
+    "title": "Connectomics Benchmark + Prize Program",
+    "summary": "Make connectome reconstruction a measurable, competitive AI problem.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/connectomics-benchmark/"
+  },
+  {
+    "title": "Macaque Ground-Truth Projectome",
+    "summary": "Create a primate reference dataset that tests long-range tracing.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/macaque-projectome/"
+  },
+  {
+    "title": "“AlphaFold for Systems Neuroscience” Challenge",
+    "summary": "Test whether neural simulation can predict a new biological result.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/discovery-challenge/"
+  },
+  {
+    "title": "Mouse Connectome Acceleration Program",
+    "summary": "Make a large-scale connectome program technically and financially credible.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/mouse-connectome/"
+  },
+  {
+    "title": "NeuroAI Benchmark Commons",
+    "summary": "Give AI researchers well-defined neuroscience problems they can work on.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/neuroai-commons/"
+  },
+  {
+    "title": "Virtual-Neuro FRO / Consortium",
+    "summary": "Build shared simulation infrastructure after a discovery target is proven.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/virtual-neuro/"
+  },
+  {
+    "title": "NeuroAI Fellows Program",
+    "summary": "Supply persistent operational ownership and an AI-native talent pipeline.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/neuroai-fellows/"
+  },
+  {
     "title": "Economies & Governance",
     "summary": "Building crypto-native economic and governance infrastructure",
     "date": "",
