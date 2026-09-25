@@ -53,7 +53,7 @@ export default function ImpactMethodologyTabs({ children }: { children: ReactNod
 
   return (
     <div>
-      <div className="sticky top-0 z-20 border-y border-black/10 bg-white/95 backdrop-blur-sm">
+      <div className="sticky top-16 z-30 border-y border-black/10 bg-white/95 backdrop-blur-sm">
         <div
           role="tablist"
           aria-label="Field-building loop"
