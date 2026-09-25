@@ -465,7 +465,7 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Collaborate', summary: 'Work with Protocol Labs R&D on research', date: '', type: 'page', relpermalink: '/outreach/collaboration/' },
     { title: 'Focus Areas', summary: 'Research focus areas driving breakthroughs in computing', date: '', type: 'page', relpermalink: '/areas/' },
     { title: 'Interventions', summary: 'Browse PL R&D interventions across four focus areas', date: '', type: 'page', relpermalink: '/interventions/' },
-    { title: 'Intervention methodology', summary: 'How PL R&D chooses interventions: map the field, name the bottleneck, intervene, and examine the evidence', date: '', type: 'page', relpermalink: '/interventions/methodology/' },
+    { title: 'Intervention methodology', summary: 'How PL R&D chooses interventions: diagnose the bottleneck, intervene, then learn from the evidence', date: '', type: 'page', relpermalink: '/interventions/methodology/' },
     ...buildInterventionSearchItems(),
     // FA2 sub-pages
     { title: 'Economies & Governance', summary: 'Building crypto-native economic and governance infrastructure', date: '', type: 'area', relpermalink: '/areas/economies-governance/' },

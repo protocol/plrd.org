@@ -50,6 +50,13 @@ export const INTERVENTION_AREA_LABEL: Record<InterventionAreaSlug, string> = {
   neurotech: 'Neurotech',
 }
 
+export const INTERVENTION_AREA_ICON: Record<InterventionAreaSlug, 'shield' | 'hexagon' | 'neural' | 'brain'> = {
+  'digital-human-rights': 'shield',
+  'economies-governance': 'hexagon',
+  'ai-robotics': 'neural',
+  neurotech: 'brain',
+}
+
 export const INTERVENTION_AREA_HREF: Record<InterventionAreaSlug, string> = {
   'digital-human-rights': '/areas/digital-human-rights/',
   'economies-governance': '/areas/economies-governance/',
@@ -91,10 +98,21 @@ export const INTERVENTION_STAGE_LABEL: Record<InterventionStage, string> = {
 }
 
 export const INTERVENTION_METHOD_STEPS = [
-  { n: '01', title: 'Map the field', body: 'Identify opportunity spaces and the changes that would make new capabilities possible.' },
-  { n: '02', title: 'Name the bottleneck', body: 'Make the constraint explicit. Check what others are already doing and where PL can add something.' },
-  { n: '03', title: 'Intervene', body: 'Resource a bounded piece of work with a delivery plan and observable evidence.' },
-  { n: '04', title: 'Examine and adapt', body: 'Read the evidence, update the hypothesis, and continue, change course, or stop.' },
+  {
+    n: 'Diagnose',
+    title: 'Identify the bottlenecks',
+    body: 'Read field velocity. Name the constraint that is actually in the way — not a general stall, a specific one.',
+  },
+  {
+    n: 'Intervene',
+    title: 'Match the work',
+    body: 'Choose the tool that could loosen that bottleneck: orient, coordinate, resource, build, prove, or enable.',
+  },
+  {
+    n: 'Learn',
+    title: 'Examine the evidence',
+    body: 'Watch whether the field moved. Update the hypothesis, continue, change course, or stop.',
+  },
 ] as const
 
 /** All catalog records, including unpublished ones. Pages must use publishedInterventions(). */

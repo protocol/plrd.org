@@ -48,12 +48,36 @@ test('public catalog publishes the 15 draft-source examples without private fiel
 test('global catalog is an editorial grid, not a cover flow', async () => {
   const tree = await InterventionsPage({ searchParams: Promise.resolve({}) })
   const nodes = elements(tree)
-  assert.ok(nodes.some((node) => node.type?.name === 'InterventionsCatalog' || node.type?.displayName === 'InterventionsCatalog' || String(node.type).includes('InterventionsCatalog') || node.type?.name === 'default'))
-  const sourceText = readFileSync(new URL('../src/app/interventions/page.tsx', import.meta.url), 'utf8')
+  assert.ok(nodes.some((node) => node.type?.name === 'InterventionsIndex' || node.type?.displayName === 'InterventionsIndex' || String(node.type).includes('InterventionsIndex')))
+  const sourceText = readFileSync(new URL('../src/components/InterventionsIndex.tsx', import.meta.url), 'utf8')
   const catalogSource = readFileSync(new URL('../src/components/InterventionsCatalog.tsx', import.meta.url), 'utf8')
   assert.doesNotMatch(sourceText + catalogSource, /cover.?flow|gallery|VARIANT/i)
-  assert.match(catalogSource, /grid sm:grid-cols-2 lg:grid-cols-3/)
-  assert.ok(nodes.some((node) => /Turning bottlenecks/.test(text(node))))
+  assert.match(catalogSource, /grid gap-4 sm:grid-cols-2 lg:grid-cols-3/)
+  assert.match(sourceText, /Diagnose/)
+  assert.match(sourceText, /Intervene/)
+  assert.match(sourceText, /Learn/)
+  assert.doesNotMatch(sourceText, /Find the bottleneck/)
+  assert.match(sourceText, /Turning bottlenecks/)
+})
+
+test('catalog pills are multi-select without an All focus areas control', () => {
+  const catalogSource = readFileSync(new URL('../src/components/InterventionsCatalog.tsx', import.meta.url), 'utf8')
+  assert.match(catalogSource, /toggleArea/)
+  assert.doesNotMatch(catalogSource, /All focus areas/)
+  assert.match(catalogSource, /ComingSoonTile/)
+  assert.doesNotMatch(catalogSource, /count === 0/)
+})
+
+test('program URLs open as a modal over the catalog, not a standalone deeper page', async () => {
+  const { default: DetailPage } = source('app/interventions/[slug]/page.tsx')
+  const tree = await DetailPage({ params: Promise.resolve({ slug: 'sovereign-ai' }) })
+  const nodes = elements(tree)
+  assert.ok(nodes.some((node) => node.type?.name === 'InterventionsIndex' || String(node.type).includes('InterventionsIndex')))
+  assert.ok(nodes.some((node) => node.type?.name === 'InterventionModal' || String(node.type).includes('InterventionModal')))
+  const cardSource = readFileSync(new URL('../src/components/InterventionCard.tsx', import.meta.url), 'utf8')
+  assert.match(cardSource, /InterventionTypeIcon/)
+  const intercept = readFileSync(new URL('../src/app/interventions/@modal/(.)[slug]/page.tsx', import.meta.url), 'utf8')
+  assert.match(intercept, /InterventionModal/)
 })
 
 test('detail pages exist for every published slug', () => {
