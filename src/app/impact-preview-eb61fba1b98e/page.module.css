@@ -1,0 +1,63 @@
+/* The global editorial p + blockquote rule has a negative margin and is
+   unlayered, so a Tailwind margin utility cannot override it. Keep the
+   methodology callout spacing local rather than changing article typography. */
+.diagnosisQuote {
+  margin-block: 1.75rem;
+}
+
+.downArrow {
+  display: flex;
+  justify-content: center;
+  padding-block: 1.25rem;
+  color: #c4c4c0;
+}
+
+.downArrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cultureLayer {
+  position: relative;
+  padding-left: 1.35rem;
+}
+
+.cultureRail {
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 2px solid #d6d3ce;
+}
+
+.cultureRail span:first-child {
+  position: absolute;
+  left: -0.55rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9c9a94;
+  background: #fff;
+  padding-block: 0.45rem;
+}
+
+.cultureRailCopy {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .cultureLayer {
+    padding-left: 2.1rem;
+  }
+
+  .cultureRail span:first-child {
+    left: -0.15rem;
+  }
+}
