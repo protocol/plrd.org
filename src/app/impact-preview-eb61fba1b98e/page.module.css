@@ -1,0 +1,6 @@
+/* The global editorial p + blockquote rule has a negative margin and is
+   unlayered, so a Tailwind margin utility cannot override it. Keep the
+   methodology callout spacing local rather than changing article typography. */
+.diagnosisQuote {
+  margin-block: 1.75rem;
+}

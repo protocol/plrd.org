@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import styles from './page.module.css'
 import Breadcrumb from '@/components/Breadcrumb'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
@@ -218,25 +219,25 @@ export default async function ImpactPage({
           </p>
 
           {/* OPERATING MODEL */}
-          <div className="mt-10 grid overflow-hidden rounded-2xl border border-gray-200 bg-white sm:grid-cols-5">
+          <div className="mt-10 grid overflow-hidden rounded-2xl border border-black/10 bg-white lg:grid-cols-5">
             {operatingModel.map(([number, title, description], index) => (
               <div
                 key={title}
-                className={`relative min-h-[150px] p-5 sm:p-6 ${
+                className={`relative grid grid-cols-[32px_minmax(0,1fr)] gap-x-3 p-5 lg:block lg:min-h-[150px] lg:p-6 ${
                   index < operatingModel.length - 1
-                    ? 'border-b border-gray-200 sm:border-b-0 sm:border-r'
+                    ? 'border-b border-black/10 lg:border-b-0 lg:border-r'
                     : ''
                 }`}
               >
-                <div className="text-[11px] font-semibold tracking-[0.16em] text-gray-300">
+                <div className="row-span-2 pt-1 text-[11px] font-semibold tracking-[0.16em] text-gray-500 lg:pt-0">
                   {number}
                 </div>
 
-                <div className="mt-7 text-[17px] font-semibold tracking-tight text-black">
+                <div className="text-[17px] font-semibold tracking-tight text-black lg:mt-7">
                   {title}
                 </div>
 
-                <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
+                <p className="col-start-2 mt-1 text-[13px] leading-relaxed text-gray-500 lg:mt-2">
                   {description}
                 </p>
               </div>
@@ -272,7 +273,7 @@ export default async function ImpactPage({
               preventing progress. The useful question is:
             </p>
 
-            <blockquote className="my-7 border-l-2 border-black pl-6 text-[24px] font-medium leading-snug tracking-tight text-black">
+            <blockquote className={`${styles.diagnosisQuote} border-l-2 border-black pl-6 text-[24px] font-medium leading-snug tracking-tight text-black`}>
               What is the most important thing preventing this field from moving
               faster now?
             </blockquote>
@@ -320,7 +321,7 @@ export default async function ImpactPage({
           {interventions.map((intervention, index) => (
             <details key={intervention.title} className="group">
               <summary className="grid cursor-pointer list-none grid-cols-[42px_1fr_auto] items-center gap-4 py-5 marker:hidden sm:grid-cols-[60px_0.7fr_1.3fr_auto] sm:py-6">
-                <span className="text-[12px] font-medium tabular-nums text-gray-300">
+                <span className="text-[12px] font-medium tabular-nums text-gray-500">
                   {String(index + 1).padStart(2, '0')}
                 </span>
 
@@ -460,7 +461,7 @@ export default async function ImpactPage({
                 key={title}
                 className="grid gap-3 py-5 sm:grid-cols-[38px_0.7fr_1.3fr] sm:gap-5"
               >
-                <span className="text-[11px] font-medium tabular-nums text-gray-300">
+                <span className="text-[11px] font-medium tabular-nums text-gray-500">
                   {String(index + 1).padStart(2, '0')}
                 </span>
 
@@ -596,7 +597,7 @@ export default async function ImpactPage({
                   </span>
 
                   {index < all.length - 1 && (
-                    <span className="text-gray-300">→</span>
+                    <span className="text-gray-500">→</span>
                   )}
                 </span>
               ))}
