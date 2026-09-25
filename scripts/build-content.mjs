@@ -11,6 +11,24 @@ const PUBLIC_DIR = path.join(ROOT, 'public')
 
 const processor = remark().use(remarkHtml, { sanitize: false })
 
+function buildInterventionSearchItems() {
+  const src = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'interventions.ts'), 'utf8')
+  const items = []
+  const re = /slug:\s*"([^"]+)"[\s\S]*?title:\s*"([^"]+)"[\s\S]*?summary:\s*"([^"]+)"[\s\S]*?published:\s*(true|false)/g
+  let match
+  while ((match = re.exec(src))) {
+    if (match[4] !== 'true') continue
+    items.push({
+      title: match[2],
+      summary: match[3],
+      date: '',
+      type: 'page',
+      relpermalink: `/interventions/${match[1]}/`,
+    })
+  }
+  return items
+}
+
 function renderMd(md) {
   if (!md || !md.trim()) return ''
   return processor.processSync(md).toString()
@@ -446,6 +464,9 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Blog', summary: 'Latest news and updates from PL R&D', date: '', type: 'page', relpermalink: '/blog/' },
     { title: 'Collaborate', summary: 'Work with Protocol Labs R&D on research', date: '', type: 'page', relpermalink: '/outreach/collaboration/' },
     { title: 'Focus Areas', summary: 'Research focus areas driving breakthroughs in computing', date: '', type: 'page', relpermalink: '/areas/' },
+    { title: 'Interventions', summary: 'Browse PL R&D interventions across four focus areas', date: '', type: 'page', relpermalink: '/interventions/' },
+    { title: 'Intervention methodology', summary: 'How PL R&D chooses interventions: diagnose the bottleneck, intervene, then learn from the evidence', date: '', type: 'page', relpermalink: '/interventions/methodology/' },
+    ...buildInterventionSearchItems(),
     // FA2 sub-pages
     { title: 'Economies & Governance', summary: 'Building crypto-native economic and governance infrastructure', date: '', type: 'area', relpermalink: '/areas/economies-governance/' },
     { title: 'Opportunity Spaces', summary: 'Convergence zones for systemic change in economies and governance', date: '', type: 'page', relpermalink: '/areas/economies-governance/#opportunity-spaces' },
