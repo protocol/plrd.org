@@ -54,14 +54,17 @@ export default function InterventionMethod() {
             </text>
           </svg>
         </p>
-        <ul className="method-cycle-levers">
-          {TYPE_ORDER.map((id) => (
-            <li key={id}>
-              <InterventionTypeIcon type={id} className="h-3.5 w-3.5 shrink-0" />
-              <span>{INTERVENTION_TYPES[id].title}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="method-cycle-levers">
+          <p className="method-cycle-levers-label">The levers</p>
+          <ul>
+            {TYPE_ORDER.map((id) => (
+              <li key={id}>
+                <InterventionTypeIcon type={id} className="h-3.5 w-3.5 shrink-0" />
+                <span>{INTERVENTION_TYPES[id].title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   )

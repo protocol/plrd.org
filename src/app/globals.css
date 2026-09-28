@@ -1544,14 +1544,28 @@ html.dark .page-content details.fa2-dashboard {
 }
 
 .method-cycle-levers {
+  grid-column: 3;
+  margin: 0.85rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgb(0 0 0 / 0.1);
+}
+
+.method-cycle-levers-label {
+  margin: 0 0 0.55rem;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.method-cycle-levers ul {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.4rem 1.1rem;
-  max-width: 28rem;
-  margin: 1.25rem 0 0;
-  padding: 0.85rem 0 0;
+  margin: 0;
+  padding: 0;
   list-style: none;
-  border-top: 1px solid rgb(0 0 0 / 0.1);
 }
 
 .method-cycle-levers li {
@@ -1583,12 +1597,20 @@ html.dark .page-content details.fa2-dashboard {
 }
 
 @media (min-width: 768px) {
+  .method-cycle {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.75rem;
+  }
+
   .method-cycle-track {
+    grid-column: 1 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: 2.75rem;
   }
 
   .method-cycle-return {
+    grid-column: 1 / -1;
     margin-top: 1.6rem;
   }
 
