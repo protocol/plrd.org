@@ -1500,3 +1500,115 @@ html.dark .page-content details.fa2-dashboard {
     transition: none !important;
   }
 }
+
+.method-cycle {
+  position: relative;
+}
+
+.method-cycle-track {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.method-cycle-stage {
+  position: relative;
+}
+
+.method-cycle-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.method-cycle-title {
+  margin-top: 0.45rem;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #000;
+}
+
+.method-cycle-body {
+  max-width: 34ch;
+  margin-top: 0.45rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+.method-cycle-levers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1.1rem;
+  margin: 1rem 0 0;
+  padding: 0.85rem 0 0;
+  list-style: none;
+  border-top: 1px solid rgb(0 0 0 / 0.1);
+}
+
+.method-cycle-levers li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgb(0 0 0 / 0.8);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.method-cycle-return {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .method-cycle-track {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.75rem;
+  }
+
+  .method-cycle-forward {
+    position: absolute;
+    top: 0.42rem;
+    left: calc(100% - 0.15rem);
+    width: calc(2.75rem + 0.3rem);
+    height: 1px;
+    background: rgb(19 19 22 / 0.28);
+  }
+
+  .method-cycle-forward::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: -1px;
+    border-top: 3.5px solid transparent;
+    border-bottom: 3.5px solid transparent;
+    border-left: 5px solid rgb(19 19 22 / 0.45);
+  }
+
+  .method-cycle-return {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15rem;
+    height: 28px;
+    margin: 0;
+    color: rgb(19 19 22 / 0.34);
+    pointer-events: none;
+  }
+
+  .method-cycle-return svg {
+    display: block;
+    width: 100%;
+    height: 28px;
+    overflow: visible;
+  }
+}
