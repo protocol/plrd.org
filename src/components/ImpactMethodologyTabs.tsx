@@ -1,6 +1,6 @@
 'use client'
 
-import { Children, isValidElement, useId, useState, type ReactNode } from 'react'
+import { Children, isValidElement, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import styles from '@/app/impact-preview-eb61fba1b98e/page.module.css'
 import { navigateImpact, useImpactNavigation } from '@/components/useImpactNavigation'
 
@@ -47,9 +47,35 @@ function tabFromLocation(): TabId {
 
 export default function ImpactMethodologyTabs({ children }: { children: ReactNode }) {
   const [tab, setTab] = useState<TabId>('diagnose')
+  const [pinned, setPinned] = useState(false)
+  const anchorRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
   useImpactNavigation(() => setTab(tabFromLocation()))
+
+  // The loop menu is the same on every tab, so it should pin only after the
+  // shared intro ("How we build fields") has scrolled past the site header.
+  useEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor) return
+
+    const headerOffset = () => {
+      const header = document.querySelector('header')
+      return header ? Math.ceil(header.getBoundingClientRect().height) : 64
+    }
+
+    const update = () => {
+      setPinned(anchor.getBoundingClientRect().top <= headerOffset() + 1)
+    }
+
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [])
 
   const select = (id: TabId) => {
     setTab(id)
@@ -58,7 +84,8 @@ export default function ImpactMethodologyTabs({ children }: { children: ReactNod
 
   return (
     <div>
-      <div className={styles.methodologyTabs}>
+      <div ref={anchorRef} className={styles.methodologyTabsAnchor} />
+      <div className={`${styles.methodologyTabs} ${pinned ? styles.methodologyTabsPinned : ''}`}>
         <div
           role="tablist"
           aria-label="Field-building loop"

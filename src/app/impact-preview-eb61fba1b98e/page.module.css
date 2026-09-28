@@ -6,21 +6,36 @@
 }
 
 /* The page wrapper uses overflow-hidden, which makes sticky resolve against
-   that box and drop the tabs once the intro scrolls away. Pin the loop menu
-   to the viewport so it stays under the 64px site header. */
+   that box. Keep the loop menu in normal flow (above the fold, under "How we
+   build fields") until that shared intro has scrolled past, then pin it under
+   the 64px site header. */
+.methodologyTabsAnchor {
+  height: 0;
+}
+
 .methodologyTabs {
+  position: relative;
+  z-index: 40;
+  border-bottom: 1px solid rgb(0 0 0 / 0.1);
+  background: #fff;
+}
+
+.methodologyTabsPinned {
   position: fixed;
   top: 4rem;
   left: 0;
   right: 0;
-  z-index: 40;
-  border-bottom: 1px solid rgb(0 0 0 / 0.1);
   background: rgb(255 255 255 / 0.95);
   backdrop-filter: blur(4px);
 }
 
 .methodologyTabsSpacer {
+  display: none;
   height: 6.75rem;
+}
+
+.methodologyTabsPinned + .methodologyTabsSpacer {
+  display: block;
 }
 
 @media (min-width: 640px) {
