@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import InterventionCard from '@/components/InterventionCard'
-import { comingNextAreas } from '@/components/PortfolioMap'
+import InterventionTypeIcon from '@/components/InterventionTypeIcon'
 import {
   INTERVENTION_AREA_LABEL,
   INTERVENTION_AREA_ORDER,
@@ -16,12 +16,15 @@ import {
 } from '@/lib/interventions'
 
 const ALL = 'all'
+const TYPE_ORDER = Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]
 
 type Props = {
   items: PublicIntervention[]
   initialAreas?: InterventionAreaSlug[]
   initialType?: string
 }
+
+type GroupBy = 'type' | 'area'
 
 export default function InterventionsCatalog({ items, initialAreas = [], initialType }: Props) {
   const validInitial = initialAreas.filter((slug) => INTERVENTION_AREA_ORDER.includes(slug))
@@ -31,6 +34,7 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
   const [type, setType] = useState<InterventionTypeId | typeof ALL>(validType)
   const [stage, setStage] = useState<InterventionStage | typeof ALL>(ALL)
   const [query, setQuery] = useState('')
+  const [groupBy, setGroupBy] = useState<GroupBy>('type')
 
   const toggleArea = (slug: InterventionAreaSlug) => {
     setAreas((current) =>
@@ -49,7 +53,23 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
     })
   }, [areas, items, query, stage, type])
 
-  const quiet = comingNextAreas(items)
+  const groups = useMemo(() => {
+    if (groupBy === 'type') {
+      return TYPE_ORDER.map((id) => ({
+        key: id,
+        title: INTERVENTION_TYPES[id].title,
+        type: id,
+        items: filtered.filter((item) => item.type === id),
+      })).filter((group) => group.items.length > 0)
+    }
+    return INTERVENTION_AREA_ORDER.map((slug) => ({
+      key: slug,
+      title: INTERVENTION_AREA_LABEL[slug],
+      type: undefined as InterventionTypeId | undefined,
+      items: filtered.filter((item) => item.area === slug),
+    })).filter((group) => group.items.length > 0)
+  }, [filtered, groupBy])
+
   const filtersActive = query.trim().length > 0 || areas.length > 0 || type !== ALL || stage !== ALL
 
   return (
@@ -68,6 +88,14 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
             className="w-full border-0 bg-transparent px-0 py-2 text-sm text-black placeholder:text-gray-400 focus:outline-none lg:max-w-sm"
           />
           <div className="flex flex-1 flex-wrap items-center gap-2 lg:justify-end">
+            <div className="flex border border-black/10" role="group" aria-label="Group interventions">
+              <GroupButton active={groupBy === 'type'} onClick={() => setGroupBy('type')}>
+                Intervention type
+              </GroupButton>
+              <GroupButton active={groupBy === 'area'} onClick={() => setGroupBy('area')}>
+                Focus area
+              </GroupButton>
+            </div>
             <div className="flex flex-wrap gap-1.5" role="group" aria-label="Focus areas">
               {INTERVENTION_AREA_ORDER.map((slug) => {
                 const active = areas.includes(slug)
@@ -95,7 +123,7 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
               onChange={(value) => setType(value as InterventionTypeId | typeof ALL)}
             >
               <option value={ALL}>Type</option>
-              {(Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]).map((id) => (
+              {TYPE_ORDER.map((id) => (
                 <option key={id} value={id}>
                   {INTERVENTION_TYPES[id].title}
                 </option>
@@ -122,9 +150,23 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
       </div>
 
       {filtered.length > 0 ? (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((item) => (
-            <InterventionCard key={item.slug} item={item} showArea={areas.length !== 1} />
+        <div className="mt-8 space-y-10">
+          {groups.map((group) => (
+            <section key={group.key} aria-labelledby={`group-${group.key}`}>
+              <h3
+                id={`group-${group.key}`}
+                className="mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500"
+              >
+                {group.type ? <InterventionTypeIcon type={group.type} className="h-3.5 w-3.5" /> : null}
+                {group.title}
+                <span className="font-normal text-gray-400">{group.items.length}</span>
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {group.items.map((item) => (
+                  <InterventionCard key={item.slug} item={item} showArea={areas.length !== 1} />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       ) : (
@@ -150,15 +192,6 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
         </div>
       )}
 
-      {quiet.length > 0 && !filtersActive && (
-        <p className="mt-10 text-[12px] uppercase tracking-[0.16em] text-gray-400">
-          Coming next{' '}
-          <span className="text-gray-600">
-            {quiet.map((area) => INTERVENTION_AREA_LABEL[area]).join(' · ')}
-          </span>
-        </p>
-      )}
-
       <p className="mt-8 text-sm text-gray-400">
         Public types here follow the FA2 draft vocabulary. See the{' '}
         <Link href="/interventions/methodology/" className="text-black underline decoration-black/20 underline-offset-4 hover:decoration-black">
@@ -167,6 +200,29 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
         for how they relate to the Console toolkit.
       </p>
     </div>
+  )
+}
+
+function GroupButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={`px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors ${
+        active ? 'bg-black text-white' : 'bg-white text-gray-500 hover:text-black'
+      }`}
+    >
+      {children}
+    </button>
   )
 }
 

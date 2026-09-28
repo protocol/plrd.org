@@ -74,9 +74,16 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
 
 test('catalog pills are multi-select without an All focus areas control', () => {
   const catalogSource = readFileSync(new URL('../src/components/InterventionsCatalog.tsx', import.meta.url), 'utf8')
+  const mapSource = readFileSync(new URL('../src/components/PortfolioMap.tsx', import.meta.url), 'utf8')
   assert.match(catalogSource, /toggleArea/)
   assert.doesNotMatch(catalogSource, /All focus areas/)
-  assert.match(catalogSource, /Coming next/)
+  assert.doesNotMatch(catalogSource, /Coming next/)
+  assert.doesNotMatch(mapSource, /Coming next in the map/)
+  assert.match(mapSource, /Group the map/)
+  assert.match(mapSource, /Intervention type/)
+  assert.match(catalogSource, /Group interventions/)
+  assert.match(catalogSource, /useState<GroupBy>\('type'\)/)
+  assert.match(mapSource, /useState<MapGroupBy>\('type'\)/)
   assert.doesNotMatch(catalogSource, /ComingSoonTile/)
   assert.doesNotMatch(catalogSource, /count === 0/)
 })
