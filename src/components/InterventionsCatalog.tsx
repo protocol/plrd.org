@@ -2,11 +2,9 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
-import ComingSoonTile from '@/components/ComingSoonTile'
 import InterventionCard from '@/components/InterventionCard'
+import { comingNextAreas } from '@/components/PortfolioMap'
 import {
-  INTERVENTION_AREA_ICON,
   INTERVENTION_AREA_LABEL,
   INTERVENTION_AREA_ORDER,
   INTERVENTION_STAGE_LABEL,
@@ -51,140 +49,151 @@ export default function InterventionsCatalog({ items, initialAreas = [], initial
     })
   }, [areas, items, query, stage, type])
 
-  const areaCount = (slug: InterventionAreaSlug) => items.filter((item) => item.area === slug).length
-
-  const typeCount = (id: InterventionTypeId) =>
-    items.filter((item) => {
-      if (areas.length > 0 && !areas.includes(item.area)) return false
-      return item.type === id || item.support.includes(id)
-    }).length
-
-  const comingSoonAreas =
-    !query && type === ALL && stage === ALL
-      ? (areas.length > 0 ? areas : INTERVENTION_AREA_ORDER).filter((slug) => areaCount(slug) === 0)
-      : []
+  const quiet = comingNextAreas(items)
+  const filtersActive = query.trim().length > 0 || areas.length > 0 || type !== ALL || stage !== ALL
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap gap-2">
-        {INTERVENTION_AREA_ORDER.map((slug) => {
-          const active = areas.includes(slug)
-          const count = areaCount(slug)
-          return (
-            <button
-              key={slug}
-              type="button"
-              aria-pressed={active}
-              onClick={() => toggleArea(slug)}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] transition-colors ${
-                active
-                  ? 'bg-black text-white hover:bg-gray-800'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+      <div className="sticky top-16 z-30 -mx-6 border-y border-black/10 bg-white/95 px-6 py-3 backdrop-blur-sm">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <label className="sr-only" htmlFor="intervention-search">
+            Search interventions
+          </label>
+          <input
+            id="intervention-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search interventions or bottlenecks..."
+            className="w-full border-0 bg-transparent px-0 py-2 text-sm text-black placeholder:text-gray-400 focus:outline-none lg:max-w-sm"
+          />
+          <div className="flex flex-1 flex-wrap items-center gap-2 lg:justify-end">
+            <div className="flex flex-wrap gap-1.5" role="group" aria-label="Focus areas">
+              {INTERVENTION_AREA_ORDER.map((slug) => {
+                const active = areas.includes(slug)
+                return (
+                  <button
+                    key={slug}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => toggleArea(slug)}
+                    className={`border px-2.5 py-1 text-[11px] uppercase tracking-[0.12em] transition-colors ${
+                      active
+                        ? 'border-black bg-black text-white'
+                        : 'border-black/10 bg-white text-gray-500 hover:border-black/30 hover:text-black'
+                    }`}
+                  >
+                    {INTERVENTION_AREA_LABEL[slug]}
+                  </button>
+                )
+              })}
+            </div>
+            <FilterSelect
+              id="intervention-type"
+              label="Type"
+              value={type}
+              onChange={(value) => setType(value as InterventionTypeId | typeof ALL)}
             >
-              <AreaIcon
-                type={INTERVENTION_AREA_ICON[slug] as AreaIconType}
-                className={`h-3.5 w-3.5 ${active ? 'text-white' : 'text-gray-500'}`}
-              />
-              {INTERVENTION_AREA_LABEL[slug]}
-              {count > 0 && (
-                <span className={active ? 'text-white/70' : 'text-gray-400'}>{count}</span>
-              )}
-            </button>
-          )
-        })}
+              <option value={ALL}>Type</option>
+              {(Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]).map((id) => (
+                <option key={id} value={id}>
+                  {INTERVENTION_TYPES[id].title}
+                </option>
+              ))}
+            </FilterSelect>
+            <FilterSelect
+              id="intervention-stage"
+              label="Stage"
+              value={stage}
+              onChange={(value) => setStage(value as InterventionStage | typeof ALL)}
+            >
+              <option value={ALL}>Stage</option>
+              {(Object.keys(INTERVENTION_STAGE_LABEL) as InterventionStage[]).map((id) => (
+                <option key={id} value={id}>
+                  {INTERVENTION_STAGE_LABEL[id]}
+                </option>
+              ))}
+            </FilterSelect>
+            <p className="ml-1 text-[12px] uppercase tracking-[0.12em] text-gray-400" aria-live="polite">
+              {filtered.length} {filtered.length === 1 ? 'intervention' : 'interventions'}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <label className="sr-only" htmlFor="intervention-search">
-          Search interventions
-        </label>
-        <input
-          id="intervention-search"
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search interventions or bottlenecks"
-          className="w-full rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-black placeholder:text-gray-400 focus:border-blue focus:outline-none sm:max-w-sm"
-        />
-        <label className="sr-only" htmlFor="intervention-type">
-          Intervention type
-        </label>
-        <select
-          id="intervention-type"
-          value={type}
-          onChange={(event) => setType(event.target.value as InterventionTypeId | typeof ALL)}
-          className="rounded-full border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600"
-        >
-          <option value={ALL}>All types</option>
-          {(Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]).map((id) => (
-            <option key={id} value={id}>
-              {INTERVENTION_TYPES[id].title} ({typeCount(id)})
-            </option>
-          ))}
-        </select>
-        <label className="sr-only" htmlFor="intervention-stage">
-          Intervention stage
-        </label>
-        <select
-          id="intervention-stage"
-          value={stage}
-          onChange={(event) => setStage(event.target.value as InterventionStage | typeof ALL)}
-          className="rounded-full border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600"
-        >
-          <option value={ALL}>All stages</option>
-          {(Object.keys(INTERVENTION_STAGE_LABEL) as InterventionStage[]).map((id) => (
-            <option key={id} value={id}>
-              {INTERVENTION_STAGE_LABEL[id]}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <p className="mb-6 text-sm text-gray-400" aria-live="polite">
-        {filtered.length === 0
-          ? `No published examples${areas.length === 1 ? ` in ${INTERVENTION_AREA_LABEL[areas[0]]}` : areas.length > 1 ? ' in selected focus areas' : ''} yet.`
-          : `${filtered.length} published ${filtered.length === 1 ? 'example' : 'examples'}${areas.length === 1 ? ` in ${INTERVENTION_AREA_LABEL[areas[0]]}` : areas.length > 1 ? ' in selected focus areas' : ''}.`}
-        {' '}Draft-source programs, labeled as proposed — not a verified active inventory.
-      </p>
-
-      {filtered.length > 0 || comingSoonAreas.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {filtered.length > 0 ? (
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((item) => (
             <InterventionCard key={item.slug} item={item} showArea={areas.length !== 1} />
           ))}
-          {comingSoonAreas.map((slug) => (
-            <ComingSoonTile key={slug} area={slug} />
-          ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-gray-200 p-8">
-          <h3 className="mb-2 text-lg font-medium text-black">No matching examples</h3>
+        <div className="mt-8 border border-black/10 p-8">
+          <h3 className="mb-2 font-serif text-2xl font-normal text-black">No matching interventions</h3>
           <p className="max-w-xl text-sm text-gray-500">
-            Try another search, type, or stage. Every current example is a proposed public edition.
+            Try another search, field, type, or stage. Every current example is a proposed public edition.
           </p>
-          <button
-            type="button"
-            className="mt-4 text-sm text-blue hover:underline"
-            onClick={() => {
-              setAreas([])
-              setType(ALL)
-              setStage(ALL)
-              setQuery('')
-            }}
-          >
-            Reset filters
-          </button>
+          {filtersActive && (
+            <button
+              type="button"
+              className="mt-4 text-sm text-black underline decoration-black/30 underline-offset-4 hover:decoration-black"
+              onClick={() => {
+                setAreas([])
+                setType(ALL)
+                setStage(ALL)
+                setQuery('')
+              }}
+            >
+              Reset filters
+            </button>
+          )}
         </div>
+      )}
+
+      {quiet.length > 0 && !filtersActive && (
+        <p className="mt-10 text-[12px] uppercase tracking-[0.16em] text-gray-400">
+          Coming next{' '}
+          <span className="text-gray-600">
+            {quiet.map((area) => INTERVENTION_AREA_LABEL[area]).join(' · ')}
+          </span>
+        </p>
       )}
 
       <p className="mt-8 text-sm text-gray-400">
         Public types here follow the FA2 draft vocabulary. See the{' '}
-        <Link href="/interventions/methodology/" className="text-blue hover:underline">
+        <Link href="/interventions/methodology/" className="text-black underline decoration-black/20 underline-offset-4 hover:decoration-black">
           methodology
         </Link>{' '}
         for how they relate to the Console toolkit.
       </p>
     </div>
+  )
+}
+
+function FilterSelect({
+  id,
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  id: string
+  label: string
+  value: string
+  onChange: (value: string) => void
+  children: React.ReactNode
+}) {
+  return (
+    <label className="relative">
+      <span className="sr-only">{label}</span>
+      <select
+        id={id}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="appearance-none border border-black/10 bg-white py-1.5 pl-3 pr-7 text-[12px] uppercase tracking-[0.12em] text-gray-600 focus:border-black focus:outline-none"
+      >
+        {children}
+      </select>
+    </label>
   )
 }

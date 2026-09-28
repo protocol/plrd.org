@@ -1,5 +1,8 @@
 import type { InterventionTypeId } from '@/lib/interventions'
 
+// A shared six-mode vocabulary: radar, nodes, diamond, module, evidence, outward.
+// Stroke glyphs so the same marks can sit on cards, the map, and later site surfaces.
+
 export default function InterventionTypeIcon({
   type,
   className = 'h-3.5 w-3.5',
@@ -10,7 +13,7 @@ export default function InterventionTypeIcon({
   const common = {
     fill: 'none' as const,
     stroke: 'currentColor',
-    strokeWidth: 1.7,
+    strokeWidth: 1.5,
     strokeLinecap: 'round' as const,
     strokeLinejoin: 'round' as const,
   }
@@ -19,36 +22,42 @@ export default function InterventionTypeIcon({
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
       {type === 'orient' && (
         <>
-          <circle cx="12" cy="12" r="8.2" {...common} />
-          <path d="M12 5.5v13M5.5 12h13" {...common} />
-          <circle cx="12" cy="12" r="2.2" {...common} />
+          <circle cx="12" cy="12" r="8" {...common} />
+          <circle cx="12" cy="12" r="4.2" {...common} />
+          <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none" />
+          <path d="M12 4v2.2M12 17.8V20M4 12h2.2M17.8 12H20" {...common} />
         </>
       )}
       {type === 'coordinate' && (
         <>
-          <circle cx="7" cy="7" r="2.2" {...common} />
-          <circle cx="17" cy="7" r="2.2" {...common} />
-          <circle cx="7" cy="17" r="2.2" {...common} />
-          <circle cx="17" cy="17" r="2.2" {...common} />
-          <path d="M9 7h6M7 9v6M17 9v6M9 17h6" {...common} />
+          <circle cx="6.5" cy="7" r="2" {...common} />
+          <circle cx="17.5" cy="7" r="2" {...common} />
+          <circle cx="12" cy="17" r="2" {...common} />
+          <path d="M8.3 8.1 10.4 15.2M15.7 8.1 13.6 15.2M8.5 7h7" {...common} />
         </>
       )}
       {type === 'resource' && (
-        <path d="M12 3.4c.5 2.6 1.7 4.3 4 5.6-2.3.8-3.5 2.4-4 5.6-.5-3.2-1.7-4.8-4-5.6 2.3-1.3 3.5-3 4-5.6ZM6.4 14.4c.3 1.6 1 2.7 2.4 3.5-1.4.5-2.1 1.5-2.4 3.5-.3-2-1-3-2.4-3.5 1.4-.8 2.1-1.9 2.4-3.5ZM17.6 13.3c.25 1.3.8 2.1 1.9 2.8-1.1.4-1.65 1.2-1.9 2.8-.25-1.6-.8-2.4-1.9-2.8 1.1-.7 1.65-1.5 1.9-2.8Z" {...common} />
+        <path d="M12 3.2 15.6 12 12 20.8 8.4 12 12 3.2Z" {...common} />
       )}
       {type === 'build' && (
-        <path d="M4.6 9.4 12 5.4l7.4 4v9.2L12 22.6l-7.4-4V9.4ZM12 5.4v17.2M8.2 11.6h7.6M8.2 15.4h7.6" {...common} />
+        <>
+          <rect x="4" y="4" width="7" height="7" rx="0.4" {...common} />
+          <rect x="13" y="4" width="7" height="7" rx="0.4" {...common} />
+          <rect x="4" y="13" width="7" height="7" rx="0.4" {...common} />
+          <rect x="13" y="13" width="7" height="7" rx="0.4" {...common} />
+        </>
       )}
       {type === 'prove' && (
         <>
-          <path d="M7.6 4.6h8.8l.4 2.1A6.2 6.2 0 0 1 12 19.4 6.2 6.2 0 0 1 7.2 6.7L7.6 4.6Z" {...common} />
-          <path d="m9.4 12.1 1.9 2 3.6-3.8" {...common} />
+          <rect x="4.5" y="3.5" width="15" height="17" rx="0.6" {...common} />
+          <path d="M8 12.2 10.6 14.7 16.2 9.2" {...common} />
         </>
       )}
       {type === 'enable' && (
         <>
-          <circle cx="10" cy="12" r="3.4" {...common} />
-          <path d="M13.6 12H20m-2.3-2.3L20.4 12l-2.7 2.3" {...common} />
+          <path d="M5 16.5 12 5.5l7 11" {...common} />
+          <path d="M8.2 16.5h7.6" {...common} />
+          <path d="M12 16.5v3" {...common} />
         </>
       )}
     </svg>

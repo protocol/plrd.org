@@ -1496,4 +1496,7 @@ html.dark .page-content details.fa2-dashboard {
     transform: none;
     filter: saturate(0.85);
   }
+  .intervention-arrow {
+    transition: none !important;
+  }
 }

@@ -34,6 +34,8 @@ export type PublicIntervention = {
   typeNote: string
   plRole: string
   published: boolean
+  /** Editorial emphasis on the catalog overview. Cards, filters, and the map still derive from the same record. */
+  featured?: boolean
 }
 
 export const INTERVENTION_AREA_ORDER: InterventionAreaSlug[] = [
@@ -132,6 +134,7 @@ export const INTERVENTION_PROGRAMS: PublicIntervention[] = [
     typeNote: "Source classification",
     plRole: "PL R&D would coordinate the shared program and institutional partnerships. Academic and engineering partners would deliver specialist work; local institutions would own operation.",
     published: true,
+    featured: true,
   },
   {
     slug: "evaluation-commons",
@@ -164,6 +167,7 @@ export const INTERVENTION_PROGRAMS: PublicIntervention[] = [
     typeNote: "Source classification",
     plRole: "PL would organize adoption partnerships and fund shared improvements with the tool teams. Local partners would lead facilitation and implementation.",
     published: true,
+    featured: true,
   },
   {
     slug: "ai4pg",
@@ -260,6 +264,7 @@ export const INTERVENTION_PROGRAMS: PublicIntervention[] = [
     typeNote: "Suggested classification · needs FA review",
     plRole: "PL’s role is to be confirmed. The source proposes a field-level program but does not establish PL’s specific delivery responsibility.",
     published: true,
+    featured: true,
   },
   {
     slug: "macaque-projectome",
@@ -378,5 +383,22 @@ export function publicInterventionHref(slug: string): string {
 export function catalogHref(area?: InterventionAreaSlug | "all"): string {
   if (!area || area === 'all') return '/interventions/'
   return `/interventions/?area=${encodeURIComponent(area)}`
+}
+
+/** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */
+export const INTERVENTION_AREA_ACCENT: Record<InterventionAreaSlug, string> = {
+  'economies-governance': '#9a6b2f',
+  neurotech: '#6b5b8c',
+  'ai-robotics': '#3d7a86',
+  'digital-human-rights': '#a15d52',
+}
+
+export const FEATURED_INTERVENTION_SLUGS = ['sovereign-ai', 'broad-listening', 'connectomics-benchmark'] as const
+
+export function featuredInterventions(): PublicIntervention[] {
+  const bySlug = new Map(publishedInterventions().map((item) => [item.slug, item]))
+  return FEATURED_INTERVENTION_SLUGS.map((slug) => bySlug.get(slug)).filter(
+    (item): item is PublicIntervention => Boolean(item?.featured),
+  )
 }
 
