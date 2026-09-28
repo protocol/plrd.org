@@ -380,9 +380,8 @@ export function publicInterventionHref(slug: string): string {
   return `/interventions/${slug}/`
 }
 
-export function catalogHref(area?: InterventionAreaSlug | "all"): string {
-  if (!area || area === 'all') return '/interventions/'
-  return `/interventions/?area=${encodeURIComponent(area)}`
+export function catalogHref(): string {
+  return '/interventions/'
 }
 
 /** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */

@@ -72,15 +72,17 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
   assert.match(mapSource, /Draft-source examples/)
 })
 
-test('catalog pills are multi-select without an All focus areas control', () => {
+test('catalog keeps grouping and drops the filter controls', () => {
   const mapSource = readFileSync(new URL('../src/components/PortfolioMap.tsx', import.meta.url), 'utf8')
+  const pageSource = readFileSync(new URL('../src/app/interventions/page.tsx', import.meta.url), 'utf8')
   const iconSource = readFileSync(new URL('../src/components/InterventionTypeIcon.tsx', import.meta.url), 'utf8')
-  assert.match(mapSource, /toggleArea/)
-  assert.doesNotMatch(mapSource, /All focus areas/)
-  assert.doesNotMatch(mapSource, /Coming next/)
   assert.match(mapSource, /Group the map/)
   assert.match(mapSource, /Intervention type/)
+  assert.match(mapSource, /Focus area/)
   assert.match(mapSource, /useState<MapGroupBy>\('type'\)/)
+  assert.doesNotMatch(mapSource, /toggleArea|intervention-search|FilterSelect|Reset filters|All focus areas/)
+  assert.doesNotMatch(mapSource, /Coming next/)
+  assert.doesNotMatch(pageSource, /searchParams|initialAreas|initialType/)
   assert.match(mapSource, /absolute right-3 top-3/)
   assert.match(mapSource, /auto-rows-fr/)
   assert.match(iconSource, /role="tooltip"/)

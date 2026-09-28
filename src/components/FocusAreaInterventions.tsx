@@ -20,7 +20,7 @@ export default function FocusAreaInterventions({ area }: { area: InterventionAre
         <p className="text-base leading-relaxed text-gray-600">
           Diagnose the bottleneck in {label}, match the intervention, then learn from the evidence.
           These are the same records as the{' '}
-          <Link href={catalogHref(area)} className="text-blue hover:underline">
+          <Link href={catalogHref()} className="text-blue hover:underline">
             global catalog
           </Link>
           — not a second list.

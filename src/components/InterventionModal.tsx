@@ -136,8 +136,8 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
             <Link href={INTERVENTION_AREA_HREF[item.area]} className="text-blue hover:underline">
               {INTERVENTION_AREA_LABEL[item.area]} →
             </Link>
-            <Link href={catalogHref(item.area)} className="text-blue hover:underline">
-              All {INTERVENTION_AREA_LABEL[item.area]} interventions →
+            <Link href={catalogHref()} className="text-blue hover:underline">
+              Browse the catalog →
             </Link>
             <Link href="/interventions/methodology/" className="text-blue hover:underline">
               Methodology →

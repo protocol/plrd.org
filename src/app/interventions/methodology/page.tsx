@@ -64,8 +64,8 @@ export default function InterventionMethodologyPage() {
                 <h3 className="text-base font-medium text-black">{tool.title}</h3>
               </div>
               <p className="mb-4 text-sm text-gray-500">{tool.summary}</p>
-              <Link href={`${catalogHref()}?type=${id}`} className="text-sm text-blue hover:underline">
-                Browse {tool.title.toLowerCase()} interventions →
+              <Link href={`${catalogHref()}#portfolio-map`} className="text-sm text-blue hover:underline">
+                Browse the catalog →
               </Link>
             </div>
           )

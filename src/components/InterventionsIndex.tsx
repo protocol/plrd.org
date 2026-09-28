@@ -3,15 +3,9 @@ import Breadcrumb from '@/components/Breadcrumb'
 import FeaturedInterventions from '@/components/FeaturedInterventions'
 import InterventionMethod from '@/components/InterventionMethod'
 import PortfolioMap from '@/components/PortfolioMap'
-import { publishedInterventions, type InterventionAreaSlug } from '@/lib/interventions'
+import { publishedInterventions } from '@/lib/interventions'
 
-export default function InterventionsIndex({
-  initialAreas,
-  initialType,
-}: {
-  initialAreas?: InterventionAreaSlug[]
-  initialType?: string
-}) {
+export default function InterventionsIndex() {
   const items = publishedInterventions()
 
   return (
@@ -39,7 +33,7 @@ export default function InterventionsIndex({
       </header>
 
       <InterventionMethod />
-      <PortfolioMap items={items} initialAreas={initialAreas} initialType={initialType} />
+      <PortfolioMap items={items} />
       <FeaturedInterventions />
 
       <section className="border-t border-black/10 py-16 md:py-24">
