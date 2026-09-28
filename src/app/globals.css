@@ -1618,3 +1618,17 @@ html.dark .page-content details.fa2-dashboard {
     width: 100%;
   }
 }
+
+.type-tip [role="tooltip"] {
+  opacity: 0;
+}
+
+.type-tip:hover [role="tooltip"] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .type-tip [role="tooltip"] {
+    transition: none;
+  }
+}

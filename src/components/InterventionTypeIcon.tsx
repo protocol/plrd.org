@@ -6,9 +6,11 @@ import type { InterventionTypeId } from '@/lib/interventions'
 export default function InterventionTypeIcon({
   type,
   className = 'h-3.5 w-3.5',
+  label,
 }: {
   type: InterventionTypeId
   className?: string
+  label?: string
 }) {
   const common = {
     fill: 'none' as const,
@@ -18,7 +20,7 @@ export default function InterventionTypeIcon({
     strokeLinejoin: 'round' as const,
   }
 
-  return (
+  const mark = (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
       {type === 'orient' && (
         <>
@@ -61,5 +63,20 @@ export default function InterventionTypeIcon({
         </>
       )}
     </svg>
+  )
+
+  if (!label) return mark
+
+  return (
+    <span className="type-tip relative inline-flex" title={label}>
+      {mark}
+      <span className="sr-only">{label}</span>
+      <span
+        role="tooltip"
+        className="pointer-events-none absolute bottom-full right-0 z-20 mb-1.5 whitespace-nowrap border border-black/10 bg-black px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white opacity-0 transition-opacity"
+      >
+        {label}
+      </span>
+    </span>
   )
 }

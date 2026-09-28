@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import FeaturedInterventions from '@/components/FeaturedInterventions'
 import InterventionMethod from '@/components/InterventionMethod'
-import InterventionsCatalog from '@/components/InterventionsCatalog'
 import PortfolioMap from '@/components/PortfolioMap'
 import { publishedInterventions, type InterventionAreaSlug } from '@/lib/interventions'
 
@@ -40,18 +39,8 @@ export default function InterventionsIndex({
       </header>
 
       <InterventionMethod />
-      <PortfolioMap items={items} />
+      <PortfolioMap items={items} initialAreas={initialAreas} initialType={initialType} />
       <FeaturedInterventions />
-
-      <section id="explore" className="border-t border-black/10 py-16 md:py-20">
-        <div className="mb-8 max-w-2xl">
-          <h2 className="font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[40px]">
-            Explore all interventions
-          </h2>
-          <p className="mt-3 text-sm text-gray-400">Draft-source examples. Not approved commitments.</p>
-        </div>
-        <InterventionsCatalog items={items} initialAreas={initialAreas} initialType={initialType} />
-      </section>
 
       <section className="border-t border-black/10 py-16 md:py-24">
         <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
