@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import styles from './page.module.css'
+import { INTERVENTION_GLYPHS, ItemGlyph, type ItemIcon } from './InterveneIcons'
 import Breadcrumb from '@/components/Breadcrumb'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
@@ -36,8 +37,16 @@ const interventions = [
     title: 'Orient',
     subtitle: 'Make the field legible.',
     failure: 'The opportunity, landscape or bottleneck is not yet clear.',
-    actions:
-      'Field maps · technology trees · Frontier Opportunity memos · benchmarks · taxonomies · roadmaps · research theses · investment theses',
+    actions: [
+      { icon: 'map', label: 'Field maps' },
+      { icon: 'stack', label: 'Technology trees' },
+      { icon: 'doc', label: 'Frontier Opportunity memos' },
+      { icon: 'check', label: 'Benchmarks' },
+      { icon: 'box', label: 'Taxonomies' },
+      { icon: 'flag', label: 'Roadmaps' },
+      { icon: 'doc', label: 'Research theses' },
+      { icon: 'money', label: 'Investment theses' },
+    ] as { icon: ItemIcon; label: string }[],
     evidence:
       'Credible actors change what they understand or do; hidden bottlenecks become visible and begin receiving attention or resources.',
   },
@@ -46,8 +55,15 @@ const interventions = [
     subtitle: 'Assemble the actors required to move it.',
     failure:
       'The right people and institutions exist, but they are fragmented, disconnected or working at cross-purposes.',
-    actions:
-      'Decision-grade convenings · scientific advisory boards · funder cohorts · working groups · coalitions · fellowships · institutional partnerships',
+    actions: [
+      { icon: 'people', label: 'Decision-grade convenings' },
+      { icon: 'doc', label: 'Scientific advisory boards' },
+      { icon: 'money', label: 'Funder cohorts' },
+      { icon: 'people', label: 'Working groups' },
+      { icon: 'box', label: 'Coalitions' },
+      { icon: 'arrow', label: 'Fellowships' },
+      { icon: 'shield', label: 'Institutional partnerships' },
+    ] as { icon: ItemIcon; label: string }[],
     evidence:
       'Repeat collaboration, new projects, coordinated capital, agreements or standards, and shorter time from introduction to collaboration.',
   },
@@ -56,8 +72,18 @@ const interventions = [
     subtitle: 'Put resources behind the bottlenecks.',
     failure:
       'Promising work exists, but lacks the right capital, talent, compute, data or institutional support.',
-    actions:
-      'Philanthropy · grants · prizes · fellowships · compute · data · institutional budgets · public funding · procurement · venture and growth capital',
+    actions: [
+      { icon: 'money', label: 'Philanthropy' },
+      { icon: 'money', label: 'Grants' },
+      { icon: 'trophy', label: 'Prizes' },
+      { icon: 'arrow', label: 'Fellowships' },
+      { icon: 'chip', label: 'Compute' },
+      { icon: 'stack', label: 'Data' },
+      { icon: 'box', label: 'Institutional budgets' },
+      { icon: 'flag', label: 'Public funding' },
+      { icon: 'check', label: 'Procurement' },
+      { icon: 'arrow', label: 'Venture and growth capital' },
+    ] as { icon: ItemIcon; label: string }[],
     evidence:
       'Additional capital enters the field, funding moves faster, follow-on resources appear, and projects graduate toward the capital they need next.',
   },
@@ -66,8 +92,17 @@ const interventions = [
     subtitle: 'Create the shared capacity the field is missing.',
     failure:
       'A missing technical capability, piece of infrastructure or institution is blocking progress for many actors at once.',
-    actions:
-      'Protocols · open-source tooling · shared datasets · research infrastructure · standards · FROs · nonprofits · institutes · permanent coalitions',
+    actions: [
+      { icon: 'box', label: 'Protocols' },
+      { icon: 'box', label: 'Open-source tooling' },
+      { icon: 'stack', label: 'Shared datasets' },
+      { icon: 'chip', label: 'Research infrastructure' },
+      { icon: 'check', label: 'Standards' },
+      { icon: 'shield', label: 'FROs' },
+      { icon: 'box', label: 'Nonprofits' },
+      { icon: 'shield', label: 'Institutes' },
+      { icon: 'arrow', label: 'Permanent coalitions' },
+    ] as { icon: ItemIcon; label: string }[],
     evidence:
       'Real users and dependencies, lower cost or time for downstream actors, new research enabled, and infrastructure that can persist without PL R&D.',
   },
@@ -76,8 +111,15 @@ const interventions = [
     subtitle: 'Move promising ideas into the world.',
     failure:
       'Something promising exists, but lacks credible evidence outside the lab.',
-    actions:
-      'Pilots · prototype programs · sandboxes · demonstrations · reference implementations · deployment partnerships · sovereign pilots',
+    actions: [
+      { icon: 'arrow', label: 'Pilots' },
+      { icon: 'box', label: 'Prototype programs' },
+      { icon: 'shield', label: 'Sandboxes' },
+      { icon: 'trophy', label: 'Demonstrations' },
+      { icon: 'check', label: 'Reference implementations' },
+      { icon: 'people', label: 'Deployment partnerships' },
+      { icon: 'flag', label: 'Sovereign pilots' },
+    ] as { icon: ItemIcon; label: string }[],
     evidence:
       'Pilot → adoption, procurement, follow-on deployment, improved cost or performance, and better evidence about what actually works.',
   },
@@ -86,12 +128,37 @@ const interventions = [
     subtitle: 'Change the environment around what works.',
     failure:
       'The capability exists, but rules, standards, incentives, legitimacy or institutional structures prevent it from spreading.',
-    actions:
-      'Standards · regulatory playbooks · procurement routes · experimentation rights · interoperability rules · assurance frameworks · evaluation frameworks · governance models',
+    actions: [
+      { icon: 'check', label: 'Standards' },
+      { icon: 'doc', label: 'Regulatory playbooks' },
+      { icon: 'check', label: 'Procurement routes' },
+      { icon: 'arrow', label: 'Experimentation rights' },
+      { icon: 'box', label: 'Interoperability rules' },
+      { icon: 'shield', label: 'Assurance frameworks' },
+      { icon: 'check', label: 'Evaluation frameworks' },
+      { icon: 'people', label: 'Governance models' },
+    ] as { icon: ItemIcon; label: string }[],
     evidence:
       'Standards adopted, procurement enabled, barriers removed, and third parties increasingly able to deploy or replicate what works.',
   },
 ] as const
+
+// The spanning conditions that run through every lever, shown as banners under
+// the six levers rather than as a seventh category.
+const spanningLayers = [
+  {
+    title: 'Culture',
+    body: 'The spanning condition, not a seventh category. It shapes what people notice, believe is possible, and choose to join — across all six levers.',
+  },
+  {
+    title: 'Narrative',
+    body: 'The stories that make a field worth joining: how the opportunity is told, and who can picture themselves in it.',
+  },
+  {
+    title: 'Talent',
+    body: 'The people who carry a field — discovering it, joining networks, receiving resources, building infrastructure, running pilots, creating institutions.',
+  },
+]
 
 export default async function ImpactPage({
   searchParams,
@@ -195,6 +262,37 @@ export default async function ImpactPage({
                   now?
                 </span>
               </p>
+
+              <p className="mt-5 max-w-3xl text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                Two fields we are already asking it of
+              </p>
+              <div className="mt-3 grid gap-3 max-w-3xl sm:grid-cols-2">
+                <div className="rounded-2xl border border-black/10 bg-white px-5 py-5">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                    Neurotechnology · proposed
+                  </div>
+                  <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
+                    Connectomics has models but no maintained benchmark or cost
+                    curve — so the{' '}
+                    <strong className="font-semibold text-black">
+                      Connectomics Benchmark + Prize Program
+                    </strong>{' '}
+                    attacks validation.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-black/10 bg-white px-5 py-5">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                    Economies &amp; Governance · proposed
+                  </div>
+                  <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
+                    Open models exist but stall at adoption — so the{' '}
+                    <strong className="font-semibold text-black">
+                      Sovereign AI acceleration program
+                    </strong>{' '}
+                    builds the missing deployment capability.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -218,76 +316,95 @@ export default async function ImpactPage({
               </p>
             </div>
 
-            <div className={`${styles.cultureLayer} mt-10`}>
-              <div className={styles.cultureRail}>
-                <span>Culture</span>
-                <span className={styles.cultureRailCopy}>
-                  Horizontal layer · not a seventh lever
-                </span>
-              </div>
+            <div className="divide-y divide-gray-200 border-y border-gray-200">
+              {interventions.map((intervention, index) => {
+                const Glyph = INTERVENTION_GLYPHS[intervention.title as keyof typeof INTERVENTION_GLYPHS]
+                return (
+                <details key={intervention.title} className="group">
+                  <summary className="grid cursor-pointer list-none grid-cols-[42px_1fr_auto] items-center gap-4 py-5 marker:hidden sm:grid-cols-[60px_auto_0.7fr_1.3fr_auto] sm:py-6">
+                    <span className="text-[12px] font-medium tabular-nums text-gray-500">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
 
-              <div className="divide-y divide-gray-200 border-y border-gray-200">
-                {interventions.map((intervention, index) => (
-                  <details key={intervention.title} className="group">
-                    <summary className="grid cursor-pointer list-none grid-cols-[42px_1fr_auto] items-center gap-4 py-5 marker:hidden sm:grid-cols-[60px_0.7fr_1.3fr_auto] sm:py-6">
-                      <span className="text-[12px] font-medium tabular-nums text-gray-500">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-500">
+                      <Glyph className="h-4 w-4" />
+                    </span>
 
-                      <span className="text-[18px] font-semibold tracking-tight text-black">
-                        {intervention.title}
-                      </span>
+                    <span className="text-[18px] font-semibold tracking-tight text-black">
+                      {intervention.title}
+                    </span>
 
-                      <span className="hidden text-[14px] text-gray-500 sm:block">
-                        {intervention.subtitle}
-                      </span>
+                    <span className="hidden text-[14px] text-gray-500 sm:block">
+                      {intervention.subtitle}
+                    </span>
 
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition-transform group-open:rotate-45">
-                        +
-                      </span>
-                    </summary>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition-transform group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
 
-                    <div className="grid gap-7 pb-7 pl-[58px] sm:grid-cols-3 sm:pl-[76px]">
-                      <div>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                          Failure addressed
-                        </div>
-                        <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                          {intervention.failure}
-                        </p>
+                  <div className="grid gap-7 pb-7 pl-[42px] sm:grid-cols-3 sm:pl-[96px]">
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        Failure addressed
                       </div>
+                      <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
+                        {intervention.failure}
+                      </p>
+                    </div>
 
-                      <div>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                          What we do
-                        </div>
-                        <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                          {intervention.actions}
-                        </p>
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        What we do
                       </div>
-
-                      <div>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                          What we look for
-                        </div>
-                        <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                          {intervention.evidence}
-                        </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {intervention.actions.map((action) => (
+                          <span
+                            key={action.label}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 py-1 pl-2 pr-3 text-[12px] font-medium text-gray-600"
+                          >
+                            <ItemGlyph icon={action.icon} className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                            {action.label}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                  </details>
-                ))}
-              </div>
+
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        What we look for
+                      </div>
+                      <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
+                        {intervention.evidence}
+                      </p>
+                    </div>
+                  </div>
+                </details>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-6xl px-6 pb-16">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+              Across every lever
             </div>
 
-            <p className="mt-6 max-w-3xl text-[14px] leading-relaxed text-gray-500">
-              Culture is the spanning condition, not a seventh category. It
-              shapes what people notice, believe is possible, and choose to
-              join — across Orient, Coordinate, Resource, Build, Prove and
-              Enable. Narrative and talent run through the same layer:
-              discovering a field, joining networks, receiving resources,
-              building infrastructure, running pilots and creating institutions.
-            </p>
+            <div className="mt-3 grid gap-3 md:grid-cols-3">
+              {spanningLayers.map((layer) => (
+                <div
+                  key={layer.title}
+                  className="rounded-2xl border border-black/10 bg-gray-50 px-5 py-6 sm:px-6 sm:py-7"
+                >
+                  <div className="text-[18px] font-semibold tracking-tight text-black">
+                    {layer.title}
+                  </div>
+                  <p className="mt-2 text-[14px] leading-relaxed text-gray-600">
+                    {layer.body}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
