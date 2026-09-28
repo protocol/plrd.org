@@ -8,7 +8,6 @@ import { HypercertsShowcase } from '@/components/hypercerts/HypercertsShowcase'
 import { fetchResearchRetreatHypercerts } from '@/lib/hypercerts'
 import { fetchLiveOutputs } from '@/lib/field-velocity-live'
 import { isFocusAreaKey, loadFieldVelocity } from '@/lib/field-velocity-data'
-import { VELOCITY_SIGNALS } from '@/lib/velocity-signals'
 
 export const revalidate = 60
 
@@ -94,34 +93,6 @@ const interventions = [
   },
 ] as const
 
-const learnCategories = [
-  [
-    'Constraint',
-    'Did the bottleneck we named actually loosen?',
-    'The diagnosis is only useful if the targeted constraint starts to give.',
-  ],
-  [
-    'Field velocity',
-    'Did the field move in the way we expected?',
-    'Read the same velocity signals we used to diagnose: capability, constraints, speed, commitment, adoption, durability.',
-  ],
-  [
-    'Substitution',
-    'Did another bottleneck become more important?',
-    'A loosened constraint often reveals the next rate-limiter. That is a new diagnosis, not a failure.',
-  ],
-  [
-    'Diagnosis',
-    'Was the original diagnosis wrong?',
-    'A miss updates the model. Inflection points are dated, falsifiable markers — not pass-or-fail targets.',
-  ],
-  [
-    'Compounding',
-    'Is the field becoming more able to move without us?',
-    'Successful field building should eventually make the field less dependent on the field builder.',
-  ],
-] as const
-
 export default async function ImpactPage({
   searchParams,
 }: {
@@ -172,80 +143,15 @@ export default async function ImpactPage({
             The loop is three steps:{' '}
             <strong className="font-semibold text-black">Diagnose</strong>,{' '}
             <strong className="font-semibold text-black">Intervene</strong>,{' '}
-            <strong className="font-semibold text-black">Learn</strong>. Reading
-            field velocity is how we diagnose — and how we diagnose again.
-            Compounding is not a separate step; it is what Learn is for.
+            <strong className="font-semibold text-black">Learn</strong>. Diagnose
+            names the bottleneck. Learn reads field velocity, then checks the
+            inflection points against what we did.
           </p>
         </section>
       </div>
 
       <ImpactMethodologyTabs>
         <section id="diagnose" className="scroll-mt-24">
-          <div
-            id="field-velocity"
-            className="scroll-mt-24 border-y border-gray-200 bg-gray-100"
-          >
-            <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
-              <div id="observe" className="scroll-mt-24" />
-              <div id="observed-velocity" className="scroll-mt-24" />
-              <div className="mb-10 max-w-3xl">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-                  Field velocity
-                </div>
-
-                <h2 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.025em] text-black">
-                  <ImpactSectionLink fragment="#field-velocity">
-                    Six ways to read field velocity.
-                  </ImpactSectionLink>
-                </h2>
-
-                <p className="mt-5 text-[17px] leading-[1.65] text-gray-600">
-                  A field can appear busy without making meaningful progress. We
-                  call the rate of meaningful change{' '}
-                  <strong className="font-semibold text-black">
-                    field velocity
-                  </strong>
-                  . Diagnose and observe are the same motion: read whether the
-                  constraint is loosening, then diagnose again.
-                </p>
-
-                <p className="mt-3 text-[15px] leading-relaxed text-gray-500">
-                  Field velocity is not a single score. Each signal is what we
-                  want to understand; the instruments nested under it are how we
-                  measure it. Different fields use different combinations. Pick a
-                  focus area to read the live charts that apply to it.
-                </p>
-              </div>
-
-              <ImpactDashboardV2
-                key={initialArea}
-                initialArea={initialArea}
-                liveOutputs={liveOutputs}
-                marketSignals={marketSignals}
-                recordsByArea={recordsByArea}
-                measurementSeriesByArea={measurementSeriesByArea}
-                ideaVintageExamples={ideaVintageExamples}
-                mode="charts"
-                orientation="vertical"
-                signals={VELOCITY_SIGNALS}
-              />
-            </div>
-          </div>
-
-          <div
-            className={`${styles.downArrow} border-b border-gray-200 bg-white`}
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                d="M12 5v14m0 0-5-5m5 5 5-5"
-              />
-            </svg>
-          </div>
-
           <div id="methodology" className="border-b border-gray-200 bg-gray-50">
             <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
               <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
@@ -259,9 +165,9 @@ export default async function ImpactPage({
               </h2>
 
               <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-gray-500">
-                After reading the field, name what is actually rate-limiting it
-                now — not which bottleneck would be interesting to work on. The
-                intervention follows that diagnosis.
+                Name what is actually rate-limiting the field now — not which
+                bottleneck would be interesting to work on. The intervention
+                follows that diagnosis.
               </p>
 
               <div className="mt-10 grid gap-3 sm:grid-cols-2" data-bottlenecks="">
@@ -383,10 +289,52 @@ export default async function ImpactPage({
               building infrastructure, running pilots and creating institutions.
             </p>
           </div>
+        </section>
+
+        <section id="learn" className="scroll-mt-24">
+          <div id="compound" className="scroll-mt-24" />
+          <div
+            id="field-velocity"
+            className="scroll-mt-24 border-b border-gray-200 bg-gray-100"
+          >
+            <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
+              <div id="observe" className="scroll-mt-24" />
+              <div id="observed-velocity" className="scroll-mt-24" />
+              <div className="mb-8 max-w-3xl">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Field velocity
+                </div>
+
+                <h2 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.025em] text-black">
+                  <ImpactSectionLink fragment="#field-velocity">
+                    Field velocity.
+                  </ImpactSectionLink>
+                </h2>
+
+                <p className="mt-5 text-[17px] leading-[1.65] text-gray-600">
+                  Pick a focus area. The summary reads that field&rsquo;s
+                  velocity across the instruments that apply to it. The
+                  inflection points below are the markers we track.
+                </p>
+              </div>
+
+              <ImpactDashboardV2
+                key={initialArea}
+                initialArea={initialArea}
+                liveOutputs={liveOutputs}
+                marketSignals={marketSignals}
+                recordsByArea={recordsByArea}
+                measurementSeriesByArea={measurementSeriesByArea}
+                ideaVintageExamples={ideaVintageExamples}
+                mode="all"
+                orientation="horizontal"
+              />
+            </div>
+          </div>
 
           <div
             id="verified-impact"
-            className="scroll-mt-24 border-t border-gray-200 bg-gray-50"
+            className="scroll-mt-24 border-b border-gray-200 bg-gray-50"
           >
             <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
               <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
@@ -437,129 +385,6 @@ export default async function ImpactPage({
                   <HypercertsShowcase certs={certs} />
                 </div>
               )}
-            </div>
-          </div>
-        </section>
-
-        <section id="learn" className="scroll-mt-24">
-          <div id="compound" className="scroll-mt-24" />
-          <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
-            <div className="max-w-3xl">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-                Learn categories
-              </div>
-
-              <h2 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.025em] text-black">
-                Every intervention is a hypothesis.
-              </h2>
-
-              <p className="mt-5 text-[17px] leading-[1.65] text-gray-600">
-                After we intervene, we diagnose again. The aim is not to prove
-                ourselves right. It is to get better at building fields — and,
-                over time, to leave behind a field that can generate, fund,
-                coordinate and sustain progress itself.
-              </p>
-            </div>
-
-            <div className="mt-10 grid gap-3 sm:grid-cols-2">
-              {learnCategories.map(([title, question, detail]) => (
-                <div
-                  key={title}
-                  className="rounded-2xl border border-black/10 bg-white px-5 py-6 sm:px-6"
-                >
-                  <div className="text-[13px] font-semibold uppercase tracking-[0.12em] text-gray-400">
-                    {title}
-                  </div>
-                  <div className="mt-3 text-[20px] font-semibold leading-snug tracking-tight text-black">
-                    {question}
-                  </div>
-                  <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
-                    {detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12 rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
-              <div className="space-y-5 text-[16px] leading-relaxed text-gray-700">
-                <p>
-                  <strong className="font-semibold text-black">
-                    We believe
-                  </strong>{' '}
-                  [constraint] is holding back [field].
-                </p>
-
-                <p>
-                  <strong className="font-semibold text-black">
-                    We are applying
-                  </strong>{' '}
-                  [intervention] because we expect [observable change].
-                </p>
-
-                <p>
-                  <strong className="font-semibold text-black">
-                    We will use
-                  </strong>{' '}
-                  [field velocity] to test whether that happened.
-                </p>
-              </div>
-
-              <div className="mt-7 overflow-x-auto text-[12px] font-medium text-gray-500">
-                bottleneck → intervention → expected change → field velocity →
-                updated diagnosis
-              </div>
-            </div>
-
-            <div className="mt-16 rounded-2xl bg-black p-7 text-white sm:p-9">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
-                Inflection points
-              </div>
-
-              <h3 className="mt-3 max-w-2xl text-[28px] font-semibold leading-tight tracking-[-0.02em]">
-                What would convince us the field has changed?
-              </h3>
-
-              <p className="mt-4 max-w-3xl text-[14px] leading-relaxed text-white/65">
-                Velocity describes movement. Inflection points describe
-                meaningful changes in state. For each Frontier Opportunity, we
-                define observable, dated and falsifiable shifts and track the
-                current constraint, expected horizon, live signals, relevant
-                interventions and status.
-              </p>
-
-              <div className="mt-7 flex flex-wrap gap-2 text-[11px] font-medium text-white/70">
-                {[
-                  'Current constraint',
-                  'Inflection point',
-                  'Expected horizon',
-                  'Live signals',
-                  'Relevant interventions',
-                  'Status',
-                ].map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-white/15 px-3 py-1.5"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 bg-gray-50">
-            <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
-              <ImpactDashboardV2
-                key={`${initialArea}-learn`}
-                initialArea={initialArea}
-                liveOutputs={liveOutputs}
-                marketSignals={marketSignals}
-                recordsByArea={recordsByArea}
-                measurementSeriesByArea={measurementSeriesByArea}
-                ideaVintageExamples={ideaVintageExamples}
-                mode="inflections"
-                orientation="vertical"
-              />
             </div>
           </div>
         </section>

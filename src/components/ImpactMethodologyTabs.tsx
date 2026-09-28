@@ -1,13 +1,14 @@
 'use client'
 
 import { Children, isValidElement, useId, useState, type ReactNode } from 'react'
+import styles from '@/app/impact-preview-eb61fba1b98e/page.module.css'
 import { navigateImpact, useImpactNavigation } from '@/components/useImpactNavigation'
 
 const TABS = [
   {
     id: 'diagnose',
     label: 'Diagnose',
-    blurb: 'Read field velocity, then name the binding constraint.',
+    blurb: 'Name the binding constraint.',
   },
   {
     id: 'intervene',
@@ -17,7 +18,7 @@ const TABS = [
   {
     id: 'learn',
     label: 'Learn',
-    blurb: 'Update the diagnosis against inflection points, and run the cycle again.',
+    blurb: 'Read field velocity, then check the inflection points.',
   },
 ] as const
 
@@ -25,13 +26,14 @@ type TabId = (typeof TABS)[number]['id']
 
 const HASH_TO_TAB: Record<string, TabId> = {
   diagnose: 'diagnose',
-  observe: 'diagnose',
-  fv: 'diagnose',
-  'field-velocity': 'diagnose',
   methodology: 'diagnose',
   toolkit: 'intervene',
   intervene: 'intervene',
-  'verified-impact': 'intervene',
+  observe: 'learn',
+  fv: 'learn',
+  'field-velocity': 'learn',
+  'observed-velocity': 'learn',
+  'verified-impact': 'learn',
   learn: 'learn',
   compound: 'learn',
   inflection: 'learn',
@@ -56,7 +58,7 @@ export default function ImpactMethodologyTabs({ children }: { children: ReactNod
 
   return (
     <div>
-      <div className="sticky top-16 z-30 border-y border-black/10 bg-white/95 backdrop-blur-sm">
+      <div className={styles.methodologyTabs}>
         <div
           role="tablist"
           aria-label="Field-building loop"
@@ -103,6 +105,7 @@ export default function ImpactMethodologyTabs({ children }: { children: ReactNod
           })}
         </div>
       </div>
+      <div className={styles.methodologyTabsSpacer} aria-hidden="true" />
 
       {Children.map(children, (child) => {
         if (!isValidElement<{ id?: string }>(child)) return child

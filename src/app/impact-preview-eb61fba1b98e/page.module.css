@@ -5,16 +5,28 @@
   margin-block: 1.75rem;
 }
 
-.downArrow {
-  display: flex;
-  justify-content: center;
-  padding-block: 1.25rem;
-  color: #c4c4c0;
+/* The page wrapper uses overflow-hidden, which makes sticky resolve against
+   that box and drop the tabs once the intro scrolls away. Pin the loop menu
+   to the viewport so it stays under the 64px site header. */
+.methodologyTabs {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  border-bottom: 1px solid rgb(0 0 0 / 0.1);
+  background: rgb(255 255 255 / 0.95);
+  backdrop-filter: blur(4px);
 }
 
-.downArrow svg {
-  width: 22px;
-  height: 22px;
+.methodologyTabsSpacer {
+  height: 6.75rem;
+}
+
+@media (min-width: 640px) {
+  .methodologyTabsSpacer {
+    height: 8.25rem;
+  }
 }
 
 .cultureLayer {

@@ -87,12 +87,15 @@ for width in [1440, 1146, 1024, 768, 640, 390, 320]:
 
     click_center(methodology_tab('Diagnose'))
     diagnose_text = js("document.getElementById('diagnose')?.innerText || ''")
-    if 'Identify the bottlenecks' not in diagnose_text or diagnose_text.find('Six ways to read field velocity') > diagnose_text.find('Identify the bottlenecks'):
-        failures.append(f'{width}: Diagnose should lead with field velocity before bottlenecks')
+    if 'Identify the bottlenecks' not in diagnose_text or 'Field velocity' in diagnose_text or 'Six ways' in diagnose_text:
+        failures.append(f'{width}: Diagnose should lead with bottlenecks, not field velocity')
     click_center(methodology_tab('Intervene'))
     intervene_text = js("document.getElementById('intervene')?.innerText || ''")
-    if 'Culture' not in intervene_text or 'Documenting our hand' not in intervene_text:
-        failures.append(f'{width}: Intervene missing culture layer or documenting our hand')
+    if 'Culture' not in intervene_text or 'Documenting our hand' in intervene_text:
+        failures.append(f'{width}: Intervene should keep the culture layer and not the hypercerts cover')
+    learn_text = js("document.getElementById('learn')?.innerText || ''")
+    if 'Field velocity' not in learn_text or 'Documenting our hand' not in learn_text or 'Every intervention is a hypothesis' in learn_text or 'Six ways to read field velocity' in learn_text:
+        failures.append(f'{width}: Learn should hold the simpler field-velocity view and hypercerts, without the hypothesis section')
     for index in range(6):
         rect = js(f"""(() => {{
           const e = document.querySelectorAll('#intervene summary')[{index}];
@@ -120,20 +123,19 @@ for width in [1440, 1146, 1024, 768, 640, 390, 320]:
               return e.getBoundingClientRect().toJSON();
             }})()""")
             capture_screenshot(path=str(out / f'{section}-{width}.png'))
-        click_center(methodology_tab('Diagnose'))
+        click_center(methodology_tab('Learn'))
         js("""(() => {
           const e = document.getElementById('field-velocity');
           e.scrollIntoView({block:'start', behavior:'instant'});
           return e.getBoundingClientRect().toJSON();
         })()""")
         capture_screenshot(path=str(out / f'field-velocity-{width}.png'))
-        click_center(methodology_tab('Learn'))
         js("""(() => {
-          const e = [...document.querySelectorAll('#learn h3')].find(h => /convince us the field has changed/.test(h.textContent));
-          e?.scrollIntoView({block:'start', behavior:'instant'});
-          return e?.getBoundingClientRect().toJSON();
+          const e = document.getElementById('verified-impact');
+          e.scrollIntoView({block:'start', behavior:'instant'});
+          return e.getBoundingClientRect().toJSON();
         })()""")
-        capture_screenshot(path=str(out / f'learn-inflections-{width}.png'))
+        capture_screenshot(path=str(out / f'learn-hypercerts-{width}.png'))
 
 (out / 'results.json').write_text(json.dumps({'origin': origin, 'results': results, 'failures': failures}, indent=2))
 print(json.dumps({'results': results, 'failures': failures}, indent=2))
