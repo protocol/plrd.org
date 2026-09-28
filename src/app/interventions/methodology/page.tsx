@@ -72,17 +72,6 @@ export default function InterventionMethodologyPage() {
         })}
       </div>
 
-      <div className="mb-10 max-w-3xl rounded-xl border border-gray-200 p-6">
-        <h3 className="mb-2 text-base font-semibold">One taxonomy still needs to be agreed</h3>
-        <p className="text-sm leading-relaxed text-gray-600">
-          This catalog uses Orient, Coordinate, Resource, Build, Prove, and Enable from the Economies
-          &amp; Governance draft. The unpublished Impact Preview and the Interventions Console currently
-          use seven labels: Legibility, Connection, Funding, Policy, Infrastructure, Translation, and
-          Culture. Public classification here is reviewed edition metadata. Operational Console types
-          are unchanged.
-        </p>
-      </div>
-
       <div className="max-w-3xl">
         <h3 className="mb-2 text-lg font-semibold">Evidence is not attribution</h3>
         <p className="mb-6 text-base leading-relaxed text-gray-600">

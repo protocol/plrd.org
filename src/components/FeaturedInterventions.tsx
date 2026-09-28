@@ -53,9 +53,8 @@ export default function FeaturedInterventions() {
     <section aria-labelledby="featured-interventions" className="border-t border-black/10 py-16 md:py-20">
       <div className="mb-8 flex items-end justify-between gap-6">
         <div>
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Featured</p>
           <h2 id="featured-interventions" className="font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[36px]">
-            Three programs, in more detail.
+            Spotlight: three live programmatic interventions
           </h2>
         </div>
       </div>

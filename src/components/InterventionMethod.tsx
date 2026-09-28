@@ -34,38 +34,34 @@ export default function InterventionMethod() {
         </h2>
       </div>
 
-      <div className="method-cycle mt-8 pb-8 md:mt-10 md:pb-9">
+      <div className="method-cycle mt-8 md:mt-10">
         <ol className="method-cycle-track">
-          {STAGES.map((stage, index) => (
+          {STAGES.map((stage) => (
             <li key={stage.kicker} className="method-cycle-stage">
-              {index < STAGES.length - 1 && <span className="method-cycle-forward" aria-hidden="true" />}
               <p className="method-cycle-kicker">{stage.kicker}</p>
               <p className="method-cycle-title">{stage.title}</p>
               <p className="method-cycle-body">{stage.body}</p>
-              {stage.kicker === 'Intervene' && (
-                <ul className="method-cycle-levers">
-                  {TYPE_ORDER.map((id) => (
-                    <li key={id}>
-                      <InterventionTypeIcon type={id} className="h-3.5 w-3.5 shrink-0" />
-                      <span>{INTERVENTION_TYPES[id].title}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
             </li>
           ))}
         </ol>
         <p className="method-cycle-return" aria-hidden="true">
-          <svg viewBox="0 0 1000 28" fill="none" preserveAspectRatio="none">
-            <path
-              d="M833 2 C 833 22, 167 22, 167 2"
-              stroke="currentColor"
-              strokeWidth="1.25"
-              vectorEffect="non-scaling-stroke"
-            />
-            <path d="M161 8 L167 2 L173 8" stroke="currentColor" strokeWidth="1.25" vectorEffect="non-scaling-stroke" />
+          <svg viewBox="0 0 120 36" fill="none">
+            <path d="M12 6 H108" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+            <path d="M12 6 L18 2 M12 6 L18 10" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M108 6 L102 2 M108 6 L102 10" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+            <text x="60" y="28" textAnchor="middle" fill="currentColor">
+              Repeat
+            </text>
           </svg>
         </p>
+        <ul className="method-cycle-levers">
+          {TYPE_ORDER.map((id) => (
+            <li key={id}>
+              <InterventionTypeIcon type={id} className="h-3.5 w-3.5 shrink-0" />
+              <span>{INTERVENTION_TYPES[id].title}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )

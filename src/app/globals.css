@@ -1547,7 +1547,8 @@ html.dark .page-content details.fa2-dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.4rem 1.1rem;
-  margin: 1rem 0 0;
+  max-width: 28rem;
+  margin: 1.25rem 0 0;
   padding: 0.85rem 0 0;
   list-style: none;
   border-top: 1px solid rgb(0 0 0 / 0.1);
@@ -1565,7 +1566,20 @@ html.dark .page-content details.fa2-dashboard {
 }
 
 .method-cycle-return {
-  display: none;
+  margin: 1.35rem 0 0;
+  color: rgb(19 19 22 / 0.42);
+  pointer-events: none;
+}
+
+.method-cycle-return svg {
+  display: block;
+  width: min(100%, 22rem);
+  height: 36px;
+  overflow: visible;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 @media (min-width: 768px) {
@@ -1574,41 +1588,11 @@ html.dark .page-content details.fa2-dashboard {
     column-gap: 2.75rem;
   }
 
-  .method-cycle-forward {
-    position: absolute;
-    top: 0.42rem;
-    left: calc(100% - 0.15rem);
-    width: calc(2.75rem + 0.3rem);
-    height: 1px;
-    background: rgb(19 19 22 / 0.28);
-  }
-
-  .method-cycle-forward::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    right: -1px;
-    border-top: 3.5px solid transparent;
-    border-bottom: 3.5px solid transparent;
-    border-left: 5px solid rgb(19 19 22 / 0.45);
-  }
-
   .method-cycle-return {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0.15rem;
-    height: 28px;
-    margin: 0;
-    color: rgb(19 19 22 / 0.34);
-    pointer-events: none;
+    margin-top: 1.6rem;
   }
 
   .method-cycle-return svg {
-    display: block;
     width: 100%;
-    height: 28px;
-    overflow: visible;
   }
 }

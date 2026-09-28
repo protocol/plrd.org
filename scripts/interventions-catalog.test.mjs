@@ -60,6 +60,7 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
   assert.match(methodSource, /Intervene/)
   assert.match(methodSource, /Repeat/)
   assert.match(methodSource, /method-cycle-return/)
+  assert.doesNotMatch(methodSource, /method-cycle-forward/)
   assert.doesNotMatch(methodSource, /Field moves|intervention-chain|01 Field/)
   assert.match(sourceText, /InterventionMethod/)
   assert.match(sourceText, /Portfolio map|PortfolioMap/)

@@ -25,8 +25,8 @@ export default function InterventionsIndex({
           Turning bottlenecks into breakthroughs
         </h1>
         <p className="mt-8 max-w-xl text-lg leading-relaxed text-gray-600 md:text-xl">
-          Fields don&apos;t stall in general. They stall on a specific constraint. These are the
-          programs we run to loosen those — and the evidence we look at next.
+          Fields get stuck at specific bottlenecks. We intervene there, then look for signals that
+          the constraint is loosening and the field is moving.
         </p>
         <Link
           href="/interventions/methodology/"

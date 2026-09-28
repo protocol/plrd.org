@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import Link from 'next/link'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
 import {
@@ -18,7 +18,6 @@ const TYPE_ORDER = Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]
 
 export default function PortfolioMap({ items }: { items: PublicIntervention[] }) {
   const labelId = useId()
-  const [active, setActive] = useState<string | null>(null)
   const populated = INTERVENTION_AREA_ORDER.filter((area) => items.some((item) => item.area === area))
   const quiet = INTERVENTION_AREA_ORDER.filter((area) => !populated.includes(area))
 
@@ -30,69 +29,33 @@ export default function PortfolioMap({ items }: { items: PublicIntervention[] })
           How current interventions sit across fields.
         </h2>
         <p className="mt-4 text-base leading-relaxed text-gray-500">
-          Columns are focus areas. Rows are intervention types. Hover or focus a mark to open the program.
+          Each row is an intervention type. The programs in that type are named underneath.
         </p>
       </div>
 
-      <div className="portfolio-map-scroll -mx-6 overflow-x-auto px-6 md:mx-0 md:overflow-visible md:px-0">
-        <div
-          className="portfolio-map min-w-[720px] border-t border-black/10 md:min-w-0"
-          role="grid"
-          aria-label="Interventions by focus area and type"
-        >
-          <div className="grid grid-cols-[7.5rem_repeat(2,minmax(0,1fr))] border-b border-black/10" role="row">
-            <div role="columnheader" className="py-4 pr-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-              Type
-            </div>
-            {populated.map((area) => (
-              <div key={area} role="columnheader" className="px-3 py-4">
-                <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-black">
-                  <span
-                    className="inline-block h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: INTERVENTION_AREA_ACCENT[area] }}
-                    aria-hidden="true"
-                  />
-                  {INTERVENTION_AREA_LABEL[area]}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {TYPE_ORDER.map((type) => (
-            <div
-              key={type}
-              role="row"
-              className="grid grid-cols-[7.5rem_repeat(2,minmax(0,1fr))] border-b border-black/[0.06]"
-            >
-              <div role="rowheader" className="flex items-center gap-2 py-4 pr-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-600">
+      <div className="border-t border-black/10">
+        {TYPE_ORDER.map((type) => {
+          const programs = items.filter((item) => item.type === type)
+          return (
+            <div key={type} className="border-b border-black/[0.08] py-5 md:py-6">
+              <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-600">
                 <InterventionTypeIcon type={type} className="h-3.5 w-3.5 text-gray-500" />
                 {INTERVENTION_TYPES[type].title}
               </div>
-              {populated.map((area) => {
-                const cell = items.filter((item) => item.area === area && item.type === type)
-                return (
-                  <div key={area} role="gridcell" className="flex min-h-[3.25rem] flex-wrap items-center gap-2 px-3 py-3">
-                    {cell.length === 0 ? (
-                      <span className="text-[11px] text-gray-300" aria-hidden="true">
-                        ·
-                      </span>
-                    ) : (
-                      cell.map((item) => (
-                        <MapMark
-                          key={item.slug}
-                          item={item}
-                          open={active === item.slug}
-                          onOpen={() => setActive(item.slug)}
-                          onClose={() => setActive((current) => (current === item.slug ? null : current))}
-                        />
-                      ))
-                    )}
-                  </div>
-                )
-              })}
+              {programs.length === 0 ? (
+                <p className="mt-3 text-sm text-gray-400">None in the current catalog.</p>
+              ) : (
+                <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {programs.map((item) => (
+                    <li key={item.slug}>
+                      <ProgramName item={item} />
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          ))}
-        </div>
+          )
+        })}
       </div>
 
       {quiet.length > 0 && (
@@ -107,43 +70,28 @@ export default function PortfolioMap({ items }: { items: PublicIntervention[] })
   )
 }
 
-function MapMark({
-  item,
-  open,
-  onOpen,
-  onClose,
-}: {
-  item: PublicIntervention
-  open: boolean
-  onOpen: () => void
-  onClose: () => void
-}) {
+function ProgramName({ item }: { item: PublicIntervention }) {
   const accent = INTERVENTION_AREA_ACCENT[item.area]
   return (
-    <span className="relative inline-flex" onMouseEnter={onOpen} onMouseLeave={onClose}>
-      <Link
-        href={publicInterventionHref(item.slug)}
-        scroll={false}
-        aria-label={item.title}
-        onFocus={onOpen}
-        onBlur={onClose}
-        className="portfolio-mark group inline-flex h-7 min-w-7 items-center justify-center rounded-full border bg-white px-1.5 no-underline transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-        style={{ borderColor: accent, color: accent, outlineColor: accent }}
-      >
-        <InterventionTypeIcon type={item.type} className="h-3.5 w-3.5" />
-      </Link>
+    <Link
+      href={publicInterventionHref(item.slug)}
+      scroll={false}
+      className="group flex min-h-11 items-start gap-2.5 border border-black/10 bg-white px-3 py-2.5 no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+    >
       <span
-        role="tooltip"
-        className={`pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-20 w-max max-w-[16rem] -translate-x-1/2 border border-black/10 bg-white px-2.5 py-1.5 text-[12px] leading-snug text-black shadow-[0_8px_24px_rgba(19,19,22,0.06)] ${
-          open ? 'block' : 'hidden'
-        }`}
-      >
-        <span className="block font-medium">{item.title}</span>
-        <span className="mt-0.5 block text-[10px] uppercase tracking-[0.12em] text-gray-400">
-          {INTERVENTION_AREA_LABEL[item.area]} · {item.timing}
+        className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+        style={{ backgroundColor: accent }}
+        aria-hidden="true"
+      />
+      <span className="min-w-0">
+        <span className="block text-sm font-medium leading-snug text-black group-hover:underline">
+          {item.title}
+        </span>
+        <span className="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
+          {INTERVENTION_AREA_LABEL[item.area]}
         </span>
       </span>
-    </span>
+    </Link>
   )
 }
 
