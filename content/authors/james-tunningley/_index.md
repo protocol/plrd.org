@@ -7,12 +7,10 @@ authors:
   - james-tunningley
 
 # Roles/positions
-role: Economies & Governance Co-Lead
+role: Economies & Governance Co-Lead · Strategic Philanthropy Lead
 
 groups:
   - 'Protocol Labs'
-  - 'Architect Systems Capital Management'
-  - 'Architect Global Institute'
 
 user_groups:
   - Leads
@@ -28,12 +26,12 @@ social:
   link: https://jamestunningley.com
 
 # For display at the top of the author details page
-quote: "Bridging capital, technology, and policy to tackle critical economic and systemic challenges."
+quote: "Building institutions, partnerships and capital around frontier technologies."
 ---
-James Tunningley is the **Economies & Governance Co-Lead** at PL R&D. James is Senior Advisor at **Architect Systems Capital Management** and Executive Director of **Architect Global Institute**.
+James Tunningley is **Economies & Governance Co-Lead** at PL R&D, where he also leads **Philanthropy**.
 
-A Semafor Global Economy Principal and Fellow of the Royal Asiatic Society, James formerly served as a Team Lead at Protocol Labs, overseeing multiple teams across the venture and builder portfolios.
+Previously, James was a Senior Advisor at **Architect Systems Capital Management** and the **Architect Institute**. Before that, he was a Team Lead at Protocol Labs, where he helped build and oversee its global startup and accelerator portfolio.
 
-He previously served as a UK Diplomat, Private Secretary to the current Cabinet Secretary, Dame Antonia Romeo DCB, and on the Future Leaders Council of the World Wide Web Foundation.
+A **Semafor World Economy Principal** and **Fellow of the Royal Asiatic Society**, James previously served as a UK diplomat and as Private Secretary to current UK Cabinet Secretary, Dame Antonia Romeo DCB.
 
-James attended Oxford University.
+James read Chinese at **University of Oxford**.
