@@ -5,8 +5,6 @@ import Breadcrumb from '@/components/Breadcrumb'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
 import ImpactMethodologyTabs from '@/components/ImpactMethodologyTabs'
-import { HypercertsShowcase } from '@/components/hypercerts/HypercertsShowcase'
-import { fetchResearchRetreatHypercerts } from '@/lib/hypercerts'
 import { fetchLiveOutputs } from '@/lib/field-velocity-live'
 import { isFocusAreaKey, loadFieldVelocity } from '@/lib/field-velocity-data'
 
@@ -165,10 +163,9 @@ export default async function ImpactPage({
 }: {
   searchParams: Promise<{ area?: string | string[] }>
 }) {
-  const [liveOutputs, fieldVelocity, certs, query] = await Promise.all([
+  const [liveOutputs, fieldVelocity, query] = await Promise.all([
     fetchLiveOutputs(),
     loadFieldVelocity(),
-    fetchResearchRetreatHypercerts(),
     searchParams,
   ])
 
@@ -263,36 +260,6 @@ export default async function ImpactPage({
                 </span>
               </p>
 
-              <p className="mt-5 max-w-3xl text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                Two fields we are already asking it of
-              </p>
-              <div className="mt-3 grid gap-3 max-w-3xl sm:grid-cols-2">
-                <div className="rounded-2xl border border-black/10 bg-white px-5 py-5">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                    Neurotechnology · proposed
-                  </div>
-                  <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
-                    Connectomics has models but no maintained benchmark or cost
-                    curve — so the{' '}
-                    <strong className="font-semibold text-black">
-                      Connectomics Benchmark + Prize Program
-                    </strong>{' '}
-                    attacks validation.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-black/10 bg-white px-5 py-5">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                    Economies &amp; Governance · proposed
-                  </div>
-                  <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
-                    Open models exist but stall at adoption — so the{' '}
-                    <strong className="font-semibold text-black">
-                      Sovereign AI acceleration program
-                    </strong>{' '}
-                    builds the missing deployment capability.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -448,74 +415,8 @@ export default async function ImpactPage({
               />
             </div>
           </div>
-
-          <div
-            id="verified-impact"
-            className="scroll-mt-24 border-b border-gray-200 bg-gray-50"
-          >
-            <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
-              <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-                <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Verified Impact + Hypercerts
-                  </div>
-
-                  <h2 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.025em] text-black">
-                    <ImpactSectionLink fragment="#verified-impact">
-                      Documenting our hand.
-                    </ImpactSectionLink>
-                  </h2>
-                </div>
-
-                <div>
-                  <p className="text-[17px] leading-[1.65] text-gray-600">
-                    Field velocity describes{' '}
-                    <strong className="font-semibold text-black">
-                      what is happening in the field
-                    </strong>
-                    . Verified Impact documents{' '}
-                    <strong className="font-semibold text-black">
-                      what PL R&amp;D actually did
-                    </strong>
-                    .
-                  </p>
-
-                  <p className="mt-4 text-[14px] leading-relaxed text-gray-500">
-                    Hypercerts, program records, outputs and supporting
-                    evidence make our contribution legible and inspectable
-                    without pretending that field-level outcomes can be cleanly
-                    attributed to PL R&amp;D.
-                  </p>
-
-                  <a
-                    href="/areas/economies-governance/impact/hypercerts/"
-                    className="mt-6 inline-flex items-center gap-2 text-[14px] font-medium text-blue hover:underline"
-                  >
-                    See all impact claims
-                    <span aria-hidden="true">→</span>
-                  </a>
-                </div>
-              </div>
-
-              {certs.length > 0 && (
-                <div className="mt-12">
-                  <HypercertsShowcase certs={certs} />
-                </div>
-              )}
-            </div>
-          </div>
         </section>
       </ImpactMethodologyTabs>
-
-      <div className="mx-auto max-w-6xl px-6 py-12">
-        <ImpactSectionLink
-          fragment="#diagnose"
-          className="inline-flex items-center gap-2 text-[13px] font-medium text-gray-500 transition-colors hover:text-black"
-        >
-          Back to the methodology
-          <span aria-hidden="true">↑</span>
-        </ImpactSectionLink>
-      </div>
     </div>
   )
 }

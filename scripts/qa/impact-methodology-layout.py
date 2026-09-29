@@ -94,8 +94,14 @@ for width in [1440, 1146, 1024, 768, 640, 390, 320]:
     if 'Culture' not in intervene_text or 'Documenting our hand' in intervene_text:
         failures.append(f'{width}: Intervene should keep the culture layer and not the hypercerts cover')
     learn_text = js("document.getElementById('learn')?.innerText || ''")
-    if 'Field velocity' not in learn_text or 'Documenting our hand' not in learn_text or 'Every intervention is a hypothesis' in learn_text or 'Six ways to read field velocity' in learn_text:
-        failures.append(f'{width}: Learn should hold the simpler field-velocity view and hypercerts, without the hypothesis section')
+    if 'Field velocity' not in learn_text or 'Documenting our hand' in learn_text or 'Every intervention is a hypothesis' in learn_text or 'Six ways to read field velocity' in learn_text:
+        failures.append(f'{width}: Learn should retain field velocity without the removed contribution showcase')
+    all_text = js("document.body.textContent")
+    for removed in ['Documenting our hand', 'Back to the methodology', 'Two fields we are already asking it of', 'Connectomics Benchmark + Prize Program', 'Sovereign AI acceleration program']:
+        if removed in all_text:
+            failures.append(f'{width}: removed content remains: {removed}')
+    if js("document.getElementById('verified-impact') !== null"):
+        failures.append(f'{width}: removed showcase wrapper remains')
     for index in range(6):
         rect = js(f"""(() => {{
           const e = document.querySelectorAll('#intervene summary')[{index}];
@@ -130,12 +136,14 @@ for width in [1440, 1146, 1024, 768, 640, 390, 320]:
           return e.getBoundingClientRect().toJSON();
         })()""")
         capture_screenshot(path=str(out / f'field-velocity-{width}.png'))
-        js("""(() => {
-          const e = document.getElementById('verified-impact');
-          e.scrollIntoView({block:'start', behavior:'instant'});
-          return e.getBoundingClientRect().toJSON();
-        })()""")
-        capture_screenshot(path=str(out / f'learn-hypercerts-{width}.png'))
+        for label, section in [('Diagnose', 'diagnose'), ('Learn', 'learn')]:
+            click_center(methodology_tab(label))
+            end = js(f"""(() => {{
+              const e = document.getElementById({section!r});
+              window.scrollTo({{top: e.getBoundingClientRect().bottom + scrollY - innerHeight + 100, behavior:'instant'}});
+              return e.getBoundingClientRect().toJSON();
+            }})()""")
+            capture_screenshot(path=str(out / f'{section}-bottom-{width}.png'))
 
 (out / 'results.json').write_text(json.dumps({'origin': origin, 'results': results, 'failures': failures}, indent=2))
 print(json.dumps({'results': results, 'failures': failures}, indent=2))

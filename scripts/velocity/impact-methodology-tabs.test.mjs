@@ -16,7 +16,7 @@ function text(node) {
   return text(node.props.children)
 }
 
-test('Diagnose leads with bottlenecks; Learn holds the simpler field-velocity view and hypercerts', async (t) => {
+test('Diagnose leads with bottlenecks; Learn keeps field velocity without the contribution showcase', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
   t.mock.method(console, 'warn', () => {})
   const Page = source('app/impact-preview-eb61fba1b98e/page.tsx').default
@@ -44,16 +44,20 @@ test('Diagnose leads with bottlenecks; Learn holds the simpler field-velocity vi
   assert.doesNotMatch(diagnoseText, /Six ways to read field velocity/)
   assert.doesNotMatch(diagnoseText, /Field velocity/)
   assert.doesNotMatch(diagnoseText, /Name the thing that is stuck/)
+  assert.doesNotMatch(diagnoseText, /Two fields we are already asking it of|Connectomics Benchmark \+ Prize Program|Sovereign AI acceleration program/)
+  assert.match(diagnoseText, /which of these is preventing this field from moving faster now\?/)
+  assert.equal(elements(diagnose).find(node => 'data-bottlenecks' in node.props).props.children.length, 10)
   assert.match(interveneText, /Culture/)
   assert.match(interveneText, /not a seventh/)
   assert.doesNotMatch(interveneText, /Documenting our hand/)
   assert.match(learnText, /Field velocity/)
-  assert.match(learnText, /Documenting our hand/)
+  assert.doesNotMatch(learnText, /Documenting our hand|Verified Impact \+ Hypercerts|See all impact claims/)
   assert.doesNotMatch(learnText, /Every intervention is a hypothesis/)
   assert.doesNotMatch(learnText, /Six ways to read field velocity/)
-  assert.ok(elements(learn).some(node => node.props.id === 'verified-impact'))
+  assert.ok(!elements(learn).some(node => node.props.id === 'verified-impact'))
   assert.ok(elements(learn).some(node => node.props.id === 'field-velocity'))
   assert.ok(elements(intervene).some(node => node.props.id === 'toolkit'))
   assert.ok(!elements(intervene).some(node => node.props.id === 'verified-impact'))
   assert.ok(elements(diagnose).some(node => node.props.id === 'methodology'))
+  assert.doesNotMatch(text(tree), /Back to the methodology/)
 })
