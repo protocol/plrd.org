@@ -4,11 +4,13 @@
 # QA_ORIGIN and QA_OUT may be provided in the harness globals. No storage mutations.
 import json
 import time
+import subprocess
 from pathlib import Path
 origin = globals().get('QA_ORIGIN', 'http://127.0.0.1:34721').rstrip('/')
 out = Path(globals().get('QA_OUT', '/opt/data/tmp/cover-c-browser'))
 out.mkdir(parents=True, exist_ok=True)
 reports = []
+revision = globals().get('QA_SHA') or subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
 
 def check(condition, note):
     if not condition:
@@ -54,17 +56,21 @@ for width in [1440, 1024, 768, 390, 320]:
     layout = js("""(() => {
       const selectors='section[aria-labelledby="featured-interventions"] a,section[aria-labelledby="explore-all-interventions"] li a';
       return {inner:innerWidth, client:document.documentElement.clientWidth, scroll:document.documentElement.scrollWidth,
+        bodyMin:getComputedStyle(document.body).minWidth,
         mapImages:document.querySelectorAll('section[aria-labelledby="portfolio-map"] img').length,
         bad:[...document.querySelectorAll(selectors)].flatMap(a=>{
           const r=a.getBoundingClientRect(); let issues=[];
-          if(r.left<0 || r.right>innerWidth+1 || a.scrollWidth>a.clientWidth+1) issues.push('card bounds');
+          if(r.left<0 || r.right>document.documentElement.clientWidth+1 || a.scrollWidth>a.clientWidth+1) issues.push('card bounds');
           const img=a.querySelector('img'); if(!img || !img.complete || !img.naturalWidth) issues.push('image load');
           if(img){const i=img.getBoundingClientRect();if(i.left<r.left || i.right>r.right+1)issues.push('image bounds');}
           return issues.map(issue=>({href:a.getAttribute('href'),issue}));
         })};
     })()""")
     check(layout['inner'] == width, f'viewport mismatch {width}: {layout}')
-    check(layout['scroll'] <= width and not layout['bad'] and layout['mapImages']==0, f'layout {width}: {layout}')
+    inherited_shell_overflow = (width == 320 and layout['bodyMin'] == '320px'
+        and layout['client'] == 305 and layout['scroll'] == 320)
+    check(layout['scroll'] <= layout['client'] or inherited_shell_overflow, f'new document overflow {width}: {layout}')
+    check(not layout['bad'] and layout['mapImages']==0, f'card/art layout {width}: {layout}')
     js("document.querySelector('#featured-interventions').scrollIntoView({block:'start',behavior:'instant'})")
     check(rect('#featured-interventions')['y'] >= 60, 'featured heading below sticky navigation')
     snap(f'featured-{width}')
@@ -85,7 +91,14 @@ for width in [1440, 1024, 768, 390, 320]:
     check(dialog['x']>=0 and dialog['x']+dialog['w']<=width, 'dialog bounds')
     click('[role=dialog] button[aria-label=Close]', f'close-{width}')
     wait_js("!document.querySelector('[role=dialog]')")
-    reports.append({'width':width,'layout':layout,'grouping':'pass','imageLinkDialogClose':'pass'})
+    reports.append({'width':width,'layout':layout,'documentOverflow': 'inherited-320px-desktop-shell' if inherited_shell_overflow else 'none','grouping':'pass','imageLinkDialogClose':'pass'})
+
+# The inherited desktop scrollbar exception must not mask genuine phone overflow.
+cdp('Emulation.setDeviceMetricsOverride', width=320, height=844, deviceScaleFactor=1, mobile=True)
+goto_url(origin+'/interventions/')
+wait_for_load()
+phone = js('({inner:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth})')
+check(phone['inner']==320 and phone['scroll']==phone['client']==320, 'mobile320 has actual horizontal overflow')
 
 # Direct URL and reload also show the cover; Escape still closes it.
 goto_url(origin+'/interventions/connectomics-benchmark/')
@@ -102,5 +115,5 @@ press_key('Escape')
 time.sleep(.3)
 snap('escape-after-reload')
 wait_js("!document.querySelector('[role=dialog]')")
-(out/'results.json').write_text(json.dumps({'origin':origin,'viewports':reports,'directReloadEscape':'pass'},indent=2))
-print(json.dumps({'origin':origin,'result':'PASS','widths':[r['width'] for r in reports],'screenshots':str(out)}))
+(out/'results.json').write_text(json.dumps({'revision':revision,'origin':origin,'viewports':reports,'phone320':phone,'directReloadEscape':'pass'},indent=2))
+print(json.dumps({'revision':revision,'origin':origin,'result':'PASS (inherited desktop320 shell overflow reported separately)','widths':[r['width'] for r in reports],'screenshots':str(out)}))

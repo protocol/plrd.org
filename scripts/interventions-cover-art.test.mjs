@@ -9,7 +9,8 @@ import { source } from './velocity/test-source-loader.mjs'
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime.js'
 
 const render = (Component, props = {}) => new JSDOM(renderToStaticMarkup(React.createElement(Component, props))).window.document
-const { featuredInterventions, publishedInterventions } = source('lib/interventions.ts')
+const { featuredInterventions, publishedInterventions, INTERVENTION_STAGE_LABEL } = source('lib/interventions.ts')
+const commissioned = JSON.parse(readFileSync(new URL('../docs/intervention-cover-art/provenance.json', import.meta.url), 'utf8')).assets
 
 test('featured cards render the selected text-free covers above unchanged program titles and real status', () => {
   const doc = render(source('components/FeaturedInterventions.tsx').default)
@@ -23,7 +24,7 @@ test('featured cards render the selected text-free covers above unchanged progra
     assert.equal(img.alt, '', 'illustrative art must not change the linked program accessible name')
     assert.equal(img.width / img.height, 16 / 9)
     assert.ok(card.querySelector('h3').textContent.includes(items[index].title))
-    assert.ok(card.textContent.includes('Proposed'))
+    assert.ok(card.textContent.includes(INTERVENTION_STAGE_LABEL[items[index].stage]))
     assert.ok(img.compareDocumentPosition(card.querySelector('h3')) & 4, 'cover precedes title')
   }
   assert.equal(doc.querySelector('#featured-interventions').textContent.trim(), 'Featured interventions')
@@ -43,7 +44,7 @@ test('compact catalog treatment retains titles, stages, grouping and link target
     assert.equal(img.height, 180)
     assert.equal(img.alt, '')
     assert.ok(link.textContent.includes(item.title))
-    assert.ok(link.textContent.includes('Proposed'))
+    assert.ok(link.textContent.includes(INTERVENTION_STAGE_LABEL[item.stage]))
   }
   assert.equal(doc.querySelectorAll('button[aria-pressed]').length, 2)
 })
@@ -59,10 +60,10 @@ test('program dialog shows the same cover while preserving close control and pro
   assert.ok(dialog.textContent.includes(item.work))
 })
 
-test('every existing program has its own art; unknown or hostile slugs return no asset URL', () => {
+test('commissioned programs have their own art; unknown or hostile slugs return no asset URL', () => {
   const { interventionArt } = source('lib/intervention-art.ts')
   const Cover = source('components/InterventionCover.tsx').default
-  for (const item of publishedInterventions()) {
+  for (const item of commissioned) {
     const art = interventionArt(item.slug)
     assert.ok(art, `missing illustration mapping: ${item.slug}`)
     assert.equal(art.src, `/images/interventions/${item.slug}.webp`)
@@ -87,10 +88,30 @@ test('portfolio summary stays art-free and all cover images reserve size and def
   }
 })
 
-test('each illustration and thumbnail is checked in, optimized WebP and unique per program', () => {
+test('mixed catalog keeps a future text-only program and a known cover with non-proposed stages', () => {
+  const seed = featuredInterventions()[0]
+  const active = { ...seed, stage: 'active' }
+  const future = { ...seed, slug: 'future-program', title: 'Future program fixture', stage: 'completed' }
+  const doc = render(source('components/PortfolioMap.tsx').default, { items: [active, future] })
+  for (const item of [active, future]) {
+    const card = [...doc.querySelectorAll('a')].find((a) => a.getAttribute('href').replace(/\/$/, '') === `/interventions/${item.slug}`)
+    assert.ok(card)
+    assert.ok(card.textContent.includes(item.title))
+    assert.ok(card.textContent.includes(INTERVENTION_STAGE_LABEL[item.stage]))
+    assert.equal(card.querySelectorAll('img').length, item === active ? 1 : 0)
+  }
+  const Modal = source('components/InterventionModal.tsx').default
+  const modal = render(() => React.createElement(AppRouterContext.Provider, { value: { back() {}, push() {} } }, React.createElement(Modal, { item: future })))
+  const dialog = modal.querySelector('[role=dialog]')
+  assert.equal(dialog.querySelectorAll('img').length, 0)
+  assert.ok(dialog.textContent.includes(future.title))
+  assert.ok(dialog.textContent.includes(INTERVENTION_STAGE_LABEL[future.stage]))
+})
+
+test('each commissioned illustration and thumbnail is checked in, optimized WebP and unique per program', () => {
   const { interventionArt } = source('lib/intervention-art.ts')
   const hashes = new Set()
-  for (const item of publishedInterventions()) {
+  for (const item of commissioned) {
     const art = interventionArt(item.slug)
     for (const [key, budget] of [['src', 120_000], ['thumbnail', 30_000]]) {
       const path = new URL(`../public${art[key]}`, import.meta.url)
