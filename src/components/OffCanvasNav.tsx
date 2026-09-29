@@ -22,7 +22,7 @@ export default function OffCanvasNav({ isOpen, onClose }: Props) {
 
       {/* Panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-50 w-72 bg-white shadow-lg transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 bottom-0 z-50 w-72 overflow-y-auto bg-white shadow-lg transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
           <span className="text-xs text-gray-400 uppercase tracking-wide">Menu</span>

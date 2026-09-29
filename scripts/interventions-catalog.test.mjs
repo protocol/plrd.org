@@ -51,6 +51,11 @@ test('Collaborate stays available in desktop and mobile navigation', () => {
   }
 })
 
+test('mobile navigation can scroll to Collaborate on short screens', () => {
+  const drawer = readFileSync(new URL('../src/components/OffCanvasNav.tsx', import.meta.url), 'utf8')
+  assert.match(drawer, /fixed top-0 right-0 bottom-0[^`]*overflow-y-auto/)
+})
+
 test('Interventions surfaces the requested journey with one full catalog', () => {
   const Index = source('components/InterventionsIndex.tsx').default
   const doc = new JSDOM(renderToStaticMarkup(React.createElement(Index))).window.document
