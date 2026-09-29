@@ -202,6 +202,16 @@
 .instrument-preview-plot svg { width: 100%; height: 2.75rem; }
 @container velocity (min-width: 40rem) { .instrument-previews { --gallery-card-width: calc((100cqw - 3rem) / 3); } }
 @container velocity (min-width: 66rem) { .instrument-previews { --gallery-card-width: calc((100cqw - 6rem) / 5); } }
+.instrument-preview-viewport[data-slots="1"] .instrument-previews,
+.instrument-preview-viewport[data-slots="2"] .instrument-previews {
+  --gallery-card-width: min(300px, 78cqw);
+}
+@container velocity (min-width: 40rem) {
+  .instrument-preview-viewport[data-slots="1"] .instrument-previews,
+  .instrument-preview-viewport[data-slots="2"] .instrument-previews {
+    --gallery-card-width: min(300px, calc((100cqw - var(--gallery-gap)) / 2));
+  }
+}
 /* Siblings begin underneath the cover and slide along the same horizontal step
    that displaces peers. The fan's full-width hit region includes every gap. */
 .chart-deck {

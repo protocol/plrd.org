@@ -17,6 +17,7 @@ const FULLSCREEN_PATTERNS = [
 // out-of-place white bar.
 const NO_BOTTOM_PAD_PATTERNS = [
   /^\/impact-preview-[^/]+\/?$/,
+  /^\/interventions-preview-[^/]+\/methodology\/?$/,
 ]
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
@@ -34,9 +35,10 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <SiteHeader onMenuClick={() => setNavOpen(true)} />
+      {!isFullscreen && <SiteHeader onMenuClick={() => setNavOpen(true)} />}
       <OffCanvasNav isOpen={navOpen} onClose={() => setNavOpen(false)} />
 
+      {!isFullscreen && <div className="h-16" aria-hidden="true" />}
       <div className={isFullscreen ? 'w-full' : noBottomPad ? 'w-full' : 'w-full pb-12'}>
         {children}
       </div>

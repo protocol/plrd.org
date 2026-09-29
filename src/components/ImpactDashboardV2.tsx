@@ -12,7 +12,8 @@ import { useGalleryDialog } from '@/components/useGalleryDialog'
 import { useGalleryFan } from '@/components/useGalleryFan'
 import { chartHash, parseChartHash } from '@/lib/chart-selection'
 import { inflectionHash, parseInflectionHash } from '@/lib/impact-selection'
-import { useImpactNavigation, openImpactDialog, closeImpactDialog, navigateImpact } from '@/components/useImpactNavigation'
+import { useImpactNavigation, openImpactDialog, closeImpactDialog, navigateImpact, navigateImpactArea } from '@/components/useImpactNavigation'
+import type { VelocitySignal } from '@/lib/velocity-signals'
 import ImpactLinkControls from '@/components/ImpactLinkControls'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
 import { instrumentGallery, type GalleryItem } from '@/lib/instrument-gallery'
@@ -81,6 +82,9 @@ export default function ImpactDashboardV2({
   ideaVintageExamples = [],
   fixedArea,
   initialArea = 'digital-human-rights',
+  mode = 'all',
+  orientation = 'horizontal',
+  signals,
 }: {
   initialArea?: FocusAreaKey
   /** Reuse the full charts/cards/modals on an area overview, without cross-field tabs. */
@@ -93,6 +97,11 @@ export default function ImpactDashboardV2({
   measurementSeriesByArea?: Partial<Record<FocusAreaKey, MeasurementSeries[]>>
   /** Methodology examples; galleries only use the selected area's fallback. */
   ideaVintageExamples?: IdeaVintageExample[]
+  /** Split the live view across methodology tabs without duplicating chart logic. */
+  mode?: 'all' | 'charts' | 'inflections'
+  orientation?: 'horizontal' | 'vertical'
+  /** When set with mode=charts, nest each instrument gallery under its signal. */
+  signals?: readonly VelocitySignal[]
 }) {
   const [selectedArea, setFilter] = useState<FocusAreaKey>(initialArea)
   const filter = fixedArea ?? selectedArea
@@ -131,8 +140,11 @@ export default function ImpactDashboardV2({
     const area = point?.area ?? route?.area ?? fallback
     if (fixedArea && area !== fixedArea) return
     setFilter(area)
-    if (point) { setActive(point); return }
-    if (!route?.instrument || !route.itemId) return
+    if (point) {
+      if (mode !== 'charts') setActive(point)
+      return
+    }
+    if (mode === 'inflections' || !route?.instrument || !route.itemId) return
     const record = (recordsByArea?.[route.area] ?? instrumentsForArea(route.area)).find(r => r.instrument === route.instrument)
     if (!record) return
     const markets = INFLECTION_POINTS.filter(p => p.area === route.area).map(p => marketSignals[p.title]).filter((market): market is MarketSignal => !!market)
@@ -146,66 +158,141 @@ export default function ImpactDashboardV2({
     return () => { window.history.scrollRestoration = previous }
   }, [])
   const selectArea = (area: FocusAreaKey) => {
-    navigateImpact(chartHash(area))
+    if (mode === 'inflections') navigateImpactArea('#inflection-points', area)
+    else navigateImpact(chartHash(area))
   }
+  const showCharts = mode !== 'inflections'
+  const showInflections = mode !== 'charts'
+  const nestedSignals = showCharts && signals && signals.length > 0
+  const vertical = !fixedArea && orientation === 'vertical'
   const openChart = (instrument: InstrumentId, itemId: string) => openImpactDialog(chartHash(filter, instrument, itemId))
   const closeChart = () => closeImpactDialog(chartHash(filter))
+
+  const areaTabs = !fixedArea && (
+    <div className={vertical ? 'mb-8 min-w-0 lg:sticky lg:top-36 lg:mb-0' : 'mb-6 min-w-0'}>
+      <div
+        role="tablist"
+        aria-orientation={vertical ? 'vertical' : 'horizontal'}
+        aria-label="Filter by focus area"
+        className={vertical ? 'flex flex-col gap-1.5' : 'flex flex-wrap gap-1.5'}
+      >
+        {FOCUS_AREAS.map((fa) => (
+          <Tab
+            key={fa.key}
+            label={fa.label}
+            count={INFLECTION_POINTS.filter((p) => p.area === fa.key).length}
+            forthcoming={fa.forthcoming}
+            icon={FA_ICON[fa.key]}
+            active={filter === fa.key}
+            stacked={vertical}
+            onClick={() => selectArea(fa.key)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+
+  const chartBox = (signalRecords: InstrumentRecord[], key: string) => (
+    <FieldVelocityBox
+      key={key}
+      records={signalRecords}
+      markets={fieldMarkets}
+      measurements={measurementSeriesByArea[filter] ?? []}
+      examples={ideaVintageExamples}
+      area={filter}
+      onOpen={openChart}
+      restoreCoverFocus={restoreCoverFocus}
+    />
+  )
 
   return (
     <>
       <div className={fixedArea ? 'min-w-0' : 'field-velocity-dashboard min-w-0'}>
-        {/* Focus-area tabs share the content width and sit above every chart. */}
-        {!fixedArea && <div className="mb-6 min-w-0">
-          <div
-            role="tablist"
-            aria-orientation="horizontal"
-            aria-label="Filter by focus area"
-            className="flex flex-wrap gap-1.5"
-          >
-            {FOCUS_AREAS.map((fa) => (
-              <Tab
-                key={fa.key}
-                label={fa.label}
-                count={INFLECTION_POINTS.filter((p) => p.area === fa.key).length}
-                forthcoming={fa.forthcoming}
-                icon={FA_ICON[fa.key]}
-                active={filter === fa.key}
-                onClick={() => selectArea(fa.key)}
-              />
-            ))}
-          </div>
-        </div>}
-        {/* Content: field velocity box + inflection points */}
-        <div className="field-velocity-content min-w-0">
-          {/* Field velocity — label outside the box; the box previews the five
-              instruments and opens a modal. */}
-          <div className="mb-2 flex items-center gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: FIELD_COLOR }}>
-              Field velocity
-            </span>
-            <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
-          </div>
-          <FieldVelocityBox key={filter} records={records} markets={fieldMarkets} measurements={measurementSeriesByArea[filter] ?? []} examples={ideaVintageExamples} area={filter} onOpen={openChart} restoreCoverFocus={restoreCoverFocus} />
+        <div className={vertical ? 'lg:grid lg:grid-cols-[13.75rem_minmax(0,1fr)] lg:items-start lg:gap-10' : undefined}>
+          {areaTabs}
+          <div className="field-velocity-content min-w-0">
+            {showCharts && nestedSignals && signals!.map((signal, index) => {
+              const ids = signal.instruments.flatMap((instrument) => instrument.id ? [instrument.id] : [])
+              const signalRecords = records.filter((record) => ids.includes(record.instrument))
+              return (
+                <div key={signal.title} className={`${index === 0 ? 'pt-0' : 'pt-8'} border-b border-gray-200 pb-8 last:border-b-0 last:pb-0`}>
+                  <div className="grid gap-3 sm:grid-cols-[38px_minmax(0,1fr)] sm:gap-5">
+                    <span className="text-[11px] font-medium tabular-nums text-gray-500">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <div>
+                      <div className="text-[18px] font-semibold tracking-tight text-black">
+                        {signal.title}
+                      </div>
+                      <div className="mt-1 text-[14px] text-gray-500">
+                        {signal.question}
+                      </div>
+                      <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
+                        {signal.core}
+                      </p>
+                      {signal.instruments.length > 0 && (
+                        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                          {signal.instruments.map((instrument) => (
+                            <div
+                              key={instrument.title}
+                              className="rounded-xl border border-gray-200 bg-white px-4 py-4"
+                            >
+                              <div className="text-[13px] font-semibold text-black">
+                                {instrument.title}
+                              </div>
+                              <p className="mt-1 text-[12px] leading-relaxed text-gray-500">
+                                {instrument.description}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {signalRecords.length > 0 && (
+                    <div className="mt-6">
+                      {chartBox(signalRecords, `${filter}-${signal.title}`)}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
 
-          {/* Inflection points — four cards in two rows, with live signals. */}
-          <div id="inflection-points" className="mt-6 mb-2 scroll-mt-24 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-            <ImpactSectionLink fragment="#inflection-points">Inflection points we&rsquo;re tracking</ImpactSectionLink>
+            {showCharts && !nestedSignals && (
+              <>
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: FIELD_COLOR }}>
+                    Field velocity
+                  </span>
+                  <span className="text-[11px] text-gray-400">· Is the field speeding up?</span>
+                </div>
+                {chartBox(records, filter)}
+              </>
+            )}
+
+            {showInflections && (
+              <>
+                <div id="inflection-points" className={`${showCharts ? 'mt-6' : ''} mb-2 scroll-mt-24 text-[11px] font-semibold uppercase tracking-wide text-gray-500`}>
+                  <ImpactSectionLink fragment="#inflection-points">Inflection points we&rsquo;re tracking</ImpactSectionLink>
+                </div>
+                {visible.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
+                    {visible.map((p) => (
+                      <InflectionCard
+                        key={`${p.area}-${p.title}`}
+                        point={p}
+                        metrics={liveOutputs[p.title]}
+                        signal={marketSignals[p.title]}
+                        onOpen={() => openImpactDialog(inflectionHash(p))}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState filter={filter} />
+                )}
+              </>
+            )}
           </div>
-          {visible.length > 0 ? (
-            <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
-              {visible.map((p) => (
-                <InflectionCard
-                  key={`${p.area}-${p.title}`}
-                  point={p}
-                  metrics={liveOutputs[p.title]}
-                  signal={marketSignals[p.title]}
-                  onOpen={() => openImpactDialog(inflectionHash(p))}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState filter={filter} />
-          )}
         </div>
       </div>
 
@@ -242,6 +329,7 @@ function Tab({
   forthcoming = false,
   active,
   icon,
+  stacked = false,
   onClick,
 }: {
   label: string
@@ -249,6 +337,7 @@ function Tab({
   forthcoming?: boolean
   active: boolean
   icon?: AreaIconType
+  stacked?: boolean
   onClick: () => void
 }) {
   return (
@@ -258,6 +347,8 @@ function Tab({
       aria-selected={active}
       onClick={onClick}
       className={`flex shrink-0 items-center gap-3 rounded-lg border px-3.5 py-3 text-left text-sm font-medium transition-all ${
+        stacked ? 'w-full' : ''
+      } ${
         active
           ? 'border-gray-200 bg-white text-black shadow-sm'
           : 'border-transparent text-gray-500 hover:bg-white/60 hover:text-black'
@@ -477,7 +568,7 @@ function FieldVelocityBox({ records, markets, measurements, examples, area, onOp
     window.addEventListener('resize', reveal)
     return () => window.removeEventListener('resize', reveal)
   }, [expandedInstrument, viewCount])
-  return <div ref={viewport} className="instrument-preview-viewport" data-chart-viewport role="region" aria-label="Field velocity charts">
+  return <div ref={viewport} className="instrument-preview-viewport" data-chart-viewport data-slots={records.length} role="region" aria-label="Field velocity charts">
     <div className="instrument-previews" data-active-group={expandedInstrument ?? undefined} style={{ '--gallery-slots': records.length + extra } as CSSProperties}>
       {records.map((record, index) => <ChartDeck key={`${area}-${record.instrument}`} record={record} {...galleries[index]} areaLabel={areaLabel} area={area} onOpen={onOpen}
         restoreCoverFocus={() => restoreCoverFocus(record.instrument)}

@@ -49,6 +49,15 @@ export function navigateImpact(hash: string) {
   window.dispatchEvent(new window.Event(navigationEvent))
 }
 
+/** Named-section navigation that sets the focus area in the query without
+ *  switching onto a chart hash (which would steal the Learn tab). */
+export function navigateImpactArea(hash: string, area: FocusAreaKey) {
+  const url = new URL(hash, window.location.href)
+  url.searchParams.set('area', area)
+  if (url.href !== window.location.href) window.history.pushState(window.history.state, '', url.href)
+  window.dispatchEvent(new window.Event(navigationEvent))
+}
+
 export function openImpactDialog(hash: string) {
   const url = impactUrl(hash)
   if (url === window.location.href) return

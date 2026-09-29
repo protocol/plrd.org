@@ -200,7 +200,8 @@ test('methodology keeps Neuro selected on open, Back/Forward and a fresh shared 
 test('main section headings expose real named anchors, with unique scroll targets', async () => {
   const { readFileSync } = await import('node:fs')
   const page = readFileSync('src/app/impact-preview-eb61fba1b98e/page.tsx', 'utf8')
-  for (const section of ['field-velocity', 'methodology', 'verified-impact']) {
+  assert.ok(!page.includes('id="verified-impact"'), 'removed contribution showcase has no orphan wrapper')
+  for (const section of ['field-velocity', 'methodology']) {
     assert.ok(page.includes(`id="${section}"`), section)
     assert.ok(page.includes(`<ImpactSectionLink fragment="#${section}">`), `clickable ${section} heading`)
   }
