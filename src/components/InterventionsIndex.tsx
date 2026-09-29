@@ -23,9 +23,10 @@ export default function InterventionsIndex() {
           </p>
           <Link
             href={`${catalogHref()}methodology/`}
-            className="mt-6 inline-flex items-center justify-center rounded-full bg-black px-5 py-3 text-sm font-medium text-white no-underline transition-colors hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-blue px-5 py-3 text-sm font-medium text-white no-underline transition-colors hover:bg-blue/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
           >
             Explore how we accelerate fields
+            <span aria-hidden="true">→</span>
           </Link>
         </header>
       </div>
