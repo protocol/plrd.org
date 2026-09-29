@@ -19,10 +19,8 @@ export default function PortfolioOverview({ items }: { items: PublicIntervention
         Focus Areas are where we work. Interventions are how we move those fields.
       </p>
       <div className="mt-8 overflow-x-auto" role="region" aria-label="Portfolio by focus area and primary intervention type" tabIndex={0}>
-        <table className="portfolio-overview w-full min-w-[640px] border-collapse text-left text-sm">
-          <caption className="caption-bottom pt-4 text-left text-xs leading-relaxed text-gray-500">
-            {items.length} draft-source examples, counted once by primary intervention type. Not approved commitments.
-          </caption>
+        <table aria-describedby="portfolio-source-note" className="portfolio-overview w-full min-w-[640px] border-collapse text-left text-sm">
+          <caption className="sr-only">Interventions by focus area and primary intervention type</caption>
           <thead>
             <tr className="border-b border-black/15">
               <th scope="col" className="w-1/5 py-4 pr-4 align-top font-medium text-gray-500">Intervention type</th>
@@ -58,6 +56,9 @@ export default function PortfolioOverview({ items }: { items: PublicIntervention
           </tbody>
         </table>
       </div>
+      <p id="portfolio-source-note" className="mt-4 text-xs leading-relaxed text-gray-500">
+        {items.length} draft-source examples, counted once by primary intervention type. Not approved commitments.
+      </p>
     </section>
   )
 }

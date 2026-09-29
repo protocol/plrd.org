@@ -90,7 +90,10 @@ test('portfolio overview counts each primary type once from the supplied records
       })
     })
     assert.equal(total, items.length)
-    assert.match(doc.querySelector('caption').textContent, /counted once by primary intervention type/)
+    const sourceNote = doc.querySelector('#portfolio-source-note')
+    assert.ok(sourceNote, 'source note must be independently visible on mobile')
+    assert.equal(sourceNote.closest('[role=region]'), null, 'do not clip the source caveat inside horizontal scrolling')
+    assert.match(sourceNote.textContent, /counted once by primary intervention type/)
   }
 })
 
