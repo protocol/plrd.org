@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
+import InterventionCover from '@/components/InterventionCover'
 import {
   INTERVENTION_AREA_HREF,
   INTERVENTION_AREA_ICON,
@@ -58,13 +59,16 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
           type="button"
           onClick={() => closeModal(router)}
           aria-label="Close"
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-black"
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-gray-600 shadow-sm transition-colors hover:bg-gray-100 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
+        <div className="overflow-hidden rounded-t-2xl">
+          <InterventionCover slug={item.slug} />
+        </div>
         <article className="p-6 sm:p-10">
           <div className="mb-4 flex flex-wrap items-center gap-2 pr-10">
             <AreaIcon

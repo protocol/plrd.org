@@ -1,0 +1,389 @@
+{
+  "style": "Option C \u2014 Editorial cut-paper",
+  "catalog_base": "2c0c67f8790b29d0e73bcf39d43ad732057e3f0f",
+  "illustrative_only": true,
+  "engine_note": "The three approved featured concepts are preserved Gemini studies; twelve companion covers were generated with gemini-3-pro-image. These are not Flux2 outputs.",
+  "assets": [
+    {
+      "slug": "sovereign-ai",
+      "subject": "An open-sided civic pavilion shelters a compact, modular computing cabinet. Its service side faces outward, with accessible joints and one removable component set beside it for local adaptation and maintenance. An unobstructed approach connects the pavilion to public use. Show the whole small assembly in a calm three-quarter view: a conceptual model of locally stewarded AI capability, not a monumental data center. No national flags, landmarks, real institutions, or claimed deployment.",
+      "files": [
+        {
+          "path": "/images/interventions/sovereign-ai.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 8956,
+          "sha256": "33b920784ccb528545bc4859ba0df33dfa55741183aec558ff585d1dd2bbefa6"
+        },
+        {
+          "path": "/images/interventions/sovereign-ai-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 2608,
+          "sha256": "e1cf799a9a6f826a2e369ee4ba2b907f28875a19fadd867646c8262b8176e76c"
+        }
+      ],
+      "generation": {
+        "engine": "Gemini; original approved concept study",
+        "source_sha256": "9467065a419a2cabf446524bb5522236cfeddaf2bb0e38b944a7eea67d82e33a",
+        "treatment": "Original Option C composition, resized and WebP encoded; no regeneration."
+      }
+    },
+    {
+      "slug": "evaluation-commons",
+      "subject": "A shared comparison instrument holds several interchangeable candidate-model inserts in equivalent testing cradles. In front, a compact set of differently shaped task specimens and an unmarked resource-measuring balance await use; off to one side, an independent inspection aperture faces the same apparatus. Make the candidates equal in visual weight, with no winner or result displayed. Use a frontal, slightly elevated composition emphasizing common test conditions and reusable evaluation tools rather than a leaderboard.",
+      "files": [
+        {
+          "path": "/images/interventions/evaluation-commons.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 16616,
+          "sha256": "a53663e9f7d5b398c92c5c86da4a7119dfcab75dfef7f2ed2a150629659c87bc"
+        },
+        {
+          "path": "/images/interventions/evaluation-commons-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 5156,
+          "sha256": "ef274ec2757b608abf6663f994706cec10df4b144969be560f364bb57724f579"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nA shared comparison instrument holds several interchangeable candidate-model inserts in equivalent testing cradles. In front, a compact set of differently shaped task specimens and an unmarked resource-measuring balance await use; off to one side, an independent inspection aperture faces the same apparatus. Make the candidates equal in visual weight, with no winner or result displayed. Use a frontal, slightly elevated composition emphasizing common test conditions and reusable evaluation tools rather than a leaderboard.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "broad-listening",
+      "subject": "Many distinct slats or broad ribbons arrive from different directions to form an open shared meeting surface. Each contribution keeps its own visible edge and character; leave deliberate gaps and separate strands so disagreement is not erased. Use an elevated view with the shared surface as the focal point, spacious and locally manageable rather than monumental. Convey different perspectives becoming legible together, not a unanimous vote, an election result, or a completed institutional deployment.",
+      "files": [
+        {
+          "path": "/images/interventions/broad-listening.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 33628,
+          "sha256": "22b6e8701afa70e03fc977ee6914d17c2e8a0b25595208b89cc4df2d855ae1ab"
+        },
+        {
+          "path": "/images/interventions/broad-listening-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 9154,
+          "sha256": "8682930902fdcfa4615f82a8c67d8b2fb8e0d04d3aed4434fd76e9ee0d5ce38d"
+        }
+      ],
+      "generation": {
+        "engine": "Gemini; original approved concept study",
+        "source_sha256": "3f8a4842ce7eac16c34cdb0278a9fb91c22d25baa0c53fe91b6cb2ac871eff3b",
+        "treatment": "Original Option C composition, resized and WebP encoded; no regeneration."
+      }
+    },
+    {
+      "slug": "ai4pg",
+      "subject": "Two separate research desks open onto a longer shared workbench. Blank folded problem briefs sit at the near end; in the middle, complementary pieces of an unfinished joint research model approach a common join; at the far end, a small reserve of building material awaits allocation. Empty working positions extend beyond the meeting area, making continued work the main subject. Use a diagonal perspective that connects preparation, collaboration, and follow-through without arrows, conference stages, or an already finished project.",
+      "files": [
+        {
+          "path": "/images/interventions/ai4pg.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 28600,
+          "sha256": "edc0e9fb10b06d1500b8e5aab0cf89b0d09ab831a224ede10426313256551956"
+        },
+        {
+          "path": "/images/interventions/ai4pg-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 6382,
+          "sha256": "317c2bf6e0025f6e12dc2176c6a6c3e1822497556389e7724ec6fc83b7e51569"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nTwo separate research desks open onto a longer shared workbench. Blank folded problem briefs sit at the near end; in the middle, complementary pieces of an unfinished joint research model approach a common join; at the far end, a small reserve of building material awaits allocation. Empty working positions extend beyond the meeting area, making continued work the main subject. Use a diagonal perspective that connects preparation, collaboration, and follow-through without arrows, conference stages, or an already finished project.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": [
+          "Surgical cleanup only: erase ALL black typography/annotation labels in the cream negative space below the workbench, including 'problem briefs', 'unfinished joint research model', and 'building material awaits allocation'. Replace those letters with the same uninterrupted lightly textured cream background. There must be absolutely no lettering anywhere. Preserve the exact workbench geometry, colors, paper texture, blank folded briefs, unfinished model pieces, chairs and spare materials. Do not redesign or add any objects. Text-free editorial cut-paper cover."
+        ]
+      }
+    },
+    {
+      "slug": "ai4cop",
+      "subject": "A small watershed relief rests in a shared evidence-handling cradle, with a ridge, a river channel, and a lowland clearly legible. Several differently shaped interpretive sleeves fit the same environmental specimen; one is set aside for inspection, and a portable training fixture waits nearby. Frame the environmental object closely enough to dominate, with the interchangeable tools secondary. This is a metaphor for partners adapting shared evidence to different institutional and language contexts, not a real climate model or a deployed policy tool.",
+      "files": [
+        {
+          "path": "/images/interventions/ai4cop.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 29448,
+          "sha256": "0fec450e9fa9d992485fc991327e7b8f28d7efda0d4cba0d9bcd2370a90df7fe"
+        },
+        {
+          "path": "/images/interventions/ai4cop-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 7268,
+          "sha256": "6570b6be523bded4de799366509547dd019f4c20de3b54220a1b4b46769e7ab8"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nA small watershed relief rests in a shared evidence-handling cradle, with a ridge, a river channel, and a lowland clearly legible. Several differently shaped interpretive sleeves fit the same environmental specimen; one is set aside for inspection, and a portable training fixture waits nearby. Frame the environmental object closely enough to dominate, with the interchangeable tools secondary. This is a metaphor for partners adapting shared evidence to different institutional and language contexts, not a real climate model or a deployed policy tool.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "evidence-research",
+      "subject": "Two matched experimental trays begin with the same simple arrangement. A single removable intervention piece rests beside one tray, ready for a prospective comparison; neither tray shows an outcome. Behind them, a short stack of blank provenance sleeves remains visibly separate from the experimental apparatus. Use a calm side-by-side composition with the potential change as the focal point. The scene should distinguish documenting an object's history from testing what a change actually causes, without pretending to show research findings.",
+      "files": [
+        {
+          "path": "/images/interventions/evidence-research.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 14678,
+          "sha256": "883693b38a3b27ad34ffa2ca9723cfc6025df1c748457500d440943f92ce21d2"
+        },
+        {
+          "path": "/images/interventions/evidence-research-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 3276,
+          "sha256": "da56057ba1960df6abfc544c3d9ffafa43c43946e10a4e131da3ffb3028fbe53"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nTwo matched experimental trays begin with the same simple arrangement. A single removable intervention piece rests beside one tray, ready for a prospective comparison; neither tray shows an outcome. Behind them, a short stack of blank provenance sleeves remains visibly separate from the experimental apparatus. Use a calm side-by-side composition with the potential change as the focal point. The scene should distinguish documenting an object's history from testing what a change actually causes, without pretending to show research findings.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": [
+          "Surgical factual correction, preserve composition and editorial cut-paper style. The two experimental trays must show EXACTLY THE SAME neutral starting arrangement. Replace only their current internal loose contents: inside EACH tray place one identical plain small charcoal square and one identical plain small dusty-blue circle, in the same relative positions. Both trays have the SAME size and orientation, the SAME two contents, and no rust piece inside either tray. Outside the trays at lower right keep ONE detached muted-rust intervention piece, uninstalled, with no blue duplicate alongside it. This makes a prospective comparison, not outcomes. Preserve the two tray frames, their empty cream interiors, the separate blank provenance sleeves behind them, the cream background and paper grain. No text, typography, labels, arrows, charts, marks, outcomes or success signals."
+        ]
+      }
+    },
+    {
+      "slug": "compute-alliance",
+      "subject": "A compact shared compute cabinet faces several distinct operator bays. Each bay has a different access connector and a small service space; a set of practical adapters and an unmarked metering fixture lies between them. One access path is fitted loosely while another remains disconnected, keeping compatibility and operational access visibly unresolved. Use a low, wide view focused on the cabinet's service side, not its impressive size. Depict a limited shared-access demonstrator awaiting evaluation, not a functioning national infrastructure network.",
+      "files": [
+        {
+          "path": "/images/interventions/compute-alliance.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 15596,
+          "sha256": "a438e24522333c4d18832ebac4ff8e1f070531b1524d15f9c1c90e72d0a5820a"
+        },
+        {
+          "path": "/images/interventions/compute-alliance-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 4290,
+          "sha256": "bfe6d683e9c86c72746f80296e39853ad6f26761bd9a52033fd4759ba76ef4ea"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nA compact shared compute cabinet faces several distinct operator bays. Each bay has a different access connector and a small service space; a set of practical adapters and an unmarked metering fixture lies between them. One access path is fitted loosely while another remains disconnected, keeping compatibility and operational access visibly unresolved. Use a low, wide view focused on the cabinet's service side, not its impressive size. Depict a limited shared-access demonstrator awaiting evaluation, not a functioning national infrastructure network.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "eg-fellowship",
+      "subject": "An open portable mission case contains complementary specialist toolsets arranged around one unfinished civic-scale assembly. The case unfolds into a temporary working surface, with separate contributions held in place but their shared join not yet fastened. A small organizer compartment supports the work without dominating it. View the case from above at a slight angle, making portability, complementary expertise, and a concrete mission legible. No graduation imagery, portraits, institutional seals, or suggestion of a confirmed cohort.",
+      "files": [
+        {
+          "path": "/images/interventions/eg-fellowship.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 28376,
+          "sha256": "4726d6960d21f60fa65832a9a6fd71d33368c84d6a5ee0f8af0990cb3116cf64"
+        },
+        {
+          "path": "/images/interventions/eg-fellowship-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 7024,
+          "sha256": "a29f7ab2840d4007cd0ab853fc1e8eb8d0f463d6c79a9d98f33788260f10ea41"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nAn open portable mission case contains complementary specialist toolsets arranged around one unfinished civic-scale assembly. The case unfolds into a temporary working surface, with separate contributions held in place but their shared join not yet fastened. A small organizer compartment supports the work without dominating it. View the case from above at a slight angle, making portability, complementary expertise, and a concrete mission legible. No graduation imagery, portraits, institutional seals, or suggestion of a confirmed cohort.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "connectomics-benchmark",
+      "subject": "A sparse set of microscopic branching axon filaments passes through two aligned rectangular inspection planes. Pick out one corresponding path in a restrained accent across both planes; leave a nearby interrupted trace unresolved. Show the planes in a close three-quarter view, with enough separation to see continuity, comparison, and tracing ambiguity. The filaments are a conceptual reconstruction specimen, not a whole brain, anatomical brain slices, a measured dataset, or a prize trophy.",
+      "files": [
+        {
+          "path": "/images/interventions/connectomics-benchmark.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 27772,
+          "sha256": "8e4bcbf02611b316249994413d07b78d6181bd4b711c9fa0ce1a8e4f5ecb1653"
+        },
+        {
+          "path": "/images/interventions/connectomics-benchmark-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 5294,
+          "sha256": "9b15c4a4a1d8ca860086c31e255d9759434bea5758dc7ed580f82a08773cb43f"
+        }
+      ],
+      "generation": {
+        "engine": "Gemini; original approved concept study",
+        "source_sha256": "e0ef87e35f07b016679c7641550bf30d7e74168cca5c501a1c732b208fe1e9df",
+        "treatment": "Original Option C composition, resized and WebP encoded; no regeneration."
+      }
+    },
+    {
+      "slug": "macaque-projectome",
+      "subject": "A long, narrow volume of stylized neural tissue is opened into spaced slabs. Only a few individually distinguishable axon filaments traverse the full distance, with sparse branching and clearly separated origins; a detached comparison strip follows one selected path alongside the volume. Emphasize the difficulty of retaining each filament's identity over distance, leaving a small ambiguous segment unresolved. Use a lateral view with strong depth separation. This is a conceptual optical-tracing study, not a macaque portrait, a whole-brain cross section, or a completed anatomical atlas.",
+      "files": [
+        {
+          "path": "/images/interventions/macaque-projectome.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 25178,
+          "sha256": "90c8c81f2e4d60ef731ce90d7148fccd1d7c5d89cbd5e6160c351b531b33c50d"
+        },
+        {
+          "path": "/images/interventions/macaque-projectome-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 5232,
+          "sha256": "24d6a22a951d10560257153a0481fcba51d1ad24633a2b6a829104f5cad7976e"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nA long, narrow volume of stylized neural tissue is opened into spaced slabs. Only a few individually distinguishable axon filaments traverse the full distance, with sparse branching and clearly separated origins; a detached comparison strip follows one selected path alongside the volume. Emphasize the difficulty of retaining each filament's identity over distance, leaving a small ambiguous segment unresolved. Use a lateral view with strong depth separation. This is a conceptual optical-tracing study, not a macaque portrait, a whole-brain cross section, or a completed anatomical atlas.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "discovery-challenge",
+      "subject": "Arrange a small neural-circuit model, an opaque prediction capsule, and a separate shallow biological-test chamber along one restrained horizontal composition. The circuit contains sparse branching neural filaments; the chamber holds a different, similarly sparse neural preparation, with no result signal or matching-outcome motif. The sealed capsule sits between prediction and test, emphasizing a prediction fixed before the experiment. Depict simulation being put to a prospective biological test, not protein folding, molecular ribbons, an AI brand, or an experimentally confirmed discovery.",
+      "files": [
+        {
+          "path": "/images/interventions/discovery-challenge.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 26726,
+          "sha256": "c9924c11768452fcd6955a0b26a47e42019e9853ee2c7e6de035fc504bc4966e"
+        },
+        {
+          "path": "/images/interventions/discovery-challenge-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 6144,
+          "sha256": "c639bfb0e5c4f56e366ea49f230ca8121cf4139a2d7a376cb5b401c0719135e0"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nArrange a small neural-circuit model, an opaque prediction capsule, and a separate shallow biological-test chamber along one restrained horizontal composition. The circuit contains sparse branching neural filaments; the chamber holds a different, similarly sparse neural preparation, with no result signal or matching-outcome motif. The sealed capsule sits between prediction and test, emphasizing a prediction fixed before the experiment. Depict simulation being put to a prospective biological test, not protein folding, molecular ribbons, an AI brand, or an experimentally confirmed discovery.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "mouse-connectome",
+      "subject": "An exploded miniature connectomics production line rests on a planning base: a tissue-section holder containing a few tracing filaments, an imaging aperture, a reconstruction jig, and a storage cassette. Keep the modules mechanically separate, with an unresolved coupling and an empty operator position. Use a shallow diagonal view that makes interfaces and assembly gaps more prominent than machinery. This is a reference architecture under preparation, not an operating factory, a completed mouse connectome, or an image of an animal experiment.",
+      "files": [
+        {
+          "path": "/images/interventions/mouse-connectome.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 19216,
+          "sha256": "4f14226519910fd880fd60d877a37a052a84a0add9fbfbe1cb92917e6b6ce00a"
+        },
+        {
+          "path": "/images/interventions/mouse-connectome-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 4704,
+          "sha256": "67af573450e31388c374f32e93b4365fd2b84041f6aadb3124665696fdd65dcd"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nAn exploded miniature connectomics production line rests on a planning base: a tissue-section holder containing a few tracing filaments, an imaging aperture, a reconstruction jig, and a storage cassette. Keep the modules mechanically separate, with an unresolved coupling and an empty operator position. Use a shallow diagonal view that makes interfaces and assembly gaps more prominent than machinery. This is a reference architecture under preparation, not an operating factory, a completed mouse connectome, or an image of an animal experiment.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "neuroai-commons",
+      "subject": "An open task-cartridge library presents four substantial interchangeable inserts on one common fitting rail. Each uses a sparse neural-filament motif differently: an incomplete path to reconstruct, an input paired with a covered prediction space, a branching path beside a removable perturbation pin, and a similar motif held within a changed surrounding frame. Keep the inserts large and clearly separated, not a wall of tiny specimens. Use a frontal display view of reusable research tasks awaiting use, with no scores, rank order, or successful predictions.",
+      "files": [
+        {
+          "path": "/images/interventions/neuroai-commons.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 21714,
+          "sha256": "ddf07bfbf7a40fc9a8f233dfad510e17eae452e66e056c2bd2fd0b08ab47f0b4"
+        },
+        {
+          "path": "/images/interventions/neuroai-commons-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 5770,
+          "sha256": "74d10d5edf332828cb08eb702ebee1ee19f0ecdcf24d4fe3894926203b10fd44"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nAn open task-cartridge library presents four substantial interchangeable inserts on one common fitting rail. Each uses a sparse neural-filament motif differently: an incomplete path to reconstruct, an input paired with a covered prediction space, a branching path beside a removable perturbation pin, and a similar motif held within a changed surrounding frame. Keep the inserts large and clearly separated, not a wall of tiny specimens. Use a frontal display view of reusable research tasks awaiting use, with no scores, rank order, or successful predictions.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": [
+          "Correct only the scientific-task motifs in the FIRST and THIRD cartridges. Preserve all four equal-size charcoal cartridges, the common fitting rail, their placement and the second and fourth cartridges exactly. In the FIRST cartridge replace the road-like dashed highway with just two sparse charcoal/rust branching neural filaments on cream; leave a clearly visible small interruption in one filament for reconstruction, with no dashes or road markings. In the THIRD cartridge remove all three triangular arrowheads: make their paths into sparse gently branching neural filaments with blunt natural endpoints, not arrows, and keep the separate removable perturbation pin beside them. No arrows anywhere, no roads, no labels, no text, no scores or charts. Preserve the flat exact-edged charcoal/cream cut-paper art with muted rust and dusty blue and slight paper grain."
+        ]
+      }
+    },
+    {
+      "slug": "virtual-neuro",
+      "subject": "A proposed modular neural-simulation stack is laid out beside a shared base, with compatible couplings and sparse neural motifs but no assembled operating system. A physical divider separates it from a small experimental-validation fixture; the socket that would permit the final connection remains empty. Compose the unbuilt stack and the evidence gate as equally important objects. Show a conditional infrastructure proposal awaiting biological evidence, not a launched consortium, a completed simulation platform, or a validation gate already passed.",
+      "files": [
+        {
+          "path": "/images/interventions/virtual-neuro.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 12008,
+          "sha256": "8f7808ad4e40a32093cd32516f71b6d405953791b89e0b190ba1a55cad3e8706"
+        },
+        {
+          "path": "/images/interventions/virtual-neuro-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 3650,
+          "sha256": "30dbfd1f55365fcfea723365e0f302ce1ec1c052127f5b1c41b0f9ab0d73e797"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nA proposed modular neural-simulation stack is laid out beside a shared base, with compatible couplings and sparse neural motifs but no assembled operating system. A physical divider separates it from a small experimental-validation fixture; the socket that would permit the final connection remains empty. Compose the unbuilt stack and the evidence gate as equally important objects. Show a conditional infrastructure proposal awaiting biological evidence, not a launched consortium, a completed simulation platform, or a validation gate already passed.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    },
+    {
+      "slug": "neuroai-fellows",
+      "subject": "A compact benchmark-maintenance work position sits directly inside a larger shared research apparatus. An open neural-task cartridge, a fine alignment jig, and a carefully placed tool roll show the practical work of sustaining the system; neighboring work positions remain available. Let the partly serviced cartridge dominate, with sparse tracing filaments visible inside it. Use an intimate over-the-workbench angle, without depicting a real person. Present an illustrative role for embedded operators and researchers, not a staffed laboratory, a graduation ceremony, or a confirmed fellows cohort.",
+      "files": [
+        {
+          "path": "/images/interventions/neuroai-fellows.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 45238,
+          "sha256": "0edb70183ade00954873eb36e4f86511b33cf1d9887fc00867a90c70d8c445ec"
+        },
+        {
+          "path": "/images/interventions/neuroai-fellows-thumb.webp",
+          "width": 320,
+          "height": 180,
+          "bytes": 10770,
+          "sha256": "6423d8ca427d8a5afee6205963428b2e8f43777655516947ce3bc8f41fe3980b"
+        }
+      ],
+      "generation": {
+        "model": "gemini-3-pro-image",
+        "prompt": "Create one text-free 16:9 editorial cover. Bold exact-edged cut-paper collage: warm pale cream background, dominant flat charcoal silhouettes, restrained muted brick-rust and dusty blue accents, very slight paper grain and paper-edge shadows. Large crisp interlocking shapes and deliberate negative space. Flatten the objects into graphic paper planes, like a refined institutional magazine illustration; NOT a realistic tabletop, 3D render, photograph, glossy object or cartoon. Keep mechanism-critical relationships in the central 70 percent with quiet cream margins.\n\nA compact benchmark-maintenance work position sits directly inside a larger shared research apparatus. An open neural-task cartridge, a fine alignment jig, and a carefully placed tool roll show the practical work of sustaining the system; neighboring work positions remain available. Let the partly serviced cartridge dominate, with sparse tracing filaments visible inside it. Use an intimate over-the-workbench angle, without depicting a real person. Present an illustrative role for embedded operators and researchers, not a staffed laboratory, a graduation ceremony, or a confirmed fellows cohort.\n\nPreserve the specific mechanism and its unresolved state. One clear focal relationship, legible at thumbnail size. No text, lettering, numerals, logos, watermarks, UI, axes, graphs, charts, arrows, result signals, invented scientific data, national flags or real institutions. No generic brain, robot head, trophy, glowing technology or network wallpaper. Neural filaments only if explicitly required by the subject, as conceptual cut-paper marks rather than anatomical evidence. No gradients, torn scraps, photographic lighting, deep shadows, decorative patterns or border. Proposed intervention concept, never proof of successful deployment.",
+        "edits": []
+      }
+    }
+  ]
+}

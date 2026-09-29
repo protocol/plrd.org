@@ -72,7 +72,7 @@ test('Interventions surfaces the requested journey with one full catalog', () =>
   assert.equal(overview.querySelectorAll('a[href^="/interventions/"]').length, 0, 'overview must not repeat the program tiles')
   assert.match(catalog.textContent, /Draft-source examples\. Not approved commitments\./)
   assert.equal(doc.querySelectorAll('input, select').length, 0, 'do not restore filters')
-  assert.match(doc.querySelector('#featured-interventions').textContent, /Spotlight: three live programmatic interventions/)
+  assert.match(doc.querySelector('#featured-interventions').textContent, /Featured interventions/)
 })
 
 test('portfolio overview counts each primary type once from the supplied records', () => {

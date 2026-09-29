@@ -1,49 +1,13 @@
 import Link from 'next/link'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
+import InterventionCover from '@/components/InterventionCover'
 import {
-  INTERVENTION_AREA_ACCENT,
   INTERVENTION_AREA_LABEL,
+  INTERVENTION_STAGE_LABEL,
   INTERVENTION_TYPES,
   featuredInterventions,
   publicInterventionHref,
-  type InterventionAreaSlug,
 } from '@/lib/interventions'
-
-function FieldTexture({ area }: { area: InterventionAreaSlug }) {
-  const accent = INTERVENTION_AREA_ACCENT[area]
-  if (area === 'neurotech') {
-    return (
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.18]" viewBox="0 0 320 220" aria-hidden="true">
-        <path d="M20 160 C70 40, 120 200, 170 90 S260 30, 300 120" fill="none" stroke={accent} strokeWidth="1" />
-        <path d="M30 180 C90 80, 140 190, 200 110" fill="none" stroke={accent} strokeWidth="0.6" />
-        <circle cx="170" cy="90" r="2" fill={accent} />
-        <circle cx="90" cy="128" r="1.5" fill={accent} />
-      </svg>
-    )
-  }
-  if (area === 'ai-robotics') {
-    return (
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.16]" viewBox="0 0 320 220" aria-hidden="true">
-        {Array.from({ length: 6 }).map((_, row) =>
-          Array.from({ length: 8 }).map((__, col) => (
-            <rect key={`${row}-${col}`} x={24 + col * 36} y={28 + row * 28} width="10" height="10" fill="none" stroke={accent} strokeWidth="0.6" />
-          )),
-        )}
-      </svg>
-    )
-  }
-  return (
-    <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.16]" viewBox="0 0 320 220" aria-hidden="true">
-      <circle cx="48" cy="48" r="2" fill={accent} />
-      <circle cx="140" cy="36" r="2" fill={accent} />
-      <circle cx="220" cy="78" r="2" fill={accent} />
-      <circle cx="86" cy="120" r="2" fill={accent} />
-      <circle cx="188" cy="150" r="2" fill={accent} />
-      <path d="M48 48 L140 36 L220 78 L188 150 L86 120 Z" fill="none" stroke={accent} strokeWidth="0.7" />
-      <path d="M140 36 L86 120" fill="none" stroke={accent} strokeWidth="0.5" />
-    </svg>
-  )
-}
 
 export default function FeaturedInterventions() {
   const items = featuredInterventions()
@@ -51,51 +15,43 @@ export default function FeaturedInterventions() {
 
   return (
     <section aria-labelledby="featured-interventions" className="border-t border-black/10 py-16 md:py-20">
-      <div className="mb-8 flex items-end justify-between gap-6">
-        <div>
-          <h2 id="featured-interventions" className="font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[36px]">
-            Spotlight: three live programmatic interventions
-          </h2>
-        </div>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <h2 id="featured-interventions" className="scroll-mt-24 font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[36px]">
+          Featured interventions
+        </h2>
+        <p className="text-xs leading-relaxed text-gray-500">Draft-source examples · Not approved commitments</p>
       </div>
       <div className="grid gap-5 lg:grid-cols-3">
-        {items.map((item) => {
-          const accent = INTERVENTION_AREA_ACCENT[item.area]
-          return (
-            <Link
-              key={item.slug}
-              href={publicInterventionHref(item.slug)}
-              scroll={false}
-              className="group relative flex min-h-[320px] flex-col overflow-hidden border border-black/10 bg-white p-6 no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-            >
-              <FieldTexture area={item.area} />
-              <span
-                className="absolute left-0 top-0 h-full w-px origin-top scale-y-0 bg-current transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none motion-reduce:scale-y-100"
-                style={{ color: accent }}
-                aria-hidden="true"
-              />
-              <div className="relative flex items-start justify-between gap-4">
+        {items.map((item) => (
+          <Link
+            key={item.slug}
+            href={publicInterventionHref(item.slug)}
+            scroll={false}
+            className="group flex min-w-0 flex-col overflow-hidden border border-black/10 bg-white no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          >
+            <InterventionCover slug={item.slug} />
+            <div className="flex flex-1 flex-col p-6">
+              <div className="flex items-start justify-between gap-4">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
                   {INTERVENTION_AREA_LABEL[item.area]}
                 </p>
-                <span className="intervention-arrow text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" aria-hidden="true">
-                  ↗
-                </span>
+                <span className="intervention-arrow text-gray-500 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" aria-hidden="true">↗</span>
               </div>
-              <p className="relative mt-8 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: accent }}>
+              <p className="mt-7 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
                 <InterventionTypeIcon type={item.type} className="h-3.5 w-3.5" />
                 {INTERVENTION_TYPES[item.type].title}
               </p>
-              <h3 className="relative mt-3 max-w-[16ch] font-serif text-[28px] font-normal leading-[1.08] tracking-tight text-black">
-                {item.title}
-              </h3>
-              <p className="relative mt-4 max-w-sm text-sm leading-relaxed text-gray-600">{item.summary}</p>
-              <p className="relative mt-auto pt-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                {item.timing}
-              </p>
-            </Link>
-          )
-        })}
+              <h3 className="mt-3 font-serif text-[28px] font-normal leading-[1.08] tracking-tight text-black">{item.title}</h3>
+              <p className="mt-4 text-sm leading-relaxed text-gray-600">{item.summary}</p>
+              <div className="mt-auto pt-8">
+                <p className="flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-4 text-[11px] uppercase tracking-[0.14em] text-gray-500">
+                  <span>{item.timing}</span>
+                  <span>{INTERVENTION_STAGE_LABEL[item.stage]}</span>
+                </p>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   )

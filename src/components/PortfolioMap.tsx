@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
+import InterventionCover from '@/components/InterventionCover'
 import {
   INTERVENTION_AREA_LABEL,
   INTERVENTION_AREA_ORDER,
@@ -77,7 +78,7 @@ export default function PortfolioMap({ items }: Props) {
             </div>
             <ul className="mt-4 grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {group.programs.map((item) => (
-                <li key={item.slug} className="flex">
+                <li key={item.slug} className="flex min-w-0">
                   <ProgramTile item={item} groupBy={groupBy} />
                 </li>
               ))}
@@ -129,7 +130,7 @@ function ProgramTile({ item, groupBy }: { item: PublicIntervention; groupBy: Map
     <Link
       href={publicInterventionHref(item.slug)}
       scroll={false}
-      className="group relative flex h-full w-full flex-col border border-black/10 bg-white p-4 no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+      className="group relative flex h-full w-full min-w-0 flex-col border border-black/10 bg-white p-4 no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
     >
       <span className="absolute right-3 top-3 flex items-center gap-1">
         {types.map((type) => (
@@ -144,8 +145,11 @@ function ProgramTile({ item, groupBy }: { item: PublicIntervention; groupBy: Map
       <span className={`block truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400 ${iconReserve}`}>
         {secondary}
       </span>
-      <span className={`mt-2 block font-serif text-[20px] font-normal leading-[1.15] tracking-tight text-black group-hover:underline ${iconReserve}`}>
-        {item.title}
+      <span className="mt-3 flex min-w-0 items-start gap-3">
+        <InterventionCover slug={item.slug} compact />
+        <span className="min-w-0 font-serif text-[20px] font-normal leading-[1.15] tracking-tight text-black group-hover:underline">
+          {item.title}
+        </span>
       </span>
       <span className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-500">{item.summary}</span>
       <span className="mt-auto flex items-center justify-between gap-3 border-t border-black/[0.06] pt-3 text-[11px] uppercase tracking-[0.14em] text-gray-400">
