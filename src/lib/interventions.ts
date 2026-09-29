@@ -1,7 +1,9 @@
+import publicSourceInterventions from '@/data/interventions-active.json'
+
 // Public interventions catalog.
 // Source of truth for plrd.org pages, FA sections, and the read-only JSON endpoint.
-// These records are a reviewed public edition, not Console operational documents.
-// Draft-source examples from FA2/FA4 planning docs (read 2026-09-25). All are proposed.
+// Public-source records and draft-source proposals retain distinct provenance and lifecycle.
+// Public releases checked 2026-09-29; proposed FA2/FA4 programmes from planning drafts read 2026-09-25.
 
 export type InterventionAreaSlug =
   | 'digital-human-rights'
@@ -119,6 +121,7 @@ export const INTERVENTION_METHOD_STEPS = [
 
 /** All catalog records, including unpublished ones. Pages must use publishedInterventions(). */
 export const INTERVENTION_PROGRAMS: PublicIntervention[] = [
+  ...(publicSourceInterventions as PublicIntervention[]),
   {
     slug: "sovereign-ai",
     title: "Sovereign AI acceleration program",

@@ -1,8 +1,19 @@
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { test } from 'node:test'
+import { source } from './velocity/test-source-loader.mjs'
 
 const file = new URL('../src/data/interventions-active.json', import.meta.url)
+
+test('public additions enter the same catalogue selectors that serve UI and API', () => {
+  const { publishedInterventions, interventionBySlug } = source('lib/interventions.ts')
+  const data = JSON.parse(readFileSync(file, 'utf8'))
+  const all = publishedInterventions()
+  for (const item of data) {
+    assert.deepEqual(interventionBySlug(item.slug), item, `${item.slug} is not in the canonical catalogue`)
+    assert.equal(all.filter(r => r.slug === item.slug).length, 1)
+  }
+})
 
 test('approved active catalogue additions exist as a public-only source edition', () => {
   assert.ok(existsSync(file), 'the approved public additions have not been authored')
@@ -36,7 +47,7 @@ test('approved active catalogue additions exist as a public-only source edition'
   assert.doesNotMatch(body, /docs\.google|plrd-interventions|commsconsole|@protocol\.ai|\$[\d,]+|did:plc:|api[_-]?key|bearer/i)
 })
 
-test('podcast collection includes every known published Season 1 guest exactly once', () => {
+test('podcast collection includes every known published guest exactly once', () => {
   assert.ok(existsSync(file), 'approved podcast collection is absent')
   const podcast = JSON.parse(readFileSync(file, 'utf8')).find(r => r.slug === 'juan-benet-neuropodcast')
   for (const guest of ['Allison Duettmann', 'Konrad Kording', 'Tom Oxley', 'Ben Rapoport', 'Jacques Carolan', 'Max Hodak', 'Adam Marblestone']) {
