@@ -35,6 +35,7 @@ test('public statuses explicitly map legacy stages without inventing fundraising
   const expected = { proposed: 'developing', active: 'live', raising: 'raising', completed: 'completed', published: 'published' }
   assert.deepEqual(catalog.INTERVENTION_STATUS_ORDER, ['live', 'published', 'raising', 'developing', 'completed'])
   for (const [stage, status] of Object.entries(expected)) {
+    assert.ok(catalog.INTERVENTION_STAGE_LABEL[stage], `legacy stage label missing for ${stage}`)
     assert.equal(catalog.interventionStatus({ stage }), status)
     assert.equal(catalog.INTERVENTION_STATUS_LABEL[status], status[0].toUpperCase() + status.slice(1))
     assert.ok(catalog.INTERVENTION_STATUS_DESCRIPTION[status].length > 20)

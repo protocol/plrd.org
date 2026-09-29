@@ -138,6 +138,7 @@ export const INTERVENTION_TYPES: Record<InterventionTypeId, { title: string; sum
 export const INTERVENTION_STAGE_LABEL: Record<InterventionStage, string> = {
   proposed: 'Proposed',
   active: 'Active',
+  published: 'Published',
   raising: 'Raising',
   completed: 'Completed',
 }
