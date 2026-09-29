@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import FeaturedInterventions from '@/components/FeaturedInterventions'
 import PortfolioMap from '@/components/PortfolioMap'
-import { publishedInterventions } from '@/lib/interventions'
+import { publishedInterventions, catalogHref } from '@/lib/interventions'
 
 export default function InterventionsIndex() {
   const items = publishedInterventions()
@@ -28,7 +28,7 @@ export default function InterventionsIndex() {
             Observe. Diagnose. Intervene. Repeat.
           </h2>
           <Link
-            href="/interventions/methodology/"
+            href={`${catalogHref()}methodology/`}
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-black px-5 py-3 text-sm font-medium text-white no-underline transition-colors hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
           >
             Explore how we accelerate fields

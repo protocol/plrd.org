@@ -273,16 +273,14 @@ test('Interventions surfaces the requested journey with one full catalog', () =>
   const Index = source('components/InterventionsIndex.tsx').default
   const doc = new JSDOM(renderToStaticMarkup(React.createElement(Index))).window.document
   const sectionIds = [...doc.querySelectorAll('section[aria-labelledby]')].map((node) => node.getAttribute('aria-labelledby'))
-  assert.deepEqual(sectionIds.filter((id) => ['portfolio-map', 'featured-interventions', 'explore-all-interventions', 'intervention-evidence'].includes(id)), [
-    'portfolio-map', 'featured-interventions', 'explore-all-interventions', 'intervention-evidence',
-  ])
+  assert.deepEqual(sectionIds, ['intervention-method', 'featured-interventions', 'explore-all-interventions'])
   const catalog = doc.querySelector('section[aria-labelledby="explore-all-interventions"]')
   assert.equal(catalog.querySelector('h2').textContent.trim(), 'Explore all interventions')
   const links = [...catalog.querySelectorAll('li a[href^="/interventions-preview-872d1767c376/"]')]
   assert.equal(links.length, Math.min(5, publishedInterventions().length))
   assert.equal(new Set(links.map((a) => a.getAttribute('href'))).size, links.length)
   const overview = doc.querySelector('section[aria-labelledby="portfolio-map"]')
-  assert.equal(overview.querySelectorAll('a[href^="/interventions-preview-872d1767c376/"]').length, 0, 'overview must not repeat the program tiles')
+  assert.equal(overview, null, 'Portfolio map was removed by the approved simplification')
   assert.match(catalog.textContent, /Draft proposals are not approved commitments\./)
   assert.equal(doc.querySelectorAll('input, select').length, 0, 'do not restore filters')
   assert.match(doc.querySelector('#featured-interventions').textContent, /Spotlight: programmatic interventions/)
@@ -345,7 +343,7 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
   assert.match(methodSource, /The levers/)
   assert.doesNotMatch(methodSource, /method-cycle-forward/)
   assert.doesNotMatch(methodSource, /Field moves|intervention-chain|01 Field/)
-  assert.match(sourceText, /InterventionMethod/)
+  assert.match(sourceText, /Observe\. Diagnose\. Intervene\. Repeat\./)
   assert.match(sourceText, /PortfolioMap/)
   assert.doesNotMatch(sourceText, /InterventionsCatalog/)
   assert.match(mapSource, /Explore all interventions/)
@@ -448,4 +446,3 @@ test('unpublished fixture is excluded from selectors API detail params and sitem
     assert.ok(!(await (await GET()).json()).items.some(i => i.slug === fixture.slug))
   } finally { INTERVENTION_PROGRAMS.pop() }
 })
-

@@ -18,14 +18,14 @@ test('index offers one compact methodology band instead of the detailed preview 
   assert.ok(band.classList.contains('py-8'), 'methodology band uses compact vertical spacing')
   assert.equal(band.querySelector('h2').textContent.trim(), 'Observe. Diagnose. Intervene. Repeat.')
   assert.equal(band.querySelectorAll('ol, .method-cycle, .method-cycle-levers').length, 0)
-  const links = doc.querySelectorAll('a[href="/interventions/methodology/"]')
+  const links = doc.querySelectorAll('a[href="/interventions-preview-872d1767c376/methodology/"]')
   assert.equal(links.length, 1, 'only one methodology CTA on the index')
   assert.equal(links[0].textContent.trim(), 'Explore how we accelerate fields')
   assert.ok(band.contains(links[0]))
   assert.ok(links[0].classList.contains('rounded-full'), 'CTA is a pill')
   assert.equal(doc.querySelector('#portfolio-map, #intervention-evidence'), null)
   assert.doesNotMatch(doc.body.textContent, /Running a program is only the beginning|Public types here follow the FA2 draft vocabulary|Read the field|Find the constraint|Pull the right lever/)
-  assert.equal(doc.querySelector('header a[href="/interventions/methodology/"]'), null)
+  assert.equal(doc.querySelector('header a[href="/interventions-preview-872d1767c376/methodology/"]'), null)
 })
 
 test('simplified index retains hero, featured content, five-card library, and grouping controls', () => {
