@@ -24,6 +24,12 @@ test('nested methodology keeps its full-bleed footer without extra shell padding
   assert.ok(!patterns.some(pattern => pattern.test('/interventions-preview-872d1767c376/')))
 })
 
+test('Methodology CTA uses document navigation rather than the program-modal interceptor', () => {
+  const Index = source('components/InterventionsIndex.tsx').default
+  const link = elements(Index()).find(node => node.props.href === '/interventions-preview-872d1767c376/methodology/')
+  assert.equal(link.type, 'a', 'Next Link would match the dynamic intercepted program slug and leave the catalog displayed')
+})
+
 function elements(node) {
   if (!React.isValidElement(node)) return []
   return [node, ...React.Children.toArray(node.props.children).flatMap(elements)]
