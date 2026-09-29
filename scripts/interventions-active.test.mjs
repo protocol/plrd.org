@@ -2,8 +2,55 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { source } from './velocity/test-source-loader.mjs'
+import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { JSDOM } from 'jsdom'
+import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime.js'
 
 const file = new URL('../src/data/interventions-active.json', import.meta.url)
+
+test('read-only API exposes the same public status and collection as the UI records', async () => {
+  const { GET } = source('app/api/interventions/route.ts')
+  const payload = await (await GET()).json()
+  const data = JSON.parse(readFileSync(file, 'utf8'))
+  assert.equal(payload.count, payload.items.length)
+  for (const item of data) {
+    const row = payload.items.find(r => r.slug === item.slug)
+    assert.deepEqual(row.resources, item.resources, `${item.slug} API resources`)
+    assert.equal(row.sourceKind, 'public')
+    assert.equal(row.statusLabel, item.stage === 'completed' ? 'Completed' : 'Live')
+    assert.equal(row.sourceNote, item.sourceNote)
+  }
+  for (const row of payload.items.filter(r => r.stage === 'proposed')) assert.equal(row.statusLabel, 'Developing')
+})
+
+test('source collections and provenance render on both modal and direct detail routes', async () => {
+  const Modal = source('components/InterventionModal.tsx').default
+  const Details = source('app/interventions/[slug]/page.tsx').default
+  const data = JSON.parse(readFileSync(file, 'utf8'))
+  for (const item of data) {
+    for (const node of [React.createElement(Modal, { item }), await Details({ params: Promise.resolve({ slug: item.slug }) })]) {
+      const doc = new JSDOM(renderToStaticMarkup(React.createElement(AppRouterContext.Provider, { value: {} }, node))).window.document
+      const dialog = doc.querySelector('[role="dialog"]')
+      const links = [...dialog.querySelectorAll('[data-intervention-resources] a')]
+      assert.deepEqual(links.map(a => a.href), item.resources.map(r => r.href), item.slug)
+      assert.deepEqual(links.map(a => a.textContent.trim()), item.resources.map(r => r.title), item.slug)
+      assert.match(dialog.textContent, /Published source record/)
+      assert.doesNotMatch(dialog.textContent, /Draft-source example|The proposed work|proposed public edition|proposed role/)
+      assert.ok(dialog.textContent.includes(item.sourceNote))
+    }
+  }
+})
+
+test('FA0 public records have a complete cross-field area mapping', () => {
+  const catalog = source('lib/interventions.ts')
+  const area = 'rnd-acceleration'
+  assert.ok(catalog.INTERVENTION_AREA_ORDER.includes(area), 'FA0 is not a catalogue area')
+  assert.equal(catalog.INTERVENTION_AREA_LABEL[area], 'R&D Acceleration (FA0)')
+  assert.ok(catalog.INTERVENTION_AREA_ICON[area])
+  assert.ok(catalog.INTERVENTION_AREA_ACCENT[area])
+  assert.equal(catalog.INTERVENTION_AREA_HREF[area], '/interventions/#explore-all-interventions')
+})
 
 test('public additions enter the same catalogue selectors that serve UI and API', () => {
   const { publishedInterventions, interventionBySlug } = source('lib/interventions.ts')

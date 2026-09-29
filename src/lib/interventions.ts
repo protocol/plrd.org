@@ -6,6 +6,7 @@ import publicSourceInterventions from '@/data/interventions-active.json'
 // Public releases checked 2026-09-29; proposed FA2/FA4 programmes from planning drafts read 2026-09-25.
 
 export type InterventionAreaSlug =
+  | 'rnd-acceleration'
   | 'digital-human-rights'
   | 'economies-governance'
   | 'ai-robotics'
@@ -36,11 +37,16 @@ export type PublicIntervention = {
   typeNote: string
   plRole: string
   published: boolean
+  sourceKind?: 'draft' | 'public'
+  resources?: { title: string; href: string; date?: string }[]
+  resourceLabel?: string
+  sourceNote?: string
   /** Editorial emphasis on the catalog overview. Cards, filters, and the map still derive from the same record. */
   featured?: boolean
 }
 
 export const INTERVENTION_AREA_ORDER: InterventionAreaSlug[] = [
+  'rnd-acceleration',
   'digital-human-rights',
   'economies-governance',
   'ai-robotics',
@@ -48,6 +54,7 @@ export const INTERVENTION_AREA_ORDER: InterventionAreaSlug[] = [
 ]
 
 export const INTERVENTION_AREA_LABEL: Record<InterventionAreaSlug, string> = {
+  'rnd-acceleration': 'R&D Acceleration (FA0)',
   'digital-human-rights': 'Digital Human Rights',
   'economies-governance': 'Economies & Governance',
   'ai-robotics': 'AI & Robotics',
@@ -55,6 +62,7 @@ export const INTERVENTION_AREA_LABEL: Record<InterventionAreaSlug, string> = {
 }
 
 export const INTERVENTION_AREA_ICON: Record<InterventionAreaSlug, 'shield' | 'hexagon' | 'neural' | 'brain'> = {
+  'rnd-acceleration': 'hexagon',
   'digital-human-rights': 'shield',
   'economies-governance': 'hexagon',
   'ai-robotics': 'neural',
@@ -62,6 +70,7 @@ export const INTERVENTION_AREA_ICON: Record<InterventionAreaSlug, 'shield' | 'he
 }
 
 export const INTERVENTION_AREA_HREF: Record<InterventionAreaSlug, string> = {
+  'rnd-acceleration': '/interventions/#explore-all-interventions',
   'digital-human-rights': '/areas/digital-human-rights/',
   'economies-governance': '/areas/economies-governance/',
   'ai-robotics': '/areas/ai-robotics/',
@@ -389,6 +398,7 @@ export function catalogHref(): string {
 
 /** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */
 export const INTERVENTION_AREA_ACCENT: Record<InterventionAreaSlug, string> = {
+  'rnd-acceleration': '#3b7385',
   'economies-governance': '#9a6b2f',
   neurotech: '#6b5b8c',
   'ai-robotics': '#3d7a86',
