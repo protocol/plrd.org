@@ -10,6 +10,7 @@ import { stripFaPrefix, formatDate } from '@/lib/format'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import AreaHeroGraphic from '@/components/AreaHeroGraphic'
 import AreaHeroActions from '@/components/AreaHeroActions'
+import FocusAreaInterventions from '@/components/FocusAreaInterventions'
 import AuthorCard from '@/components/AuthorCard'
 import Breadcrumb from '@/components/Breadcrumb'
 import MarkdownContent from '@/components/MarkdownContent'
@@ -288,6 +289,8 @@ export default async function AreaPage({ params }: Props) {
       )}
 
       {/* Field velocity is preview-only until a separate public launch. */}
+
+      <FocusAreaInterventions area={slug as FocusAreaSlug} />
 
       {/* Insights — latest posts, publications, and talks for this focus area */}
       {areaInsights.length > 0 && (

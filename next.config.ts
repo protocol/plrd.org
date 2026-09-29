@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import previewConfig from './src/data/interventions-preview.json'
 
 const nextConfig: NextConfig = {
   trailingSlash: true,
@@ -9,6 +10,9 @@ const nextConfig: NextConfig = {
   async headers() {
     // Defense in depth; Atlas must emit noindex itself for external responses.
     return [{
+      source: `${previewConfig.basePath}/:path*`,
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
+    }, {
       source: '/neuro-atlas/:path*',
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
     }]

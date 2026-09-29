@@ -114,6 +114,7 @@ export default function AreaEditPage() {
           areaSlug={slug}
           showOpportunitySpaces={Boolean(SLUG_TO_OPPORTUNITY_DATA[slug])}
           opportunityHref={`/areas/${slug}/#opportunity-spaces`}
+          interventionsHref={`/areas/${slug}/#interventions`}
         />
 
         {/* Leads */}
