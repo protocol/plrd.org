@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import Breadcrumb from '@/components/Breadcrumb'
 import FeaturedInterventions from '@/components/FeaturedInterventions'
-import InterventionMethod from '@/components/InterventionMethod'
 import PortfolioMap from '@/components/PortfolioMap'
-import PortfolioOverview from '@/components/PortfolioOverview'
 import { publishedInterventions } from '@/lib/interventions'
 
 export default function InterventionsIndex() {
@@ -22,42 +20,23 @@ export default function InterventionsIndex() {
           Fields get stuck at specific bottlenecks. We intervene there, then look for signals that
           the constraint is loosening and the field is moving.
         </p>
-        <Link
-          href="/interventions/methodology/"
-          className="group mt-8 inline-flex items-center gap-2 text-sm font-medium text-black no-underline"
-        >
-          How we choose the work
-          <span className="intervention-arrow transition-transform group-hover:translate-x-1 motion-reduce:transform-none" aria-hidden="true">
-            →
-          </span>
-        </Link>
       </header>
 
-      <InterventionMethod />
-      <PortfolioOverview items={items} />
+      <section aria-labelledby="intervention-method" className="rounded-lg bg-gray-100 px-6 py-8 md:px-8">
+        <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
+          <h2 id="intervention-method" className="scroll-mt-24 font-serif text-[28px] font-normal leading-tight tracking-tight text-black md:text-[32px]">
+            Observe. Diagnose. Intervene. Repeat.
+          </h2>
+          <Link
+            href="/interventions/methodology/"
+            className="inline-flex shrink-0 items-center justify-center rounded-full bg-black px-5 py-3 text-sm font-medium text-white no-underline transition-colors hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+          >
+            Explore how we accelerate fields
+          </Link>
+        </div>
+      </section>
       <FeaturedInterventions />
       <PortfolioMap items={items} />
-
-      <section aria-labelledby="intervention-evidence" className="border-t border-black/10 py-16 md:py-24">
-        <p id="intervention-evidence" className="scroll-mt-24 mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
-          From intervention to evidence
-        </p>
-        <h2 className="max-w-xl font-serif text-[32px] font-normal leading-[1.08] tracking-tight text-black md:text-[42px]">
-          Running a program is only the beginning.
-        </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-gray-600 md:text-lg">
-          We track whether an intervention changes the underlying field — and update the hypothesis accordingly.
-        </p>
-        <Link
-          href="/interventions/methodology/"
-          className="group mt-8 inline-flex items-center gap-2 text-sm font-medium text-black no-underline"
-        >
-          Explore how we measure field velocity
-          <span className="intervention-arrow transition-transform group-hover:translate-x-1 motion-reduce:transform-none" aria-hidden="true">
-            →
-          </span>
-        </Link>
-      </section>
     </div>
   )
 }

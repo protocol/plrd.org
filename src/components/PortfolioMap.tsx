@@ -146,13 +146,6 @@ export default function PortfolioMap({ items }: Props) {
         </>}
       </div>
 
-      <p className="mt-8 text-sm text-gray-400">
-        Public types here follow the FA2 draft vocabulary. See the{' '}
-        <Link href="/interventions/methodology/" className="text-black underline decoration-black/20 underline-offset-4 hover:decoration-black">
-          methodology
-        </Link>{' '}
-        for how they relate to the Console toolkit.
-      </p>
     </section>
   )
 }
