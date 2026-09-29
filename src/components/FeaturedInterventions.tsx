@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
+import InterventionStatusTag from '@/components/InterventionStatusTag'
 import {
   INTERVENTION_AREA_ACCENT,
   INTERVENTION_AREA_LABEL,
@@ -54,7 +55,7 @@ export default function FeaturedInterventions() {
       <div className="mb-8 flex items-end justify-between gap-6">
         <div>
           <h2 id="featured-interventions" className="font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[36px]">
-            Spotlight: three live programmatic interventions
+            Spotlight: programmatic interventions
           </h2>
         </div>
       </div>
@@ -66,7 +67,7 @@ export default function FeaturedInterventions() {
               key={item.slug}
               href={publicInterventionHref(item.slug)}
               scroll={false}
-              className="group relative flex min-h-[320px] flex-col overflow-hidden border border-black/10 bg-white p-6 no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-black/10 bg-white p-6 no-underline transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
             >
               <FieldTexture area={item.area} />
               <span
@@ -90,9 +91,10 @@ export default function FeaturedInterventions() {
                 {item.title}
               </h3>
               <p className="relative mt-4 max-w-sm text-sm leading-relaxed text-gray-600">{item.summary}</p>
-              <p className="relative mt-auto pt-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                {item.timing}
-              </p>
+              <div className="relative mt-auto flex flex-wrap items-center justify-between gap-3 pt-8 text-[11px] text-gray-400">
+                <span>{item.timing}</span>
+                <InterventionStatusTag item={item} />
+              </div>
             </Link>
           )
         })}

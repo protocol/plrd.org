@@ -20,7 +20,35 @@ export type InterventionTypeId =
   | 'prove'
   | 'enable'
 
-export type InterventionStage = 'proposed' | 'active' | 'completed'
+export type InterventionStage = 'proposed' | 'active' | 'raising' | 'completed'
+export type InterventionStatus = 'live' | 'raising' | 'developing' | 'completed'
+
+export const INTERVENTION_STATUS_ORDER: InterventionStatus[] = ['live', 'raising', 'developing', 'completed']
+
+export const INTERVENTION_STATUS_LABEL: Record<InterventionStatus, string> = {
+  live: 'Live',
+  raising: 'Raising',
+  developing: 'Developing',
+  completed: 'Completed',
+}
+
+export const INTERVENTION_STATUS_DESCRIPTION: Record<InterventionStatus, string> = {
+  live: 'The program or intervention is underway.',
+  raising: 'The intervention is defined enough to fundraise against.',
+  developing: 'The intervention is still being clarified and scoped.',
+  completed: 'The event or intervention has concluded; it is not currently live.',
+}
+
+const STATUS_BY_STAGE: Record<InterventionStage, InterventionStatus> = {
+  proposed: 'developing',
+  active: 'live',
+  raising: 'raising',
+  completed: 'completed',
+}
+
+export function interventionStatus(item: Pick<PublicIntervention, 'stage'>): InterventionStatus {
+  return STATUS_BY_STAGE[item.stage]
+}
 
 export type PublicIntervention = {
   slug: string
@@ -107,6 +135,7 @@ export const INTERVENTION_TYPES: Record<InterventionTypeId, { title: string; sum
 export const INTERVENTION_STAGE_LABEL: Record<InterventionStage, string> = {
   proposed: 'Proposed',
   active: 'Active',
+  raising: 'Raising',
   completed: 'Completed',
 }
 

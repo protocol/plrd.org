@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
+import InterventionStatusTag from '@/components/InterventionStatusTag'
 import {
   INTERVENTION_AREA_ACCENT,
   INTERVENTION_AREA_LABEL,
-  INTERVENTION_STAGE_LABEL,
   INTERVENTION_TYPES,
   publicInterventionHref,
   type PublicIntervention,
@@ -21,7 +21,7 @@ export default function InterventionCard({
     <Link
       href={publicInterventionHref(item.slug)}
       scroll={false}
-      className="group flex h-full flex-col border border-black/10 bg-white p-5 no-underline transition-colors hover:border-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+      className="group flex h-full flex-col rounded-lg border border-black/10 bg-white p-5 no-underline transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
     >
       <div className="mb-6 flex items-start justify-between gap-3">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
@@ -44,7 +44,7 @@ export default function InterventionCard({
       <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-500">{item.summary}</p>
       <div className="mt-auto flex items-center justify-between gap-3 border-t border-black/[0.06] pt-4 text-[11px] uppercase tracking-[0.14em] text-gray-400">
         <span>{item.timing}</span>
-        <span className="font-normal">{INTERVENTION_STAGE_LABEL[item.stage]}</span>
+        <InterventionStatusTag item={item} />
       </div>
     </Link>
   )

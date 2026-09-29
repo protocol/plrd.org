@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
+import InterventionStatusTag from '@/components/InterventionStatusTag'
 import {
   INTERVENTION_AREA_HREF,
   INTERVENTION_AREA_ICON,
   INTERVENTION_AREA_LABEL,
-  INTERVENTION_STAGE_LABEL,
   INTERVENTION_TYPES,
   catalogHref,
   type PublicIntervention,
@@ -81,9 +81,7 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
               <InterventionTypeIcon type={item.type} />
               {INTERVENTION_TYPES[item.type].title}
             </span>
-            <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-              {INTERVENTION_STAGE_LABEL[item.stage]}
-            </span>
+            <InterventionStatusTag item={item} />
           </div>
           <h1
             id="intervention-modal-title"
