@@ -27,6 +27,20 @@ test('Impact headline matches the catalog’s 32px mobile and 44px desktop scale
   assert.deepEqual(sizeClasses, ['text-[32px]', 'md:text-[44px]'])
 })
 
+test('Methodology tabs share the page backdrop instead of painting separate full-width bands', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
+  t.mock.method(console, 'warn', () => {})
+  const Page = source('app/impact-preview-eb61fba1b98e/page.tsx').default
+  const nodes = elements(await Page({ searchParams: Promise.resolve({}) }))
+  for (const id of ['diagnose', 'methodology', 'intervene', 'learn', 'field-velocity']) {
+    const surface = nodes.find(node => node.props.id === id)
+    assert.ok(surface, `missing ${id}`)
+    assert.doesNotMatch(surface.props.className ?? '', /(?:^|\s)(?:[\w-]+:)*bg-/, `${id} must inherit the common page backdrop`)
+    assert.equal(surface.props.style?.background, undefined)
+    assert.equal(surface.props.style?.backgroundColor, undefined)
+  }
+})
+
 test('Diagnose leads with bottlenecks; Learn keeps field velocity without the contribution showcase', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
   t.mock.method(console, 'warn', () => {})

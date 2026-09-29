@@ -221,7 +221,7 @@ export default async function ImpactPage({
 
       <ImpactMethodologyTabs>
         <section id="diagnose" className="scroll-mt-24">
-          <div id="methodology" className="border-b border-gray-200 bg-gray-50">
+          <div id="methodology" className="border-b border-gray-200">
             <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
               <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
                 Bottlenecks
@@ -384,7 +384,7 @@ export default async function ImpactPage({
           <div id="compound" className="scroll-mt-24" />
           <div
             id="field-velocity"
-            className="scroll-mt-24 border-b border-gray-200 bg-gray-100"
+            className="scroll-mt-24 border-b border-gray-200"
           >
             <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
               <div id="observe" className="scroll-mt-24" />
