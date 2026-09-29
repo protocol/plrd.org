@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { JSDOM } from 'jsdom'
 import { source } from './velocity/test-source-loader.mjs'
 
 const {
@@ -30,6 +32,67 @@ function text(node) {
   if (typeof node === 'string' || typeof node === 'number') return String(node)
   return node && typeof node === 'object' ? text(node.props?.children) : ''
 }
+
+test('global navigation puts Interventions between Focus Areas and Insights', () => {
+  assert.deepEqual(mainNav.map((item) => item.name), ['About us', 'Focus Areas', 'Interventions', 'Insights', 'Team'])
+  assert.equal(mainNav[2].url, '/interventions/')
+  assert.equal(mainNav[2].children, undefined)
+  for (const component of ['SiteHeader', 'OffCanvasNav']) {
+    const navigation = readFileSync(new URL(`../src/components/${component}.tsx`, import.meta.url), 'utf8')
+    assert.match(navigation, /mainNav\.map/)
+  }
+})
+
+test('Collaborate stays available in desktop and mobile navigation', () => {
+  for (const component of ['SiteHeader', 'OffCanvasNav']) {
+    const navigation = readFileSync(new URL(`../src/components/${component}.tsx`, import.meta.url), 'utf8')
+    assert.match(navigation, /href="\/outreach\/collaboration\/"/)
+    assert.match(navigation, /Collaborate/)
+  }
+})
+
+test('Interventions surfaces the requested journey with one full catalog', () => {
+  const Index = source('components/InterventionsIndex.tsx').default
+  const doc = new JSDOM(renderToStaticMarkup(React.createElement(Index))).window.document
+  const sectionIds = [...doc.querySelectorAll('section[aria-labelledby]')].map((node) => node.getAttribute('aria-labelledby'))
+  assert.deepEqual(sectionIds.filter((id) => ['portfolio-map', 'featured-interventions', 'explore-all-interventions', 'intervention-evidence'].includes(id)), [
+    'portfolio-map', 'featured-interventions', 'explore-all-interventions', 'intervention-evidence',
+  ])
+  const catalog = doc.querySelector('section[aria-labelledby="explore-all-interventions"]')
+  assert.equal(catalog.querySelector('h2').textContent.trim(), 'Explore all interventions')
+  const links = [...catalog.querySelectorAll('li a[href^="/interventions/"]')]
+  assert.equal(links.length, publishedInterventions().length)
+  assert.equal(new Set(links.map((a) => a.getAttribute('href'))).size, links.length)
+  const overview = doc.querySelector('section[aria-labelledby="portfolio-map"]')
+  assert.equal(overview.querySelectorAll('a[href^="/interventions/"]').length, 0, 'overview must not repeat the program tiles')
+  assert.match(catalog.textContent, /Draft-source examples\. Not approved commitments\./)
+  assert.equal(doc.querySelectorAll('input, select').length, 0, 'do not restore filters')
+  assert.match(doc.querySelector('#featured-interventions').textContent, /Spotlight: three live programmatic interventions/)
+})
+
+test('portfolio overview counts each primary type once from the supplied records', () => {
+  const Overview = source('components/PortfolioOverview.tsx').default
+  const { INTERVENTION_TYPES } = source('lib/interventions.ts')
+  for (const items of [publishedInterventions(), []]) {
+    const doc = new JSDOM(renderToStaticMarkup(React.createElement(Overview, { items }))).window.document
+    const rows = [...doc.querySelectorAll('tbody tr')]
+    assert.equal(rows.length, Object.keys(INTERVENTION_TYPES).length)
+    let total = 0
+    rows.forEach((row, index) => {
+      const type = Object.keys(INTERVENTION_TYPES)[index]
+      const cells = [...row.querySelectorAll('td')]
+      assert.equal(cells.length, INTERVENTION_AREA_ORDER.length)
+      cells.forEach((cell, column) => {
+        const actual = Number(cell.textContent.trim()) || 0
+        const expected = items.filter((item) => item.type === type && item.area === INTERVENTION_AREA_ORDER[column]).length
+        assert.equal(actual, expected)
+        total += actual
+      })
+    })
+    assert.equal(total, items.length)
+    assert.match(doc.querySelector('caption').textContent, /counted once by primary intervention type/)
+  }
+})
 
 test('public catalog publishes the 15 draft-source examples without private fields', () => {
   const items = publishedInterventions()
@@ -65,7 +128,7 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
   assert.match(sourceText, /InterventionMethod/)
   assert.match(sourceText, /PortfolioMap/)
   assert.doesNotMatch(sourceText, /InterventionsCatalog/)
-  assert.doesNotMatch(sourceText, /Explore all interventions/)
+  assert.match(mapSource, /Explore all interventions/)
   assert.match(mapSource, /publicInterventionHref/)
   assert.doesNotMatch(sourceText, /Find the bottleneck/)
   assert.match(sourceText, /Turning bottlenecks/)

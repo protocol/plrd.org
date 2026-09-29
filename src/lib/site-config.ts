@@ -36,8 +36,8 @@ export const mainNav: NavItem[] = [
       { name: 'Neurotech', url: '/areas/neurotech/' },
     ],
   },
-  { name: 'Insights', url: '/insights/' },
   { name: 'Interventions', url: '/interventions/' },
+  { name: 'Insights', url: '/insights/' },
   { name: 'Team', url: '/authors/' },
 ]
 

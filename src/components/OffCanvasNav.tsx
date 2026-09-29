@@ -60,6 +60,13 @@ export default function OffCanvasNav({ isOpen, onClose }: Props) {
               )}
             </div>
           ))}
+          <Link
+            href="/outreach/collaboration/"
+            onClick={onClose}
+            className="inline-flex rounded-full bg-black px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+          >
+            Collaborate
+          </Link>
         </nav>
       </div>
     </>

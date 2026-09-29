@@ -42,12 +42,11 @@ export default function PortfolioMap({ items }: Props) {
   }, [groupBy, items])
 
   return (
-    <section aria-labelledby="portfolio-map" className="py-16 md:py-24">
+    <section aria-labelledby="explore-all-interventions" className="border-t border-black/10 py-16 md:py-24">
       <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Portfolio map</p>
-          <h2 id="portfolio-map" className="font-serif text-[32px] font-normal leading-[1.08] tracking-tight text-black md:text-[40px]">
-            How current interventions sit across fields.
+          <h2 id="explore-all-interventions" className="scroll-mt-24 font-serif text-[32px] font-normal leading-[1.08] tracking-tight text-black md:text-[40px]">
+            Explore all interventions
           </h2>
           <p className="mt-4 text-base leading-relaxed text-gray-500">
             {groupBy === 'type'

@@ -551,6 +551,15 @@ p + ul, p + ol, p + blockquote {
   margin-block-start: -0.5em;
 }
 
+/* Keep the portfolio summary editorial; do not inherit prose-table cell boxes. */
+.portfolio-overview :is(th, td) {
+  border: 0;
+  padding: 1rem 0.75rem;
+}
+.portfolio-overview :is(th, td):first-child {
+  padding-left: 0;
+}
+
 th, td {
   border: 1px solid;
   border-collapse: collapse;

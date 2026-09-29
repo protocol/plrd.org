@@ -3,6 +3,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import FeaturedInterventions from '@/components/FeaturedInterventions'
 import InterventionMethod from '@/components/InterventionMethod'
 import PortfolioMap from '@/components/PortfolioMap'
+import PortfolioOverview from '@/components/PortfolioOverview'
 import { publishedInterventions } from '@/lib/interventions'
 
 export default function InterventionsIndex() {
@@ -33,11 +34,12 @@ export default function InterventionsIndex() {
       </header>
 
       <InterventionMethod />
-      <PortfolioMap items={items} />
+      <PortfolioOverview items={items} />
       <FeaturedInterventions />
+      <PortfolioMap items={items} />
 
-      <section className="border-t border-black/10 py-16 md:py-24">
-        <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+      <section aria-labelledby="intervention-evidence" className="border-t border-black/10 py-16 md:py-24">
+        <p id="intervention-evidence" className="scroll-mt-24 mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
           From intervention to evidence
         </p>
         <h2 className="max-w-xl font-serif text-[32px] font-normal leading-[1.08] tracking-tight text-black md:text-[42px]">
