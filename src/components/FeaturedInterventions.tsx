@@ -51,53 +51,55 @@ export default function FeaturedInterventions() {
   if (items.length === 0) return null
 
   return (
-    <section aria-labelledby="featured-interventions" className="border-t border-black/10 py-16 md:py-20">
-      <div className="mb-8 flex items-end justify-between gap-6">
-        <div>
-          <h2 id="featured-interventions" className="font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[36px]">
-            Spotlight: programmatic interventions
-          </h2>
+    <section aria-labelledby="featured-interventions" className="bg-gray-100 py-12 md:py-16">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <div>
+            <h2 id="featured-interventions" className="font-serif text-[32px] font-normal leading-tight tracking-tight text-black md:text-[36px]">
+              Featured interventions
+            </h2>
+          </div>
         </div>
-      </div>
-      <div className="grid gap-5 lg:grid-cols-3">
-        {items.map((item) => {
-          const accent = INTERVENTION_AREA_ACCENT[item.area]
-          return (
-            <Link
-              key={item.slug}
-              href={publicInterventionHref(item.slug)}
-              scroll={false}
-              className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-black/10 bg-white p-6 no-underline transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-            >
-              <FieldTexture area={item.area} />
-              <span
-                className="absolute left-0 top-0 h-full w-px origin-top scale-y-0 bg-current transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none motion-reduce:scale-y-100"
-                style={{ color: accent }}
-                aria-hidden="true"
-              />
-              <div className="relative flex items-start justify-between gap-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-                  {INTERVENTION_AREA_LABEL[item.area]}
+        <div className="grid gap-5 lg:grid-cols-3">
+          {items.map((item) => {
+            const accent = INTERVENTION_AREA_ACCENT[item.area]
+            return (
+              <Link
+                key={item.slug}
+                href={publicInterventionHref(item.slug)}
+                scroll={false}
+                className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-2xl border border-black/10 bg-white p-6 no-underline transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+              >
+                <FieldTexture area={item.area} />
+                <span
+                  className="absolute left-0 top-0 h-full w-px origin-top scale-y-0 bg-current transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none motion-reduce:scale-y-100"
+                  style={{ color: accent }}
+                  aria-hidden="true"
+                />
+                <div className="relative flex items-start justify-between gap-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+                    {INTERVENTION_AREA_LABEL[item.area]}
+                  </p>
+                  <span className="intervention-arrow text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" aria-hidden="true">
+                    ↗
+                  </span>
+                </div>
+                <p className="relative mt-8 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: accent }}>
+                  <InterventionTypeIcon type={item.type} className="h-3.5 w-3.5" />
+                  {INTERVENTION_TYPES[item.type].title}
                 </p>
-                <span className="intervention-arrow text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" aria-hidden="true">
-                  ↗
-                </span>
-              </div>
-              <p className="relative mt-8 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: accent }}>
-                <InterventionTypeIcon type={item.type} className="h-3.5 w-3.5" />
-                {INTERVENTION_TYPES[item.type].title}
-              </p>
-              <h3 className="relative mt-3 max-w-[16ch] font-serif text-[28px] font-normal leading-[1.08] tracking-tight text-black">
-                {item.title}
-              </h3>
-              <p className="relative mt-4 max-w-sm text-sm leading-relaxed text-gray-600">{item.summary}</p>
-              <div className="relative mt-auto flex flex-wrap items-center justify-between gap-3 pt-8 text-[11px] text-gray-400">
-                <span>{item.timing}</span>
-                <InterventionStatusTag item={item} />
-              </div>
-            </Link>
-          )
-        })}
+                <h3 className="relative mt-3 max-w-[16ch] font-serif text-[28px] font-normal leading-[1.08] tracking-tight text-black">
+                  {item.title}
+                </h3>
+                <p className="relative mt-4 max-w-sm text-sm leading-relaxed text-gray-600">{item.summary}</p>
+                <div className="relative mt-auto flex flex-wrap items-center justify-between gap-3 pt-8 text-[11px] text-gray-400">
+                  <span>{item.timing}</span>
+                  <InterventionStatusTag item={item} />
+                </div>
+              </Link>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

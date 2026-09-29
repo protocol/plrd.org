@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import InterventionTypeIcon from '@/components/InterventionTypeIcon'
 import InterventionStatusTag from '@/components/InterventionStatusTag'
@@ -17,6 +17,8 @@ import {
   type PublicIntervention,
 } from '@/lib/interventions'
 
+// SiteHeader's h-16 navigation plus its 1px bottom border.
+const SITE_HEADER_HEIGHT = 65
 const TYPE_ORDER = Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]
 
 export type MapGroupBy = 'type' | 'area' | 'status'
@@ -27,18 +29,23 @@ type Props = {
 
 export default function PortfolioMap({ items }: Props) {
   const [groupBy, setGroupBy] = useState<MapGroupBy>('type')
-  const [expanded, setExpanded] = useState(false)
-  const toggleRef = useRef<HTMLButtonElement>(null)
-  const hasToggled = useRef(false)
+  const libraryStartRef = useRef<HTMLDivElement>(null)
+  const anchorAfterGrouping = useRef(false)
 
-  useEffect(() => {
-    if (hasToggled.current) toggleRef.current?.focus()
-  }, [expanded])
-
-  function toggleLibrary() {
-    hasToggled.current = true
-    setExpanded((value) => !value)
+  function changeGrouping(next: MapGroupBy) {
+    if (next === groupBy) return
+    const start = libraryStartRef.current
+    anchorAfterGrouping.current = Boolean(start && start.getBoundingClientRect().top < SITE_HEADER_HEIGHT)
+    setGroupBy(next)
   }
+
+  useLayoutEffect(() => {
+    if (!anchorAfterGrouping.current) return
+    // Regrouping can shorten the page. Anchor after the new layout, before paint,
+    // rather than leaving the reader below the results or animating a long jump.
+    libraryStartRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
+    anchorAfterGrouping.current = false
+  }, [groupBy])
 
   const groups = useMemo(() => {
     if (groupBy === 'type') {
@@ -68,61 +75,35 @@ export default function PortfolioMap({ items }: Props) {
     })).filter((group) => group.programs.length > 0)
   }, [groupBy, items])
 
-  const preview = groups.flatMap((group) => group.programs.map((item) => ({ item, label: group.title }))).slice(0, 5)
-
   return (
-    <section aria-labelledby="explore-all-interventions" className="border-t border-black/10 py-16 md:py-24">
-      <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-2xl">
-          <h2 id="explore-all-interventions" className="scroll-mt-24 font-serif text-[32px] font-normal leading-[1.08] tracking-tight text-black md:text-[40px]">
-            Explore all interventions
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-gray-500">
-            {!expanded
-              ? 'A first look at the library, ordered by your chosen grouping. See more to browse every intervention.'
-              : groupBy === 'type'
-              ? 'Each row is an intervention type. The programs in that type sit underneath.'
-              : groupBy === 'area'
-                ? 'Each row is a focus area. The programs in that field sit underneath.'
-                : 'Group programs by their current status, including completed work.'}{' '}
-            Published records and draft-source examples. Draft proposals are not approved commitments.
-          </p>
-        </div>
+    <section aria-labelledby="explore-all-interventions" className="py-12 md:py-16">
+      <div ref={libraryStartRef} data-catalogue-start className="scroll-mt-[65px]" aria-hidden="true" />
+      <div className="sticky top-[65px] z-30 -mx-6 flex flex-col gap-3 bg-white/95 px-6 py-3 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between">
+        <h2 id="explore-all-interventions" className="scroll-mt-[81px] font-serif text-[24px] font-normal leading-[1.08] tracking-tight text-black md:text-[32px]">
+          Explore all interventions
+        </h2>
         <div className="flex shrink-0 flex-wrap gap-2" role="group" aria-label="Group the map">
-          <GroupButton active={groupBy === 'type'} onClick={() => setGroupBy('type')}>
+          <GroupButton active={groupBy === 'type'} onClick={() => changeGrouping('type')}>
             Intervention type
           </GroupButton>
-          <GroupButton active={groupBy === 'area'} onClick={() => setGroupBy('area')}>
+          <GroupButton active={groupBy === 'area'} onClick={() => changeGrouping('area')}>
             Focus area
           </GroupButton>
-          <GroupButton active={groupBy === 'status'} onClick={() => setGroupBy('status')}>
+          <GroupButton active={groupBy === 'status'} onClick={() => changeGrouping('status')}>
             Status
           </GroupButton>
         </div>
       </div>
 
+      <p className="mb-6 mt-4 text-sm leading-relaxed text-gray-500">
+        {groupBy === 'type'
+          ? 'Browse every intervention, grouped by intervention type.'
+          : groupBy === 'area'
+            ? 'Browse every intervention, grouped by focus area.'
+            : 'Browse every intervention, grouped by status.'}
+      </p>
+
       <div id="intervention-library" className="border-t border-black/10">
-        {!expanded ? (
-          <ul data-testid="catalogue-grid" className="mt-4 grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {preview.map(({ item, label }) => (
-              <li key={item.slug} className="flex min-w-0">
-                <ProgramTile item={item} groupBy={groupBy} groupLabel={label} />
-              </li>
-            ))}
-            {items.length > 5 && (
-              <li className="flex min-w-0">
-                <button ref={toggleRef} type="button" aria-expanded={false} aria-controls="intervention-library" onClick={toggleLibrary}
-                  className="flex min-h-40 w-full items-center justify-center rounded-lg border border-black/10 p-6 text-base font-medium transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue">
-                  See more
-                </button>
-              </li>
-            )}
-          </ul>
-        ) : <>
-        <button ref={toggleRef} type="button" aria-expanded={true} aria-controls="intervention-library" onClick={toggleLibrary}
-          className="mt-6 rounded-full border border-black/10 px-4 py-2 text-sm font-medium transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue">
-          Show fewer
-        </button>
         {groups.map((group) => (
           <div key={group.key} data-catalogue-group={group.key} className="border-b border-black/[0.08] py-6 md:py-8">
             <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-600">
@@ -142,10 +123,7 @@ export default function PortfolioMap({ items }: Props) {
             </ul>
           </div>
         ))}
-
-        </>}
       </div>
-
     </section>
   )
 }
@@ -173,7 +151,7 @@ function GroupButton({
   )
 }
 
-function ProgramTile({ item, groupBy, groupLabel }: { item: PublicIntervention; groupBy: MapGroupBy; groupLabel?: string }) {
+function ProgramTile({ item, groupBy }: { item: PublicIntervention; groupBy: MapGroupBy }) {
   const types = [item.type, ...item.support.filter((id) => id !== item.type)]
   const secondary =
     groupBy === 'type' ? INTERVENTION_AREA_LABEL[item.area] : INTERVENTION_TYPES[item.type].title
@@ -196,7 +174,6 @@ function ProgramTile({ item, groupBy, groupLabel }: { item: PublicIntervention; 
         ))}
       </span>
       <span className={`block truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400 ${iconReserve}`}>
-        {groupLabel && <span data-group-label className="mb-2 block text-xs font-medium normal-case tracking-normal text-gray-600">{groupLabel}</span>}
         {secondary}
       </span>
       <span className={`mt-2 block font-serif text-[20px] font-normal leading-[1.15] tracking-tight text-black group-hover:underline ${iconReserve}`}>

@@ -62,11 +62,37 @@ test('status tags describe every lifecycle across cards, catalog and modal', () 
   }
   const Featured = source('components/FeaturedInterventions.tsx').default
   const doc = markupDocument(React.createElement(Featured))
-  assert.equal(doc.querySelector('h2').textContent.trim(), 'Spotlight: programmatic interventions')
+  assert.equal(doc.querySelector('h2').textContent.trim(), 'Featured interventions')
   for (const item of catalog.featuredInterventions()) {
     const link = doc.querySelector(`a[href="/interventions-preview-872d1767c376/${item.slug}/"]`)
     assert.equal(link.querySelector('[data-intervention-status]').textContent, catalog.INTERVENTION_STATUS_LABEL[catalog.interventionStatus(item)])
   }
+})
+
+test('index cards and grouping views use plain lifecycle copy without provenance boilerplate', async () => {
+  const catalog = source('lib/interventions.ts')
+  const Map = source('components/PortfolioMap.tsx').default
+  const Index = source('components/InterventionsIndex.tsx').default
+  const Card = source('components/InterventionCard.tsx').default
+  const jargon = /Published records and draft-source examples|Supporting types|None listed|Public timing|Classification|Published source record|Draft-source example|current production|future cadence|not asserted|not currently live/i
+  const assertClean = doc => {
+    assert.doesNotMatch([doc.body.textContent, ...[...doc.querySelectorAll('[title]')].map(node => node.title)].join(' '), jargon)
+    for (const item of publishedInterventions()) {
+      if (item.sourceNote) assert.ok(!doc.body.textContent.includes(item.sourceNote))
+    }
+  }
+  assertClean(markupDocument(React.createElement(Index)))
+  for (const item of publishedInterventions()) assertClean(markupDocument(React.createElement(Card, { item })))
+  await mount(React.createElement(Map, { items: publishedInterventions() }), async doc => {
+    for (const label of ['Intervention type', 'Focus area', 'Status']) {
+      await click(button(doc, label))
+      assertClean(doc)
+    }
+    assert.equal(doc.querySelector('[data-catalogue-group="published"] > p').textContent, 'Published resources available to explore.')
+    assert.equal(doc.querySelector('[data-catalogue-group="completed"] > p').textContent, 'The event or intervention has concluded.')
+  })
+  assert.equal(catalog.INTERVENTION_STATUS_LABEL.published, 'Published')
+  assert.equal(catalog.INTERVENTION_STATUS_LABEL.completed, 'Completed')
 })
 
 test('FA0 has complete metadata and a working catalogue anchor rather than a missing area page', () => {
@@ -94,6 +120,8 @@ test('FA0 has complete metadata and a working catalogue anchor rather than a mis
 
 async function mount(node, run) {
   const dom = new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>', { url: 'https://www.plrd.org/interventions-preview-872d1767c376/' })
+  // jsdom has no layout or scrolling; individual navigation tests supply geometry.
+  dom.window.HTMLElement.prototype.scrollIntoView = () => {}
   const keys = ['window', 'self', 'document', 'HTMLElement', 'Element', 'Node', 'MouseEvent', 'IS_REACT_ACT_ENVIRONMENT']
   const previous = new Map(keys.map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]))
   for (const key of keys) Object.defineProperty(globalThis, key, { configurable: true, writable: true, value: key === 'IS_REACT_ACT_ENVIRONMENT' ? true : dom.window[key] })
@@ -122,7 +150,6 @@ test('grouping by status retains every record and separates completed events fro
   const Map = source('components/PortfolioMap.tsx').default
   const items = [...publishedInterventions(), ...lifecycleItems()]
   await mount(React.createElement(Map, { items }), async (doc) => {
-    await click(button(doc, 'See more'))
     await click(button(doc, 'Status'))
     assert.equal(button(doc, 'Status').getAttribute('aria-pressed'), 'true')
     const groups = [...doc.querySelectorAll('[data-catalogue-group]')]
@@ -133,45 +160,96 @@ test('grouping by status retains every record and separates completed events fro
   })
 })
 
-test('compact catalogue is one five-card grid with a sixth expansion tile for every grouping', async () => {
+test('all 22 catalogue cards render by type initially and remain complete after grouping switches', async () => {
   const Map = source('components/PortfolioMap.tsx').default
   const catalog = source('lib/interventions.ts')
-  const items = [...publishedInterventions(), ...lifecycleItems()]
+  const items = publishedInterventions()
+  assert.equal(items.length, 22)
   const groupings = {
-    'Intervention type': (item) => catalog.INTERVENTION_TYPES[item.type].title,
-    'Focus area': (item) => catalog.INTERVENTION_AREA_LABEL[item.area],
-    Status: (item) => catalog.INTERVENTION_STATUS_LABEL[catalog.interventionStatus(item)],
+    'Intervention type': { key: item => item.type, order: Object.keys(catalog.INTERVENTION_TYPES) },
+    'Focus area': { key: item => item.area, order: catalog.INTERVENTION_AREA_ORDER },
+    Status: { key: catalog.interventionStatus, order: catalog.INTERVENTION_STATUS_ORDER },
   }
   await mount(React.createElement(Map, { items }), async (doc) => {
-    for (const [label, groupLabel] of Object.entries(groupings)) {
-      await click(button(doc, label))
-      const grids = doc.querySelectorAll('[data-testid="catalogue-grid"]')
-      assert.equal(grids.length, 1, 'initial grouping must not create separate rows')
-      const grid = grids[0]
-      assert.ok(grid.classList.contains('lg:grid-cols-3'))
-      assert.equal(grid.children.length, 6)
-      const cards = [...grid.querySelectorAll('[data-intervention-slug]')]
-      assert.equal(cards.length, 5, 'five overall, not per group')
-      for (const card of cards) {
-        const item = items.find((item) => item.slug === card.dataset.interventionSlug)
-        assert.equal(card.querySelector('[data-group-label]').textContent, groupLabel(item))
-      }
-      assert.equal(grid.lastElementChild.querySelector('button'), button(doc, 'See more'))
-      assert.equal(button(doc, 'See more').getAttribute('aria-expanded'), 'false')
-      const compactOrder = cards.map((card) => card.dataset.interventionSlug)
-      await click(button(doc, 'See more'))
-      const expanded = [...doc.querySelectorAll('[data-intervention-slug]')].map((card) => card.dataset.interventionSlug)
-      assert.deepEqual(expanded.slice(0, 5), compactOrder, 'preview follows the chosen grouping order')
-      assert.deepEqual(expanded.toSorted(), items.map((item) => item.slug).toSorted())
-      assert.ok(doc.querySelector('[data-catalogue-group]'), 'full library uses groups')
-      assert.equal(button(doc, 'Show fewer').getAttribute('aria-expanded'), 'true')
-      assert.equal(doc.activeElement, button(doc, 'Show fewer'))
-      assert.ok(button(doc, 'Show fewer').compareDocumentPosition(doc.querySelector('[data-catalogue-group]')) & 4, 'expanded focus control must precede results rather than jump past the library')
-      await click(button(doc, 'Show fewer'))
+    const assertGrouping = label => {
+      const { key, order } = groupings[label]
       assert.equal(button(doc, label).getAttribute('aria-pressed'), 'true')
-      assert.equal(doc.querySelectorAll('[data-intervention-slug]').length, 5)
-      assert.equal(doc.activeElement, button(doc, 'See more'))
+      assert.ok(!button(doc, 'See more'), 'no expansion control')
+      assert.ok(!button(doc, 'Show fewer'), 'no collapse control')
+      const cards = [...doc.querySelectorAll('[data-intervention-slug]')]
+      assert.equal(cards.length, 22, label)
+      assert.deepEqual(cards.map(card => card.dataset.interventionSlug).sort(), items.map(item => item.slug).sort())
+      const groups = [...doc.querySelectorAll('[data-catalogue-group]')]
+      assert.deepEqual(groups.map(group => group.dataset.catalogueGroup), order.filter(id => items.some(item => key(item) === id)))
+      for (const group of groups) {
+        const expected = items.filter(item => key(item) === group.dataset.catalogueGroup)
+        assert.deepEqual([...group.querySelectorAll('[data-intervention-slug]')].map(card => card.dataset.interventionSlug), expected.map(item => item.slug))
+        assert.ok(group.querySelector('ul').classList.contains('lg:grid-cols-3'))
+      }
     }
+    assertGrouping('Intervention type') // Initial mount, before any interaction.
+    for (const label of ['Focus area', 'Status', 'Intervention type', 'Status', 'Focus area']) {
+      await click(button(doc, label))
+      assertGrouping(label)
+    }
+  })
+})
+
+test('only the library heading and grouping controls stick below the 65px site header', () => {
+  const Map = source('components/PortfolioMap.tsx').default
+  const doc = markupDocument(React.createElement(Map, { items: publishedInterventions() }))
+  const section = doc.querySelector('section')
+  const sticky = section.querySelector('.sticky')
+  assert.ok(sticky, 'library needs a sticky control surface')
+  for (const token of ['top-[65px]', 'z-30', 'bg-white/95', 'backdrop-blur-sm']) {
+    assert.ok(sticky.classList.contains(token), token)
+  }
+  assert.ok(sticky.contains(doc.querySelector('#explore-all-interventions')))
+  assert.ok(sticky.contains(doc.querySelector('[aria-label="Group the map"]')))
+  assert.ok(!sticky.contains(doc.querySelector('#intervention-library')), 'results scroll normally')
+  assert.equal(sticky.querySelectorAll('p').length, 0, 'explanatory paragraphs must not take over short landscape screens')
+  assert.equal(sticky.querySelectorAll('button').length, 3)
+  assert.ok(sticky.querySelector('[role="group"]').classList.contains('flex-wrap'))
+  assert.ok(sticky.querySelector('h2').classList.contains('text-[24px]'), 'compact title on narrow screens')
+  assert.ok(doc.querySelector('[data-catalogue-start]').classList.contains('scroll-mt-[65px]'))
+  for (let parent = sticky.parentElement; parent; parent = parent.parentElement) {
+    assert.doesNotMatch(parent.className, /(?:^|\s)(?:sticky|overflow-(?:hidden|auto|scroll))(?=\s|$)/)
+  }
+})
+
+test('grouping switches anchor a deep reader to the updated library without moving a reader at its start', async (t) => {
+  const Map = source('components/PortfolioMap.tsx').default
+  await mount(React.createElement(Map, { items: publishedInterventions() }), async (doc) => {
+    const anchor = doc.querySelector('[data-catalogue-start]')
+    assert.ok(anchor, 'stable scroll target precedes the sticky surface')
+    let top = 140
+    const calls = []
+    t.mock.method(anchor, 'getBoundingClientRect', () => ({ top }))
+    anchor.scrollIntoView = options => calls.push({
+      options,
+      active: doc.querySelector('[aria-pressed="true"]').textContent.trim(),
+      firstGroup: doc.querySelector('[data-catalogue-group]').dataset.catalogueGroup,
+      count: doc.querySelectorAll('[data-intervention-slug]').length,
+    })
+    button(doc, 'Focus area').focus()
+    await click(button(doc, 'Focus area'))
+    assert.equal(calls.length, 0, 'preserve viewport when library start is visible')
+    top = -2400
+    button(doc, 'Status').focus()
+    await click(button(doc, 'Status'))
+    assert.deepEqual(calls, [{ options: { block: 'start', behavior: 'instant' }, active: 'Status', firstGroup: 'live', count: 22 }], 'anchor after rendering the new groups, even when the library shrinks')
+    assert.ok(doc.activeElement === button(doc, 'Status'), 'keyboard focus stays on selected pill')
+    await click(button(doc, 'Status'))
+    assert.equal(calls.length, 1, 'reselecting the active grouping does not jump')
+    button(doc, 'Intervention type').focus()
+    await click(button(doc, 'Intervention type'))
+    assert.equal(calls.length, 2)
+    assert.equal(calls[1].firstGroup, 'orient')
+    assert.equal(calls[1].count, 22)
+    assert.ok(doc.activeElement === button(doc, 'Intervention type'))
+    top = 65
+    await click(button(doc, 'Focus area'))
+    assert.equal(calls.length, 2, 'already aligned beneath SiteHeader')
   })
 })
 
@@ -273,17 +351,17 @@ test('Interventions surfaces the requested journey with one full catalog', () =>
   const Index = source('components/InterventionsIndex.tsx').default
   const doc = new JSDOM(renderToStaticMarkup(React.createElement(Index))).window.document
   const sectionIds = [...doc.querySelectorAll('section[aria-labelledby]')].map((node) => node.getAttribute('aria-labelledby'))
-  assert.deepEqual(sectionIds, ['intervention-method', 'featured-interventions', 'explore-all-interventions'])
+  assert.deepEqual(sectionIds, ['featured-interventions', 'explore-all-interventions'])
   const catalog = doc.querySelector('section[aria-labelledby="explore-all-interventions"]')
   assert.equal(catalog.querySelector('h2').textContent.trim(), 'Explore all interventions')
   const links = [...catalog.querySelectorAll('li a[href^="/interventions-preview-872d1767c376/"]')]
-  assert.equal(links.length, Math.min(5, publishedInterventions().length))
+  assert.equal(links.length, 22)
   assert.equal(new Set(links.map((a) => a.getAttribute('href'))).size, links.length)
   const overview = doc.querySelector('section[aria-labelledby="portfolio-map"]')
   assert.equal(overview, null, 'Portfolio map was removed by the approved simplification')
-  assert.match(catalog.textContent, /Draft proposals are not approved commitments\./)
+  assert.doesNotMatch(catalog.textContent, /Published records and draft-source examples/)
   assert.equal(doc.querySelectorAll('input, select').length, 0, 'do not restore filters')
-  assert.match(doc.querySelector('#featured-interventions').textContent, /Spotlight: programmatic interventions/)
+  assert.match(doc.querySelector('#featured-interventions').textContent, /Featured interventions/)
 })
 
 test('portfolio overview counts each primary type once from the supplied records', () => {
@@ -350,7 +428,7 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
   assert.match(mapSource, /publicInterventionHref/)
   assert.doesNotMatch(sourceText, /Find the bottleneck/)
   assert.match(sourceText, /Turning bottlenecks/)
-  assert.match(mapSource, /draft-source examples/)
+  assert.doesNotMatch(mapSource, /draft-source examples/)
 })
 
 test('catalog keeps grouping and drops the filter controls', () => {
@@ -429,7 +507,7 @@ test('public search index excludes the unlisted catalogue methodology and progra
   assert.ok(!index.some(row => row.relpermalink.includes('/interventions')))
 })
 
-test('expanded catalogue lists override the prose negative list margin', () => {
+test('grouped catalogue lists override the prose negative list margin', () => {
   const css = readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8')
   assert.match(css, /\[data-catalogue-group\]\s*>\s*ul\s*\{\s*margin-block-start:\s*1rem;/)
 })

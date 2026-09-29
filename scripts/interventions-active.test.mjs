@@ -9,7 +9,7 @@ import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared
 
 const file = new URL('../src/data/interventions-active.json', import.meta.url)
 
-test('mixed catalogue describes public sources separately from draft proposals', () => {
+test('catalogue preserves internal provenance without displaying it as library copy', () => {
   const { publishedInterventions } = source('lib/interventions.ts')
   const items = publishedInterventions()
   const published = items.filter((item) => item.sourceKind === 'public').length
@@ -19,8 +19,10 @@ test('mixed catalogue describes public sources separately from draft proposals',
   const overview = new JSDOM(renderToStaticMarkup(React.createElement(Overview, { items }))).window.document
   assert.match(overview.querySelector('#portfolio-source-note').textContent, new RegExp(`${published} published-source records and ${draft} draft-source examples`))
   const map = new JSDOM(renderToStaticMarkup(React.createElement(Map, { items }))).window.document
-  assert.match(map.body.textContent, /Published records and draft-source examples/)
-  assert.match(map.body.textContent, /Draft proposals are not approved commitments/)
+  assert.doesNotMatch(map.body.textContent, /Published records and draft-source examples|Draft proposals are not approved commitments/)
+  for (const item of items.filter(item => item.stage === 'proposed')) {
+    assert.equal(map.querySelector(`[data-intervention-slug="${item.slug}"] [data-intervention-status]`).textContent, 'Developing')
+  }
 })
 
 test('read-only API exposes the same public status and collection as the UI records', async () => {
@@ -38,20 +40,32 @@ test('read-only API exposes the same public status and collection as the UI reco
   for (const row of payload.items.filter(r => r.stage === 'proposed')) assert.equal(row.statusLabel, 'Developing')
 })
 
-test('source collections and provenance render on both modal and direct detail routes', async () => {
+test('modal and both detail routes retain resources and evidence without audit metadata', async () => {
   const Modal = source('components/InterventionModal.tsx').default
   const Details = source('app/interventions-preview-872d1767c376/[slug]/page.tsx').default
-  const data = JSON.parse(readFileSync(file, 'utf8'))
-  for (const item of data) {
-    for (const node of [React.createElement(Modal, { item }), await Details({ params: Promise.resolve({ slug: item.slug }) })]) {
+  const Intercept = source('app/interventions-preview-872d1767c376/@modal/(.)[slug]/page.tsx').default
+  const { publishedInterventions, interventionStatus, INTERVENTION_STATUS_LABEL } = source('lib/interventions.ts')
+  for (const item of publishedInterventions()) {
+    for (const node of [React.createElement(Modal, { item }), await Details({ params: Promise.resolve({ slug: item.slug }) }), await Intercept({ params: Promise.resolve({ slug: item.slug }) })]) {
       const doc = new JSDOM(renderToStaticMarkup(React.createElement(AppRouterContext.Provider, { value: {} }, node))).window.document
       const dialog = doc.querySelector('[role="dialog"]')
       const links = [...dialog.querySelectorAll('[data-intervention-resources] a')]
-      assert.deepEqual(links.map(a => a.href), item.resources.map(r => r.href), item.slug)
-      assert.deepEqual(links.map(a => a.textContent.trim()), item.resources.map(r => r.title), item.slug)
-      assert.match(dialog.textContent, /Published source record/)
-      assert.doesNotMatch(dialog.textContent, /Draft-source example|The proposed work|proposed public edition|proposed role/)
-      assert.ok(dialog.textContent.includes(item.sourceNote))
+      assert.deepEqual(links.map(a => a.href), (item.resources || []).map(r => r.href), item.slug)
+      assert.deepEqual(links.map(a => a.textContent.trim()), (item.resources || []).map(r => r.title), item.slug)
+      assert.doesNotMatch(dialog.textContent, /Supporting types|None listed|Public timing|Classification|Published source record|Draft-source example|proposed public edition|internal planning drafts|designated publisher|private source links/)
+      if (item.sourceNote) assert.ok(!dialog.textContent.includes(item.sourceNote), `${item.slug} source note stays internal`)
+      for (const field of ['bottleneck', 'work', 'plRole', 'evidence']) {
+        assert.ok(dialog.textContent.includes(item[field]), `${item.slug} keeps substantive ${field}`)
+      }
+      assert.equal(dialog.querySelector('[data-intervention-status]').textContent, INTERVENTION_STATUS_LABEL[interventionStatus(item)])
+      if (item.stage === 'proposed') {
+        assert.match(dialog.textContent, /The proposed work/)
+        assert.match(dialog.textContent, /What we would examine/)
+        assert.match(dialog.textContent, /PL R&D’s proposed role/)
+        assert.doesNotMatch(dialog.textContent, /not an approved commitment|proposal in development/i)
+      } else {
+        assert.doesNotMatch(dialog.textContent, /The proposed work|proposed role|proposal in development/i)
+      }
     }
   }
 })

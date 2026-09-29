@@ -10,38 +10,57 @@ process.env.__NEXT_TRAILING_SLASH = 'true'
 const Index = source('components/InterventionsIndex.tsx').default
 const render = () => new JSDOM(renderToStaticMarkup(React.createElement(Index))).window.document
 
-test('index offers one compact methodology band instead of the detailed preview and extra sections', () => {
+test('compact serif hero includes the measurement loop and its only methodology CTA', () => {
   const doc = render()
-  const band = doc.querySelector('#intervention-method')?.closest('section')
-  assert.ok(band, 'methodology band remains accessible by its heading')
-  assert.ok(band.classList.contains('bg-gray-100'), 'methodology band has a light-grey background')
-  assert.ok(band.classList.contains('py-8'), 'methodology band uses compact vertical spacing')
-  assert.equal(band.querySelector('h2').textContent.trim(), 'Observe. Diagnose. Intervene. Repeat.')
-  assert.equal(band.querySelectorAll('ol, .method-cycle, .method-cycle-levers').length, 0)
+  const hero = doc.querySelector('header')
+  const headline = hero.querySelector('h1')
+  assert.ok(headline.classList.contains('font-serif'))
+  assert.ok(headline.classList.contains('text-[32px]'), 'mobile headline is 32px')
+  assert.ok(headline.classList.contains('md:text-[44px]'), 'desktop headline is 44px')
+  assert.doesNotMatch(headline.className, /(?:lg:)?text-\[(?:68|76)px\]/)
+  assert.ok(hero.classList.contains('pt-8'), 'hero starts closer to the breadcrumb')
+  assert.doesNotMatch(hero.className, /pt-14|pt-20|pb-24/)
+  const subheading = headline.nextElementSibling
+  assert.equal(subheading.textContent.replace(/\s+/g, ' ').trim(), 'Observe. Diagnose. Intervene. Repeat. We observe each field’s velocity, diagnose its bottlenecks, deploy interventions, and measure whether they worked—then repeat.')
+  assert.doesNotMatch(subheading.className, /(?:^|\s)(?:md:)?text-(?:lg|xl)(?:\s|$)/, 'custom oversized type tokens do not suit a subheading')
   const links = doc.querySelectorAll('a[href="/interventions-preview-872d1767c376/methodology/"]')
-  assert.equal(links.length, 1, 'only one methodology CTA on the index')
+  assert.equal(links.length, 1)
   assert.equal(links[0].textContent.trim(), 'Explore how we accelerate fields')
-  assert.ok(band.contains(links[0]))
-  assert.ok(links[0].classList.contains('rounded-full'), 'CTA is a pill')
-  assert.equal(doc.querySelector('#portfolio-map, #intervention-evidence'), null)
-  assert.doesNotMatch(doc.body.textContent, /Running a program is only the beginning|Public types here follow the FA2 draft vocabulary|Read the field|Find the constraint|Pull the right lever/)
-  assert.equal(doc.querySelector('header a[href="/interventions-preview-872d1767c376/methodology/"]'), null)
+  assert.ok(hero.contains(links[0]), 'CTA is inside the hero')
+  assert.ok(subheading.compareDocumentPosition(links[0]) & 4, 'CTA follows the subheading')
+  assert.ok(links[0].classList.contains('rounded-full'))
+  assert.equal(doc.querySelector('#intervention-method, #portfolio-map, #intervention-evidence'), null, 'no separate methodology band or removed sections')
 })
 
-test('simplified index retains hero, featured content, five-card library, and grouping controls', () => {
+test('Featured interventions uses the homepage full-width background and contained content', () => {
+  const doc = render()
+  const featured = doc.querySelector('section[aria-labelledby="featured-interventions"]')
+  assert.equal(featured.querySelector('h2').textContent.trim(), 'Featured interventions')
+  assert.ok(featured.classList.contains('bg-gray-100'))
+  const inner = featured.firstElementChild
+  for (const token of ['max-w-6xl', 'mx-auto', 'px-6']) assert.ok(inner.classList.contains(token), token)
+  for (let ancestor = featured; ancestor; ancestor = ancestor.parentElement) {
+    assert.doesNotMatch(ancestor.className, /max-w-|(?:^|\s)px-|100vw|w-screen|overflow-(?:x-)?hidden/, 'section must reach the viewport without width/overflow tricks')
+  }
+  const hero = doc.querySelector('header')
+  const library = doc.querySelector('section[aria-labelledby="explore-all-interventions"]')
+  for (const node of [hero, library]) {
+    assert.ok(node.closest('.max-w-6xl.px-6'), 'other page content stays aligned')
+  }
+})
+
+test('index server render includes all 22 grouped cards and no expansion control', () => {
   const doc = render()
   assert.equal(doc.querySelector('h1').textContent.trim(), 'Turning bottlenecks into breakthroughs')
-  assert.match(doc.body.textContent, /Spotlight/)
   const library = doc.querySelector('#explore-all-interventions').closest('section')
-  const grid = library.querySelector('[data-testid="catalogue-grid"]')
-  assert.equal(grid.querySelectorAll('[data-intervention-slug]').length, 5)
-  assert.equal(grid.children.length, 6)
-  for (const tile of grid.children) assert.ok(tile.classList.contains('min-w-0'), 'grid items must shrink below min-content width at 320px')
-  for (const tile of grid.querySelectorAll('[data-intervention-slug]')) assert.ok(tile.classList.contains('min-w-0'), 'card links must shrink with grid items')
-  const more = grid.querySelector('button')
-  assert.equal(more.textContent.trim(), 'See more')
-  assert.equal(more.getAttribute('aria-expanded'), 'false')
-  assert.equal(more.getAttribute('aria-controls'), 'intervention-library')
-  assert.deepEqual([...library.querySelectorAll('[role="group"] button')].map(button => button.textContent.trim()), ['Intervention type', 'Focus area', 'Status'])
-  assert.match(library.textContent, /Draft proposals are not approved commitments/)
+  const groups = library.querySelectorAll('[data-catalogue-group]')
+  assert.ok(groups.length > 1)
+  assert.equal(library.querySelectorAll('[data-intervention-slug]').length, 22)
+  for (const tile of library.querySelectorAll('li, [data-intervention-slug]')) {
+    assert.ok(tile.classList.contains('min-w-0'), 'cards shrink below min-content width at 320px')
+  }
+  assert.doesNotMatch(library.textContent, /See more|Show fewer|first look/)
+  const controls = [...library.querySelectorAll('[role="group"] button')]
+  assert.deepEqual(controls.map(button => button.textContent.trim()), ['Intervention type', 'Focus area', 'Status'])
+  assert.equal(controls[0].getAttribute('aria-pressed'), 'true')
 })

@@ -40,10 +40,10 @@ export const INTERVENTION_STATUS_LABEL: Record<InterventionStatus, string> = {
 
 export const INTERVENTION_STATUS_DESCRIPTION: Record<InterventionStatus, string> = {
   live: 'The program or intervention is underway.',
-  published: 'A published resource collection; current production or future cadence is not asserted.',
+  published: 'Published resources available to explore.',
   raising: 'The intervention is defined enough to fundraise against.',
   developing: 'The intervention is still being clarified and scoped.',
-  completed: 'The event or intervention has concluded; it is not currently live.',
+  completed: 'The event or intervention has concluded.',
 }
 
 const STATUS_BY_STAGE: Record<InterventionStage, InterventionStatus> = {

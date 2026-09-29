@@ -22,7 +22,6 @@ function closeModal(router: ReturnType<typeof useRouter>) {
 
 export default function InterventionModal({ item }: { item: PublicIntervention }) {
   const router = useRouter()
-  const support = item.support.map((id) => INTERVENTION_TYPES[id].title).join(' · ')
   const isPublicSource = item.sourceKind === 'public'
 
   useEffect(() => {
@@ -73,7 +72,7 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
               className="h-6 w-6 text-blue"
             />
             <p className="text-xs uppercase tracking-widest text-gray-400">
-              {INTERVENTION_AREA_LABEL[item.area]} · {isPublicSource ? 'Published source record' : 'Draft-source example'}
+              {INTERVENTION_AREA_LABEL[item.area]}
             </p>
           </div>
           <div className="mb-4 flex flex-wrap gap-1.5">
@@ -127,27 +126,6 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
               <p className="text-base leading-relaxed text-gray-600">{item.evidence}</p>
             </section>
           </div>
-
-          <dl className="mt-10 space-y-2 border-t border-gray-100 pt-6 text-sm text-gray-500">
-            <div>
-              <dt className="inline text-gray-400">Supporting types: </dt>
-              <dd className="inline">{support || 'None listed'}</dd>
-            </div>
-            <div>
-              <dt className="inline text-gray-400">Public timing: </dt>
-              <dd className="inline">{item.timing}</dd>
-            </div>
-            <div>
-              <dt className="inline text-gray-400">Classification: </dt>
-              <dd className="inline">{item.typeNote}</dd>
-            </div>
-          </dl>
-
-          <p className="mt-6 text-xs leading-relaxed text-gray-500">
-            {isPublicSource
-              ? item.sourceNote
-              : 'This is a proposed public edition from internal planning drafts, not a verified active commitment. Funding figures and private source links are withheld until a designated publisher reviews them.'}
-          </p>
 
           <div className="mt-8 flex flex-wrap gap-4 text-sm">
             <Link href={INTERVENTION_AREA_HREF[item.area]} className="text-blue hover:underline">
