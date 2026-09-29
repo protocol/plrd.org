@@ -36,6 +36,8 @@ test('simplified index retains hero, featured content, five-card library, and gr
   const grid = library.querySelector('[data-testid="catalogue-grid"]')
   assert.equal(grid.querySelectorAll('[data-intervention-slug]').length, 5)
   assert.equal(grid.children.length, 6)
+  for (const tile of grid.children) assert.ok(tile.classList.contains('min-w-0'), 'grid items must shrink below min-content width at 320px')
+  for (const tile of grid.querySelectorAll('[data-intervention-slug]')) assert.ok(tile.classList.contains('min-w-0'), 'card links must shrink with grid items')
   const more = grid.querySelector('button')
   assert.equal(more.textContent.trim(), 'See more')
   assert.equal(more.getAttribute('aria-expanded'), 'false')

@@ -105,12 +105,12 @@ export default function PortfolioMap({ items }: Props) {
         {!expanded ? (
           <ul data-testid="catalogue-grid" className="mt-4 grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {preview.map(({ item, label }) => (
-              <li key={item.slug} className="flex">
+              <li key={item.slug} className="flex min-w-0">
                 <ProgramTile item={item} groupBy={groupBy} groupLabel={label} />
               </li>
             ))}
             {items.length > 5 && (
-              <li className="flex">
+              <li className="flex min-w-0">
                 <button ref={toggleRef} type="button" aria-expanded={false} aria-controls="intervention-library" onClick={toggleLibrary}
                   className="flex min-h-40 w-full items-center justify-center rounded-lg border border-black/10 p-6 text-base font-medium transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue">
                   See more
@@ -135,7 +135,7 @@ export default function PortfolioMap({ items }: Props) {
             {group.description && <p className="mt-2 text-sm text-gray-500">{group.description}</p>}
             <ul className="mt-4 grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {group.programs.map((item) => (
-                <li key={item.slug} className="flex">
+                <li key={item.slug} className="flex min-w-0">
                   <ProgramTile item={item} groupBy={groupBy} />
                 </li>
               ))}
@@ -183,7 +183,7 @@ function ProgramTile({ item, groupBy, groupLabel }: { item: PublicIntervention; 
       href={publicInterventionHref(item.slug)}
       data-intervention-slug={item.slug}
       scroll={false}
-      className="group relative flex h-full w-full flex-col rounded-lg border border-black/10 bg-white p-4 no-underline transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      className="group relative flex h-full w-full min-w-0 flex-col rounded-lg border border-black/10 bg-white p-4 no-underline transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
     >
       <span className="absolute right-3 top-3 flex items-center gap-1">
         {types.map((type) => (
