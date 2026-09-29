@@ -1,0 +1,100 @@
+{
+  "origin": "http://127.0.0.1:3287",
+  "results": [
+    {
+      "width": 1440,
+      "client": 1425,
+      "scroll": 1425,
+      "breadcrumb": "Home\n/\nInterventions\n/\nMethodology",
+      "links": [
+        {
+          "text": "Home",
+          "href": "/"
+        },
+        {
+          "text": "Interventions",
+          "href": "/interventions-preview-872d1767c376/"
+        }
+      ],
+      "h1": "How we build fields.",
+      "font": "44px",
+      "title": "\ud83d\udc34 Intervention methodology | PL R&D",
+      "canonical": "https://www.plrd.org/interventions-preview-872d1767c376/methodology/",
+      "robots": "noindex, nofollow",
+      "googlebot": "noindex, nofollow"
+    },
+    {
+      "width": 768,
+      "client": 753,
+      "scroll": 753,
+      "breadcrumb": "Home\n/\nInterventions\n/\nMethodology",
+      "links": [
+        {
+          "text": "Home",
+          "href": "/"
+        },
+        {
+          "text": "Interventions",
+          "href": "/interventions-preview-872d1767c376/"
+        }
+      ],
+      "h1": "How we build fields.",
+      "font": "44px",
+      "title": "\ud83d\udc34 Intervention methodology | PL R&D",
+      "canonical": "https://www.plrd.org/interventions-preview-872d1767c376/methodology/",
+      "robots": "noindex, nofollow",
+      "googlebot": "noindex, nofollow"
+    },
+    {
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "breadcrumb": "\u2190 Interventions",
+      "links": [
+        {
+          "text": "\u2190 Interventions",
+          "href": "/interventions-preview-872d1767c376/"
+        }
+      ],
+      "h1": "How we build fields.",
+      "font": "32px",
+      "title": "\ud83d\udc34 Intervention methodology | PL R&D",
+      "canonical": "https://www.plrd.org/interventions-preview-872d1767c376/methodology/",
+      "robots": "noindex, nofollow",
+      "googlebot": "noindex, nofollow"
+    },
+    {
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "breadcrumb": "\u2190 Interventions",
+      "links": [
+        {
+          "text": "\u2190 Interventions",
+          "href": "/interventions-preview-872d1767c376/"
+        }
+      ],
+      "h1": "How we build fields.",
+      "font": "32px",
+      "title": "\ud83d\udc34 Intervention methodology | PL R&D",
+      "canonical": "https://www.plrd.org/interventions-preview-872d1767c376/methodology/",
+      "robots": "noindex, nofollow",
+      "googlebot": "noindex, nofollow"
+    },
+    {
+      "path": "/interventions-preview-872d1767c376/methodology/",
+      "search": "?area=neurotech",
+      "hash": "#learn",
+      "selected": "learn",
+      "breadcrumb": "Home/Interventions/Methodology\u2190 Interventions"
+    },
+    {
+      "path": "/impact-preview-eb61fba1b98e/",
+      "search": "?area=neurotech",
+      "hash": "#learn",
+      "selected": "learn",
+      "breadcrumb": "Home/Interventions/Methodology\u2190 Interventions"
+    }
+  ],
+  "pass": true
+}
