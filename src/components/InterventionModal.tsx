@@ -92,9 +92,9 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
           <p className="mb-8 text-lg leading-relaxed text-gray-600">{item.summary}</p>
 
           {item.resources && item.resources.length > 0 && (
-            <section data-intervention-resources aria-labelledby="intervention-resources-title" className="mb-10 rounded-lg bg-gray-50 p-5">
-              <h2 id="intervention-resources-title" className="mb-4 text-base font-semibold text-black">
-                {item.resourceLabel || 'Published resources'}
+            <section data-intervention-resources aria-labelledby="intervention-resources" className="mb-10 rounded-lg bg-gray-50 p-5">
+              <h2 id="intervention-resources" className="mb-4 text-base font-semibold text-black">
+                {item.resourceLabel || 'Resources'}
               </h2>
               <ul className="space-y-3">
                 {item.resources.map((resource) => (
@@ -102,7 +102,7 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
                     <a href={resource.href} className="text-sm leading-relaxed text-blue underline decoration-blue/30 underline-offset-4 hover:decoration-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue">
                       {resource.title}
                     </a>
-                    {resource.date && <span className="ml-2 text-xs text-gray-500">{resource.date}</span>}
+                    {resource.date && <time dateTime={resource.date} className="ml-2 text-xs text-gray-500">{resource.date}</time>}
                   </li>
                 ))}
               </ul>

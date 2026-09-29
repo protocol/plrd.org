@@ -26,6 +26,14 @@ function buildInterventionSearchItems() {
       relpermalink: `/interventions/${match[1]}/`,
     })
   }
+  const publishedSources = JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'interventions-active.json'), 'utf8'))
+  items.push(...publishedSources.filter((item) => item.published).map((item) => ({
+    title: item.title,
+    summary: item.summary,
+    date: '',
+    type: 'page',
+    relpermalink: `/interventions/${item.slug}/`,
+  })))
   return items
 }
 
@@ -464,7 +472,7 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Blog', summary: 'Latest news and updates from PL R&D', date: '', type: 'page', relpermalink: '/blog/' },
     { title: 'Collaborate', summary: 'Work with Protocol Labs R&D on research', date: '', type: 'page', relpermalink: '/outreach/collaboration/' },
     { title: 'Focus Areas', summary: 'Research focus areas driving breakthroughs in computing', date: '', type: 'page', relpermalink: '/areas/' },
-    { title: 'Interventions', summary: 'Browse PL R&D interventions across four focus areas', date: '', type: 'page', relpermalink: '/interventions/' },
+    { title: 'Interventions', summary: 'Browse PL R&D interventions across four focus areas and R&D Acceleration (FA0)', date: '', type: 'page', relpermalink: '/interventions/' },
     { title: 'Intervention methodology', summary: 'How PL R&D chooses interventions: diagnose the bottleneck, intervene, then learn from the evidence', date: '', type: 'page', relpermalink: '/interventions/methodology/' },
     ...buildInterventionSearchItems(),
     // FA2 sub-pages

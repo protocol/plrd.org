@@ -1884,7 +1884,7 @@
   },
   {
     "title": "Interventions",
-    "summary": "Browse PL R&D interventions across four focus areas",
+    "summary": "Browse PL R&D interventions across four focus areas and R&D Acceleration (FA0)",
     "date": "",
     "type": "page",
     "relpermalink": "/interventions/"
@@ -2000,6 +2000,55 @@
     "date": "",
     "type": "page",
     "relpermalink": "/interventions/neuroai-fellows/"
+  },
+  {
+    "title": "Juan Benet Neuropodcast",
+    "summary": "Conversations with the people building the frontier of neurotechnology and brain science.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/juan-benet-neuropodcast/"
+  },
+  {
+    "title": "BCI Roadmap Series",
+    "summary": "A shared roadmap for taking brain-computer interfaces from scientific promise to practical use.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/bci-roadmap/"
+  },
+  {
+    "title": "PL Neuro Salon",
+    "summary": "Scaled human neural data towards a science of intelligence.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/pl-neuro-salon/"
+  },
+  {
+    "title": "BCI Founders Retreat",
+    "summary": "Bringing together the founders building the future of brain-computer interfaces.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/bci-founders-retreat/"
+  },
+  {
+    "title": "Connectomics Workshop",
+    "summary": "A research convening on decoding the human brain’s circuitry.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/connectomics-workshop/"
+  },
+  {
+    "title": "IERR 2025 · Impact Evaluator Research Retreat",
+    "summary": "An immersive research retreat on impact evaluation and public-goods funding mechanisms.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/ierr-2025/"
+  },
+  {
+    "title": "d/acc Residency · Edge City Patagonia",
+    "summary": "A four-week residency to prototype defensive-acceleration ideas in a real community setting.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/interventions/dacc-2025/"
   },
   {
     "title": "Economies & Governance",

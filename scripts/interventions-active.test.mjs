@@ -9,6 +9,20 @@ import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared
 
 const file = new URL('../src/data/interventions-active.json', import.meta.url)
 
+test('mixed catalogue describes public sources separately from draft proposals', () => {
+  const { publishedInterventions } = source('lib/interventions.ts')
+  const items = publishedInterventions()
+  const published = items.filter((item) => item.sourceKind === 'public').length
+  const draft = items.length - published
+  const Overview = source('components/PortfolioOverview.tsx').default
+  const Map = source('components/PortfolioMap.tsx').default
+  const overview = new JSDOM(renderToStaticMarkup(React.createElement(Overview, { items }))).window.document
+  assert.match(overview.querySelector('#portfolio-source-note').textContent, new RegExp(`${published} published-source records and ${draft} draft-source examples`))
+  const map = new JSDOM(renderToStaticMarkup(React.createElement(Map, { items }))).window.document
+  assert.match(map.body.textContent, /Published records and draft-source examples/)
+  assert.match(map.body.textContent, /Draft proposals are not approved commitments/)
+})
+
 test('read-only API exposes the same public status and collection as the UI records', async () => {
   const { GET } = source('app/api/interventions/route.ts')
   const payload = await (await GET()).json()

@@ -9,6 +9,7 @@ import {
 
 export default function PortfolioOverview({ items }: { items: PublicIntervention[] }) {
   const types = Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]
+  const publicSourceCount = items.filter((item) => item.sourceKind === 'public').length
 
   return (
     <section aria-labelledby="portfolio-map" className="py-16 md:py-20">
@@ -57,7 +58,7 @@ export default function PortfolioOverview({ items }: { items: PublicIntervention
         </table>
       </div>
       <p id="portfolio-source-note" className="mt-4 text-xs leading-relaxed text-gray-500">
-        {items.length} draft-source examples, counted once by primary intervention type. Not approved commitments.
+        {publicSourceCount} published-source records and {items.length - publicSourceCount} draft-source examples, counted once by primary intervention type. Draft proposals are not approved commitments.
       </p>
     </section>
   )

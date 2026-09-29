@@ -1,4 +1,4 @@
-import { INTERVENTION_AREA_LABEL, INTERVENTION_TYPES, publishedInterventions } from '@/lib/interventions'
+import { INTERVENTION_AREA_LABEL, INTERVENTION_TYPES, INTERVENTION_STATUS_LABEL, interventionStatus, publishedInterventions } from '@/lib/interventions'
 
 export const runtime = 'nodejs'
 export const revalidate = 60
@@ -20,6 +20,12 @@ export async function GET() {
     evidence: item.evidence,
     timing: item.timing,
     stage: item.stage,
+    status: interventionStatus(item),
+    statusLabel: INTERVENTION_STATUS_LABEL[interventionStatus(item)],
+    sourceKind: item.sourceKind || 'draft',
+    resources: item.resources || [],
+    resourceLabel: item.resourceLabel,
+    sourceNote: item.sourceNote,
     plRole: item.plRole,
   }))
   return Response.json(

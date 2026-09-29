@@ -85,7 +85,7 @@ export default function PortfolioMap({ items }: Props) {
               : groupBy === 'area'
                 ? 'Each row is a focus area. The programs in that field sit underneath.'
                 : 'Group programs by their current status, including completed work.'}{' '}
-            Draft-source examples. Not approved commitments.
+            Published records and draft-source examples. Draft proposals are not approved commitments.
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2" role="group" aria-label="Group the map">
@@ -119,6 +119,10 @@ export default function PortfolioMap({ items }: Props) {
             )}
           </ul>
         ) : <>
+        <button ref={toggleRef} type="button" aria-expanded={true} aria-controls="intervention-library" onClick={toggleLibrary}
+          className="mt-6 rounded-full border border-black/10 px-4 py-2 text-sm font-medium transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue">
+          Show fewer
+        </button>
         {groups.map((group) => (
           <div key={group.key} data-catalogue-group={group.key} className="border-b border-black/[0.08] py-6 md:py-8">
             <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-600">
@@ -138,10 +142,7 @@ export default function PortfolioMap({ items }: Props) {
             </ul>
           </div>
         ))}
-        <button ref={toggleRef} type="button" aria-expanded={true} aria-controls="intervention-library" onClick={toggleLibrary}
-          className="mt-6 rounded-full border border-black/10 px-4 py-2 text-sm font-medium transition-all hover:border-blue hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue">
-          Show fewer
-        </button>
+
         </>}
       </div>
 
