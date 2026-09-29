@@ -62,6 +62,12 @@ export default function EGEditPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m0 0l-6-6m6 6l6-6" />
             </svg>
           </a>
+          <a href="/areas/economies-governance/#interventions" className="inline-flex items-center gap-2 px-5 py-2.5 border border-blue text-blue rounded-full hover:bg-blue/5 transition-colors font-medium">
+            Interventions
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m0 0l-6-6m6 6l6-6" />
+            </svg>
+          </a>
           <a href="https://grants.plresearch.org" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 border border-blue/30 text-blue rounded-full hover:bg-blue/5 transition-colors font-medium">
             Apply for Grants
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

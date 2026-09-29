@@ -9,6 +9,7 @@ import AreaHeroGraphic from '@/components/AreaHeroGraphic'
 import { AreaIcon } from '@/components/AreaIcons'
 import MarkdownContent from '@/components/MarkdownContent'
 import FA2LiveStatsBand from '@/components/FA2LiveStatsBand'
+import FocusAreaInterventions from '@/components/FocusAreaInterventions'
 import opportunityData from '@/data/fa2/opportunityspaces.json'
 import { FOCUS_AREA_DESCRIPTIONS } from '@/lib/focus-area-descriptions'
 import { fetchPage, getSection, fetchOpportunitySpaces } from '@/lib/indexer'
@@ -256,6 +257,8 @@ export default async function FA2MainPage() {
       </section>
 
       {/* Field velocity is preview-only until a separate public launch. */}
+
+      <FocusAreaInterventions area="economies-governance" />
 
       {/* Explore */}
       <h2 className="text-sm text-gray-500 uppercase tracking-wide mb-6">Explore</h2>
