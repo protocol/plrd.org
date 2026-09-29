@@ -43,6 +43,9 @@ for width in [1440, 390, 320]:
             }})()''')
             assert state['background'] == 'rgba(0, 0, 0, 0)', state
             assert state['effective'] == state['body'], state
+            if tab == 'learn':
+                state['galleryBackground'] = js("getComputedStyle(document.querySelector('#field-velocity .instrument-preview-viewport')).backgroundColor")
+                assert state['galleryBackground'] == 'rgba(0, 0, 0, 0)', state
             assert state['width'] == width and state['scroll'] <= state['client'] + 1, state
             assert 'noindex' in state['robots'], state
             # Show the section with its tabs, not the shared intro or obscured heading.

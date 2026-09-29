@@ -384,7 +384,7 @@ export default async function ImpactPage({
           <div id="compound" className="scroll-mt-24" />
           <div
             id="field-velocity"
-            className="scroll-mt-24 border-b border-gray-200"
+            className={`${styles.fieldVelocity} scroll-mt-24 border-b border-gray-200`}
           >
             <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
               <div id="observe" className="scroll-mt-24" />
