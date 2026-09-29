@@ -8,7 +8,6 @@ import {
   blogPosts,
   areas,
 } from '@/lib/content'
-import { publishedInterventions } from '@/lib/interventions'
 
 const BASE = siteConfig.baseUrl
 
@@ -31,8 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('about'), changeFrequency: 'monthly', priority: 0.7 },
     { url: url('areas'), changeFrequency: 'monthly', priority: 0.8 },
     { url: url('insights'), changeFrequency: 'weekly', priority: 0.8 },
-    { url: url('interventions'), changeFrequency: 'weekly', priority: 0.8 },
-    { url: url('interventions/methodology'), changeFrequency: 'monthly', priority: 0.6 },
     { url: url('authors'), changeFrequency: 'weekly', priority: 0.7 },
     { url: url('publications'), changeFrequency: 'weekly', priority: 0.8 },
     { url: url('talks'), changeFrequency: 'weekly', priority: 0.7 },
@@ -85,12 +82,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }))
 
-  const interventionRoutes: MetadataRoute.Sitemap = publishedInterventions().map((item) => ({
-    url: url(`interventions/${item.slug}`),
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }))
-
   return [
     ...staticRoutes,
     ...areaRoutes,
@@ -99,6 +90,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...authorRoutes,
     ...tutorialRoutes,
     ...blogRoutes,
-    ...interventionRoutes,
   ]
 }

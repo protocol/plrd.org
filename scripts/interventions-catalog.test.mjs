@@ -24,9 +24,9 @@ const {
 const FocusAreaInterventions = source('components/FocusAreaInterventions.tsx').default
 const AreaHeroActions = source('components/AreaHeroActions.tsx').default
 const { default: sitemap } = source('app/sitemap.ts')
-const { default: InterventionsPage } = source('app/interventions/page.tsx')
-const { generateStaticParams } = source('app/interventions/[slug]/page.tsx')
-const { GET } = source('app/api/interventions/route.ts')
+const { default: InterventionsPage } = source('app/interventions-preview-872d1767c376/page.tsx')
+const { generateStaticParams } = source('app/interventions-preview-872d1767c376/[slug]/page.tsx')
+const { GET } = source('app/interventions-preview-872d1767c376/data/route.ts')
 const { mainNav, footerNav } = source('lib/site-config.ts')
 
 test('public statuses explicitly map legacy stages without inventing fundraising', () => {
@@ -64,7 +64,7 @@ test('status tags describe every lifecycle across cards, catalog and modal', () 
   const doc = markupDocument(React.createElement(Featured))
   assert.equal(doc.querySelector('h2').textContent.trim(), 'Spotlight: programmatic interventions')
   for (const item of catalog.featuredInterventions()) {
-    const link = doc.querySelector(`a[href="/interventions/${item.slug}/"]`)
+    const link = doc.querySelector(`a[href="/interventions-preview-872d1767c376/${item.slug}/"]`)
     assert.equal(link.querySelector('[data-intervention-status]').textContent, catalog.INTERVENTION_STATUS_LABEL[catalog.interventionStatus(item)])
   }
 })
@@ -74,7 +74,7 @@ test('FA0 has complete metadata and a working catalogue anchor rather than a mis
   const area = 'rnd-acceleration'
   assert.equal(catalog.INTERVENTION_AREA_ORDER[0], area)
   assert.equal(catalog.INTERVENTION_AREA_LABEL[area], 'R&D Acceleration (FA0)')
-  assert.equal(catalog.INTERVENTION_AREA_HREF[area], '/interventions/#explore-all-interventions')
+  assert.equal(catalog.INTERVENTION_AREA_HREF[area], '/interventions-preview-872d1767c376/#explore-all-interventions')
   assert.match(catalog.INTERVENTION_AREA_ACCENT[area], /^#[0-9a-f]{6}$/i)
   const { AreaIcon } = source('components/AreaIcons.tsx')
   const icon = renderToStaticMarkup(React.createElement(AreaIcon, { type: catalog.INTERVENTION_AREA_ICON[area] }))
@@ -85,7 +85,7 @@ test('FA0 has complete metadata and a working catalogue anchor rather than a mis
   const doc = markupDocument(React.createElement(Overview, { items: [item] }))
   assert.match(doc.querySelector('thead').textContent, /R&D Acceleration \(FA0\)/)
   assert.equal([...doc.querySelectorAll('tbody td')].reduce((sum, cell) => sum + (Number(cell.textContent) || 0), 0), 1)
-  const { metadata } = source('app/interventions/page.tsx')
+  const { metadata } = source('app/interventions-preview-872d1767c376/page.tsx')
   for (const description of [metadata.description, metadata.openGraph.description]) {
     assert.match(description, /R&D Acceleration/)
     assert.doesNotMatch(description, /four focus areas/)
@@ -93,7 +93,7 @@ test('FA0 has complete metadata and a working catalogue anchor rather than a mis
 })
 
 async function mount(node, run) {
-  const dom = new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>', { url: 'https://www.plrd.org/interventions/' })
+  const dom = new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>', { url: 'https://www.plrd.org/interventions-preview-872d1767c376/' })
   const keys = ['window', 'self', 'document', 'HTMLElement', 'Element', 'Node', 'MouseEvent', 'IS_REACT_ACT_ENVIRONMENT']
   const previous = new Map(keys.map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]))
   for (const key of keys) Object.defineProperty(globalThis, key, { configurable: true, writable: true, value: key === 'IS_REACT_ACT_ENVIRONMENT' ? true : dom.window[key] })
@@ -127,7 +127,7 @@ test('grouping by status retains every record and separates completed events fro
     assert.equal(button(doc, 'Status').getAttribute('aria-pressed'), 'true')
     const groups = [...doc.querySelectorAll('[data-catalogue-group]')]
     assert.deepEqual(groups.map((group) => group.getAttribute('data-catalogue-group')), ['live', 'published', 'raising', 'developing', 'completed'])
-    assert.deepEqual(groups.flatMap((group) => [...group.querySelectorAll('li a')].map((a) => a.getAttribute('href'))).sort(), items.map((item) => `/interventions/${item.slug}/`).sort())
+    assert.deepEqual(groups.flatMap((group) => [...group.querySelectorAll('li a')].map((a) => a.getAttribute('href'))).sort(), items.map((item) => `/interventions-preview-872d1767c376/${item.slug}/`).sort())
     assert.equal(groups.at(-1).querySelector('[data-intervention-status]').textContent, 'Completed')
     assert.equal(doc.querySelectorAll('input, select').length, 0)
   })
@@ -208,8 +208,8 @@ test('catalogue controls and tiles share the Insights visual language with visib
 })
 
 test('resource collections are clickable on intercepted modals and direct detail URLs', async () => {
-  const Direct = source('app/interventions/[slug]/page.tsx').default
-  const Intercept = source('app/interventions/@modal/(.)[slug]/page.tsx').default
+  const Direct = source('app/interventions-preview-872d1767c376/[slug]/page.tsx').default
+  const Intercept = source('app/interventions-preview-872d1767c376/@modal/(.)[slug]/page.tsx').default
   const fixture = {
     ...interventionBySlug('sovereign-ai'), slug: 'test-resource-collection', sourceKind: 'public', stage: 'active',
     resourceLabel: 'Episodes', resources: [
@@ -246,9 +246,9 @@ function text(node) {
   return node && typeof node === 'object' ? text(node.props?.children) : ''
 }
 
-test('global navigation puts Interventions between Focus Areas and Insights', () => {
-  assert.deepEqual(mainNav.map((item) => item.name), ['About us', 'Focus Areas', 'Interventions', 'Insights', 'Team'])
-  assert.equal(mainNav[2].url, '/interventions/')
+test('prelaunch global navigation omits the unlisted catalogue', () => {
+  assert.deepEqual(mainNav.map((item) => item.name), ['About us', 'Focus Areas', 'Insights', 'Team'])
+  assert.equal(mainNav[2].url, '/insights/')
   assert.equal(mainNav[2].children, undefined)
   for (const component of ['SiteHeader', 'OffCanvasNav']) {
     const navigation = readFileSync(new URL(`../src/components/${component}.tsx`, import.meta.url), 'utf8')
@@ -278,11 +278,11 @@ test('Interventions surfaces the requested journey with one full catalog', () =>
   ])
   const catalog = doc.querySelector('section[aria-labelledby="explore-all-interventions"]')
   assert.equal(catalog.querySelector('h2').textContent.trim(), 'Explore all interventions')
-  const links = [...catalog.querySelectorAll('li a[href^="/interventions/"]')]
+  const links = [...catalog.querySelectorAll('li a[href^="/interventions-preview-872d1767c376/"]')]
   assert.equal(links.length, Math.min(5, publishedInterventions().length))
   assert.equal(new Set(links.map((a) => a.getAttribute('href'))).size, links.length)
   const overview = doc.querySelector('section[aria-labelledby="portfolio-map"]')
-  assert.equal(overview.querySelectorAll('a[href^="/interventions/"]').length, 0, 'overview must not repeat the program tiles')
+  assert.equal(overview.querySelectorAll('a[href^="/interventions-preview-872d1767c376/"]').length, 0, 'overview must not repeat the program tiles')
   assert.match(catalog.textContent, /Draft proposals are not approved commitments\./)
   assert.equal(doc.querySelectorAll('input, select').length, 0, 'do not restore filters')
   assert.match(doc.querySelector('#featured-interventions').textContent, /Spotlight: programmatic interventions/)
@@ -357,7 +357,7 @@ test('global catalog is an editorial grid, not a cover flow', async () => {
 
 test('catalog keeps grouping and drops the filter controls', () => {
   const mapSource = readFileSync(new URL('../src/components/PortfolioMap.tsx', import.meta.url), 'utf8')
-  const pageSource = readFileSync(new URL('../src/app/interventions/page.tsx', import.meta.url), 'utf8')
+  const pageSource = readFileSync(new URL('../src/app/interventions-preview-872d1767c376/page.tsx', import.meta.url), 'utf8')
   const iconSource = readFileSync(new URL('../src/components/InterventionTypeIcon.tsx', import.meta.url), 'utf8')
   assert.match(mapSource, /Group the map/)
   assert.match(mapSource, /Intervention type/)
@@ -375,14 +375,14 @@ test('catalog keeps grouping and drops the filter controls', () => {
 })
 
 test('program URLs open as a modal over the catalog, not a standalone deeper page', async () => {
-  const { default: DetailPage } = source('app/interventions/[slug]/page.tsx')
+  const { default: DetailPage } = source('app/interventions-preview-872d1767c376/[slug]/page.tsx')
   const tree = await DetailPage({ params: Promise.resolve({ slug: 'sovereign-ai' }) })
   const nodes = elements(tree)
   assert.ok(nodes.some((node) => node.type?.name === 'InterventionsIndex' || String(node.type).includes('InterventionsIndex')))
   assert.ok(nodes.some((node) => node.type?.name === 'InterventionModal' || String(node.type).includes('InterventionModal')))
   const cardSource = readFileSync(new URL('../src/components/InterventionCard.tsx', import.meta.url), 'utf8')
   assert.match(cardSource, /InterventionTypeIcon/)
-  const intercept = readFileSync(new URL('../src/app/interventions/@modal/(.)[slug]/page.tsx', import.meta.url), 'utf8')
+  const intercept = readFileSync(new URL('../src/app/interventions-preview-872d1767c376/@modal/(.)[slug]/page.tsx', import.meta.url), 'utf8')
   assert.match(intercept, /InterventionModal/)
 })
 
@@ -392,36 +392,32 @@ test('detail pages exist for every published slug', () => {
   assert.ok(params.every((row) => row.slug))
 })
 
-test('FA pages mount the in-place catalog from the same records', async (t) => {
-  t.mock.method(globalThis, 'fetch', async () => Response.json({
-    data: { orgPlresearchPage: { edges: [] } },
-  }))
+test('FA pages retain their content without promoting the unlisted catalogue', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ data: { orgPlresearchPage: { edges: [] } } }))
   for (const slug of INTERVENTION_AREA_ORDER.filter((area) => area !== 'rnd-acceleration')) {
     const route = slug === 'economies-governance' ? 'app/areas/economies-governance/page.tsx' : 'app/areas/[slug]/page.tsx'
     const Page = source(route).default
     const nodes = elements(await Page({ params: Promise.resolve({ slug }) }))
     const section = nodes.find((node) => node.type === FocusAreaInterventions)
-    assert.ok(section, `${slug} must show interventions on the FA page`)
+    assert.ok(section)
     assert.equal(section.props.area, slug)
-    const heroLink = nodes.some((node) => node.props?.href === '#interventions')
-    const heroAction = nodes.some((node) => node.type === AreaHeroActions)
-    assert.ok(heroLink || heroAction, `${slug} needs a local Interventions entry point`)
+    assert.equal(renderToStaticMarkup(React.createElement(FocusAreaInterventions, section.props)), '')
+    assert.ok(!nodes.some((node) => node.props?.href === '#interventions'))
   }
 })
 
-test('sitemap, nav, and JSON endpoint share the published selector', async () => {
+test('preview JSON keeps the published selector without adding navigation or sitemap entries', async () => {
+  const { INTERVENTIONS_BASE_PATH } = source('lib/interventions.ts')
   const urls = sitemap().map((row) => row.url)
-  assert.ok(urls.includes('https://www.plrd.org/interventions/'))
-  assert.ok(urls.includes('https://www.plrd.org/interventions/methodology/'))
-  assert.ok(urls.includes('https://www.plrd.org/interventions/sovereign-ai/'))
-  assert.equal(urls.filter((url) => url.includes('/interventions/')).length, publishedInterventions().length + 2)
-  assert.ok(mainNav.some((item) => item.url === '/interventions/'))
-  assert.ok(footerNav.some((item) => item.url === '/interventions/'))
+  assert.ok(!urls.some(url => url.includes('/interventions')))
+  assert.ok(!mainNav.some(item => item.url.includes('/interventions')))
+  assert.ok(!footerNav.some(item => item.url.includes('/interventions')))
   const res = await GET()
   const body = await res.json()
   assert.equal(body.count, publishedInterventions().length)
   assert.equal(body.items.length, publishedInterventions().length)
-  assert.ok(body.items.every((item) => item.href.startsWith('https://www.plrd.org/interventions/')))
+  assert.ok(body.items.every((item) => item.href.startsWith('https://www.plrd.org' + INTERVENTIONS_BASE_PATH + '/')))
+  assert.match(res.headers.get('X-Robots-Tag'), /noindex/)
   assert.doesNotMatch(JSON.stringify(body), /docs\.google|\$[0-9]|budget|plRoleNote/i)
 })
 
@@ -430,14 +426,9 @@ test('unpublished records stay off every public surface', () => {
   assert.equal(interventionBySlug('not-a-record'), undefined)
 })
 
-test('search index includes the catalog, methodology, and every published program', () => {
+test('public search index excludes the unlisted catalogue methodology and programs', () => {
   const index = JSON.parse(readFileSync(new URL('../public/search-index.json', import.meta.url), 'utf8'))
-  const hrefs = new Set(index.map((row) => row.relpermalink))
-  assert.ok(hrefs.has('/interventions/'))
-  assert.ok(hrefs.has('/interventions/methodology/'))
-  for (const item of publishedInterventions()) {
-    assert.ok(hrefs.has(`/interventions/${item.slug}/`), `missing search entry for ${item.slug}`)
-  }
+  assert.ok(!index.some(row => row.relpermalink.includes('/interventions')))
 })
 
 test('expanded catalogue lists override the prose negative list margin', () => {
@@ -458,15 +449,3 @@ test('unpublished fixture is excluded from selectors API detail params and sitem
   } finally { INTERVENTION_PROGRAMS.pop() }
 })
 
-test('search builder excludes unpublished public-source and legacy fixtures', async () => {
-  const helper = new URL('./intervention-search.mjs', import.meta.url)
-  assert.ok(existsSync(helper), 'search builder needs an independently exercisable public exclusion gate')
-  const { buildInterventionSearchItems } = await import(helper)
-  const sourceText = `slug: "fixture-private", title: "private", summary: "private", published: false,
-    slug: "fixture-public", title: "public", summary: "public", published: true,`
-  const sources = [
-    { slug: 'json-private', title: 'private', summary: 'private', published: false },
-    { slug: 'json-public', title: 'public', summary: 'public', published: true },
-  ]
-  assert.deepEqual(buildInterventionSearchItems(sourceText, sources).map(i => i.relpermalink), ['/interventions/fixture-public/', '/interventions/json-public/'])
-})

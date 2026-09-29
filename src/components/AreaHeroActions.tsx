@@ -1,3 +1,5 @@
+import { INTERVENTIONS_UNLISTED } from '@/lib/interventions'
+
 type AreaWebsiteLink = {
   label: string
   href: string
@@ -29,6 +31,7 @@ export default function AreaHeroActions({
   className = 'relative z-10 flex flex-wrap gap-4 mb-10',
 }: AreaHeroActionsProps) {
   const areaWebsite = getAreaWebsiteLink(areaSlug)
+  showInterventions = showInterventions && !INTERVENTIONS_UNLISTED
 
   if (!showOpportunitySpaces && !showInterventions && !areaWebsite) return null
 

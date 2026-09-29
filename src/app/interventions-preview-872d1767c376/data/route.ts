@@ -1,4 +1,4 @@
-import { INTERVENTION_AREA_LABEL, INTERVENTION_TYPES, INTERVENTION_STATUS_LABEL, interventionStatus, publishedInterventions } from '@/lib/interventions'
+import { INTERVENTION_AREA_LABEL, INTERVENTION_TYPES, INTERVENTION_STATUS_LABEL, interventionStatus, publishedInterventions, publicInterventionHref } from '@/lib/interventions'
 
 export const runtime = 'nodejs'
 export const revalidate = 60
@@ -7,7 +7,7 @@ export const revalidate = 60
 export async function GET() {
   const items = publishedInterventions().map((item) => ({
     slug: item.slug,
-    href: `https://www.plrd.org/interventions/${item.slug}/`,
+    href: `https://www.plrd.org${publicInterventionHref(item.slug)}`,
     title: item.title,
     area: item.area,
     areaLabel: INTERVENTION_AREA_LABEL[item.area],
@@ -37,6 +37,7 @@ export async function GET() {
     {
       headers: {
         'Access-Control-Allow-Origin': '*',
+        'X-Robots-Tag': 'noindex, nofollow, noarchive',
         'Cache-Control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=600',
       },
     },

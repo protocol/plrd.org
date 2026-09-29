@@ -3,12 +3,14 @@ import ComingSoonTile from '@/components/ComingSoonTile'
 import InterventionCard from '@/components/InterventionCard'
 import {
   INTERVENTION_AREA_LABEL,
+  INTERVENTIONS_UNLISTED,
   catalogHref,
   interventionsForArea,
   type InterventionAreaSlug,
 } from '@/lib/interventions'
 
 export default function FocusAreaInterventions({ area }: { area: InterventionAreaSlug }) {
+  if (INTERVENTIONS_UNLISTED) return null
   const items = interventionsForArea(area)
   const label = INTERVENTION_AREA_LABEL[area]
 
@@ -25,7 +27,7 @@ export default function FocusAreaInterventions({ area }: { area: InterventionAre
           </Link>
           — not a second list.
         </p>
-        <Link href="/interventions/methodology/" className="mt-3 inline-block text-sm text-blue hover:underline">
+        <Link href={`${catalogHref()}methodology/`} className="mt-3 inline-block text-sm text-blue hover:underline">
           What is an intervention? →
         </Link>
       </div>
@@ -39,7 +41,7 @@ export default function FocusAreaInterventions({ area }: { area: InterventionAre
       ) : (
         <div className="max-w-sm">
           <ComingSoonTile area={area} />
-          <Link href="/interventions/" className="mt-4 inline-block text-sm text-blue hover:underline">
+          <Link href={catalogHref()} className="mt-4 inline-block text-sm text-blue hover:underline">
             Browse the full catalog →
           </Link>
         </div>

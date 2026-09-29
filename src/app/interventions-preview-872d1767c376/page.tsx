@@ -1,14 +1,15 @@
 import type { Metadata } from 'next'
 import InterventionsIndex from '@/components/InterventionsIndex'
+import { catalogHref } from '@/lib/interventions'
 
 export const metadata: Metadata = {
   title: 'Interventions',
   description:
     'Browse PL R&D interventions across R&D Acceleration, Digital Human Rights, Economies & Governance, AI & Robotics, and Neurotech. Diagnose the bottleneck, intervene, then learn.',
-  alternates: { canonical: '/interventions/' },
+  alternates: { canonical: catalogHref() },
   openGraph: {
     type: 'website',
-    url: '/interventions/',
+    url: catalogHref(),
     title: 'Interventions',
     description:
       'Browse PL R&D interventions across our focus areas and R&D Acceleration. Diagnose the bottleneck, intervene, then learn.',

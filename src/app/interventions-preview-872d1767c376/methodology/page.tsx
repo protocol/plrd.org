@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: 'Intervention methodology',
   description:
     'How PL R&D chooses interventions: diagnose the bottleneck, intervene, then learn from the evidence.',
-  alternates: { canonical: '/interventions/methodology/' },
+  alternates: { canonical: `${catalogHref()}methodology/` },
 }
 
 const TYPE_ORDER = Object.keys(INTERVENTION_TYPES) as InterventionTypeId[]
@@ -23,7 +23,7 @@ export default function InterventionMethodologyPage() {
     <div className="mx-auto max-w-6xl px-6 pb-16 pt-8">
       <Breadcrumb
         items={[
-          { label: 'Interventions', href: '/interventions/' },
+          { label: 'Interventions', href: catalogHref() },
           { label: 'Methodology' },
         ]}
       />
@@ -64,7 +64,7 @@ export default function InterventionMethodologyPage() {
                 <h3 className="text-base font-medium text-black">{tool.title}</h3>
               </div>
               <p className="mb-4 text-sm text-gray-500">{tool.summary}</p>
-              <Link href={`${catalogHref()}#portfolio-map`} className="text-sm text-blue hover:underline">
+              <Link href={`${catalogHref()}#explore-all-interventions`} className="text-sm text-blue hover:underline">
                 Browse the catalog →
               </Link>
             </div>
@@ -79,7 +79,7 @@ export default function InterventionMethodologyPage() {
           Field-level attribution is not cleanly identifiable; making that link clearer remains research
           work. A hypercert, dataset, or report can evidence a program — it is not the intervention itself.
         </p>
-        <Link href="/interventions/" className="font-medium text-blue hover:underline">
+        <Link href={catalogHref()} className="font-medium text-blue hover:underline">
           Browse the catalog →
         </Link>
       </div>

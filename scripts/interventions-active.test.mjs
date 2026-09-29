@@ -24,7 +24,7 @@ test('mixed catalogue describes public sources separately from draft proposals',
 })
 
 test('read-only API exposes the same public status and collection as the UI records', async () => {
-  const { GET } = source('app/api/interventions/route.ts')
+  const { GET } = source('app/interventions-preview-872d1767c376/data/route.ts')
   const payload = await (await GET()).json()
   const data = JSON.parse(readFileSync(file, 'utf8'))
   assert.equal(payload.count, payload.items.length)
@@ -40,7 +40,7 @@ test('read-only API exposes the same public status and collection as the UI reco
 
 test('source collections and provenance render on both modal and direct detail routes', async () => {
   const Modal = source('components/InterventionModal.tsx').default
-  const Details = source('app/interventions/[slug]/page.tsx').default
+  const Details = source('app/interventions-preview-872d1767c376/[slug]/page.tsx').default
   const data = JSON.parse(readFileSync(file, 'utf8'))
   for (const item of data) {
     for (const node of [React.createElement(Modal, { item }), await Details({ params: Promise.resolve({ slug: item.slug }) })]) {
@@ -63,7 +63,7 @@ test('FA0 public records have a complete cross-field area mapping', () => {
   assert.equal(catalog.INTERVENTION_AREA_LABEL[area], 'R&D Acceleration (FA0)')
   assert.ok(catalog.INTERVENTION_AREA_ICON[area])
   assert.ok(catalog.INTERVENTION_AREA_ACCENT[area])
-  assert.equal(catalog.INTERVENTION_AREA_HREF[area], '/interventions/#explore-all-interventions')
+  assert.equal(catalog.INTERVENTION_AREA_HREF[area], '/interventions-preview-872d1767c376/#explore-all-interventions')
 })
 
 test('public additions enter the same catalogue selectors that serve UI and API', () => {

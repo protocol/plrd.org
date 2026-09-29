@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import InterventionModal from '@/components/InterventionModal'
 import InterventionsIndex from '@/components/InterventionsIndex'
-import { interventionBySlug, publishedInterventions } from '@/lib/interventions'
+import { interventionBySlug, publishedInterventions, publicInterventionHref } from '@/lib/interventions'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const item = interventionBySlug(slug)
   if (!item) return { title: 'Not Found' }
-  const canonical = `/interventions/${item.slug}/`
+  const canonical = publicInterventionHref(item.slug)
   return {
     title: item.title,
     description: item.summary,

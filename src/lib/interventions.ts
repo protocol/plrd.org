@@ -1,4 +1,9 @@
 import publicSourceInterventions from '@/data/interventions-active.json'
+import previewConfig from '@/data/interventions-preview.json'
+
+/** An unlisted share URL, not authentication or private access control. */
+export const INTERVENTIONS_BASE_PATH = previewConfig.basePath
+export const INTERVENTIONS_UNLISTED = previewConfig.unlisted
 
 // Public interventions catalog.
 // Source of truth for plrd.org pages, FA sections, and the read-only JSON endpoint.
@@ -101,7 +106,7 @@ export const INTERVENTION_AREA_ICON: Record<InterventionAreaSlug, 'shield' | 'he
 }
 
 export const INTERVENTION_AREA_HREF: Record<InterventionAreaSlug, string> = {
-  'rnd-acceleration': '/interventions/#explore-all-interventions',
+  'rnd-acceleration': `${INTERVENTIONS_BASE_PATH}/#explore-all-interventions`,
   'digital-human-rights': '/areas/digital-human-rights/',
   'economies-governance': '/areas/economies-governance/',
   'ai-robotics': '/areas/ai-robotics/',
@@ -422,11 +427,11 @@ export function interventionBySlug(slug: string): PublicIntervention | undefined
 }
 
 export function publicInterventionHref(slug: string): string {
-  return `/interventions/${slug}/`
+  return `${INTERVENTIONS_BASE_PATH}/${slug}/`
 }
 
 export function catalogHref(): string {
-  return '/interventions/'
+  return `${INTERVENTIONS_BASE_PATH}/`
 }
 
 /** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */

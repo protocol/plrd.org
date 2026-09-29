@@ -17,7 +17,7 @@ import {
 
 function closeModal(router: ReturnType<typeof useRouter>) {
   if (window.history.length > 1) router.back()
-  else router.push('/interventions/')
+  else router.push(catalogHref())
 }
 
 export default function InterventionModal({ item }: { item: PublicIntervention }) {
@@ -156,7 +156,7 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
             <Link href={catalogHref()} className="text-blue hover:underline">
               Browse the catalog →
             </Link>
-            <Link href="/interventions/methodology/" className="text-blue hover:underline">
+            <Link href={`${catalogHref()}methodology/`} className="text-blue hover:underline">
               Methodology →
             </Link>
           </div>
