@@ -193,7 +193,7 @@ export default async function ImpactPage({
             Our impact methodology
           </div>
 
-          <h1 className="max-w-4xl text-[42px] font-semibold leading-[1.02] tracking-[-0.035em] text-black sm:text-[56px] lg:text-[72px]">
+          <h1 className="max-w-4xl text-[32px] font-semibold leading-[1.02] tracking-[-0.035em] text-black md:text-[44px]">
             How we build fields.
           </h1>
 

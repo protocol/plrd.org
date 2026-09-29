@@ -16,6 +16,17 @@ function text(node) {
   return text(node.props.children)
 }
 
+test('Impact headline matches the catalog’s 32px mobile and 44px desktop scale', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
+  t.mock.method(console, 'warn', () => {})
+  const Page = source('app/impact-preview-eb61fba1b98e/page.tsx').default
+  const tree = await Page({ searchParams: Promise.resolve({}) })
+  const heading = elements(tree).find(node => node.type === 'h1')
+  assert.equal(text(heading).trim(), 'How we build fields.')
+  const sizeClasses = heading.props.className.split(/\s+/).filter(token => /^(?:(?:sm|md|lg|xl):)?text-\[\d+px\]$/.test(token))
+  assert.deepEqual(sizeClasses, ['text-[32px]', 'md:text-[44px]'])
+})
+
 test('Diagnose leads with bottlenecks; Learn keeps field velocity without the contribution showcase', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
   t.mock.method(console, 'warn', () => {})
