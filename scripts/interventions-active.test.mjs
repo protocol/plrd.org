@@ -32,7 +32,7 @@ test('read-only API exposes the same public status and collection as the UI reco
     const row = payload.items.find(r => r.slug === item.slug)
     assert.deepEqual(row.resources, item.resources, `${item.slug} API resources`)
     assert.equal(row.sourceKind, 'public')
-    assert.equal(row.statusLabel, item.stage === 'completed' ? 'Completed' : 'Live')
+    assert.equal(row.statusLabel, item.stage === 'completed' ? 'Completed' : item.stage === 'published' ? 'Published' : 'Live')
     assert.equal(row.sourceNote, item.sourceNote)
   }
   for (const row of payload.items.filter(r => r.stage === 'proposed')) assert.equal(row.statusLabel, 'Developing')
@@ -101,9 +101,12 @@ test('approved active catalogue additions exist as a public-only source edition'
   for (const slug of ['pl-neuro-salon', 'bci-founders-retreat', 'connectomics-workshop', 'ierr-2025', 'dacc-2025']) {
     assert.equal(records.find(r => r.slug === slug).stage, 'completed', `${slug} must not be called Live`)
   }
-  for (const slug of ['juan-benet-neuropodcast', 'bci-roadmap']) {
-    assert.equal(records.find(r => r.slug === slug).stage, 'active')
-  }
+  assert.equal(records.find(r => r.slug === 'bci-roadmap').stage, 'active')
+  const podcast = records.find(r => r.slug === 'juan-benet-neuropodcast')
+  assert.equal(podcast.stage, 'published', 'published episodes alone do not establish ongoing production')
+  assert.equal(podcast.timing, 'Published collection')
+  assert.match(records.find(r => r.slug === 'dacc-2025').work, /was designed for residents to prototype/)
+  assert.match(records.find(r => r.slug === 'ierr-2025').work, /retreat focused on/)
   const body = JSON.stringify(records)
   assert.doesNotMatch(body, /docs\.google|plrd-interventions|commsconsole|@protocol\.ai|\$[\d,]+|did:plc:|api[_-]?key|bearer/i)
 })

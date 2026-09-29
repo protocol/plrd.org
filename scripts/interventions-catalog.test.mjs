@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { test } from 'node:test'
 import React, { act } from 'react'
 import { createRequire } from 'node:module'
@@ -32,8 +32,8 @@ const { mainNav, footerNav } = source('lib/site-config.ts')
 test('public statuses explicitly map legacy stages without inventing fundraising', () => {
   const catalog = source('lib/interventions.ts')
   assert.equal(typeof catalog.interventionStatus, 'function')
-  const expected = { proposed: 'developing', active: 'live', raising: 'raising', completed: 'completed' }
-  assert.deepEqual(catalog.INTERVENTION_STATUS_ORDER, ['live', 'raising', 'developing', 'completed'])
+  const expected = { proposed: 'developing', active: 'live', raising: 'raising', completed: 'completed', published: 'published' }
+  assert.deepEqual(catalog.INTERVENTION_STATUS_ORDER, ['live', 'published', 'raising', 'developing', 'completed'])
   for (const [stage, status] of Object.entries(expected)) {
     assert.equal(catalog.interventionStatus({ stage }), status)
     assert.equal(catalog.INTERVENTION_STATUS_LABEL[status], status[0].toUpperCase() + status.slice(1))
@@ -49,7 +49,7 @@ test('status tags describe every lifecycle across cards, catalog and modal', () 
   const Card = source('components/InterventionCard.tsx').default
   const Map = source('components/PortfolioMap.tsx').default
   const Modal = source('components/InterventionModal.tsx').default
-  for (const stage of ['active', 'raising', 'proposed', 'completed']) {
+  for (const stage of ['active', 'raising', 'proposed', 'completed', 'published']) {
     const item = { ...interventionBySlug('sovereign-ai'), stage }
     const status = catalog.interventionStatus(item)
     for (const node of [React.createElement(Card, { item }), React.createElement(Map, { items: [item] }), React.createElement(Modal, { item })]) {
@@ -125,7 +125,7 @@ test('grouping by status retains every record and separates completed events fro
     await click(button(doc, 'Status'))
     assert.equal(button(doc, 'Status').getAttribute('aria-pressed'), 'true')
     const groups = [...doc.querySelectorAll('[data-catalogue-group]')]
-    assert.deepEqual(groups.map((group) => group.getAttribute('data-catalogue-group')), ['live', 'raising', 'developing', 'completed'])
+    assert.deepEqual(groups.map((group) => group.getAttribute('data-catalogue-group')), ['live', 'published', 'raising', 'developing', 'completed'])
     assert.deepEqual(groups.flatMap((group) => [...group.querySelectorAll('li a')].map((a) => a.getAttribute('href'))).sort(), items.map((item) => `/interventions/${item.slug}/`).sort())
     assert.equal(groups.at(-1).querySelector('[data-intervention-status]').textContent, 'Completed')
     assert.equal(doc.querySelectorAll('input, select').length, 0)
@@ -437,4 +437,35 @@ test('search index includes the catalog, methodology, and every published progra
   for (const item of publishedInterventions()) {
     assert.ok(hrefs.has(`/interventions/${item.slug}/`), `missing search entry for ${item.slug}`)
   }
+})
+
+test('expanded catalogue lists override the prose negative list margin', () => {
+  const css = readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8')
+  assert.match(css, /\[data-catalogue-group\]\s*>\s*ul\s*\{\s*margin-block-start:\s*1rem;/)
+})
+
+test('unpublished fixture is excluded from selectors API detail params and sitemap', async () => {
+  const fixture = { ...interventionBySlug('sovereign-ai'), slug: 'unpublished-fixture', published: false }
+  INTERVENTION_PROGRAMS.push(fixture)
+  try {
+    assert.ok(!publishedInterventions().some(i => i.slug === fixture.slug))
+    assert.equal(interventionBySlug(fixture.slug), undefined)
+    assert.ok(!interventionsForArea(fixture.area).some(i => i.slug === fixture.slug))
+    assert.ok(!generateStaticParams().some(i => i.slug === fixture.slug))
+    assert.ok(!(await sitemap()).some(i => i.url.includes(fixture.slug)))
+    assert.ok(!(await (await GET()).json()).items.some(i => i.slug === fixture.slug))
+  } finally { INTERVENTION_PROGRAMS.pop() }
+})
+
+test('search builder excludes unpublished public-source and legacy fixtures', async () => {
+  const helper = new URL('./intervention-search.mjs', import.meta.url)
+  assert.ok(existsSync(helper), 'search builder needs an independently exercisable public exclusion gate')
+  const { buildInterventionSearchItems } = await import(helper)
+  const sourceText = `slug: "fixture-private", title: "private", summary: "private", published: false,
+    slug: "fixture-public", title: "public", summary: "public", published: true,`
+  const sources = [
+    { slug: 'json-private', title: 'private', summary: 'private', published: false },
+    { slug: 'json-public', title: 'public', summary: 'public', published: true },
+  ]
+  assert.deepEqual(buildInterventionSearchItems(sourceText, sources).map(i => i.relpermalink), ['/interventions/fixture-public/', '/interventions/json-public/'])
 })

@@ -20,13 +20,14 @@ export type InterventionTypeId =
   | 'prove'
   | 'enable'
 
-export type InterventionStage = 'proposed' | 'active' | 'raising' | 'completed'
-export type InterventionStatus = 'live' | 'raising' | 'developing' | 'completed'
+export type InterventionStage = 'proposed' | 'active' | 'raising' | 'completed' | 'published'
+export type InterventionStatus = 'live' | 'raising' | 'developing' | 'completed' | 'published'
 
-export const INTERVENTION_STATUS_ORDER: InterventionStatus[] = ['live', 'raising', 'developing', 'completed']
+export const INTERVENTION_STATUS_ORDER: InterventionStatus[] = ['live', 'published', 'raising', 'developing', 'completed']
 
 export const INTERVENTION_STATUS_LABEL: Record<InterventionStatus, string> = {
   live: 'Live',
+  published: 'Published',
   raising: 'Raising',
   developing: 'Developing',
   completed: 'Completed',
@@ -34,6 +35,7 @@ export const INTERVENTION_STATUS_LABEL: Record<InterventionStatus, string> = {
 
 export const INTERVENTION_STATUS_DESCRIPTION: Record<InterventionStatus, string> = {
   live: 'The program or intervention is underway.',
+  published: 'A published resource collection; current production or future cadence is not asserted.',
   raising: 'The intervention is defined enough to fundraise against.',
   developing: 'The intervention is still being clarified and scoped.',
   completed: 'The event or intervention has concluded; it is not currently live.',
@@ -42,6 +44,7 @@ export const INTERVENTION_STATUS_DESCRIPTION: Record<InterventionStatus, string>
 const STATUS_BY_STAGE: Record<InterventionStage, InterventionStatus> = {
   proposed: 'developing',
   active: 'live',
+  published: 'published',
   raising: 'raising',
   completed: 'completed',
 }

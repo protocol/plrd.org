@@ -551,6 +551,11 @@ p + ul, p + ol, p + blockquote {
   margin-block-start: -0.5em;
 }
 
+/* Catalogue groups are UI grids, not prose lists following a paragraph. */
+[data-catalogue-group] > ul {
+  margin-block-start: 1rem;
+}
+
 /* Keep the portfolio summary editorial; do not inherit prose-table cell boxes. */
 .portfolio-overview :is(th, td) {
   border: 0;

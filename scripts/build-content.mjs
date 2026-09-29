@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import remarkHtml from 'remark-html'
+import { buildInterventionSearchItems } from './intervention-search.mjs'
 
 const ROOT = process.cwd()
 const CONTENT_DIR = path.join(ROOT, 'content')
@@ -11,31 +12,6 @@ const PUBLIC_DIR = path.join(ROOT, 'public')
 
 const processor = remark().use(remarkHtml, { sanitize: false })
 
-function buildInterventionSearchItems() {
-  const src = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'interventions.ts'), 'utf8')
-  const items = []
-  const re = /slug:\s*"([^"]+)"[\s\S]*?title:\s*"([^"]+)"[\s\S]*?summary:\s*"([^"]+)"[\s\S]*?published:\s*(true|false)/g
-  let match
-  while ((match = re.exec(src))) {
-    if (match[4] !== 'true') continue
-    items.push({
-      title: match[2],
-      summary: match[3],
-      date: '',
-      type: 'page',
-      relpermalink: `/interventions/${match[1]}/`,
-    })
-  }
-  const publishedSources = JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'interventions-active.json'), 'utf8'))
-  items.push(...publishedSources.filter((item) => item.published).map((item) => ({
-    title: item.title,
-    summary: item.summary,
-    date: '',
-    type: 'page',
-    relpermalink: `/interventions/${item.slug}/`,
-  })))
-  return items
-}
 
 function renderMd(md) {
   if (!md || !md.trim()) return ''
@@ -474,7 +450,10 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Focus Areas', summary: 'Research focus areas driving breakthroughs in computing', date: '', type: 'page', relpermalink: '/areas/' },
     { title: 'Interventions', summary: 'Browse PL R&D interventions across four focus areas and R&D Acceleration (FA0)', date: '', type: 'page', relpermalink: '/interventions/' },
     { title: 'Intervention methodology', summary: 'How PL R&D chooses interventions: diagnose the bottleneck, intervene, then learn from the evidence', date: '', type: 'page', relpermalink: '/interventions/methodology/' },
-    ...buildInterventionSearchItems(),
+    ...buildInterventionSearchItems(
+      fs.readFileSync(path.join(ROOT, 'src', 'lib', 'interventions.ts'), 'utf8'),
+      JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'interventions-active.json'), 'utf8')),
+    ),
     // FA2 sub-pages
     { title: 'Economies & Governance', summary: 'Building crypto-native economic and governance infrastructure', date: '', type: 'area', relpermalink: '/areas/economies-governance/' },
     { title: 'Opportunity Spaces', summary: 'Convergence zones for systemic change in economies and governance', date: '', type: 'page', relpermalink: '/areas/economies-governance/#opportunity-spaces' },

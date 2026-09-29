@@ -9,8 +9,8 @@
     "bottleneck": "Neurotechnology spans many technical approaches; shared conversations help make the frontier legible.",
     "work": "Juan Benet talks with researchers and founders about brain-computer interfaces, neural data, connectomics and the future of intelligence.",
     "evidence": "The published episodes below document the conversations. Reach, adoption and downstream effects are separate questions.",
-    "timing": "Ongoing series",
-    "stage": "active",
+    "timing": "Published collection",
+    "stage": "published",
     "typeNote": "Public catalogue classification",
     "plRole": "Juan Benet hosts the conversations, published through PL Neuro.",
     "published": true,
@@ -46,7 +46,7 @@
       }
     ],
     "resourceLabel": "Published episodes",
-    "sourceNote": "All seven podcast episodes listed on PL Neuro at 29 September 2026 are included. This is a release snapshot, not a promise of future episodes."
+    "sourceNote": "All seven podcast episodes listed on PL Neuro at 29 September 2026 are included. This is a published collection; current production and future release cadence are not established by the public listing."
   },
   {
     "slug": "bci-roadmap",
@@ -178,7 +178,7 @@
     ],
     "summary": "An immersive research retreat on impact evaluation and public-goods funding mechanisms.",
     "bottleneck": "Research on impact evaluation and distributed funding needs sustained exchange across approaches and disciplines.",
-    "work": "Researchers and practitioners worked together on the Impact Evaluator framework, evaluation mechanisms and distributed funding systems.",
+    "work": "The retreat focused on the Impact Evaluator framework, evaluation mechanisms and distributed funding systems, bringing together researchers and practitioners.",
     "evidence": "The public retreat record marks the event as concluded. Its existence does not by itself establish causal impact or a return on funding.",
     "timing": "July 26 – August 10, 2025",
     "stage": "completed",
@@ -206,7 +206,7 @@
     ],
     "summary": "A four-week residency to prototype defensive-acceleration ideas in a real community setting.",
     "bottleneck": "Cross-field ideas need a place to become prototypes and be tested in context.",
-    "work": "Residents prototyped projects across AI, robotics, governance, self-sovereign tools, cybersecurity, resource allocation and information integrity inside Edge City’s popup village.",
+    "work": "The residency was designed for residents to prototype projects across AI, robotics, governance, self-sovereign tools, cybersecurity, resource allocation and information integrity inside Edge City’s popup village.",
     "evidence": "The public residency record marks the programme as concluded. Programme completion and demonstrated downstream impact are different claims.",
     "timing": "October 18 – November 15, 2025",
     "stage": "completed",
