@@ -4,6 +4,12 @@ This guide explains how focus area leads and contributors can add and edit conte
 
 > **Publishing a post?** See [docs/analytics.md](docs/analytics.md) for how to build UTM-tagged links for the social/newsletter push so campaign attribution stays clean.
 
+## About page
+
+The About page is maintained through pull requests, not ATProto. Edit `src/data/about.json` for the hero, history, collaborations, future and quotes. Body values support Markdown; use `\n\n` for a paragraph break. The existing focus-area cards still use `src/lib/focus-area-descriptions.ts`, and author cards use the normal author content pipeline.
+
+Preview with `npm run dev` at `/about/`. Run `node --test scripts/about-page.test.mjs`, `npm test`, `npx tsc --noEmit` and `npm run build` before submitting a PR. Approved changes publish through the normal merge/deployment process. The historical About CMS record is retained but no longer read or edited by the website; do not run a CMS sync for About.
+
 ## Focus Area Pages
 
 Three focus areas are fully managed through Markdown: **Digital Human Rights**, **AI & Robotics**, and **Neurotech**. Each focus area lead can update their page by editing a single file.
