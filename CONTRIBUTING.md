@@ -8,7 +8,7 @@ This guide explains how focus area leads and contributors can add and edit conte
 
 The About page is maintained through pull requests, not ATProto. Edit `src/data/about.json` for the hero, history, collaborations, future and quotes. Body values support Markdown; use `\n\n` for a paragraph break. The existing focus-area cards still use `src/lib/focus-area-descriptions.ts`, and author cards use the normal author content pipeline.
 
-Preview with `npm run dev` at `/about/`. Run `node --test scripts/about-page.test.mjs`, `npm test`, `npx tsc --noEmit` and `npm run build` before submitting a PR. Approved changes publish through the normal merge/deployment process. The historical About CMS record is retained but no longer read or edited by the website; do not run a CMS sync for About.
+Preview with `npm run dev` at `/about/`. Run `node --test scripts/about-page.test.mjs`, `npm test`, `npx tsc --noEmit` and `npm run build` before submitting a PR. Approved changes publish through the normal merge/deployment process. `/about/` no longer reads the historical About CMS record, and its website CMS editor/API is retired. The separate `/outreach/collaboration/` page still reads that record’s collaborations section directly from the indexer; this dependency is unchanged, so About PRs do not update that page. Keep the historical record intact; do not sync it as part of an About edit.
 
 ## Focus Area Pages
 
