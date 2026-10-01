@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { AtpAgent } from "@atproto/api"
 import { revalidateTag } from "next/cache"
 import { fetchPage } from "@/lib/indexer"
+import { aboutCmsRetiredResponse } from "@/lib/about-cms"
 import { getSession } from "@/lib/session"
 import { ADMIN_DID, ADMIN_DIDS, PAGE_COLLECTION } from "@/lib/lexicons"
 import { env } from "@/lib/env"
@@ -14,6 +15,8 @@ type Props = { params: Promise<{ rkey: string }> }
 
 export async function GET(_req: NextRequest, { params }: Props) {
   const { rkey } = await params
+  // Next decodes dynamic parameters, including percent-encoded About paths.
+  if (rkey === "about") return aboutCmsRetiredResponse()
   try {
     const record = await fetchPage(rkey)
     if (!record) {
@@ -43,6 +46,8 @@ async function getPlresearchAgent(): Promise<AtpAgent> {
 
 export async function PUT(req: NextRequest, { params }: Props) {
   const { rkey } = await params
+  // Next decodes dynamic parameters, including percent-encoded About paths.
+  if (rkey === "about") return aboutCmsRetiredResponse()
   const session = await getSession()
 
   // Auth check — user must be logged in
