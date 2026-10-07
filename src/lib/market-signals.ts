@@ -9,19 +9,28 @@
 //                  research-heavy bets no money market prices (e.g. WBE). Its API
 //                  requires a token (METACULUS_API_TOKEN); without one we still
 //                  link the question but show no live number.
+//   - Bayes Market (futarchy.ai) — a live Bayesian belief network over AI
+//                  futures (900+ linked markets). Play-money, so there is no USD
+//                  volume to show, but it prices AI/robotics themes no money
+//                  market touches. Read from its public /v1/net API; the node's
+//                  marginal is the crowd "yes" probability.
 //
 // A market read is an *external, independent* estimate on the FIELD axis
 // ("will it happen?") — it is never PL contribution (Q3) and never a settled Q2.
 // Where no market exists, that gap is itself informative: the bet is early or
 // contrarian enough that no one is pricing it yet.
 
-export type Platform = 'polymarket' | 'kalshi' | 'metaculus'
+export type Platform = 'polymarket' | 'kalshi' | 'metaculus' | 'futarchy'
 export type SignalMatch = 'direct' | 'proxy' | 'gap'
 
 type MarketRef =
   | { platform: 'polymarket'; slug: string; hint?: string; question: string; url: string }
   | { platform: 'kalshi'; ticker: string; question: string; url: string }
   | { platform: 'metaculus'; id: number; kind?: 'binary' | 'date'; question: string; url: string }
+  // Bayes Market node, keyed by its stable variableId. resolutionDate is carried
+  // on the ref because the /v1/net API does not return one (the year lives only
+  // in the question text); a forecast without a resolution date is unrenderable.
+  | { platform: 'futarchy'; variableId: string; resolutionDate: string; question: string; url: string }
 
 export type MarketMapping = {
   /** Must match InflectionPoint.title exactly. */
@@ -121,8 +130,15 @@ export const MARKET_MAPPINGS: MarketMapping[] = [
   },
   {
     title: 'A frontier model trained off the hyperscalers',
-    match: 'gap',
-    note: 'No liquid market prices a frontier model trained end-to-end on decentralized compute — an early, contrarian white space.',
+    match: 'proxy',
+    primary: {
+      platform: 'futarchy',
+      variableId: 'x_100b_ai_training_cluster_before_2029',
+      resolutionDate: '2029-12-31',
+      question: '$100B AI training cluster before 2029?',
+      url: 'https://futarchy.ai/markets/x0186',
+    },
+    note: 'A contrarian, inverse read: no money market prices decentralized frontier training, but Bayes Market prices a single $100B centralized training cluster as near-certain — high odds here are a headwind for training off the hyperscalers, not for it.',
   },
   {
     title: 'Agents transact on open rails',
@@ -131,8 +147,15 @@ export const MARKET_MAPPINGS: MarketMapping[] = [
   },
   {
     title: 'A shared real-world robotics data network',
-    match: 'gap',
-    note: 'No liquid market prices an open, multi-operator robotics data commons — a genuine white space.',
+    match: 'proxy',
+    primary: {
+      platform: 'futarchy',
+      variableId: 'x_2030_3_over_one_hundred_thousand_humanoid_robots_will_be_d',
+      resolutionDate: '2030-12-31',
+      question: 'Over 100,000 humanoid robots deployed in the real world by 2030?',
+      url: 'https://futarchy.ai/markets/x0227',
+    },
+    note: 'The closest live analogue: Bayes Market prices a large embodied fleet reaching the real world. It reads embodied-AI momentum — the fleet that would generate the data — not the openness of the data itself, which no market yet prices.',
   },
   {
     title: 'Machine-native money moves at scale',
@@ -195,6 +218,7 @@ export function mappingByTitle(): Record<string, MarketMapping> {
 const GAMMA = 'https://gamma-api.polymarket.com'
 const KALSHI = 'https://api.elections.kalshi.com/trade-api/v2'
 const METACULUS = 'https://www.metaculus.com/api'
+const FUTARCHY = 'https://api.futarchy.ai/v1'
 const METACULUS_TOKEN = process.env.METACULUS_API_TOKEN
 const REVALIDATE = 3600
 
@@ -338,6 +362,42 @@ async function fetchMetaculus(id: number, kind: 'binary' | 'date' = 'binary'): P
   }
 }
 
+// Bayes Market (futarchy.ai) publishes its whole belief network in one call. We
+// fetch it once per render pass, cache it, and look up each node by variableId.
+// It is play-money, so volume is always null (no USD is at stake); the node's
+// `marginals.yes` is the crowd probability. resolutionDate is not in the payload,
+// so the caller supplies it from the mapping.
+type FutarchyNode = { variableId?: string; marginals?: { yes?: number } }
+let futarchyCache: Promise<Map<string, number>> | null = null
+
+function loadFutarchyMarginals(): Promise<Map<string, number>> {
+  if (futarchyCache) return futarchyCache
+  futarchyCache = (async () => {
+    const map = new Map<string, number>()
+    try {
+      const res = await fetch(`${FUTARCHY}/net/markets`, { next: { revalidate: REVALIDATE } })
+      if (!res.ok) return map
+      const body = (await res.json()) as { markets?: FutarchyNode[] } | FutarchyNode[]
+      const nodes = Array.isArray(body) ? body : (body.markets ?? [])
+      for (const n of nodes) {
+        const yes = n.marginals?.yes
+        if (n.variableId && typeof yes === 'number') map.set(n.variableId, yes)
+      }
+    } catch {
+      // leave the map empty; callers still link the question with prob = null
+    }
+    return map
+  })()
+  return futarchyCache
+}
+
+async function fetchFutarchy(variableId: string, resolutionDate: string): Promise<Quote | null> {
+  const map = await loadFutarchyMarginals()
+  const yes = map.get(variableId)
+  if (typeof yes !== 'number') return null
+  return { prob: yes, volume: null, resolutionDate }
+}
+
 async function fetchRef(ref: MarketRef): Promise<Quote | null> {
   switch (ref.platform) {
     case 'polymarket':
@@ -346,6 +406,8 @@ async function fetchRef(ref: MarketRef): Promise<Quote | null> {
       return fetchKalshi(ref.ticker)
     case 'metaculus':
       return fetchMetaculus(ref.id, ref.kind)
+    case 'futarchy':
+      return fetchFutarchy(ref.variableId, ref.resolutionDate)
   }
 }
 

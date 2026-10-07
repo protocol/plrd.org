@@ -33,4 +33,14 @@ export const FIELD_SIGNALS: FieldSignal[] = [
     areaSlug: 'digital-human-rights',
     date: '2026-06-29',
   },
+  {
+    key: 'signal-robinson-moores-law-neurotech',
+    title: "A 'Moore's Law' for therapeutic neurotech",
+    description:
+      'Jacob Robinson (Rice / Motif Neurotech) shows clinical trials of brain stimulation for mental health doubling roughly every 4.7 years — a ~100× rise since 2000, the growth semiconductors had reached by 1985 — and argues therapeutic BCIs, not communication BCIs, are the larger market. A field-side read that clinical commitment to neurotech is compounding, from inside the vertically integrated era our BCI app-store marker would end.',
+    href: 'https://www.embs.org/pulse/articles/making-heads-and-tails-of-the-coming-era-of-neural-devices-could-moores-law-address-the-declining-mental-health-trend/',
+    source: 'IEEE Pulse',
+    areaSlug: 'neurotech',
+    date: '2025-07-21',
+  },
 ]

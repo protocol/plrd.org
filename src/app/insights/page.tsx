@@ -7,7 +7,6 @@ import MarkdownContent from '@/components/MarkdownContent'
 import InsightsExplorer, { type InsightSection, type AreaDef } from '@/components/InsightsExplorer'
 import PLRadar, { type RadarItem } from '@/components/PLRadar'
 import { FIELD_SIGNALS } from '@/lib/radar-signals'
-import { fetchCuratedRadar } from '@/lib/radar-curator'
 import { fetchPage, getSection } from '@/lib/indexer'
 import { formatDate } from '@/lib/format'
 
@@ -170,30 +169,21 @@ export default async function InsightsPage({
   })).sort(byDateDesc)
 
   // Reserve one slot for the newest field signal so the Radar always carries at
-  // least one external read, then fill the rest with our newest content. This is
-  // the FALLBACK cut, used only if the live curator service is unreachable.
+  // least one external read, then fill the rest with our newest local content.
   const signalItems = signalPool.slice(0, 1)
-  const fallbackRadarPool: RadarItem[] = [...contentPool.slice(0, 6 - signalItems.length), ...signalItems]
+  const rawRadarPool: RadarItem[] = [...contentPool.slice(0, 6 - signalItems.length), ...signalItems]
     .sort(byDateDesc)
     .map(({ _sort, ...item }) => ({ ...item, date: formatDate(item.date) }))
 
-  const fallbackEdition = (() => {
-    const newest = fallbackRadarPool[0]?.date
+  const radarEdition = (() => {
+    const newest = rawRadarPool[0]?.date
     const d = newest ? new Date(newest) : new Date()
     return `${d.toLocaleDateString('en-US', { month: 'long' })} Radar`
   })()
 
-  // Prefer the live, crowd-curated Radar — whatever curators have voted onto the
-  // current edition in the dashboard (https://plrd-radar-curator.fly.dev/
-  // dashboard#radar). Falls back to the locally-computed pool if the service is
-  // unreachable so the page always renders.
-  const curated = await fetchCuratedRadar(6)
-  const rawRadarPool: RadarItem[] = curated?.items ?? fallbackRadarPool
-  const radarEdition = curated?.edition ?? fallbackEdition
-
   // Always surface PL R&D's own output (talks, publications, posts on PL
   // properties) ahead of third-party "field signals", while preserving each
-  // group's existing curator/date order. Array.sort is stable, so items keep
+  // group's date order. Array.sort is stable, so items keep
   // their relative order within the PL and signal groups.
   const isFieldSignal = (it: RadarItem) => it.type === 'Signal'
   const radarPool: RadarItem[] = [...rawRadarPool].sort(

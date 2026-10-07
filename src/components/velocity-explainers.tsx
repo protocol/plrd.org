@@ -9,7 +9,7 @@ export type IdeaVintageExample = { label: string; series: SeriesPoint[]; scale: 
 
 // Small multiples + the OpenAlex methodology and its artefact caveats. Rendered
 // inside the idea-vintage explainer in both places it can be opened from.
-export function IdeaVintageExamples({ examples }: { examples: IdeaVintageExample[] }) {
+export function IdeaVintageExamples({ examples, showCharts = true }: { examples: IdeaVintageExample[]; showCharts?: boolean }) {
   if (!examples.length) return null
   return (
     <div className="mt-5 border-t border-gray-100 pt-5">
@@ -19,14 +19,14 @@ export function IdeaVintageExamples({ examples }: { examples: IdeaVintageExample
         solid line is reliable years, the shaded band is the 95% interval, and the dashed tail is the most
         recent years, still under-indexed. A lower line means the field is building on fresher ideas.
       </p>
-      <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {showCharts && <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {examples.map((e) => (
           <div key={e.label} className="rounded-lg border border-gray-200 p-3">
             <div className="mb-1 text-xs font-medium text-black">{e.label}</div>
             <Sparkline series={e.series} scale={e.scale} band width={220} height={60} axis unit="y" />
           </div>
         ))}
-      </div>
+      </div>}
 
       <div className="mt-5">
         <div className="text-sm font-semibold text-black">How we build this from OpenAlex</div>

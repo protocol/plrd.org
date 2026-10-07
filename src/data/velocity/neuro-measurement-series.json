@@ -1,0 +1,437 @@
+[
+  {
+    "id": "tissue-mapped",
+    "title": "Neural tissue mapped — selected datasets",
+    "instrument": "performance_curves",
+    "lens": "capability",
+    "unit": "mm³",
+    "description": "Physical volume checkpoints in selected synapse-resolution imaging and reconstruction datasets, with species and volume basis kept distinct.",
+    "coverage": "Selected global evidence across human, mouse, and fruit fly datasets; not an exhaustive inventory or worldwide cumulative volume.",
+    "caveat": "Sample bounds, imaged volume, and neuropil volume are not interchangeable. Reconstruction completeness varies; no cross-dataset lines, sums, or global growth rate.",
+    "checkedAt": "2026-09-09",
+    "chartKind": "scatter",
+    "scale": "log",
+    "tracks": [
+      {
+        "id": "bock-mouse-imaged",
+        "label": "Bock mouse cortex · imaged bounds",
+        "definition": "Mouse V1 serial-EM imaged tissue extent; not a saturated connectome.",
+        "points": [
+          {
+            "date": "2011-01-01",
+            "datePrecision": "year",
+            "dateBasis": "publication",
+            "value": 0.00819,
+            "label": "Bock mouse V1",
+            "sourceUrl": "https://cellimagelibrary.org/images/40263",
+            "sourceLabel": "Bock mouse V1 — primary source",
+            "note": "Source: “Reconstruction encompasses 450 X 350 X 52 um volume of tissue.” Derived geometric volume: 450 × 350 × 52 / 10⁹ = 0.00819 mm³. Publication-year checkpoint; first release date not established. Dense reconstruction of every neurite is not asserted.",
+            "qualifier": "approximate"
+          }
+        ]
+      },
+      {
+        "id": "hemibrain-fly-bounds",
+        "label": "Hemibrain fly · sample bounds",
+        "definition": "Adult female fly central-brain sample bounding volume; segmented, synapse annotated, extensively proofread.",
+        "points": [
+          {
+            "date": "2020-01-01",
+            "datePrecision": "year",
+            "dateBasis": "publication",
+            "value": 0.0156,
+            "label": "Hemibrain",
+            "sourceUrl": "https://elifesciences.org/articles/57443",
+            "sourceLabel": "Hemibrain — primary source",
+            "note": "Source: “The hemibrain sample is roughly 250 × 250 × 250 μm.” Geometric product 0.015625 mm³, displayed approximately 0.0156; not acquired voxel-mask volume. Publication year, not exact release date.",
+            "qualifier": "approximate"
+          }
+        ]
+      },
+      {
+        "id": "h01-human-imaged",
+        "label": "H01 human cortex · imaged tissue",
+        "definition": "Human temporal-cortex EM sample, automatically reconstructed with selected cells proofread.",
+        "points": [
+          {
+            "date": "2021-06-01",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 1,
+            "label": "H01 first public release",
+            "sourceUrl": "https://research.google/blog/a-browsable-petascale-reconstruction-of-the-human-cortex/",
+            "sourceLabel": "H01 first public release — primary source",
+            "note": "Source: “roughly one cubic millimeter of brain tissue.” Announcement dated June 1, 2021. Automated segmentation and annotated synapses; only selected cells proofread. Later 1.05-mm³ compression-corrected paper estimate is not new tissue.",
+            "qualifier": "approximate"
+          }
+        ]
+      },
+      {
+        "id": "microns-mouse-imaged",
+        "label": "MICrONS mouse cortex · imaged tissue",
+        "definition": "Mouse visual-cortex cubic-millimeter-class EM resource; dense automated reconstruction, selective proofreading.",
+        "points": [
+          {
+            "date": "2021-07-01",
+            "datePrecision": "month",
+            "dateBasis": "release",
+            "value": 1,
+            "label": "MICrONS v117",
+            "sourceUrl": "https://microns-explorer.org/manifests/mm3-v117",
+            "sourceLabel": "MICrONS v117 — primary source",
+            "note": "Source: “first public data released on the cubic millimeter dataset in July 2021.” Approximate nominal sample scale, not an exact valid segmentation mask. July precision; 2025 paper is later analysis of this specimen.",
+            "qualifier": "approximate"
+          }
+        ]
+      },
+      {
+        "id": "flywire-fly-neuropil",
+        "label": "FlyWire fly · neuropil volume",
+        "definition": "Adult female fly whole-brain neuropil volume; not whole-specimen image volume.",
+        "points": [
+          {
+            "date": "2024-01-01",
+            "datePrecision": "year",
+            "dateBasis": "publication",
+            "value": 0.0175,
+            "label": "FlyWire whole-brain neuropil",
+            "sourceUrl": "https://www.nature.com/articles/s41586-024-07558-y",
+            "sourceLabel": "FlyWire whole-brain neuropil — primary source",
+            "note": "Source: “The whole brain contains 0.0175 mm³ of neuropil volume.” Publication-year checkpoint for this reported value; the reconstruction reuses FAFB imagery and is not new tissue acquired in 2024."
+          }
+        ]
+      },
+      {
+        "id": "liconn-mouse-native",
+        "label": "LICONN mouse cortex · native tissue",
+        "definition": "Light-microscopy reconstruction of mouse somatosensory cortex, measured before hydrogel expansion.",
+        "points": [
+          {
+            "date": "2025-01-01",
+            "datePrecision": "year",
+            "dateBasis": "publication",
+            "value": 0.00095,
+            "label": "LICONN native tissue",
+            "sourceUrl": "https://www.nature.com/articles/s41586-025-08985-1",
+            "sourceLabel": "LICONN native tissue — primary source",
+            "note": "Figure 1: “0.95 × 10⁶ µm³ before” expansion, equivalent to 0.00095 mm³. Native volume, not expanded hydrogel; automated dense reconstruction with synaptic molecular predictions and selected traced validation regions. Publication-year checkpoint, first final-dataset release not established.",
+            "qualifier": "approximate"
+          }
+        ]
+      },
+      {
+        "id": "malecns-fly-imaged",
+        "label": "MaleCNS fly · imaged volume",
+        "definition": "Adult male fly brain and ventral nerve cord EM image volume; segmented and extensively proofread.",
+        "points": [
+          {
+            "date": "2025-10-03",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 0.082,
+            "label": "MaleCNS v0.9",
+            "sourceUrl": "https://biorxiv.org/content/10.1101/2025.10.09.680999v2.full",
+            "sourceLabel": "MaleCNS v0.9 — primary source",
+            "note": "Preprint: “0.082 mm3 total volume” (160 teravoxels at 8-nm isotropic resolution). Release date independently verified at https://male-cns.janelia.org/ : “2025-10-03 - MaleCNS v0.9 released”. Later v1.0 and 2026 publication reuse this specimen; not all synapses have proofread partners.",
+            "qualifier": "approximate"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bci-implants",
+    "title": "Implanted BCI participants — selected cohorts",
+    "instrument": "revealed_commitments",
+    "lens": "adoption",
+    "unit": "participants",
+    "description": "Publicly identified human recipients in assistive implanted-BCI research, including intracortical, surface, endovascular, and brain-to-spine interfaces.",
+    "coverage": "Selected global evidence: historical literature/disclosure cohort plus separate company/program checkpoints. Incomplete coverage, not a current worldwide total.",
+    "caveat": "Cohorts overlap: do not add the review to company counts or suppliers to programs. Ever implanted is not active users. Lines join only Neuralink’s compatible cumulative checkpoints.",
+    "checkedAt": "2026-09-09",
+    "chartKind": "line",
+    "scale": "linear",
+    "tracks": [
+      {
+        "id": "identified-literature-cohort",
+        "label": "Identified global review cohort",
+        "definition": "Authors’ discoverable 1998–December 2023 assistive-iBCI cohort; not an audited census.",
+        "points": [
+          {
+            "date": "2023-12-01",
+            "datePrecision": "month",
+            "dateBasis": "observation",
+            "value": 67,
+            "label": "Review cohort through Dec 2023",
+            "sourceUrl": "https://www.nature.com/articles/s44222-024-00239-5",
+            "sourceLabel": "Patrick-Krueger et al., Nature Reviews Bioengineering",
+            "note": "Source: “These groups have implanted a total of 67 participants”; data collection ended December 2023 and later implants are excluded. Includes ECoG and endovascular systems, not only intracortical. Only 31 were active at cutoff. Supplement Table 2 identifies participants but does not supply implantation-year columns; no annual points invented."
+          }
+        ]
+      },
+      {
+        "id": "neuralink-cumulative",
+        "label": "Neuralink · cumulative recipients",
+        "definition": "One company’s disclosed cumulative implanted trial participants; observation months early, disclosure dates later.",
+        "points": [
+          {
+            "date": "2024-01-01",
+            "datePrecision": "month",
+            "dateBasis": "observation",
+            "value": 1,
+            "label": "Neuralink first participant",
+            "sourceUrl": "https://neuralink.com/updates/prime-study-progress-update/",
+            "sourceLabel": "Neuralink first participant — primary source",
+            "note": "April 12, 2024 disclosure: “In January, we conducted the first human implantation.” January is the implantation month, not an exact surgery day."
+          },
+          {
+            "date": "2024-07-01",
+            "datePrecision": "month",
+            "dateBasis": "observation",
+            "value": 2,
+            "label": "Neuralink second participant",
+            "sourceUrl": "https://neuralink.com/updates/prime-study-progress-update-second-participant/",
+            "sourceLabel": "Neuralink second participant — primary source",
+            "note": "August 21, 2024 disclosure: “Last month, Alex ... the second participant ... received his Neuralink implant.” July implantation month; cumulative two recipients."
+          },
+          {
+            "date": "2025-02-05",
+            "datePrecision": "day",
+            "dateBasis": "disclosure",
+            "value": 3,
+            "label": "Neuralink three participants",
+            "sourceUrl": "https://neuralink.com/updates/a-year-of-telepathy/",
+            "sourceLabel": "Neuralink three participants — primary source",
+            "note": "Source: “Today, there are three people with Telepathy: Noland, Alex, and Brad.” Disclosure date, not all three surgery dates."
+          },
+          {
+            "date": "2025-06-02",
+            "datePrecision": "day",
+            "dateBasis": "disclosure",
+            "value": 5,
+            "label": "Neuralink five participants",
+            "sourceUrl": "https://neuralink.com/updates/neuralink-raises-650m-series-e/",
+            "sourceLabel": "Neuralink five participants — primary source",
+            "note": "Source: “Five individuals with severe paralysis are now using Neuralink to control digital and physical devices with their thoughts.” Post-implant use supports receipt, not mere enrollment."
+          },
+          {
+            "date": "2026-01-28",
+            "datePrecision": "day",
+            "dateBasis": "disclosure",
+            "value": 21,
+            "label": "Neuralink 21 participants",
+            "sourceUrl": "https://neuralink.com/updates/two-years-of-telepathy/",
+            "sourceLabel": "Neuralink 21 participants — primary source",
+            "note": "Company headline says “21 Neuralnauts enrolled”; implantation interpretation also requires body: “higher signal quality across 18 of the subsequent 20 participants” after the first recipient. Company-reported cumulative checkpoint, not independently audited current active users. Page release date Jan 28; last modification Feb 2 is not the checkpoint."
+          }
+        ]
+      },
+      {
+        "id": "synchron-cumulative",
+        "label": "Synchron · US and Australia",
+        "definition": "Company-reported Stentrode recipients across SWITCH and COMMAND; overlaps historical review.",
+        "points": [
+          {
+            "date": "2025-11-06",
+            "datePrecision": "day",
+            "dateBasis": "disclosure",
+            "value": 10,
+            "label": "Synchron ten recipients",
+            "sourceUrl": "https://www.businesswire.com/news/home/20251106150841/en/Synchron-Raises-%24200-Million-Series-D-to-Advance-Brain-Computer-Interface-Technology",
+            "sourceLabel": "Synchron ten recipients — primary source",
+            "note": "Issuer: “Stentrode BCIs have been placed in 10 patients with paralysis to date, across clinical trials in the U.S. and Australia.” Includes four Australian and six US recipients; do not add those subsets or add this to review baseline."
+          }
+        ]
+      },
+      {
+        "id": "onward-arc-bci",
+        "label": "ONWARD ARC-BCI · brain–spine",
+        "definition": "Participants receiving cortical recording implant paired with spinal stimulation; count people, not hardware.",
+        "points": [
+          {
+            "date": "2026-01-22",
+            "datePrecision": "day",
+            "dateBasis": "disclosure",
+            "value": 7,
+            "label": "ONWARD seven participants",
+            "sourceUrl": "https://kommunikasjon.ntb.no/pressemelding/18780443/onward-medical-completes-two-additional-brain-computer-interface-implants-paired-with-spinal-cord-stimulation-technology-to-restore-thought-driven-movement?lang=en&publisherId=4954260",
+            "sourceLabel": "ONWARD seven participants — primary source",
+            "note": "Source: “Seven study participants have now received ARC-BCI Therapy.” Two additional people bring total to seven. Some historical CEA/WIMAGINE participants overlap the review; exact crosswalk unresolved."
+          }
+        ]
+      },
+      {
+        "id": "paradromics-connect-one",
+        "label": "Paradromics · long-term study",
+        "definition": "At least one long-term Connexus Connect-One recipient; excludes temporary 2025 epilepsy recording.",
+        "points": [
+          {
+            "date": "2026-06-17",
+            "datePrecision": "day",
+            "dateBasis": "disclosure",
+            "value": 1,
+            "label": "Paradromics first long-term participant",
+            "sourceUrl": "https://paradromics.com/news/paradromics-completes-first-human-brain-computer-interface-bci-implantation",
+            "sourceLabel": "Paradromics — first Connexus Connect-One implantation",
+            "note": "June 17, 2026 issuer release: “The first participant ... was enrolled and implanted ... and will be followed and evaluated over the next six years.” Exact disclosure date, not surgery date. At least one long-term participant; earlier temporary 2025 epilepsy implantation is excluded.",
+            "qualifier": "at-least"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "neural-recording-hours",
+    "title": "Neural recording hours — selected datasets",
+    "instrument": "performance_curves",
+    "lens": "data-supply",
+    "unit": "hours",
+    "description": "Reported recording duration in named datasets and releases, separated by modality and access; a model-training corpus is explicitly distinct.",
+    "coverage": "Selected globally scoped evidence from US and Japanese human datasets and a multi-source nonhuman-primate corpus; not a harmonized worldwide archive total.",
+    "caveat": "No sums across datasets, releases, modalities, or model reuse. TUSZ includes held-out evaluation data; POYO is reused training-corpus scale. These are reported hours, not independently recomputed QC-valid subject-hours.",
+    "checkedAt": "2026-09-09",
+    "chartKind": "scatter",
+    "scale": "linear",
+    "tracks": [
+      {
+        "id": "tusz-scalp-eeg",
+        "label": "TUSZ · human scalp EEG, controlled access",
+        "definition": "Maintainer-reported full seizure-corpus release sizes, including held-out evaluation; a subset of TUEG.",
+        "points": [
+          {
+            "date": "2017-04-17",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 170,
+            "label": "TUSZ v1.0.0",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.0.0, 2017-04-17, Total Duration (Hours): 170. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2017-08-04",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 425,
+            "label": "TUSZ v1.1.0",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.1.0, 2017-08-04, Total Duration (Hours): 425. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2018-04-15",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 504,
+            "label": "TUSZ v1.2.0",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.2.0, 2018-04-15, Total Duration (Hours): 504. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2018-08-16",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 651,
+            "label": "TUSZ v1.3.0",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.3.0, 2018-08-16, Total Duration (Hours): 651. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2018-11-14",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 651,
+            "label": "TUSZ v1.4.0",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.4.0, 2018-11-14, Total Duration (Hours): 651. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2019-07-22",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 1074,
+            "label": "TUSZ v1.5.0",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.5.0, 2019-07-22, Total Duration (Hours): 1,074. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2020-04-23",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 1074,
+            "label": "TUSZ v1.5.1",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.5.1, 2020-04-23, Total Duration (Hours): 1,074. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          },
+          {
+            "date": "2020-05-09",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 1074,
+            "label": "TUSZ v1.5.2",
+            "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+            "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+            "note": "Table 1 reports v1.5.2, 2020-05-09, Total Duration (Hours): 1,074. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+          }
+        ]
+      },
+      {
+        "id": "ajile12-intracranial",
+        "label": "AJILE12 · human intracranial, open",
+        "definition": "Frozen DANDI 000055/0.220127.0436; 12 participants; open CC-BY-4.0 ECoG/depth recordings.",
+        "points": [
+          {
+            "date": "2022-01-27",
+            "datePrecision": "day",
+            "dateBasis": "release",
+            "value": 1280,
+            "label": "AJILE12 frozen release",
+            "sourceUrl": "https://api.dandiarchive.org/api/dandisets/000055/versions/0.220127.0436/",
+            "sourceLabel": "DANDI AJILE12 frozen release 0.220127.0436",
+            "note": "Release metadata: “Neural recordings are available at 500 Hz from at least 64 electrodes per participant, for a total of 1280 hours.” datePublished January 27, 2022. Reported duration, not electrode-multiplied time; gaps/preprocessing mean nominal and QC-valid hours differ."
+          }
+        ]
+      },
+      {
+        "id": "poyo-primate-training",
+        "label": "POYO-1 · primate spikes, training corpus",
+        "definition": "Reported model-training corpus spanning seven nonhuman primates and constituent datasets with varying access; not a new unique-data release.",
+        "points": [
+          {
+            "date": "2023-10-24",
+            "datePrecision": "day",
+            "dateBasis": "publication",
+            "value": 100,
+            "label": "POYO-1 training corpus",
+            "sourceUrl": "https://arxiv.org/abs/2310.16046",
+            "sourceLabel": "POYO-1 training corpus — primary source",
+            "note": "Abstract: “over 100 hours of recordings” from seven nonhuman primates and over 158 sessions. Strict lower-bound marker, not exactly 100. Existing datasets reused for training; no new-data or wholly open-corpus claim.",
+            "qualifier": "greater-than"
+          }
+        ]
+      },
+      {
+        "id": "japaneeg-scalp-eeg",
+        "label": "JapanEEG · human scalp EEG, open release claim",
+        "definition": "Japanese speech dataset, three participants; simultaneous EEG/EMG/audio counted once for EEG duration; author-reported CC0 OpenNeuro release.",
+        "points": [
+          {
+            "date": "2026-05-31",
+            "datePrecision": "day",
+            "dateBasis": "publication",
+            "value": 1020,
+            "label": "JapanEEG descriptor",
+            "sourceUrl": "https://arxiv.org/abs/2606.01264",
+            "sourceLabel": "JapanEEG descriptor — primary source",
+            "note": "Abstract: “1020 hours of simultaneously recorded scalp electroencephalography (EEG), facial electromyography (EMG), and speech audio”; authors say released through OpenNeuro under CC0. Descriptor submission date, not verified archive upload date. Count once, not three modalities; full manifest not enumerated."
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -33,6 +33,17 @@ export { FIELD_COLOR, FIELD_INK, HAND_COLOR, LIVE_COLOR }
 export { FOCUS_AREAS, INFLECTION_POINTS }
 export type { FocusAreaKey, InflectionPoint }
 
+export const FIELD_VELOCITY_OVERVIEW = '/impact-preview-eb61fba1b98e/'
+export const FIELD_VELOCITY_ORIGIN = 'https://www.plrd.org'
+
+// Shared public copy: the overview and API must explain the same reading rules.
+export const FIELD_VELOCITY_METHODOLOGY = {
+  intro: 'We document the interventions PL R&D runs, then observe how each field changes. The toolkit describes our work; field velocity and inflection points describe the field, not a causal score for PL.',
+  attribution: 'Fields move with or without PL. We do not claim these interventions directly cause a field to accelerate: field-level attribution is not cleanly identifiable. We name what we run and watch whether the field moves; making that link clearer remains research work.',
+  observedVelocity: 'Field velocity is the rate a field is moving. We read it through five instrument categories, each able to hold multiple field-specific measures, plus dated, falsifiable markers. Not every measure fits every field. Having no single gating cost does not mean there is no capability curve: comparable cost, scale, quality or capability measures can still be tracked. An unpriced milestone has no market signal; missing data is not evidence of no progress.',
+  stocksAndFlows: 'Stocks are not velocity. Compare annual additions or changes using comparable units, definitions and observation windows; acceleration requires a change in that rate, not just a larger total. Mapped-volume frontiers can measure capability; available data-hours are a data resource stock; cumulative implants are an adoption and commitment stock. They are not all pure performance curves. Keep coverage, quality, access and the observation cutoff explicit before comparing them.',
+} as const
+
 // ── The toolkit — PL R&D interventions ────────────────────────────────────────
 // Seven interventions we run to move a field. The short entry (title, subtitle,
 // oneLiner) renders in the methodology grid; the full description renders in the
@@ -65,8 +76,8 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
   {
     id: 'legibility',
     title: 'Legibility',
-    subtitle: 'field-building communications',
-    oneLiner: 'Maps, roadmaps, benchmarks, and tutorials that make a field navigable.',
+    subtitle: 'field building communications',
+    oneLiner: 'Maps, roadmaps, benchmarks, and tutorials that make a field navigable',
     examples: [
       { label: 'Insights', href: '/insights/', blurb: 'Roadmaps, essays, and field maps from PL R&D.' },
     ],
@@ -76,8 +87,8 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
   {
     id: 'connection',
     title: 'Connection',
-    subtitle: 'convenings & sustained cohorts',
-    oneLiner: 'Rooms that keep the right people in contact over time.',
+    subtitle: 'convenings & talent attraction',
+    oneLiner: 'Forums that bring the right people together and keep them in contact over time',
     examples: [
       {
         label: 'PL Neuro events',
@@ -97,7 +108,7 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
     id: 'funding',
     title: 'Funding',
     subtitle: 'grants, prizes & fellowships',
-    oneLiner: 'Early money and prizes where small amounts unlock outsized effort.',
+    oneLiner: 'Early money and prizes where small amounts unlock outsized efforts',
     examples: [
       {
         label: 'FIL-PropGF',
@@ -112,7 +123,7 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
     id: 'policy',
     title: 'Policy',
     subtitle: 'standards & experimentation rights',
-    oneLiner: 'Adoption paths for working tech, and room to experiment.',
+    oneLiner: 'Shape adoption paths for working tech, and room to experiment',
     examples: [
       { label: 'SAFT', href: 'https://saft-project.org/', blurb: 'A framework for safe, legal experimentation.' },
     ],
@@ -122,8 +133,8 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
   {
     id: 'infrastructure',
     title: 'Infrastructure',
-    subtitle: 'primitives, rails & cheap tools',
-    oneLiner: 'Open protocols and cheap tools that collapse the cost of trying things.',
+    subtitle: 'primitives, rails & tooling',
+    oneLiner: 'Open protocols and tool that collapse the cost of trying new things',
     examples: [
       { label: 'atproto', href: 'https://atproto.com/', blurb: 'The open protocol behind Bluesky.' },
       { label: 'IPFS', href: 'https://ipfs.tech/', blurb: 'The content-addressed storage protocol.' },
@@ -135,7 +146,7 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
     id: 'translation',
     title: 'Translation',
     subtitle: 'venture conversion & visibility',
-    oneLiner: 'Routing validated work to pilots, production, and capital.',
+    oneLiner: 'Routing validated work to pilots, production, and capital',
     examples: [
       { label: 'Simocracy', href: 'https://www.simocracy.org/', blurb: 'Routing validated work toward deployment.' },
     ],
@@ -145,8 +156,8 @@ export const TOOLKIT_V2: ToolkitEntry[] = [
   {
     id: 'culture',
     title: 'Culture',
-    subtitle: 'celebrating the improving mentality',
-    oneLiner: 'Open-ended creative bets that recruit people into building.',
+    subtitle: 'Celebrating the improving and acceleration mentality',
+    oneLiner: 'Open-ended creative interventions that celebrate techno optimism',
     examples: [
       { label: 'Film', href: 'https://www.youtube.com/watch?v=l44z35vabvA', blurb: 'A creative bet that recruits people into building.' },
     ],

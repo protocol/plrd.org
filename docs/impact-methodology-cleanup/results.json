@@ -1,0 +1,496 @@
+{
+  "origin": "http://127.0.0.1:4279",
+  "results": [
+    {
+      "width": 1440,
+      "client": 1425,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 32
+        },
+        {
+          "text": "Capability",
+          "font": 32
+        },
+        {
+          "text": "Coordination",
+          "font": 32
+        },
+        {
+          "text": "Talent",
+          "font": 32
+        },
+        {
+          "text": "Capital",
+          "font": 32
+        },
+        {
+          "text": "Infrastructure",
+          "font": 32
+        },
+        {
+          "text": "Validation",
+          "font": 32
+        },
+        {
+          "text": "Demand",
+          "font": 32
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 32
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 32
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 32,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    },
+    {
+      "width": 1146,
+      "client": 1131,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 32
+        },
+        {
+          "text": "Capability",
+          "font": 32
+        },
+        {
+          "text": "Coordination",
+          "font": 32
+        },
+        {
+          "text": "Talent",
+          "font": 32
+        },
+        {
+          "text": "Capital",
+          "font": 32
+        },
+        {
+          "text": "Infrastructure",
+          "font": 32
+        },
+        {
+          "text": "Validation",
+          "font": 32
+        },
+        {
+          "text": "Demand",
+          "font": 32
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 32
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 32
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 32,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "client": 1009,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 32
+        },
+        {
+          "text": "Capability",
+          "font": 32
+        },
+        {
+          "text": "Coordination",
+          "font": 32
+        },
+        {
+          "text": "Talent",
+          "font": 32
+        },
+        {
+          "text": "Capital",
+          "font": 32
+        },
+        {
+          "text": "Infrastructure",
+          "font": 32
+        },
+        {
+          "text": "Validation",
+          "font": 32
+        },
+        {
+          "text": "Demand",
+          "font": 32
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 32
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 32
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 32,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "client": 753,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 32
+        },
+        {
+          "text": "Capability",
+          "font": 32
+        },
+        {
+          "text": "Coordination",
+          "font": 32
+        },
+        {
+          "text": "Talent",
+          "font": 32
+        },
+        {
+          "text": "Capital",
+          "font": 32
+        },
+        {
+          "text": "Infrastructure",
+          "font": 32
+        },
+        {
+          "text": "Validation",
+          "font": 32
+        },
+        {
+          "text": "Demand",
+          "font": 32
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 32
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 32
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 32,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    },
+    {
+      "width": 640,
+      "client": 625,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 32
+        },
+        {
+          "text": "Capability",
+          "font": 32
+        },
+        {
+          "text": "Coordination",
+          "font": 32
+        },
+        {
+          "text": "Talent",
+          "font": 32
+        },
+        {
+          "text": "Capital",
+          "font": 32
+        },
+        {
+          "text": "Infrastructure",
+          "font": 32
+        },
+        {
+          "text": "Validation",
+          "font": 32
+        },
+        {
+          "text": "Demand",
+          "font": 32
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 32
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 32
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 32,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "client": 375,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 28
+        },
+        {
+          "text": "Capability",
+          "font": 28
+        },
+        {
+          "text": "Coordination",
+          "font": 28
+        },
+        {
+          "text": "Talent",
+          "font": 28
+        },
+        {
+          "text": "Capital",
+          "font": 28
+        },
+        {
+          "text": "Infrastructure",
+          "font": 28
+        },
+        {
+          "text": "Validation",
+          "font": 28
+        },
+        {
+          "text": "Demand",
+          "font": 28
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 28
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 28
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 28,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "client": 305,
+      "tabs": [
+        "01DiagnoseName the binding constraint.",
+        "02InterveneApply the lever that matches that bottleneck.",
+        "03LearnRead field velocity, then check the inflection points."
+      ],
+      "selected": "01DiagnoseName the binding constraint.",
+      "names": [
+        {
+          "text": "Knowledge",
+          "font": 28
+        },
+        {
+          "text": "Capability",
+          "font": 28
+        },
+        {
+          "text": "Coordination",
+          "font": 28
+        },
+        {
+          "text": "Talent",
+          "font": 28
+        },
+        {
+          "text": "Capital",
+          "font": 28
+        },
+        {
+          "text": "Infrastructure",
+          "font": 28
+        },
+        {
+          "text": "Validation",
+          "font": 28
+        },
+        {
+          "text": "Demand",
+          "font": 28
+        },
+        {
+          "text": "Policy / legitimacy",
+          "font": 28
+        },
+        {
+          "text": "Institutional capacity",
+          "font": 28
+        }
+      ],
+      "qFont": 15,
+      "nameFont": 28,
+      "panels": [
+        {
+          "id": "diagnose",
+          "hidden": false
+        },
+        {
+          "id": "intervene",
+          "hidden": true
+        },
+        {
+          "id": "learn",
+          "hidden": true
+        }
+      ],
+      "robot": "noindex, nofollow",
+      "overflow": false
+    }
+  ],
+  "failures": []
+}

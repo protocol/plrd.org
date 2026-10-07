@@ -1,0 +1,65 @@
+[
+  {
+    "width": 1440,
+    "clientWidth": 1425,
+    "scrollWidth": 1425,
+    "gap": 57,
+    "font": 20,
+    "sectionHeight": 124.75,
+    "text": "Join our team\n\nExplore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "rect": {
+      "x": 1149.953125,
+      "y": 491.3125,
+      "width": 114.546875,
+      "height": 44,
+      "top": 491.3125,
+      "right": 1264.5,
+      "bottom": 535.3125,
+      "left": 1149.953125
+    }
+  },
+  {
+    "width": 390,
+    "clientWidth": 375,
+    "scrollWidth": 375,
+    "gap": 57,
+    "font": 20,
+    "sectionHeight": 199.5,
+    "text": "Join our team\n\nExplore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "rect": {
+      "x": 24,
+      "y": 491.59375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 491.59375,
+      "right": 138.546875,
+      "bottom": 535.59375,
+      "left": 24
+    }
+  },
+  {
+    "width": 320,
+    "clientWidth": 305,
+    "scrollWidth": 320,
+    "gap": 57,
+    "font": 20,
+    "sectionHeight": 199.5,
+    "text": "Join our team\n\nExplore opportunities across the Protocol Labs network.\n\nSee open roles\n\u2192",
+    "href": "https://os.pl.xyz/jobs",
+    "links": 1,
+    "rect": {
+      "x": 24,
+      "y": 484.34375,
+      "width": 114.546875,
+      "height": 44,
+      "top": 484.34375,
+      "right": 138.546875,
+      "bottom": 528.34375,
+      "left": 24
+    }
+  }
+]

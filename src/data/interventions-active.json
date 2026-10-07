@@ -1,0 +1,226 @@
+[
+  {
+    "slug": "juan-benet-neuropodcast",
+    "title": "Juan Benet Neuropodcast",
+    "area": "neurotech",
+    "type": "orient",
+    "support": [],
+    "summary": "Conversations with the people building the frontier of neurotechnology and brain science.",
+    "bottleneck": "Neurotechnology spans many technical approaches; shared conversations help make the frontier legible.",
+    "work": "Juan Benet talks with researchers and founders about brain-computer interfaces, neural data, connectomics and the future of intelligence.",
+    "evidence": "The published episodes below document the conversations. Reach, adoption and downstream effects are separate questions.",
+    "timing": "Published collection",
+    "stage": "published",
+    "typeNote": "Public catalogue classification",
+    "plRole": "Juan Benet hosts the conversations, published through PL Neuro.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "Adam Marblestone — We Are Massively Underinvesting in the Human Brain",
+        "href": "https://www.plneuro.xyz/insights/adam-marblestone-mapping-the-brain-connectomics-and-uploading/"
+      },
+      {
+        "title": "Allison Duettmann — Why We Don't Have to Die: Cryonics, Uploading, and Existential Hope",
+        "href": "https://www.plneuro.xyz/insights/allison-duettmann-cryonics-uploading-and-existential-hope/"
+      },
+      {
+        "title": "Konrad Kording — The Power of a Single Neuron and Simulating the Brain",
+        "href": "https://www.plneuro.xyz/insights/konrad-kording-the-power-of-a-single-neuron-and-simulating-the-brain/"
+      },
+      {
+        "title": "Tom Oxley — BCI Without Opening the Skull, the Race With China, and the 2040s",
+        "href": "https://www.plneuro.xyz/insights/tom-oxley-bci-without-opening-the-skull-the-race-with-china-and-the-2040s/"
+      },
+      {
+        "title": "Jacques Carolan — The Mission to Get Breakthrough Brain Treatments to Everyone",
+        "href": "https://www.plneuro.xyz/insights/jacques-carolan-the-mission-to-get-breakthrough-brain-treatments-to-everyone/"
+      },
+      {
+        "title": "Ben Rapoport — Treating Paralysis and Digitizing Neural Data",
+        "href": "https://www.plneuro.xyz/insights/ben-rapoport-treating-paralysis-and-digitizing-neural-data/"
+      },
+      {
+        "title": "Max Hodak — Restoring Sight, Growing Neurons on Silicon, and Expanding Human Intelligence",
+        "href": "https://www.plneuro.xyz/insights/max-hodak-restoring-sight-growing-neurons-on-silicon-and-expanding-human-intelligence/"
+      }
+    ],
+    "resourceLabel": "Published episodes",
+    "sourceNote": "All seven podcast episodes listed on PL Neuro at 29 September 2026 are included. This is a published collection; current production and future release cadence are not established by the public listing."
+  },
+  {
+    "slug": "bci-roadmap",
+    "title": "BCI Roadmap Series",
+    "area": "neurotech",
+    "type": "orient",
+    "support": [
+      "enable"
+    ],
+    "summary": "A shared roadmap for taking brain-computer interfaces from scientific promise to practical use.",
+    "bottleneck": "Clinical revenue, consumer adoption, public understanding and capital formation each present different barriers.",
+    "work": "Publish a strategic overview and focused roadmaps on the barriers to BCI adoption.",
+    "evidence": "Read the published overview and Roadmaps 1–3 below. Publication is evidence of a shared roadmap, not proof that the barriers have been resolved.",
+    "timing": "Ongoing series",
+    "stage": "active",
+    "typeNote": "Public catalogue classification",
+    "plRole": "Protocol Labs publishes the BCI Roadmap Series through PL Neuro.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "PL BCI Roadmap Series: Overview — A Strategic Vision for the Future of Brain–Computer Interfaces",
+        "href": "https://www.plneuro.xyz/insights/bci-roadmap-series-overview-a-strategic-vision-for-the-future-of-brain-computer-interfaces/"
+      },
+      {
+        "title": "PL BCI Roadmap Series: Roadmap 1 — Smoothing the Path to Clinical Revenue",
+        "href": "https://www.plneuro.xyz/insights/bci-roadmap-series-roadmap-1-smoothing-the-path-to-clinical-revenue/"
+      },
+      {
+        "title": "PL BCI Roadmap Series: Roadmap 2 — Expanding Neurotechnology to Consumer Products",
+        "href": "https://www.plneuro.xyz/insights/bci-roadmap-series-roadmap-2-expanding-neurotechnology-to-consumer-products/"
+      },
+      {
+        "title": "PL BCI Roadmap Series: Roadmap 3 — Popularizing the Promise of Neurotechnology",
+        "href": "https://www.plneuro.xyz/insights/bci-roadmap-series-roadmap-3-popularizing-the-promise-of-neurotechnology/"
+      }
+    ],
+    "resourceLabel": "Published editions",
+    "sourceNote": "The overview and Roadmaps 1–3 are published. Roadmap 4 — Increasing Venture Capital Flows — is listed as coming soon; it is not presented as a published edition."
+  },
+  {
+    "slug": "pl-neuro-salon",
+    "title": "PL Neuro Salon",
+    "area": "neurotech",
+    "type": "coordinate",
+    "support": [
+      "orient"
+    ],
+    "summary": "Scaled human neural data towards a science of intelligence.",
+    "bottleneck": "Bring neural-data and machine-learning researchers together around shared questions.",
+    "work": "A PL Neuro convening on scaled human neural data and intelligence.",
+    "evidence": "The public event record below documents this convening. Longer-term collaborations and field effects are not quantified here.",
+    "timing": "June 6–8, 2025",
+    "stage": "completed",
+    "typeNote": "Public catalogue classification",
+    "plRole": "PL Neuro convened the salon as part of its workshop series.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "PL Neuro Salon — event record",
+        "href": "https://www.plneuro.xyz/events/neuro-ai-workshop/"
+      }
+    ],
+    "resourceLabel": "Event record",
+    "sourceNote": "This entry describes the completed event, not a currently running or announced future edition."
+  },
+  {
+    "slug": "bci-founders-retreat",
+    "title": "BCI Founders Retreat",
+    "area": "neurotech",
+    "type": "coordinate",
+    "support": [
+      "orient"
+    ],
+    "summary": "Bringing together the founders building the future of brain-computer interfaces.",
+    "bottleneck": "Founders working across BCI technologies benefit from direct exchange on shared challenges.",
+    "work": "A retreat bringing BCI founders together as part of the PL Neuro workshop series.",
+    "evidence": "The public event record below documents this convening. Longer-term collaborations and field effects are not quantified here.",
+    "timing": "June 2025",
+    "stage": "completed",
+    "typeNote": "Public catalogue classification",
+    "plRole": "PL Neuro convened the founders retreat.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "BCI Founders Retreat — event record",
+        "href": "https://www.plneuro.xyz/events/bci-founders-retreat/"
+      }
+    ],
+    "resourceLabel": "Event record",
+    "sourceNote": "This entry describes the completed event, not a currently running or announced future edition."
+  },
+  {
+    "slug": "connectomics-workshop",
+    "title": "Connectomics Workshop",
+    "area": "neurotech",
+    "type": "coordinate",
+    "support": [
+      "orient"
+    ],
+    "summary": "A research convening on decoding the human brain’s circuitry.",
+    "bottleneck": "Connectomics research spans methods and organisations that need opportunities to compare approaches.",
+    "work": "A PL Neuro workshop focused on connectomics and the brain’s circuitry.",
+    "evidence": "The public event record below documents this convening. Longer-term collaborations and field effects are not quantified here.",
+    "timing": "April 17–19, 2026",
+    "stage": "completed",
+    "typeNote": "Public catalogue classification",
+    "plRole": "PL Neuro convened the connectomics workshop.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "Connectomics Workshop — event record",
+        "href": "https://www.plneuro.xyz/events/connectomics-workshop/"
+      }
+    ],
+    "resourceLabel": "Event record",
+    "sourceNote": "This entry describes the completed event, not a currently running or announced future edition."
+  },
+  {
+    "slug": "ierr-2025",
+    "title": "IERR 2025 · Impact Evaluator Research Retreat",
+    "area": "rnd-acceleration",
+    "type": "coordinate",
+    "support": [
+      "orient"
+    ],
+    "summary": "An immersive research retreat on impact evaluation and public-goods funding mechanisms.",
+    "bottleneck": "Research on impact evaluation and distributed funding needs sustained exchange across approaches and disciplines.",
+    "work": "The retreat focused on the Impact Evaluator framework, evaluation mechanisms and distributed funding systems, bringing together researchers and practitioners.",
+    "evidence": "The public retreat record marks the event as concluded. Its existence does not by itself establish causal impact or a return on funding.",
+    "timing": "July 26 – August 10, 2025",
+    "stage": "completed",
+    "typeNote": "Public catalogue classification",
+    "plRole": "The retreat was organised by a coalition of researchers and practitioners. This entry does not attribute sole delivery or impact to Protocol Labs.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "Impact Evaluator Research Retreat 2025 — retreat record",
+        "href": "https://www.researchretreat.org/ierr-2025/"
+      }
+    ],
+    "resourceLabel": "Retreat record",
+    "sourceNote": "Completed in Iceland. Categorised as cross-field R&D Acceleration (FA0), rather than a single focus-area programme."
+  },
+  {
+    "slug": "dacc-2025",
+    "title": "d/acc Residency · Edge City Patagonia",
+    "area": "rnd-acceleration",
+    "type": "build",
+    "support": [
+      "coordinate",
+      "prove"
+    ],
+    "summary": "A four-week residency to prototype defensive-acceleration ideas in a real community setting.",
+    "bottleneck": "Cross-field ideas need a place to become prototypes and be tested in context.",
+    "work": "The residency was designed for residents to prototype projects across AI, robotics, governance, self-sovereign tools, cybersecurity, resource allocation and information integrity inside Edge City’s popup village.",
+    "evidence": "The public residency record marks the programme as concluded. Programme completion and demonstrated downstream impact are different claims.",
+    "timing": "October 18 – November 15, 2025",
+    "stage": "completed",
+    "typeNote": "Public catalogue classification",
+    "plRole": "Protocol Labs hosted the residency within Edge City Patagonia.",
+    "published": true,
+    "sourceKind": "public",
+    "resources": [
+      {
+        "title": "d/acc Residency · Edge City Patagonia — residency record",
+        "href": "https://www.researchretreat.org/dacc-residency/"
+      }
+    ],
+    "resourceLabel": "Residency record",
+    "sourceNote": "Completed in San Martín de Los Andes, Argentina. This is the 2025 residency, not an open call or live funding offer."
+  }
+]

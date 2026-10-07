@@ -228,7 +228,9 @@ Server components in this layer: `SiteFooter`, `AuthorCard`, `Breadcrumb`, `Area
 
 ## 6. ATProto, auth, and the editable CMS layer
 
-Editable pages (landing, about, focus areas, etc.) are stored as **ATProto records on plresearch.org's PDS**, served through a Railway-hosted GraphQL indexer, and rendered server-side with static fallbacks.
+Editable pages (landing, focus areas, etc.) are stored as **ATProto records on plresearch.org's PDS**, served through a Railway-hosted GraphQL indexer, and rendered server-side with static fallbacks.
+
+**About is the explicit exception:** `/about/` reads `src/data/about.json` through `src/lib/about.ts`. Edit that JSON through a PR; do not sync the historical `about` PDS record. Its old editor explains the PR workflow, and `/api/pages/about/` returns 410 for reads/writes. The four-layer CMS rules below apply only to pages that still use the CMS.
 
 ### Client modes
 

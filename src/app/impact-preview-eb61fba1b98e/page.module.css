@@ -1,0 +1,51 @@
+/* The global editorial p + blockquote rule has a negative margin and is
+   unlayered, so a Tailwind margin utility cannot override it. Keep the
+   methodology callout spacing local rather than changing article typography. */
+.diagnosisQuote {
+  margin-block: 1.75rem;
+}
+
+/* Keep the methodology gallery on the same page backdrop as the other tabs.
+   Shared focus-area galleries retain their existing surface. */
+.fieldVelocity :global(.instrument-preview-viewport) {
+  background: transparent;
+}
+
+/* The page wrapper uses overflow-hidden, which makes sticky resolve against
+   that box. Keep the loop menu in normal flow (above the fold, under "How we
+   build fields") until that shared intro has scrolled past, then pin it under
+   the 64px site header. */
+.methodologyTabsAnchor {
+  height: 0;
+}
+
+.methodologyTabs {
+  position: relative;
+  z-index: 40;
+  border-bottom: 1px solid rgb(0 0 0 / 0.1);
+  background: #fff;
+}
+
+.methodologyTabsPinned {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  background: rgb(255 255 255 / 0.95);
+  backdrop-filter: blur(4px);
+}
+
+.methodologyTabsSpacer {
+  display: none;
+  height: 6.75rem;
+}
+
+.methodologyTabsPinned + .methodologyTabsSpacer {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .methodologyTabsSpacer {
+    height: 8.25rem;
+  }
+}

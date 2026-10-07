@@ -553,6 +553,13 @@
     "relpermalink": "/publications/benet2014/"
   },
   {
+    "title": "Adam Marblestone — We Are Massively Underinvesting in the Human Brain",
+    "summary": "Juan Benet speaks with Adam Marblestone, CEO and co-founder of Convergent Research, about why neurotech, whole-brain emulation, and nanotech are limited by capital and coordination rather than ideas, why connectomics is the approach most poised to scale, what a full wiring diagram of the brain would unlock for disease and AI, and how far mind uploading really is from the fringe of science.",
+    "date": "2026-08-27T00:00:00.000Z",
+    "type": "talk",
+    "relpermalink": "/talks/jbp-adam-marblestone/"
+  },
+  {
     "title": "Allison Duettmann — Why We Don't Have to Die: Cryonics, Uploading, and Existential Hope",
     "summary": "Juan Benet speaks with Allison Duettmann, CEO of the Foresight Institute, about why cryonics and mind emulation could mean we don't have to die, how whole-brain emulation and connectomics could keep humans compatible with superintelligent AI, how nanotechnology could rebuild the physical world, and the case for Existential Hope — imagining flourishing futures as a precondition for building them.",
     "date": "2026-07-21T00:00:00.000Z",
@@ -1380,7 +1387,7 @@
   },
   {
     "title": "James Tunningley",
-    "summary": "Economies & Governance Co-Lead",
+    "summary": "Economies & Governance Co-Lead · Strategic Philanthropy Lead",
     "date": "",
     "type": "author",
     "relpermalink": "/authors/james-tunningley/"
@@ -1685,6 +1692,13 @@
     "date": "",
     "type": "author",
     "relpermalink": "/authors/zixuan-zhang/"
+  },
+  {
+    "title": "Neurotech as a Frontier for Human Flourishing",
+    "summary": "PL Neuro exists to break bottlenecks: to define the milestones neurotech and NeuroAI need, drive the research that shifts what's believed possible, and route talent and capital to some of humanity's hardest and most important problems.",
+    "date": "2026-09-09T00:00:00.000Z",
+    "type": "blog",
+    "relpermalink": "/blog/neurotech-frontier-human-flourishing/"
   },
   {
     "title": "Securing Fundamental Rights in the Digital Realm: The Infrastructure Freedom Now Runs On",

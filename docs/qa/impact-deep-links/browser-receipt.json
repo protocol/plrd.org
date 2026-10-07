@@ -1,0 +1,546 @@
+{
+  "source_sha": "3262dae0e2da0b74f4389fb2837f998789218f5b",
+  "environment": "isolated local production build; headed Chrome; responsive viewport emulation",
+  "main_case_count": 68,
+  "additional_case_count": 11,
+  "total_case_count": 79,
+  "new_modal_count": 29,
+  "cases": [
+    {
+      "case": "click-url-close",
+      "name": "toolkit-0",
+      "width": 1440,
+      "url": "#intervention/legibility",
+      "title": "Legibility",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "toolkit-1",
+      "width": 1440,
+      "url": "#intervention/connection",
+      "title": "Connection",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "toolkit-2",
+      "width": 1440,
+      "url": "#intervention/funding",
+      "title": "Funding",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "toolkit-3",
+      "width": 1440,
+      "url": "#intervention/policy",
+      "title": "Policy",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "toolkit-4",
+      "width": 1440,
+      "url": "#intervention/infrastructure",
+      "title": "Infrastructure",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "toolkit-5",
+      "width": 1440,
+      "url": "#intervention/translation",
+      "title": "Translation",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "toolkit-6",
+      "width": 1440,
+      "url": "#intervention/culture",
+      "title": "Culture",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "observed-velocity-0",
+      "width": 1440,
+      "url": "#definition/performance_curves",
+      "title": "Performance curves",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "observed-velocity-1",
+      "width": 1440,
+      "url": "#definition/latency_compression",
+      "title": "Latency compression",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "observed-velocity-2",
+      "width": 1440,
+      "url": "#definition/idea_vintage",
+      "title": "Idea vintage",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "observed-velocity-3",
+      "width": 1440,
+      "url": "#definition/revealed_commitments",
+      "title": "Revealed commitments",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "observed-velocity-4",
+      "width": 1440,
+      "url": "#definition/markets",
+      "title": "Markets",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "observed-velocity-5",
+      "width": 1440,
+      "url": "#definition/inflection_points",
+      "title": "Inflection points",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "digital-human-rights-inflection-0",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-communication-that-cannot-be-switched-off",
+      "title": "Communication that cannot be switched off",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "digital-human-rights-inflection-1",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-personhood-without-the-state-in-the-loop",
+      "title": "Personhood without the state in the loop",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "digital-human-rights-inflection-2",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-provenance-becomes-the-default-for-truth",
+      "title": "Provenance becomes the default for truth",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "digital-human-rights-inflection-3",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-agents-run-on-open-rails",
+      "title": "Agents run on open rails",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "economies-governance-inflection-0",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-programmable-government-in-production",
+      "title": "Programmable government in production",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "economies-governance-inflection-1",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-a-binding-decision-at-scale",
+      "title": "A binding decision at scale",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "economies-governance-inflection-2",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-public-goods-become-a-financeable-category",
+      "title": "Public goods become a financeable category",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "economies-governance-inflection-3",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-capital-that-pays-on-verified-outcomes",
+      "title": "Capital that pays on verified outcomes",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "ai-robotics-inflection-0",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-a-frontier-model-trained-off-the-hyperscalers",
+      "title": "A frontier model trained off the hyperscalers",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "ai-robotics-inflection-1",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-agents-transact-on-open-rails",
+      "title": "Agents transact on open rails",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "ai-robotics-inflection-2",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-a-shared-real-world-robotics-data-network",
+      "title": "A shared real-world robotics data network",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "ai-robotics-inflection-3",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-machine-native-money-moves-at-scale",
+      "title": "Machine-native money moves at scale",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "neurotech-inflection-0",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-the-bci-app-store",
+      "title": "The BCI app store",
+      "history": true
+    },
+    {
+      "case": "click-url-close",
+      "name": "neurotech-inflection-1",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-neural-distillation",
+      "title": "Neural distillation",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "neurotech-inflection-2",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-the-neuromorphic-energy-pivot",
+      "title": "The neuromorphic energy pivot",
+      "history": false
+    },
+    {
+      "case": "click-url-close",
+      "name": "neurotech-inflection-3",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-memory-retrieval-in-simulation",
+      "title": "Memory retrieval in simulation",
+      "history": false
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/legibility",
+      "title": "Legibility",
+      "name": "toolkit-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/connection",
+      "title": "Connection",
+      "name": "toolkit-1"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/funding",
+      "title": "Funding",
+      "name": "toolkit-2"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/policy",
+      "title": "Policy",
+      "name": "toolkit-3"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/infrastructure",
+      "title": "Infrastructure",
+      "name": "toolkit-4"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/translation",
+      "title": "Translation",
+      "name": "toolkit-5"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#intervention/culture",
+      "title": "Culture",
+      "name": "toolkit-6"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#definition/performance_curves",
+      "title": "Performance curves",
+      "name": "observed-velocity-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#definition/latency_compression",
+      "title": "Latency compression",
+      "name": "observed-velocity-1"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#definition/idea_vintage",
+      "title": "Idea vintage",
+      "name": "observed-velocity-2"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#definition/revealed_commitments",
+      "title": "Revealed commitments",
+      "name": "observed-velocity-3"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#definition/markets",
+      "title": "Markets",
+      "name": "observed-velocity-4"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#definition/inflection_points",
+      "title": "Inflection points",
+      "name": "observed-velocity-5"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-communication-that-cannot-be-switched-off",
+      "title": "Communication that cannot be switched off",
+      "name": "digital-human-rights-inflection-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-personhood-without-the-state-in-the-loop",
+      "title": "Personhood without the state in the loop",
+      "name": "digital-human-rights-inflection-1"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-provenance-becomes-the-default-for-truth",
+      "title": "Provenance becomes the default for truth",
+      "name": "digital-human-rights-inflection-2"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/digital-human-rights/ip-agents-run-on-open-rails",
+      "title": "Agents run on open rails",
+      "name": "digital-human-rights-inflection-3"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-programmable-government-in-production",
+      "title": "Programmable government in production",
+      "name": "economies-governance-inflection-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-a-binding-decision-at-scale",
+      "title": "A binding decision at scale",
+      "name": "economies-governance-inflection-1"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-public-goods-become-a-financeable-category",
+      "title": "Public goods become a financeable category",
+      "name": "economies-governance-inflection-2"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/economies-governance/ip-capital-that-pays-on-verified-outcomes",
+      "title": "Capital that pays on verified outcomes",
+      "name": "economies-governance-inflection-3"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-a-frontier-model-trained-off-the-hyperscalers",
+      "title": "A frontier model trained off the hyperscalers",
+      "name": "ai-robotics-inflection-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-agents-transact-on-open-rails",
+      "title": "Agents transact on open rails",
+      "name": "ai-robotics-inflection-1"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-a-shared-real-world-robotics-data-network",
+      "title": "A shared real-world robotics data network",
+      "name": "ai-robotics-inflection-2"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/ai-robotics/ip-machine-native-money-moves-at-scale",
+      "title": "Machine-native money moves at scale",
+      "name": "ai-robotics-inflection-3"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-the-bci-app-store",
+      "title": "The BCI app store",
+      "name": "neurotech-inflection-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-neural-distillation",
+      "title": "Neural distillation",
+      "name": "neurotech-inflection-1"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-the-neuromorphic-energy-pivot",
+      "title": "The neuromorphic energy pivot",
+      "name": "neurotech-inflection-2"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 1440,
+      "url": "#inflection/neurotech/ip-memory-retrieval-in-simulation",
+      "title": "Memory retrieval in simulation",
+      "name": "neurotech-inflection-3"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 390,
+      "url": "#intervention/culture",
+      "title": "Culture",
+      "name": "toolkit-6"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 390,
+      "url": "#definition/performance_curves",
+      "title": "Performance curves",
+      "name": "observed-velocity-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 390,
+      "url": "#inflection/neurotech/ip-the-bci-app-store",
+      "title": "The BCI app store",
+      "name": "neurotech-inflection-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 320,
+      "url": "#intervention/culture",
+      "title": "Culture",
+      "name": "toolkit-6"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 320,
+      "url": "#definition/performance_curves",
+      "title": "Performance curves",
+      "name": "observed-velocity-0"
+    },
+    {
+      "case": "fresh-copy-focus-close",
+      "width": 320,
+      "url": "#inflection/neurotech/ip-the-bci-app-store",
+      "title": "The BCI app store",
+      "name": "neurotech-inflection-0"
+    },
+    {
+      "case": "invalid-route",
+      "fragment": "#intervention/no-such-tool"
+    },
+    {
+      "case": "invalid-route",
+      "fragment": "#definition/no-such-definition"
+    },
+    {
+      "case": "invalid-route",
+      "fragment": "#inflection/neurotech/no-such-point"
+    },
+    {
+      "case": "invalid-route",
+      "fragment": "#intervention/%E0%A4%A"
+    },
+    {
+      "case": "chart-methodology-family-exclusion"
+    },
+    {
+      "case": "legacy-cert-family-history",
+      "cert_title": "IERR 2025 \u00b7 Impact Evaluator Research Retreat"
+    },
+    {
+      "case": "normal-cert-from-section-to-culture",
+      "cert_url": "#ierr-2025"
+    },
+    {
+      "case": "section-anchor",
+      "section": "field-velocity"
+    },
+    {
+      "case": "section-anchor",
+      "section": "methodology"
+    },
+    {
+      "case": "section-anchor",
+      "section": "toolkit"
+    },
+    {
+      "case": "section-anchor",
+      "section": "observed-velocity"
+    },
+    {
+      "case": "section-anchor",
+      "section": "inflection-points"
+    },
+    {
+      "case": "section-anchor",
+      "section": "verified-impact"
+    },
+    {
+      "case": "dismiss",
+      "mode": "button"
+    },
+    {
+      "case": "dismiss",
+      "mode": "backdrop"
+    }
+  ]
+}

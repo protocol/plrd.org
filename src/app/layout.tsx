@@ -81,7 +81,7 @@ export default function RootLayout({
     sameAs: [
       'https://protocol.ai',
       'https://bsky.app/profile/plrd.org',
-      'https://github.com/protocol/plrd',
+      siteConfig.githubUrl,
     ],
   }
 

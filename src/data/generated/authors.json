@@ -1565,17 +1565,15 @@
   {
     "slug": "james-tunningley",
     "name": "James Tunningley",
-    "role": "Economies & Governance Co-Lead",
+    "role": "Economies & Governance Co-Lead · Strategic Philanthropy Lead",
     "groups": [
-      "Protocol Labs",
-      "Architect Systems Capital Management",
-      "Architect Global Institute"
+      "Protocol Labs"
     ],
     "user_groups": [
       "Leads"
     ],
     "interests": [],
-    "quote": "Bridging capital, technology, and policy to tackle critical economic and systemic challenges.",
+    "quote": "Building institutions, partnerships and capital around frontier technologies.",
     "social": [
       {
         "icon": "linkedin",
@@ -1588,7 +1586,7 @@
     ],
     "education": null,
     "avatarPath": "/images/authors/james-tunningley/avatar.jpg",
-    "html": "<p>James Tunningley is the <strong>Economies &#x26; Governance Co-Lead</strong> at PL R&#x26;D. James is Senior Advisor at <strong>Architect Systems Capital Management</strong> and Executive Director of <strong>Architect Global Institute</strong>.</p>\n<p>A Semafor Global Economy Principal and Fellow of the Royal Asiatic Society, James formerly served as a Team Lead at Protocol Labs, overseeing multiple teams across the venture and builder portfolios.</p>\n<p>He previously served as a UK Diplomat, Private Secretary to the current Cabinet Secretary, Dame Antonia Romeo DCB, and on the Future Leaders Council of the World Wide Web Foundation.</p>\n<p>James attended Oxford University.</p>\n"
+    "html": "<p>James Tunningley is <strong>Economies &#x26; Governance Co-Lead</strong> at PL R&#x26;D, where he also leads <strong>Philanthropy</strong>.</p>\n<p>Previously, James was a Senior Advisor at <strong>Architect Systems Capital Management</strong> and the <strong>Architect Institute</strong>. Before that, he was a Team Lead at Protocol Labs, where he helped build and oversee its global startup and accelerator portfolio.</p>\n<p>A <strong>Semafor World Economy Principal</strong> and <strong>Fellow of the Royal Asiatic Society</strong>, James previously served as a UK diplomat and as Private Secretary to current UK Cabinet Secretary, Dame Antonia Romeo DCB.</p>\n<p>James read Chinese at <strong>University of Oxford</strong>.</p>\n"
   },
   {
     "slug": "jeromy-johnson",
