@@ -148,6 +148,24 @@ export const INTERVENTION_STAGE_LABEL: Record<InterventionStage, string> = {
   completed: 'Completed',
 }
 
+export const FIELD_LOOP_STEPS = [
+  {
+    n: '01',
+    label: 'Diagnose',
+    blurb: 'Name the binding constraint.',
+  },
+  {
+    n: '02',
+    label: 'Intervene',
+    blurb: 'Apply the lever that matches that bottleneck.',
+  },
+  {
+    n: '03',
+    label: 'Learn',
+    blurb: 'Read field velocity, then check the inflection points.',
+  },
+] as const
+
 export const INTERVENTION_METHOD_STEPS = [
   {
     n: 'Diagnose',

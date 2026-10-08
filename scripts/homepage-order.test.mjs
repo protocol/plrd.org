@@ -40,7 +40,7 @@ test('homepage places the existing latest carousel between focus areas and the i
   assert.ok(teamIndex > nodes.indexOf(pipeline[0]), 'team remains below both sections')
 })
 
-test('homepage gives methodology a full-width invitation under the four focus areas', async (t) => {
+test('homepage previews the three field-building steps above the four focus areas', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => Response.json({
     data: { orgPlresearchPage: { edges: [] } },
   }))
@@ -50,8 +50,14 @@ test('homepage gives methodology a full-width invitation under the four focus ar
   assert.equal(invitations.length, 1, 'one methodology invitation, not a second hero tease')
   const invitation = invitations[0]
   assert.equal(invitation.props.href, '/methodology/')
-  assert.ok(text(invitation).includes('Methodology'))
-  assert.ok(text(invitation).includes('Read the methodology →'))
+  const copy = text(invitation)
+  assert.ok(copy.includes('Methodology'))
+  assert.ok(copy.includes('Learn about our methodology →'))
+  assert.equal(copy.includes('Read the methodology'), false)
+  for (const step of ['01Diagnose', '02Intervene', '03Learn']) {
+    assert.ok(copy.includes(step), `teaser previews ${step}`)
+  }
+  assert.ok(copy.includes('Name the binding constraint.'))
   const label = elements(invitation).find((node) => node.type === 'span' && text(node) === 'Methodology')
   assert.equal(label.props.className.includes('text-[12px]'), true)
   assert.equal(label.props.className.includes('text-dark-blue'), true, '12px label uses the contrast-safe token')
@@ -59,6 +65,6 @@ test('homepage gives methodology a full-width invitation under the four focus ar
   const latestIndex = nodes.findIndex((node) => node.type === 'h2' && text(node) === 'Latest from PL R&D')
   const heroIndex = nodes.findIndex((node) => node.type === 'h1')
   const invitationIndex = nodes.indexOf(invitation)
-  assert.ok(focusIndex > heroIndex && invitationIndex > focusIndex, 'invitation follows the four focus areas')
-  assert.ok(latestIndex > invitationIndex, 'news stays below the invitation')
+  assert.ok(invitationIndex > heroIndex && focusIndex > invitationIndex, 'invitation sits above the four focus areas')
+  assert.ok(latestIndex > focusIndex, 'news stays below the focus areas')
 })

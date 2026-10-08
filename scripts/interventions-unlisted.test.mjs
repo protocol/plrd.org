@@ -54,13 +54,14 @@ test('the public methodology page is indexable and retired catalogue URLs redire
   assert.match(catalogueBlock, /basePath}\/methodology/)
 })
 
-test('the homepage teases the methodology page under the four focus areas', () => {
+test('the homepage teases the methodology page above the four focus areas', () => {
   const home = readFileSync(new URL('../src/app/page.tsx', import.meta.url), 'utf8')
   const focus = home.indexOf('id="focus-areas"')
   const tease = home.indexOf('Explore how we build fields')
   const news = home.indexOf('Latest from PL R&amp;D')
-  assert.ok(focus >= 0 && tease > focus && news > tease, 'the invitation sits under the four focus areas, above news')
-  assert.equal(home.slice(0, focus).includes('Explore how we build fields'), false, 'the hero no longer carries the small tease')
-  assert.match(home, /href="\/methodology\/"/)
-  assert.match(home, /Read the methodology/)
+  assert.ok(tease >= 0 && focus > tease && news > focus, 'the invitation sits above the four focus areas')
+  assert.equal(home.slice(0, tease).includes('id="focus-areas"'), false)
+  assert.match(home, /FIELD_LOOP_STEPS/)
+  assert.match(home, /Learn about our methodology/)
+  assert.doesNotMatch(home, /Read the methodology/)
 })

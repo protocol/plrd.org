@@ -5,6 +5,7 @@ import { publications, talks, listedBlogPosts as blogPosts } from '@/lib/content
 import MarkdownContent from '@/components/MarkdownContent'
 import { fetchPage, getSection } from "@/lib/indexer"
 import { FOCUS_AREA_DESCRIPTIONS } from '@/lib/focus-area-descriptions'
+import { FIELD_LOOP_STEPS, methodologyHref } from '@/lib/interventions'
 
 /** Focus-area hero illustrations floating above each card (replaces the hex cloud). */
 const FOCUS_AREA_IMAGES: Record<string, string> = {
@@ -173,6 +174,38 @@ export default async function HomePage() {
 
     </div>
 
+    <Link
+      href={methodologyHref()}
+      className="block border-y border-black/10 bg-white transition-colors hover:bg-blue/10 dark:border-white/15 dark:bg-neutral-900"
+    >
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 lg:py-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <div className="flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span className="text-[12px] font-semibold uppercase tracking-[.16em] text-dark-blue dark:text-blue">
+              Methodology
+            </span>
+            <span className="font-serif text-[22px] leading-tight tracking-tight sm:text-[24px]">
+              Explore how we build fields
+            </span>
+          </div>
+          <span className="shrink-0 text-[15px] font-semibold">Learn about our methodology →</span>
+        </div>
+        <ol className="grid grid-cols-3 gap-4 border-t border-black/10 pt-4 sm:gap-8 dark:border-white/10">
+          {FIELD_LOOP_STEPS.map((step) => (
+            <li key={step.label} className="min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="text-[11px] font-semibold tracking-[0.16em] text-gray-500">{step.n}</span>
+                <span className="text-[15px] font-semibold tracking-tight text-black sm:text-[17px] dark:text-white">
+                  {step.label}
+                </span>
+              </div>
+              <p className="mt-1 hidden text-[13px] leading-snug text-gray-500 sm:block">{step.blurb}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </Link>
+
     {/* ── Focus Areas (full-bleed gray) ── */}
     <div id="focus-areas" className="bg-gray-100 scroll-mt-20">
       <div className="max-w-6xl mx-auto px-6 pb-20 lg:pb-28 pt-16 lg:pt-24">
@@ -215,19 +248,6 @@ export default async function HomePage() {
         </div>
       </div>
     </div>
-
-    <Link
-      href="/methodology/"
-      className="block border-y border-black/10 bg-white hover:bg-blue/10 transition-colors dark:border-white/15 dark:bg-neutral-900"
-    >
-      <div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap gap-4 items-center justify-between">
-        <div>
-          <span className="text-[12px] uppercase tracking-[.16em] text-dark-blue dark:text-blue mr-4">Methodology</span>
-          <span className="font-serif text-[24px]">Explore how we build fields</span>
-        </div>
-        <span className="text-[15px] font-semibold">Read the methodology →</span>
-      </div>
-    </Link>
 
     <div className="max-w-6xl mx-auto px-6">
       {/* ── Latest Insights ── */}
