@@ -148,6 +148,24 @@ export const INTERVENTION_STAGE_LABEL: Record<InterventionStage, string> = {
   completed: 'Completed',
 }
 
+export const FIELD_LOOP_STEPS = [
+  {
+    n: '01',
+    label: 'Diagnose',
+    blurb: 'Name the binding constraint.',
+  },
+  {
+    n: '02',
+    label: 'Intervene',
+    blurb: 'Apply the lever that matches that bottleneck.',
+  },
+  {
+    n: '03',
+    label: 'Learn',
+    blurb: 'Read field velocity, then check the inflection points.',
+  },
+] as const
+
 export const INTERVENTION_METHOD_STEPS = [
   {
     n: 'Diagnose',
@@ -434,9 +452,11 @@ export function catalogHref(): string {
   return `${INTERVENTIONS_BASE_PATH}/`
 }
 
-/** The kept methodology page. Catalogue routes redirect here. */
+/** Public methodology page. The old unlisted preview path redirects here. */
+export const METHODOLOGY_PATH = '/methodology/'
+
 export function methodologyHref(): string {
-  return `${INTERVENTIONS_BASE_PATH}/methodology/`
+  return METHODOLOGY_PATH
 }
 
 /** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */

@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: url(''), changeFrequency: 'weekly', priority: 1 },
     { url: url('about'), changeFrequency: 'monthly', priority: 0.7 },
+    { url: url('methodology'), changeFrequency: 'monthly', priority: 0.7 },
     { url: url('areas'), changeFrequency: 'monthly', priority: 0.8 },
     { url: url('insights'), changeFrequency: 'weekly', priority: 0.8 },
     { url: url('authors'), changeFrequency: 'weekly', priority: 0.7 },

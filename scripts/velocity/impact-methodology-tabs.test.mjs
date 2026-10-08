@@ -76,6 +76,8 @@ test('Diagnose leads with bottlenecks; Learn keeps field velocity without the co
   assert.match(interveneText, /not a seventh/)
   assert.doesNotMatch(interveneText, /Documenting our hand/)
   assert.match(learnText, /Field velocity/)
+  assert.match(learnText, /Work in progress/)
+  assert.match(learnText, /Some charts will change/)
   assert.doesNotMatch(learnText, /Documenting our hand|Verified Impact \+ Hypercerts|See all impact claims/)
   assert.doesNotMatch(learnText, /Every intervention is a hypothesis/)
   assert.doesNotMatch(learnText, /Six ways to read field velocity/)
