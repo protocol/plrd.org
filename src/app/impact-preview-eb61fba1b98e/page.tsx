@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import styles from './page.module.css'
 import { INTERVENTION_GLYPHS, ItemGlyph, type ItemIcon } from './InterveneIcons'
-import Breadcrumb from '@/components/Breadcrumb'
-import { catalogHref } from '@/lib/interventions'
+import { methodologyHref } from '@/lib/interventions'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
 import ImpactMethodologyTabs from '@/components/ImpactMethodologyTabs'
@@ -13,7 +12,7 @@ export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Intervention methodology',
-  alternates: { canonical: `${catalogHref()}methodology/` },
+  alternates: { canonical: methodologyHref() },
   description:
     'How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.',
   robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
@@ -188,12 +187,7 @@ export default async function ImpactPage({
   return (
     <div className="overflow-hidden">
       <div className="mx-auto max-w-6xl px-6 pt-8">
-        <Breadcrumb items={[
-          { label: 'Interventions', href: catalogHref() },
-          { label: 'Methodology' },
-        ]} />
-
-        <section className="pb-12 pt-10 lg:pb-16 lg:pt-14">
+        <section className="pb-12 pt-6 lg:pb-16 lg:pt-10">
           <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
             Our impact methodology
           </div>

@@ -24,30 +24,21 @@ test('nested methodology keeps its full-bleed footer without extra shell padding
   assert.ok(!patterns.some(pattern => pattern.test('/interventions-preview-872d1767c376/')))
 })
 
-test('Methodology CTA uses document navigation rather than the program-modal interceptor', () => {
-  const Index = source('components/InterventionsIndex.tsx').default
-  const link = elements(Index()).find(node => node.props.href === '/interventions-preview-872d1767c376/methodology/')
-  assert.equal(link.type, 'a', 'Next Link would match the dynamic intercepted program slug and leave the catalog displayed')
-})
-
 function elements(node) {
   if (!React.isValidElement(node)) return []
   return [node, ...React.Children.toArray(node.props.children).flatMap(elements)]
 }
 
-test('catalog methodology destination serves the approved tabbed page and its parent breadcrumb', async (t) => {
+test('methodology page serves the approved tabbed page without a catalogue parent', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
   t.mock.method(console, 'warn', () => {})
   const Page = source(route).default
   const tree = await Page({ searchParams: Promise.resolve({ area: 'neurotech' }) })
   const nodes = elements(tree)
   const Tabs = source('components/ImpactMethodologyTabs.tsx').default
-  assert.equal(nodes.filter(node => node.type === Tabs).length, 1, 'Methodology must use the approved three-tab page, not the catalog placeholder')
+  assert.equal(nodes.filter(node => node.type === Tabs).length, 1, 'Methodology must use the approved three-tab page')
   const Breadcrumb = source('components/Breadcrumb.tsx').default
-  assert.deepEqual(nodes.find(node => node.type === Breadcrumb).props.items, [
-    { label: 'Interventions', href: '/interventions-preview-872d1767c376/' },
-    { label: 'Methodology' },
-  ])
+  assert.equal(nodes.some(node => node.type === Breadcrumb), false, 'no Interventions parent once the catalogue is removed')
   assert.deepEqual(nodes.filter(node => ['diagnose', 'intervene', 'learn'].includes(node.props.id)).map(node => node.props.id), ['diagnose', 'intervene', 'learn'])
   const Dashboard = source('components/ImpactDashboardV2.tsx').default
   assert.equal(nodes.find(node => node.type === Dashboard).props.initialArea, 'neurotech')
