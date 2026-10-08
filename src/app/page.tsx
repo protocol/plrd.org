@@ -178,19 +178,11 @@ export default async function HomePage() {
       href={methodologyHref()}
       className="block border-y border-black/10 bg-white transition-colors hover:bg-blue/10 dark:border-white/15 dark:bg-neutral-900"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 lg:py-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-          <div className="flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="text-[12px] font-semibold uppercase tracking-[.16em] text-dark-blue dark:text-blue">
-              Methodology
-            </span>
-            <span className="font-serif text-[22px] leading-tight tracking-tight sm:text-[24px]">
-              Explore how we build fields
-            </span>
-          </div>
-          <span className="shrink-0 text-[15px] font-semibold">Learn about our methodology →</span>
-        </div>
-        <ol className="grid grid-cols-3 gap-4 border-t border-black/10 pt-4 sm:gap-8 dark:border-white/10">
+      <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-5 sm:gap-6 lg:py-6">
+        <p className="text-[12px] font-semibold uppercase tracking-[.16em] text-dark-blue dark:text-blue">
+          How we build fields
+        </p>
+        <ol className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-8">
           {FIELD_LOOP_STEPS.map((step) => (
             <li key={step.label} className="min-w-0">
               <div className="flex items-baseline gap-2">
@@ -199,10 +191,11 @@ export default async function HomePage() {
                   {step.label}
                 </span>
               </div>
-              <p className="mt-1 hidden text-[13px] leading-snug text-gray-500 sm:block">{step.blurb}</p>
+              <p className="mt-1 text-[13px] leading-snug text-gray-500">{step.blurb}</p>
             </li>
           ))}
         </ol>
+        <span className="text-[15px] font-semibold">Learn about our methodology →</span>
       </div>
     </Link>
 
