@@ -39,3 +39,26 @@ test('homepage places the existing latest carousel between focus areas and the i
   assert.ok(nodes.indexOf(pipeline[0]) > chasmIndex, 'graphic stays with its heading')
   assert.ok(teamIndex > nodes.indexOf(pipeline[0]), 'team remains below both sections')
 })
+
+test('homepage gives methodology a full-width invitation under the four focus areas', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({
+    data: { orgPlresearchPage: { edges: [] } },
+  }))
+  const nodes = elements(await HomePage())
+  const isLink = (node) => node.type === 'a' || node.type?.render?.name === 'LinkComponent'
+  const invitations = nodes.filter((node) => isLink(node) && text(node).includes('Explore how we build fields'))
+  assert.equal(invitations.length, 1, 'one methodology invitation, not a second hero tease')
+  const invitation = invitations[0]
+  assert.equal(invitation.props.href, '/methodology/')
+  assert.ok(text(invitation).includes('Methodology'))
+  assert.ok(text(invitation).includes('Read the methodology →'))
+  const label = elements(invitation).find((node) => node.type === 'span' && text(node) === 'Methodology')
+  assert.equal(label.props.className.includes('text-[12px]'), true)
+  assert.equal(label.props.className.includes('text-dark-blue'), true, '12px label uses the contrast-safe token')
+  const focusIndex = nodes.findIndex((node) => node.props?.id === 'focus-areas')
+  const latestIndex = nodes.findIndex((node) => node.type === 'h2' && text(node) === 'Latest from PL R&D')
+  const heroIndex = nodes.findIndex((node) => node.type === 'h1')
+  const invitationIndex = nodes.indexOf(invitation)
+  assert.ok(focusIndex > heroIndex && invitationIndex > focusIndex, 'invitation follows the four focus areas')
+  assert.ok(latestIndex > invitationIndex, 'news stays below the invitation')
+})

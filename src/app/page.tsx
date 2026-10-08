@@ -168,16 +168,6 @@ export default async function HomePage() {
               </svg>
             </a>
           </div>
-          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-            <p className="text-[15px] text-gray-600">Explore how we build fields</p>
-            <Link
-              href="/methodology/"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-[14px] font-semibold text-gray-900 transition-colors hover:border-gray-400 hover:bg-gray-50"
-            >
-              Methodology
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -225,6 +215,19 @@ export default async function HomePage() {
         </div>
       </div>
     </div>
+
+    <Link
+      href="/methodology/"
+      className="block border-y border-black/10 bg-white hover:bg-blue/10 transition-colors dark:border-white/15 dark:bg-neutral-900"
+    >
+      <div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap gap-4 items-center justify-between">
+        <div>
+          <span className="text-[12px] uppercase tracking-[.16em] text-dark-blue dark:text-blue mr-4">Methodology</span>
+          <span className="font-serif text-[24px]">Explore how we build fields</span>
+        </div>
+        <span className="text-[15px] font-semibold">Read the methodology →</span>
+      </div>
+    </Link>
 
     <div className="max-w-6xl mx-auto px-6">
       {/* ── Latest Insights ── */}
