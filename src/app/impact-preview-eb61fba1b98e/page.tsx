@@ -5,7 +5,6 @@ import { methodologyHref } from '@/lib/interventions'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
 import ImpactMethodologyTabs from '@/components/ImpactMethodologyTabs'
-import { fetchLiveOutputs } from '@/lib/field-velocity-live'
 import { isFocusAreaKey, loadFieldVelocity } from '@/lib/field-velocity-data'
 
 export const revalidate = 60
@@ -163,8 +162,10 @@ export default async function ImpactPage({
 }: {
   searchParams: Promise<{ area?: string | string[] }>
 }) {
-  const [liveOutputs, fieldVelocity, query] = await Promise.all([
-    fetchLiveOutputs(),
+  // The Learn tab reads field velocity, not the live contribution metrics.
+  // Those fetches (Glow weeks, GainForest, Simocracy) were blocking first paint
+  // of /methodology/ for several seconds and the result was never rendered.
+  const [fieldVelocity, query] = await Promise.all([
     loadFieldVelocity(),
     searchParams,
   ])
@@ -398,12 +399,19 @@ export default async function ImpactPage({
                   velocity across the instruments that apply to it. The
                   inflection points below are the markers we track.
                 </p>
+
+                <p className="mt-4 text-[13px] leading-relaxed text-gray-500">
+                  <span className="font-semibold uppercase tracking-[0.14em] text-gray-400">
+                    Work in progress.
+                  </span>{' '}
+                  These readings are still being settled. Some charts will change.
+                </p>
               </div>
 
               <ImpactDashboardV2
                 key={initialArea}
                 initialArea={initialArea}
-                liveOutputs={liveOutputs}
+                liveOutputs={{}}
                 marketSignals={marketSignals}
                 recordsByArea={recordsByArea}
                 measurementSeriesByArea={measurementSeriesByArea}

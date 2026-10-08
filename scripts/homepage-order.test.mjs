@@ -40,7 +40,7 @@ test('homepage places the existing latest carousel between focus areas and the i
   assert.ok(teamIndex > nodes.indexOf(pipeline[0]), 'team remains below both sections')
 })
 
-test('homepage previews the three field-building steps above the four focus areas', async (t) => {
+test('homepage previews the three field-building steps under the four focus areas', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => Response.json({
     data: { orgPlresearchPage: { edges: [] } },
   }))
@@ -71,6 +71,6 @@ test('homepage previews the three field-building steps above the four focus area
   const latestIndex = nodes.findIndex((node) => node.type === 'h2' && text(node) === 'Latest from PL R&D')
   const heroIndex = nodes.findIndex((node) => node.type === 'h1')
   const invitationIndex = nodes.indexOf(invitation)
-  assert.ok(invitationIndex > heroIndex && focusIndex > invitationIndex, 'invitation sits above the four focus areas')
-  assert.ok(latestIndex > focusIndex, 'news stays below the focus areas')
+  assert.ok(invitationIndex > focusIndex && focusIndex > heroIndex, 'invitation sits under the four focus areas')
+  assert.ok(latestIndex > invitationIndex, 'news stays below the methodology band')
 })
