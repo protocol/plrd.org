@@ -41,7 +41,59 @@ const nextConfig: NextConfig = {
     ]
   },
   async redirects() {
+    const methodology = `${previewConfig.basePath}/methodology/`
     return [
+      // The interventions catalogue is retired. Keep the methodology page and
+      // send old catalogue URLs there so shared links do not 404.
+      {
+        source: previewConfig.basePath,
+        destination: methodology,
+        permanent: false,
+      },
+      {
+        source: `${previewConfig.basePath}/`,
+        destination: methodology,
+        permanent: false,
+      },
+      {
+        source: `${previewConfig.basePath}/data`,
+        destination: methodology,
+        permanent: false,
+      },
+      {
+        source: `${previewConfig.basePath}/data/`,
+        destination: methodology,
+        permanent: false,
+      },
+      // Named catalogue slugs only. A wildcard would also match methodology
+      // and redirect the kept page onto itself.
+      ...[
+        'juan-benet-neuropodcast',
+        'bci-roadmap',
+        'pl-neuro-salon',
+        'bci-founders-retreat',
+        'connectomics-workshop',
+        'ierr-2025',
+        'dacc-2025',
+        'sovereign-ai',
+        'evaluation-commons',
+        'broad-listening',
+        'ai4pg',
+        'ai4cop',
+        'evidence-research',
+        'compute-alliance',
+        'eg-fellowship',
+        'connectomics-benchmark',
+        'macaque-projectome',
+        'discovery-challenge',
+        'mouse-connectome',
+        'neuroai-commons',
+        'virtual-neuro',
+        'neuroai-fellows',
+      ].flatMap((slug) => ([
+        { source: `${previewConfig.basePath}/${slug}`, destination: methodology, permanent: false },
+        { source: `${previewConfig.basePath}/${slug}/`, destination: methodology, permanent: false },
+      ])),
       // Preserve shared preview links when the approved Neuro article goes live.
       {
         source: '/blog/preview-neurotech-4972678300d0a37a2a1e0b9d1b40e852/',

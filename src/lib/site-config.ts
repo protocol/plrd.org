@@ -23,6 +23,7 @@ export const mainNav: NavItem[] = [
     url: '#',
     children: [
       { name: 'About us', url: '/about/' },
+      { name: 'Methodology', url: '/interventions-preview-872d1767c376/methodology/' },
       { name: 'Protocol Labs', url: 'https://protocol.ai' },
     ],
   },

@@ -434,6 +434,11 @@ export function catalogHref(): string {
   return `${INTERVENTIONS_BASE_PATH}/`
 }
 
+/** The kept methodology page. Catalogue routes redirect here. */
+export function methodologyHref(): string {
+  return `${INTERVENTIONS_BASE_PATH}/methodology/`
+}
+
 /** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */
 export const INTERVENTION_AREA_ACCENT: Record<InterventionAreaSlug, string> = {
   'rnd-acceleration': '#3b7385',

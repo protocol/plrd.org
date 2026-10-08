@@ -6,38 +6,47 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { source } from './velocity/test-source-loader.mjs'
 
 const catalog = source('lib/interventions.ts')
+const base = catalog.INTERVENTIONS_BASE_PATH
 
-test('catalogue lives only at an obscure shareable preview prefix', () => {
-  assert.match(catalog.INTERVENTIONS_BASE_PATH || '', /^\/interventions-preview-[a-f0-9]{12}$/)
-  assert.equal(catalog.catalogHref(), catalog.INTERVENTIONS_BASE_PATH + '/')
-  assert.equal(catalog.publicInterventionHref('bci-roadmap'), catalog.INTERVENTIONS_BASE_PATH + '/bci-roadmap/')
+test('methodology stays at the obscure preview prefix; the catalogue routes are gone', () => {
+  assert.match(base || '', /^\/interventions-preview-[a-f0-9]{12}$/)
+  assert.equal(catalog.methodologyHref(), base + '/methodology/')
   assert.ok(!existsSync(new URL('../src/app/interventions/page.tsx', import.meta.url)))
   assert.ok(!existsSync(new URL('../src/app/api/interventions/route.ts', import.meta.url)))
-  assert.ok(existsSync(new URL('../src/app'+catalog.INTERVENTIONS_BASE_PATH+'/data/route.ts', import.meta.url)))
+  assert.ok(!existsSync(new URL('../src/app' + base + '/page.tsx', import.meta.url)), 'catalogue index is removed')
+  assert.ok(!existsSync(new URL('../src/app' + base + '/data/route.ts', import.meta.url)), 'catalogue JSON endpoint is removed')
+  assert.ok(!existsSync(new URL('../src/app' + base + '/[slug]/page.tsx', import.meta.url)), 'program pages are removed')
+  assert.ok(existsSync(new URL('../src/app' + base + '/methodology/page.tsx', import.meta.url)))
 })
 
-test('preview is absent from navigation search sitemap and focus-area promotion', async () => {
+test('About us dropdown includes Methodology and nothing else promotes the catalogue', () => {
   const { mainNav, footerNav } = source('lib/site-config.ts')
-  assert.ok(![...mainNav,...footerNav].some(item => /intervention/i.test(item.name)))
-  const footer = readFileSync(new URL('../src/components/SiteFooter.tsx', import.meta.url),'utf8')
+  const about = mainNav.find(item => item.name === 'About us')
+  assert.deepEqual(about.children.map(item => item.name), ['About us', 'Methodology', 'Protocol Labs'])
+  assert.equal(about.children.find(item => item.name === 'Methodology').url, base + '/methodology/')
+  assert.ok(![...mainNav, ...footerNav].some(item => /intervention/i.test(item.name)))
+  assert.ok(!footerNav.some(item => item.url.includes('/interventions')))
+  const footer = readFileSync(new URL('../src/components/SiteFooter.tsx', import.meta.url), 'utf8')
   assert.doesNotMatch(footer, /href="\/interventions\//)
   const sitemap = source('app/sitemap.ts').default()
   assert.ok(!sitemap.some(item => /\/interventions/.test(item.url)))
-  const index = JSON.parse(readFileSync(new URL('../public/search-index.json', import.meta.url),'utf8'))
+  const index = JSON.parse(readFileSync(new URL('../public/search-index.json', import.meta.url), 'utf8'))
   assert.ok(!index.some(item => /\/interventions/.test(item.relpermalink)))
   const Area = source('components/FocusAreaInterventions.tsx').default
   assert.equal(renderToStaticMarkup(React.createElement(Area, { area: 'neurotech' })), '')
   const Hero = source('components/AreaHeroActions.tsx').default
-  assert.doesNotMatch(renderToStaticMarkup(React.createElement(Hero, {areaSlug:'neurotech',showOpportunitySpaces:true,opportunityHref:'#opportunity-spaces'})), />Interventions</)
+  assert.doesNotMatch(renderToStaticMarkup(React.createElement(Hero, { areaSlug: 'neurotech', showOpportunitySpaces: true, opportunityHref: '#opportunity-spaces' })), />Interventions</)
 })
 
-test('all preview pages inherit explicit noindex and nofollow including Googlebot', () => {
-  assert.ok(catalog.INTERVENTIONS_BASE_PATH, 'preview path absent')
-  const { metadata } = source('app'+catalog.INTERVENTIONS_BASE_PATH+'/layout.tsx')
-  assert.deepEqual(metadata.robots, {index:false,follow:false,googleBot:{index:false,follow:false}})
-  const config = readFileSync(new URL('../next.config.ts', import.meta.url),'utf8')
-  assert.match(config, /previewConfig.basePath/)
+test('methodology inherits explicit noindex and retired catalogue URLs redirect to it', () => {
+  const { metadata } = source('app' + base + '/layout.tsx')
+  assert.deepEqual(metadata.robots, { index: false, follow: false, googleBot: { index: false, follow: false } })
+  const config = readFileSync(new URL('../next.config.ts', import.meta.url), 'utf8')
+  assert.match(config, /previewConfig\.basePath/)
   assert.match(config, /X-Robots-Tag/)
-  const api = source('app'+catalog.INTERVENTIONS_BASE_PATH+'/data/route.ts')
-  assert.equal(typeof api.GET, 'function')
+  assert.match(config, /The interventions catalogue is retired/)
+  assert.match(config, /destination: methodology/)
+  assert.match(config, /'neuroai-fellows'/)
+  const catalogueBlock = config.slice(config.indexOf('The interventions catalogue is retired'), config.indexOf('Preserve shared preview links'))
+  assert.doesNotMatch(catalogueBlock, /:slug/)
 })

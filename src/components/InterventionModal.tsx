@@ -11,13 +11,13 @@ import {
   INTERVENTION_AREA_ICON,
   INTERVENTION_AREA_LABEL,
   INTERVENTION_TYPES,
-  catalogHref,
+  methodologyHref,
   type PublicIntervention,
 } from '@/lib/interventions'
 
 function closeModal(router: ReturnType<typeof useRouter>) {
   if (window.history.length > 1) router.back()
-  else router.push(catalogHref())
+  else router.push(methodologyHref())
 }
 
 export default function InterventionModal({ item }: { item: PublicIntervention }) {
@@ -131,10 +131,7 @@ export default function InterventionModal({ item }: { item: PublicIntervention }
             <Link href={INTERVENTION_AREA_HREF[item.area]} className="text-blue hover:underline">
               {INTERVENTION_AREA_LABEL[item.area]} →
             </Link>
-            <Link href={catalogHref()} className="text-blue hover:underline">
-              Browse the catalog →
-            </Link>
-            <Link href={`${catalogHref()}methodology/`} className="text-blue hover:underline">
+            <Link href={methodologyHref()} className="text-blue hover:underline">
               Methodology →
             </Link>
           </div>

@@ -7,15 +7,8 @@ export const metadata: Metadata = {
 
 export default function InterventionsLayout({
   children,
-  modal,
 }: {
   children: ReactNode
-  modal: ReactNode
 }) {
-  return (
-    <>
-      {children}
-      {modal}
-    </>
-  )
+  return children
 }
