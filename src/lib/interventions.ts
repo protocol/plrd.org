@@ -434,9 +434,11 @@ export function catalogHref(): string {
   return `${INTERVENTIONS_BASE_PATH}/`
 }
 
-/** The kept methodology page. Catalogue routes redirect here. */
+/** Public methodology page. The old unlisted preview path redirects here. */
+export const METHODOLOGY_PATH = '/methodology/'
+
 export function methodologyHref(): string {
-  return `${INTERVENTIONS_BASE_PATH}/methodology/`
+  return METHODOLOGY_PATH
 }
 
 /** Restrained field accents for glyphs, map nodes, and hover rules — not page color. */

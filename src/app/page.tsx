@@ -168,6 +168,16 @@ export default async function HomePage() {
               </svg>
             </a>
           </div>
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="text-[15px] text-gray-600">Explore how we build fields</p>
+            <Link
+              href="/methodology/"
+              className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-[14px] font-semibold text-gray-900 transition-colors hover:border-gray-400 hover:bg-gray-50"
+            >
+              Methodology
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </div>
 

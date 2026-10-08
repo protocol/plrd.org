@@ -17,7 +17,7 @@ const FULLSCREEN_PATTERNS = [
 // out-of-place white bar.
 const NO_BOTTOM_PAD_PATTERNS = [
   /^\/impact-preview-[^/]+\/?$/,
-  /^\/interventions-preview-[^/]+\/methodology\/?$/,
+  /^\/methodology\/?$/,
 ]
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {

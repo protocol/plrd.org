@@ -1834,6 +1834,13 @@
     "relpermalink": "/about/"
   },
   {
+    "title": "Methodology",
+    "summary": "How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/methodology/"
+  },
+  {
     "title": "Team",
     "summary": "Meet the Protocol Labs R&D team",
     "date": "",

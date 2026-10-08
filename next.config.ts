@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     // Defense in depth; Atlas must emit noindex itself for external responses.
+    // The old interventions preview prefix stays noindex because every path
+    // under it now redirects to the public methodology page.
     return [{
       source: `${previewConfig.basePath}/:path*`,
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
@@ -41,10 +43,21 @@ const nextConfig: NextConfig = {
     ]
   },
   async redirects() {
-    const methodology = `${previewConfig.basePath}/methodology/`
+    const methodology = '/methodology/'
     return [
-      // The interventions catalogue is retired. Keep the methodology page and
-      // send old catalogue URLs there so shared links do not 404.
+      // The methodology page is public. Old cryptic and catalogue URLs redirect
+      // there so shared links do not 404. The retired catalogue prefix stays
+      // noindex above.
+      {
+        source: `${previewConfig.basePath}/methodology`,
+        destination: methodology,
+        permanent: true,
+      },
+      {
+        source: `${previewConfig.basePath}/methodology/`,
+        destination: methodology,
+        permanent: true,
+      },
       {
         source: previewConfig.basePath,
         destination: methodology,

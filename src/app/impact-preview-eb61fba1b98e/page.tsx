@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   alternates: { canonical: methodologyHref() },
   description:
     'How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.',
-  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 }
 
 const bottlenecks = [
@@ -239,7 +238,7 @@ export default async function ImpactPage({
                     key={title}
                     className="rounded-2xl border border-black/10 bg-white px-5 py-6 sm:px-6 sm:py-8"
                   >
-                    <div className="text-[28px] font-semibold leading-[1.05] tracking-[-0.03em] text-black sm:text-[32px]">
+                    <div className="text-[22px] font-semibold leading-[1.1] tracking-[-0.02em] text-black sm:text-[24px]">
                       {title}
                     </div>
                     <p className="mt-3 text-[15px] leading-relaxed text-gray-600">

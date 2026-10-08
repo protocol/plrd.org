@@ -36,11 +36,12 @@ for (const { key } of FOCUS_AREAS) {
   })
 }
 
-test('the exact unlisted overview retains all fields, charts, methodology and noindex metadata', async (t) => {
+test('the exact unlisted overview retains all fields, charts, methodology and public metadata', async (t) => {
   offlineProviders(t)
   assert.equal(FIELD_VELOCITY_OVERVIEW, '/impact-preview-eb61fba1b98e/')
   const { default: Overview, metadata } = source(`app${FIELD_VELOCITY_OVERVIEW}page.tsx`)
-  assert.deepEqual(metadata.robots, { index: false, follow: false, googleBot: { index: false, follow: false } })
+  assert.equal(metadata.alternates.canonical, '/methodology/')
+  assert.equal(metadata.robots, undefined, 'the page is public; the old preview path redirects to /methodology/')
   for (const { key } of FOCUS_AREAS) {
     const nodes = elements(await Overview({ searchParams: Promise.resolve({ area: key }) }))
     const dashboard = nodes.find(node => node.type === Dashboard)

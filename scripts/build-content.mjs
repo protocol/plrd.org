@@ -440,6 +440,7 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     })),
     // Static site pages
     { title: 'About', summary: 'About Protocol Labs Research & Development', date: '', type: 'page', relpermalink: '/about/' },
+    { title: 'Methodology', summary: 'How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.', date: '', type: 'page', relpermalink: '/methodology/' },
     { title: 'Team', summary: 'Meet the Protocol Labs R&D team', date: '', type: 'page', relpermalink: '/authors/' },
     { title: 'Publications', summary: 'Research papers and academic publications', date: '', type: 'page', relpermalink: '/publications/' },
     { title: 'Talks', summary: 'Conference talks and presentations', date: '', type: 'page', relpermalink: '/talks/' },
