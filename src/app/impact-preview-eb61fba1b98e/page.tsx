@@ -138,24 +138,32 @@ const interventions = [
     evidence:
       'Standards adopted, procurement enabled, barriers removed, and third parties increasingly able to deploy or replicate what works.',
   },
-] as const
-
-// The spanning conditions that run through every lever, shown as banners under
-// the six levers rather than as a seventh category.
-const spanningLayers = [
   {
     title: 'Culture',
-    body: 'The spanning condition, not a seventh category. It shapes what people notice, believe is possible, and choose to join — across all six levers.',
+    subtitle: 'Make the field worth joining.',
+    failure:
+      'The work exists, but the stories and norms around it do not make people want to join, stay, or celebrate what is improving.',
+    actions: [
+      { icon: 'flag', label: 'Field stories' },
+      { icon: 'people', label: 'Communities of practice' },
+      { icon: 'doc', label: 'Public writing' },
+      { icon: 'trophy', label: 'Recognition' },
+      { icon: 'arrow', label: 'Open rituals' },
+      { icon: 'check', label: 'Shared norms' },
+    ] as { icon: ItemIcon; label: string }[],
+    evidence:
+      'More people can picture themselves in the field, stay in it, and treat improving culture as something worth celebrating.',
   },
-  {
-    title: 'Narrative',
-    body: 'The stories that make a field worth joining: how the opportunity is told, and who can picture themselves in it.',
-  },
+] as const
+
+// Talent still runs through every lever. Culture, including the stories that
+// make a field worth joining, is a lever of its own.
+const spanningLayers = [
   {
     title: 'Talent',
     body: 'The people who carry a field — discovering it, joining networks, receiving resources, building infrastructure, running pilots, creating institutions.',
   },
-]
+] as const
 
 export default async function ImpactPage({
   searchParams,
@@ -249,16 +257,6 @@ export default async function ImpactPage({
                 ))}
               </div>
 
-              <p
-                className={`${styles.diagnosisQuote} max-w-3xl text-[15px] leading-relaxed text-gray-500`}
-              >
-                Binding question, after the blockers:{' '}
-                <span className="font-medium text-black">
-                  which of these is preventing this field from moving faster
-                  now?
-                </span>
-              </p>
-
             </div>
           </div>
         </section>
@@ -272,7 +270,7 @@ export default async function ImpactPage({
               </div>
 
               <h2 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.025em] text-black">
-                Six repeatable ways to unblock a field.
+                Seven repeatable ways to unblock a field.
               </h2>
 
               <p className="mt-5 text-[17px] leading-[1.65] text-gray-600">
