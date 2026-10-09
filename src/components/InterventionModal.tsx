@@ -11,13 +11,14 @@ import {
   INTERVENTION_AREA_ICON,
   INTERVENTION_AREA_LABEL,
   INTERVENTION_TYPES,
+  catalogHref,
   methodologyHref,
   type PublicIntervention,
 } from '@/lib/interventions'
 
 function closeModal(router: ReturnType<typeof useRouter>) {
   if (window.history.length > 1) router.back()
-  else router.push(methodologyHref())
+  else router.push(catalogHref())
 }
 
 export default function InterventionModal({ item }: { item: PublicIntervention }) {
