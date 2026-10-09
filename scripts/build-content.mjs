@@ -455,6 +455,7 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Impact Dashboard', summary: 'Ecosystem impact metrics across villages and funding', date: '', type: 'page', relpermalink: '/areas/economies-governance/impact/' },
     { title: 'Project Explorer', summary: '242+ teams building decentralized coordination and public goods', date: '', type: 'page', relpermalink: '/areas/economies-governance/projects/' },
     { title: 'Dependency Graph', summary: 'Strategic dependency trees across 4 inflection points', date: '', type: 'page', relpermalink: '/areas/economies-governance/dependency-graph/' },
+    { title: 'Why sovereign AI', summary: 'A one-page brief: six reasons a country should run, test and answer for its own AI, each with the evidence behind it', date: '', type: 'page', relpermalink: '/areas/economies-governance/briefs/why-sovereign-ai/' },
   ]
   return items
 }

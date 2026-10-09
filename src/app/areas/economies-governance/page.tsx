@@ -16,6 +16,7 @@ import { fetchPage, getSection, fetchOpportunitySpaces } from '@/lib/indexer'
 import { fetchSimocracyStats } from '@/lib/simocracy'
 import { fetchGainforestStats } from '@/lib/gainforest'
 import { fetchGlowStats } from '@/lib/glow'
+import { briefs, briefHref } from '@/lib/briefs'
 
 type OpportunityCard = {
   id: string
@@ -287,6 +288,17 @@ export default async function FA2MainPage() {
           title={exploreDepgraph?.title || "Dependency Graph"}
           description={exploreDepgraph?.subtitle || "Strategic dependency trees across 4 inflection points."}
         />
+        {/* Briefs sit quietly at the foot of Explore, one full-width row each. */}
+        {briefs.map((brief) => (
+          <div key={brief.slug} className="md:col-span-2">
+            <ExploreCard
+              href={briefHref(brief.slug)}
+              label="Brief"
+              title={brief.title}
+              description={brief.summary}
+            />
+          </div>
+        ))}
       </div>
 
       {/* How to Engage */}
