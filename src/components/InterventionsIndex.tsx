@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/Breadcrumb'
 import FeaturedInterventions from '@/components/FeaturedInterventions'
 import PortfolioMap from '@/components/PortfolioMap'
-import { publishedInterventions, catalogHref } from '@/lib/interventions'
+import { publishedInterventions, methodologyHref } from '@/lib/interventions'
 
 export default function InterventionsIndex() {
   const items = publishedInterventions()
@@ -20,9 +20,9 @@ export default function InterventionsIndex() {
             Observe. Diagnose. Intervene. Repeat. We observe each field’s velocity, diagnose its
             bottlenecks, deploy interventions, and measure whether they worked—then repeat.
           </p>
-          {/* Full navigation: methodology is a page, not a (.)[slug] program modal. */}
+          {/* Full navigation: methodology is the public page, not a program modal. */}
           <a
-            href={`${catalogHref()}methodology/`}
+            href={methodologyHref()}
             className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-blue px-5 py-3 text-sm font-medium text-white no-underline transition-colors hover:bg-blue/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
           >
             Explore how we accelerate fields
