@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{title}} · Protocol Labs R&amp;D</title>
+
+<!-- ===========================================================
+     A Protocol Labs R&D brief, printed on one DIN A4 page.
+
+     The words live in src/data/fa2/briefs/<slug>.json, which the
+     web edition at /areas/economies-governance/briefs/<slug>/ also
+     reads, so the page and the paper cannot drift. Rebuild with
+
+       npm run build-briefs
+
+     Set in the site's own voice: Newsreader for headings, Aileron
+     for everything else, black ink on white, the brand blue for
+     links and figures, the brand pink for kickers, and the FA2
+     pencil drawing on its cream panel. Rounded hairline cards, as
+     on plrd.org.
+     =========================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=block" rel="stylesheet">
+<style>
+@font-face { font-family: "Aileron"; src: url("/public/fonts/Aileron-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Aileron"; src: url("/public/fonts/Aileron-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Aileron"; src: url("/public/fonts/Aileron-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; }
+@font-face { font-family: "Aileron"; src: url("/public/fonts/Aileron-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+
+:root {
+  --black: #131316;
+  --ink: #34373F;
+  --body: #4b4e5a;
+  --muted: #6b6d79;
+  --faint: #9a9caa;
+  --line: #e5e7eb;
+  --line-soft: #f0f1f4;
+  --blue: #1982F4;
+  --pink: #E51A66;
+  --cream: #F9F2E2;
+  --surface: #F6F9FD;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Aileron", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@page { size: A4; margin: 0; }
+html, body {
+  background: #e9e9ee; font-family: var(--sans); color: var(--black);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+@media print { html, body { background: #fff; } }
+
+.sheet { width: 210mm; height: 297mm; margin: 0 auto; padding: 11mm 12mm 8.5mm; background: #fff; overflow: hidden; }
+
+/* The flow is laid out 1/fit larger than the page and scaled back onto it,
+   so a longer brief shrinks as a whole instead of losing its foot. */
+.flow {
+  --fit: 1;
+  width: calc(100% / var(--fit)); height: calc(100% / var(--fit));
+  transform: scale(var(--fit)); transform-origin: top left;
+  display: flex; flex-direction: column; gap: 3.2mm;
+}
+
+/* ─── masthead: the site's own logo row ─── */
+.brandline { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 2.4mm; }
+.brand img { height: 8.6mm; width: auto; display: block; }
+.brand .word { font-size: 10.5pt; font-weight: 600; color: var(--black); letter-spacing: -0.01em; }
+.brand .word span { font-weight: 400; color: var(--muted); }
+.filed { text-align: right; font-family: var(--serif); font-size: 7pt; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); line-height: 1.6; }
+.filed .date { color: var(--blue); }
+
+/* ─── hero: title beside the FA2 drawing ─── */
+.hero { display: grid; grid-template-columns: 1.18fr 0.82fr; gap: 6mm; align-items: end; }
+h1 { font-family: var(--serif); font-weight: 500; font-size: 33pt; line-height: 1.02; letter-spacing: -0.015em; color: var(--black); }
+.subtitle { font-family: var(--serif); font-style: italic; font-size: 15pt; line-height: 1.15; color: var(--blue); margin-top: 1.6mm; }
+.standfirst { font-size: 8.6pt; line-height: 1.5; color: var(--body); margin-top: 3.4mm; }
+/* The drawing has paper to spare above and below, so the plate crops it to
+   a flatter frame and keeps the building. */
+.plate { background: var(--cream); border-radius: 3.2mm; overflow: hidden; aspect-ratio: 16 / 10; }
+.plate img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; display: block; }
+
+/* ─── the six reasons: rounded hairline cards, three across ─── */
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.2mm; }
+.card {
+  display: grid; grid-template-rows: subgrid; grid-row: span 3; row-gap: 0;
+  border: 0.6pt solid var(--line); border-radius: 2.6mm; padding: 2.6mm 3mm 2.5mm; background: #fff;
+}
+.card .k { font-size: 5.8pt; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); }
+.card h3 { font-family: var(--serif); font-weight: 500; font-size: 11.4pt; line-height: 1.12; color: var(--black); margin-top: 0.9mm; }
+.card .text { font-size: 7pt; line-height: 1.45; color: var(--body); margin-top: 1.6mm; }
+.evidence { margin-top: 2.4mm; padding-top: 2mm; border-top: 0.6pt solid var(--line); }
+.evidence .fig { font-family: var(--serif); font-weight: 500; font-size: 17pt; line-height: 1; color: var(--black); white-space: nowrap; display: block; }
+.evidence .cap { font-size: 6.5pt; line-height: 1.38; color: var(--ink); margin-top: 1.1mm; }
+.evidence .src { font-size: 5.7pt; line-height: 1.4; color: var(--muted); margin-top: 1mm; }
+
+/* ─── what a country can do · the red line · the honest limit ─── */
+.bottom { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 6mm; align-items: start; }
+.label { font-family: var(--serif); font-size: 7.2pt; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); margin-bottom: 2mm; }
+.steps { list-style: none; display: flex; flex-direction: column; gap: 1.5mm; }
+.step { display: grid; grid-template-columns: auto 1fr; column-gap: 2.6mm; align-items: baseline; padding-top: 1.4mm; border-top: 0.6pt solid var(--line-soft); }
+.step:first-child { border-top: 0; padding-top: 0; }
+.step .n { font-family: var(--serif); font-weight: 500; font-size: 12pt; line-height: 1; color: var(--blue); }
+.step p { font-size: 7.3pt; line-height: 1.45; color: var(--body); }
+.step b { font-weight: 600; color: var(--black); }
+
+.side { display: flex; flex-direction: column; gap: 3mm; }
+.redline { background: var(--surface); border-radius: 2.6mm; padding: 2.8mm 3.2mm 3mm; }
+.limit { border-left: 1.2pt solid var(--line); padding: 0.6mm 0 0.6mm 3.2mm; }
+.side .k { font-size: 5.8pt; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+.redline .k { color: var(--pink); }
+.limit .k { color: var(--muted); }
+.side h3 { font-family: var(--serif); font-weight: 500; font-size: 11pt; line-height: 1.12; color: var(--black); margin-top: 1mm; }
+.side p { font-size: 6.9pt; line-height: 1.42; color: var(--body); margin-top: 1.2mm; }
+.sources-note { font-size: 5.9pt; line-height: 1.45; color: var(--muted); }
+.sources-note .url { display: block; color: var(--blue); white-space: nowrap; }
+
+/* ─── footer ─── */
+footer { margin-top: auto; border-top: 0.6pt solid var(--line); padding-top: 2.8mm; display: flex; align-items: center; justify-content: space-between; gap: 6mm; }
+.foot-copy { display: flex; align-items: center; gap: 2.6mm; max-width: 130mm; }
+.foot-copy img { height: 7mm; width: auto; }
+.foot-copy p { font-size: 6.8pt; line-height: 1.4; color: var(--body); }
+.foot-copy p b { color: var(--black); font-weight: 600; }
+.foot-copy .meta { font-size: 5.6pt; color: var(--faint); margin-top: 0.6mm; }
+.cta { background: var(--black); color: #fff; border-radius: 99px; padding: 2mm 4.2mm; font-size: 7.4pt; font-weight: 600; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="sheet">
+<div class="flow">
+
+  <div class="brandline">
+    <div class="brand">
+      <img src="/public/images/pl_logo_mark.svg" alt="Protocol Labs">
+      <span class="word">PL <span>R&amp;D</span></span>
+    </div>
+    <div class="filed">{{kicker}}<br><span class="date">{{date}}</span></div>
+  </div>
+
+  <section class="hero">
+    <div>
+      <h1>{{title}}</h1>
+      <p class="subtitle">{{subtitle}}</p>
+      <p class="standfirst">{{standfirst}}</p>
+    </div>
+    <div class="plate"><img src="/public{{image}}" alt="{{imageAlt}}"></div>
+  </section>
+
+  <div class="cards">
+{{cards}}
+  </div>
+
+  <div class="bottom">
+    <section>
+      <p class="label">{{stepsTitle}}</p>
+      <ol class="steps">
+{{steps}}
+      </ol>
+    </section>
+    <div class="side">
+      <section class="redline">
+        <span class="k">{{redKicker}}</span>
+        <h3>{{redTitle}}</h3>
+        <p>{{redText}}</p>
+      </section>
+      <section class="limit">
+        <span class="k">{{limitKicker}}</span>
+        <h3>{{limitTitle}}</h3>
+        <p>{{limitText}}</p>
+      </section>
+      <p class="sources-note">{{sourcesNote}} <span class="url">{{url}}</span></p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-copy">
+      <img src="/public/images/pl_logo_mark.svg" alt="">
+      <div>
+        <p><b>Protocol Labs R&amp;D</b> · {{about}}</p>
+        <p class="meta">© Protocol Labs, Inc. Except as noted, content licensed CC-BY 3.0. Evidence checked {{checked}}.</p>
+      </div>
+    </div>
+    <div class="cta">{{contact}}</div>
+  </footer>
+
+</div>
+</div>
+
+<script>
+/* Shrink the whole flow until it fits the page, never below a legible
+   floor; mark the page if it still overflows so a silent clip cannot ship. */
+(function () {
+  var FLOOR = 0.8;
+  function fit() {
+    var flow = document.querySelector(".flow");
+    var f = 1;
+    flow.style.setProperty("--fit", f);
+    function over() { return flow.scrollHeight > flow.clientHeight + 1 || flow.scrollWidth > flow.clientWidth + 1; }
+    while (over() && f > FLOOR) { f = Math.round((f - 0.01) * 1000) / 1000; flow.style.setProperty("--fit", f); }
+    flow.dataset.fit = String(f);
+    if (over()) flow.dataset.clipped = "true";
+  }
+  fit();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  window.addEventListener("load", fit);
+})();
+</script>
+</body>
+</html>

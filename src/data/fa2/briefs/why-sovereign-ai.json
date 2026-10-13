@@ -1,0 +1,191 @@
+{
+  "slug": "why-sovereign-ai",
+  "kicker": "Economies & Governance · Brief",
+  "date": "October 2026",
+  "checked": "8 October 2026",
+  "title": "Why sovereign AI",
+  "subtitle": "AI that answers to your country",
+  "summary": "Six reasons a country should run, test and answer for its own AI, each with the evidence behind it.",
+  "standfirst": "Every government will use AI. The question is whose. A rented model carries its makers' values, keeps your data under another country's law, and can be withdrawn from abroad. Sovereign AI means a country runs, tests and answers for the models its public services rely on.",
+  "pdf": "/briefs/why-sovereign-ai.pdf",
+  "url": "plrd.org/areas/economies-governance/briefs/why-sovereign-ai",
+  "image": "/images/fa2/briefs/why-sovereign-ai.webp",
+  "imageAlt": "A pencil drawing of a classical public library whose colonnade shelters rows of servers, behind a low wall with an open gate.",
+  "reasons": [
+    {
+      "title": "Keep the skills at home",
+      "text": "A country that only rents AI pays every year and learns little. The people who can run, test and fix these systems learn by doing it, and they move to where the computers are. A national service gives them work worth staying for, and gives ministries people who understand what they buy.",
+      "figure": "<0.1%",
+      "caption": "of the world's shared data-centre capacity is in low-income countries. High-income countries hold 77%.",
+      "source": "World Bank data, June 2025, in UN report A/80/817",
+      "url": "https://documents.un.org/doc/undoc/gen/n26/214/19/pdf/n2621419.pdf"
+    },
+    {
+      "title": "Own your decisions",
+      "text": "A model that drafts a policy shapes it. People who write with a slanted AI assistant move towards its view, and most never notice. Every text that leaves a ministry needs an owner with a mandate, who can see how the model got there.",
+      "figure": "1 in 5",
+      "caption": "or fewer noticed the slant in an AI writing assistant. Their own views still moved towards it, and warnings did not stop that.",
+      "source": "Williams-Ceci et al., Science Advances, March 2026",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12978215/"
+    },
+    {
+      "title": "Choose whose values you use",
+      "text": "A model learns its values from its data and its makers. Five OpenAI models tested in 2024 all answered most like people in English-speaking and Protestant European countries. China requires its models to uphold \"Core Socialist Values\", and US federal agencies may only buy models that meet \"Unbiased AI Principles\". Test a model against your own priorities before you rely on it.",
+      "figure": "8 of 8",
+      "caption": "leading AI models advised more escalation for the US, UK and France than for China or Russia, in the same crisis scenarios.",
+      "source": "CSIS Futures Lab, Critical Foreign Policy Decisions benchmark, 2025",
+      "url": "https://www.csis.org/analysis/asking-ai-how-respond-foreign-policy-decision"
+    },
+    {
+      "title": "Guard what runs your country",
+      "text": "Attackers now use AI agents against ministries, embassies and the hotel Wi-Fi officials use when they travel. Defending public systems will take AI that reads your own records today, and the code that runs your grid, water and elections tomorrow. Give that access only to a model that runs under your law. Abroad, Anthropic vets access to its most capable cyber model \"in collaboration with the US government\".",
+      "figure": "300,000+",
+      "caption": "national identity records taken from a North African government agency by a spy group that used AI at every stage.",
+      "source": "Anthropic threat intelligence report, September 2026",
+      "url": "https://www.anthropic.com/threat-intelligence-report-september-2026"
+    },
+    {
+      "title": "Keep your data under your law",
+      "text": "What a ministry types into a foreign AI service is stored under that country's law. US providers can be compelled through US legal process to hand over data wherever they store it, and a judge can bar them from telling you. In 2025 a US court made OpenAI keep users' deleted ChatGPT chats for over four months. A model you host answers to your courts.",
+      "figure": "\"No\"",
+      "caption": "said Microsoft France's director of public and legal affairs under oath, asked to guarantee that French data would never reach US authorities without French consent. He added that it had never happened yet.",
+      "source": "French Senate inquiry on public procurement, 10 June 2025",
+      "url": "https://www.senat.fr/compte-rendu-commissions/20250609/ce_commande_publique.html"
+    },
+    {
+      "title": "Access for everyone, without paying with data",
+      "text": "Access to a capable AI model should be a basic right, and nobody should pay for it with their data. ChatGPT now shows ads matched to your conversation on its free and cheapest plans in over 60 countries. Public models show another way: Switzerland publishes Apertus with its weights and training data, and publicai.co offers it free without training on chats.",
+      "figure": "38,000",
+      "caption": "GPUs that India rents to startups, researchers and public bodies at about 65 rupees an hour each.",
+      "source": "Government of India, answer to the Lok Sabha, 1 April 2026",
+      "url": "https://sansad.in/getFile/lsapps/loksabhaquestions/annex/187/AU6044_lZOsLn.pdf"
+    }
+  ],
+  "stepsTitle": "What a country can do",
+  "steps": [
+    {
+      "lead": "Run open models for public work",
+      "text": "on national or regional machines. Start with translating and drafting anything not yet public."
+    },
+    {
+      "lead": "Train people, then hire them.",
+      "text": "Fund fellowships tied to public service, and let the fellows run the systems they trained on."
+    },
+    {
+      "lead": "Buy with conditions.",
+      "text": "Data stays in the country, no training on government data, a right to audit, and a way out. Test every model against your own priorities."
+    },
+    {
+      "lead": "Offer citizens a public AI service",
+      "text": "that is free or cheap and keeps their conversations private. Pool computers with neighbours where one country is too small."
+    },
+    {
+      "lead": "Back it at the UN.",
+      "text": "The Secretary-General proposes a Global Fund for AI Capacity-Building of about $3 billion. Resolution 78/311 already asks for technology transfer and open-source AI."
+    }
+  ],
+  "redLine": {
+    "kicker": "Red line",
+    "title": "Confidential stays on machines you control",
+    "text": "Never put citizens' records, policy not yet public, or anything said in confidence into an AI service your country does not control. Use online models for public material and practice."
+  },
+  "limit": {
+    "kicker": "The honest limit",
+    "title": "A model made at home still needs testing",
+    "text": "The best open models still trail the strongest closed ones on the hardest tasks. A national model can carry its own bias: in one 2026 test, models built in a country predicted its UN votes no better than any other. You choose, test and answer for the model, whoever built it."
+  },
+  "about": "Economies & Governance focus area. We welcome feedback, case studies and partners.",
+  "contact": "research@protocol.ai",
+  "sourcesTitle": "Sources",
+  "sourcesNote": "Every source, with links, is on the web edition:",
+  "sources": [
+    {
+      "label": "UN Secretary-General, report A/80/817 on financing AI capacity-building, August 2026, citing World Bank data",
+      "url": "https://documents.un.org/doc/undoc/gen/n26/214/19/pdf/n2621419.pdf"
+    },
+    {
+      "label": "The New York Times, The Global A.I. Divide, 23 June 2025",
+      "url": "https://www.nytimes.com/interactive/2025/06/23/technology/ai-computing-global-divide.html"
+    },
+    {
+      "label": "Williams-Ceci, Jakesch, Bhat, Kadoma, Zalmanson and Naaman, Science Advances 12(11), March 2026",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12978215/"
+    },
+    {
+      "label": "Tao, Viberg, Baker and Kizilcec, Cultural bias and cultural alignment of large language models, PNAS Nexus 3(9), September 2024",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11407280/"
+    },
+    {
+      "label": "Cyberspace Administration of China and six other agencies, Interim Measures for the Management of Generative AI Services, Article 4, 2023",
+      "url": "https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm"
+    },
+    {
+      "label": "The White House, Executive Order 14319, Preventing Woke AI in the Federal Government, 23 July 2025",
+      "url": "https://www.whitehouse.gov/presidential-actions/2025/07/preventing-woke-ai-in-the-federal-government/"
+    },
+    {
+      "label": "CSIS Futures Lab, Critical Foreign Policy Decisions benchmark, April 2025",
+      "url": "https://www.csis.org/analysis/asking-ai-how-respond-foreign-policy-decision"
+    },
+    {
+      "label": "Microsoft Threat Intelligence, CaptiveCrunch: Midnight Blizzard targets travelers worldwide, 31 July 2026",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/07/31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-for-malware-delivery-and-credential-theft/"
+    },
+    {
+      "label": "Anthropic, threat intelligence report, September 2026",
+      "url": "https://www.anthropic.com/threat-intelligence-report-september-2026"
+    },
+    {
+      "label": "Anthropic, Cyber Verification Program, 6 October 2026",
+      "url": "https://www.anthropic.com/news/cyber-verification-program"
+    },
+    {
+      "label": "18 U.S.C. § 2713, the CLOUD Act",
+      "url": "https://www.law.cornell.edu/uscode/text/18/2713"
+    },
+    {
+      "label": "US Department of Justice, The CLOUD Act white paper and FAQ, April 2019",
+      "url": "https://www.justice.gov/criminal/media/999601/dl?inline"
+    },
+    {
+      "label": "The New York Times v. OpenAI, S.D.N.Y., preservation order of 13 May 2025",
+      "url": "https://storage.courtlistener.com/recap/gov.uscourts.nysd.612697/gov.uscourts.nysd.612697.551.0_1.pdf"
+    },
+    {
+      "label": "The New York Times v. OpenAI, S.D.N.Y., stipulation and order ending it, 9 October 2025",
+      "url": "https://storage.courtlistener.com/recap/gov.uscourts.nysd.612697/gov.uscourts.nysd.612697.922.0.pdf"
+    },
+    {
+      "label": "French Senate, commission of inquiry on public procurement, hearing of 10 June 2025",
+      "url": "https://www.senat.fr/compte-rendu-commissions/20250609/ce_commande_publique.html"
+    },
+    {
+      "label": "OpenAI, Testing ads in ChatGPT, 9 February 2026",
+      "url": "https://openai.com/index/testing-ads-in-chatgpt/"
+    },
+    {
+      "label": "OpenAI, ChatGPT Ads expands to Southeast Asia and Taiwan, 23 September 2026",
+      "url": "https://openai.com/index/chatgpt-ads-expands-southeast-asia-taiwan/"
+    },
+    {
+      "label": "ETH Zurich, Apertus: a fully open, transparent, multilingual language model, 2 September 2025",
+      "url": "https://ethz.ch/en/news-and-events/eth-news/news/2025/09/press-release-apertus-a-fully-open-transparent-multilingual-language-model.html"
+    },
+    {
+      "label": "Public AI, the Public AI Inference Utility",
+      "url": "https://publicai.co/stories/utility"
+    },
+    {
+      "label": "Government of India, answer to Lok Sabha unstarred question 6044, 1 April 2026",
+      "url": "https://sansad.in/getFile/lsapps/loksabhaquestions/annex/187/AU6044_lZOsLn.pdf"
+    },
+    {
+      "label": "UN General Assembly, resolution 78/311 on capacity-building of AI, 1 July 2024",
+      "url": "https://documents.un.org/api/symbol/access?s=A/RES/78/311&l=en&t=pdf"
+    },
+    {
+      "label": "Nangia, Gokrani and Lazzaroni, UNSC-Bench, Workshop on Multilingual Multicultural Evaluation, 2026",
+      "url": "https://aclanthology.org/2026.mme-main.10.pdf"
+    }
+  ]
+}

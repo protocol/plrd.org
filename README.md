@@ -21,6 +21,7 @@ Open http://localhost:3000.
 | `npm run build` | Production build (content + Next.js) |
 | `npm start` | Start production server |
 | `npx tsc --noEmit` | Type-check without emitting files |
+| `npm run build-briefs` | Print the FA2 briefs in `src/data/fa2/briefs/` to `public/briefs/*.pdf` (needs local Chrome) |
 
 No ESLint or test runner is configured. Use `npx tsc --noEmit` to verify types before pushing.
 
@@ -89,6 +90,7 @@ Run `node --test scripts/radar-local.test.mjs` for the Radar regression tests; t
 | `/areas/` | Focus areas listing |
 | `/areas/[slug]/` | Individual focus area (Markdown-driven; leads defined in frontmatter) |
 | `/areas/economies-governance/` | FA2 focus area with sub-pages (impact, projects, opportunity spaces) — hardcoded, not Markdown |
+| `/areas/economies-governance/briefs/[slug]/` | FA2 one-page briefs, each with a printed PDF at `/briefs/<slug>.pdf` |
 | `/research/` | Research hub |
 | `/publications/` | All publications, sorted by date |
 | `/publications/[slug]/` | Publication detail |
@@ -109,6 +111,7 @@ The FA2 (Upgrade Economies & Governance) focus area has hand-curated JSON data i
 - **`projects.json`** -- 242 ecosystem teams/projects with metadata (name, logo, website, tier, tags, etc.)
 - **`impact.json`** -- Impact dashboard data with headline metrics and initiative details
 - **`opportunityspaces.json`** -- 4 opportunity spaces with descriptions, assumptions, tipping signals
+- **`briefs/<slug>.json`** -- one-page briefs (claims, evidence, sources). The web page renders the JSON; `npm run build-briefs` prints it to `public/briefs/<slug>.pdf`, which is committed (the one exception to the `*.pdf` ignore rule)
 
 These files are edited directly as JSON and consumed by hardcoded FA2 sub-pages under `/areas/economies-governance/`.
 
@@ -146,7 +149,7 @@ The `vercel.json` config is minimal:
 ## Gotchas
 
 - `src/data/generated/` is checked into git -- Vercel needs it at build time
-- `*.pdf` files are gitignored (removed to reduce repo size)
+- `*.pdf` files are gitignored (removed to reduce repo size), except the FA2 briefs in `public/briefs/`
 - Images must use `unoptimized: true` (configured in `next.config.ts`)
 - Hugo shortcodes like `{{< youtube ID >}}` in talk Markdown are rendered as iframes at the component level
 - After deleting pages, remove `.next/` to clear stale type cache before type-checking

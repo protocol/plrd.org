@@ -356,6 +356,9 @@ FA2 is special-cased: **hardcoded routes** under `/areas/economies-governance/` 
 | `.../dependency-graph/` | `dependency-graph/page.tsx` | `lib/content` dep-graph entries |
 | `.../dependency-graph/[slug]/` | `DependencyGraph.tsx` (d3-force) | `dependency-graph/data/` |
 | `.../edit/` | `edit/page.tsx` | inline editor over `area-economies-governance` |
+| `.../briefs/[slug]/` | SSG via `generateStaticParams` | `src/data/fa2/briefs/<slug>.json`, PDF in `public/briefs/` |
+
+**Briefs.** `.../briefs/[slug]/` renders a one-page brief from `src/data/fa2/briefs/<slug>.json` (registered in `src/lib/briefs.ts`); every brief also gets a full-width "Brief" row at the foot of the FA2 page's Explore grid. The same JSON is printed to `public/briefs/<slug>.pdf` by `npm run build-briefs` (headless Chrome against `scripts/briefs/template.html`, served from the repo root so the Aileron files load; Newsreader comes from Google Fonts, so the build needs network). Those PDFs are the one exception to the `*.pdf` ignore rule. Rebuild and commit the PDF whenever the JSON changes, and check the page still fits: the template shrinks its flow to fit A4 and sets `data-clipped` on `.flow` in `.briefs-build/<slug>.html` if it cannot.
 
 The *other* areas (`ai-robotics`, `digital-human-rights`, `neurotech`) each have their own `opportunity-spaces/` + `[slug]` pair powered by `src/data/fa2/{ai,dhr,neuro}-opportunityspaces.json` (yes, named under `fa2/` for historical reasons).
 
@@ -427,7 +430,7 @@ Only `COOKIE_SECRET`, `PUBLIC_URL`, `ATPROTO_JWK_PRIVATE`, `ATPROTO_HANDLE`, `AT
 
 ## 10. Deployment
 
-The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`; `daviddao/plrd-v2` was an earlier name). `main` auto-deploys to Vercel. `vercel.json` sets only `framework: nextjs` + `buildCommand: npm run build`. `*.pdf` is gitignored.
+The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`; `daviddao/plrd-v2` was an earlier name). `main` auto-deploys to Vercel. `vercel.json` sets only `framework: nextjs` + `buildCommand: npm run build`. `*.pdf` is gitignored, except the FA2 briefs in `public/briefs/`.
 
 ---
 
