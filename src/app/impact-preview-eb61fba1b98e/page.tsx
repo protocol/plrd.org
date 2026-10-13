@@ -402,7 +402,7 @@ export default async function ImpactPage({
                   <span className="font-semibold uppercase tracking-[0.14em] text-gray-400">
                     Work in progress.
                   </span>{' '}
-                  These readings are still being settled. Some charts will change.
+                  Charts may change as information is updated.
                 </p>
               </div>
 
