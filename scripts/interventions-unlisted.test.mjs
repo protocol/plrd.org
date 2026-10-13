@@ -9,14 +9,21 @@ const catalog = source('lib/interventions.ts')
 const base = catalog.INTERVENTIONS_BASE_PATH
 const methodology = catalog.METHODOLOGY_PATH
 
-test('methodology is a public page; the catalogue routes and cryptic prefix are gone', () => {
+test('methodology stays public; the interventions overview is the unlisted catalogue page', () => {
   assert.equal(methodology, '/methodology/')
   assert.equal(catalog.methodologyHref(), '/methodology/')
+  assert.equal(catalog.catalogHref(), `${base}/`)
   assert.match(base || '', /^\/interventions-preview-[a-f0-9]{12}$/)
   assert.ok(!existsSync(new URL('../src/app/interventions/page.tsx', import.meta.url)))
   assert.ok(!existsSync(new URL('../src/app/api/interventions/route.ts', import.meta.url)))
-  assert.ok(!existsSync(new URL('../src/app' + base, import.meta.url)), 'cryptic preview prefix is removed')
+  assert.ok(existsSync(new URL(`../src/app${base}/page.tsx`, import.meta.url)), 'unlisted overview page exists')
   assert.ok(existsSync(new URL('../src/app/methodology/page.tsx', import.meta.url)))
+  const overview = readFileSync(new URL(`../src/app${base}/page.tsx`, import.meta.url), 'utf8')
+  assert.match(overview, /index: false/)
+  const index = renderToStaticMarkup(React.createElement(source('components/InterventionsIndex.tsx').default))
+  assert.match(index, /Turning bottlenecks into breakthroughs/)
+  assert.match(index, /href="\/methodology\/"/)
+  assert.doesNotMatch(index, new RegExp(`href="${base}/methodology/`))
 })
 
 test('About us dropdown includes Methodology and nothing else promotes the catalogue', () => {
@@ -40,7 +47,7 @@ test('About us dropdown includes Methodology and nothing else promotes the catal
   assert.doesNotMatch(renderToStaticMarkup(React.createElement(Hero, { areaSlug: 'neurotech', showOpportunitySpaces: true, opportunityHref: '#opportunity-spaces' })), />Interventions</)
 })
 
-test('the public methodology page is indexable and retired catalogue URLs redirect to it', () => {
+test('the public methodology page is indexable and only the nested methodology URL redirects to it', () => {
   const { metadata } = source('app/impact-preview-eb61fba1b98e/page.tsx')
   assert.equal(metadata.robots, undefined, 'the shared page is now public; the old preview route redirects')
   assert.equal(metadata.alternates.canonical, '/methodology/')
@@ -48,10 +55,10 @@ test('the public methodology page is indexable and retired catalogue URLs redire
   assert.match(config, /const methodology = '\/methodology\/'/)
   assert.match(config, /X-Robots-Tag/)
   assert.match(config, /destination: methodology/)
-  assert.match(config, /'neuroai-fellows'/)
   const catalogueBlock = config.slice(config.indexOf('The methodology page is public'), config.indexOf('Preserve shared preview links'))
-  assert.doesNotMatch(catalogueBlock, /:slug/)
   assert.match(catalogueBlock, /basePath}\/methodology/)
+  assert.doesNotMatch(catalogueBlock, /destination: methodology,\s*\n\s*permanent: false/)
+  assert.doesNotMatch(catalogueBlock, /'neuroai-fellows'/)
 })
 
 test('the homepage teases the methodology page under the four focus areas', () => {
