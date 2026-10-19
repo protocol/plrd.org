@@ -1,0 +1,173 @@
+{
+  "slug": "broad-listening-simocracy",
+  "layout": "explainer",
+  "kicker": "Economies & Governance · Brief",
+  "date": "October 2026",
+  "title": "Broad Listening & Simocracy",
+  "subtitle": "Hear everyone, then decide in the open",
+  "label": "Broad Listening & Simocracy",
+  "summary": "What the two tools do, where they have run, and how a government can use them.",
+  "standfirst": "Broad Listening reads every answer to an open question, not a sample, and links each finding to the words behind it. Simocracy gives every participant an AI representative, a sim, that argues their case in public and helps split a real budget. Together they let a government hear everyone before it decides, and show its working afterwards. Both are open source, so they can run on machines the government controls.",
+  "image": "/images/fa2/briefs/broad-listening-simocracy.webp",
+  "imageAlt": "A pencil drawing of an open-air Greek theatre set into a hillside, its stone tiers curving around a round stage with a colonnade behind it.",
+  "imagePosition": "50% 66%",
+  "toolsLabel": "Two tools",
+  "toolsAside": "What each one does, with the evidence behind it",
+  "tools": [
+    {
+      "title": "Broad Listening",
+      "promise": "Read every answer, and show your working",
+      "text": "People answer an open question in their own words and their own language. A language model splits the answers into single claims, groups them into topics and writes a report. Every claim links back to the quotes behind it, so anyone can check the summary, and the people who spoke can correct it.",
+      "evidence": [
+        {
+          "figure": "200,000+",
+          "caption": "people have taken part in Taiwan's vTaiwan consultations on Polis, the open tool this field grew from. The first, in 2015, was on how to regulate Uber.",
+          "source": "Computational Democracy Project, vTaiwan case study",
+          "url": "https://compdemocracy.org/case-studies/2014-vtaiwan/"
+        },
+        {
+          "figure": "38,000",
+          "caption": "questions and 6,000 policy suggestions from voters, gathered through an AI policy app, fed the 2026 manifesto of Japan's Team Mirai, which then won eleven seats in the lower house.",
+          "source": "Schneier and Sanders, Tech Policy Press, 17 March 2026",
+          "url": "https://techpolicy.press/japans-team-mirai-uses-tech-to-bolster-democracy-not-undermine-it"
+        }
+      ]
+    },
+    {
+      "title": "Simocracy",
+      "promise": "A voice for everyone, on the record",
+      "text": "Each participant builds a sim: an AI representative with a constitution that sets out what it stands for, its red lines and how it speaks. The sim belongs to its person and lives on the open AT Protocol. Sims debate proposals in public, and the S-Process, a method from the Survival and Flourishing Fund, turns their judgements into a budget split.",
+      "evidence": [
+        {
+          "figure": "$4,270",
+          "caption": "of a $5,000 treasury, split across eight projects by a council of floor leads' sims at Funding the Commons in San Francisco. They held $730 back rather than over-fund.",
+          "source": "simocracy.org/ftc, March 2026",
+          "url": "https://www.simocracy.org/ftc"
+        },
+        {
+          "figure": "112",
+          "caption": "proposals on a live decision, ENS Labs' plan to empower the ENS Foundation, weighed by 50 sims. Ten weekday rounds paid out $8,890 of a $10,000 pool.",
+          "source": "simocracy.org/ens, August 2026",
+          "url": "https://www.simocracy.org/ens"
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "label": "How a round runs",
+    "aside": "From one open question to a decision on the record",
+    "items": [
+      {
+        "title": "Ask",
+        "text": "One open question, set by whoever must decide, with a clear use for the answers."
+      },
+      {
+        "title": "Listen",
+        "text": "Broad Listening reads every answer and maps the claims. People check the map against their own words."
+      },
+      {
+        "title": "Deliberate",
+        "text": "Each person's sim argues for them in public. Every argument stays on the record."
+      },
+      {
+        "title": "Decide",
+        "text": "The sims propose a split. Whoever holds the budget signs it off or vetoes it, and the record is published."
+      }
+    ],
+    "barLead": "Our rule:",
+    "bar": "evidence is not a mandate. These tools show what people said and what their sims argued. The person who holds the mandate still decides, and answers for it."
+  },
+  "ran": {
+    "label": "Where they have run",
+    "items": [
+      {
+        "lead": "Funding the Commons, San Francisco, March 2026.",
+        "text": "Floor leads' sims allocated the $5,000 agentic part of a $15,000 tower treasury, in public.",
+        "source": "simocracy.org/ftc",
+        "url": "https://www.simocracy.org/ftc"
+      },
+      {
+        "lead": "Edge Esmeralda, California, June 2026.",
+        "text": "Residents minted 36 sims and wrote 35 proposals with their own AI agents. $1,000 went out every day for ten days, matched by Artizen.",
+        "source": "simocracy.org/edge",
+        "url": "https://www.simocracy.org/edge"
+      },
+      {
+        "lead": "ENS DAO, online, August 2026.",
+        "text": "50 sims debated a live governance plan over ten rounds, with every proposal and payout public.",
+        "source": "simocracy.org/ens",
+        "url": "https://www.simocracy.org/ens"
+      },
+      {
+        "lead": "Envision Bhutan 2035.",
+        "text": "A Broad Listening map of ideas for Bhutan's digital future: education, cultural identity, public participation and the environment.",
+        "source": "broadlistening.org",
+        "url": "https://www.broadlistening.org/"
+      }
+    ]
+  },
+  "uses": {
+    "label": "Where a government can use them",
+    "items": [
+      {
+        "lead": "Consultations.",
+        "text": "Read every response, not a sample, and publish the map with its quotes."
+      },
+      {
+        "lead": "Participatory budgeting.",
+        "text": "Residents' sims argue for projects and propose a split. Officials sign it off."
+      },
+      {
+        "lead": "Citizens' assemblies.",
+        "text": "Bring what thousands of people said into a room of fifty, with the quotes attached."
+      },
+      {
+        "lead": "Reporting back.",
+        "text": "Run the same process after a decision to hear how it landed."
+      },
+      {
+        "lead": "A pilot.",
+        "text": "The [government pilot partnership](/areas/economies-governance/briefs/government-pilot-partnership/) sets out how we run one with you."
+      }
+    ]
+  },
+  "limit": {
+    "kicker": "The honest limit",
+    "title": "A sim is not its person",
+    "text": "A sim is only as good as the constitution its person wrote, and a model can drift from it. Our next experiment measures how often sims rank proposals the way their people do. Until that evidence is in, use sims to widen a debate, and leave the decision with people."
+  },
+  "wayIn": {
+    "kicker": "Start here",
+    "title": "Bring us one open question",
+    "text": "Tell us about a decision your government faces, and we will scope a Broad Listening round or a Simocracy pilot around it.",
+    "people": "David Dao and James Tunningley, co-leads, Economies & Governance."
+  },
+  "about": "Economies & Governance focus area. We welcome feedback, case studies and partners.",
+  "contact": "research@protocol.ai",
+  "checked": "19 October 2026",
+  "notes": {
+    "label": "Also drawn on:",
+    "items": [
+      {
+        "label": "Funding the Commons, Comparative Floor Governance at Funding the Commons SF, April 2026",
+        "url": "https://www.fundingthecommons.io/post/comparative-floor-governance-at-funding-the-commons-sf"
+      },
+      {
+        "label": "Cosmos Institute, We Gave a Village Personal AI Agents, 31 July 2026",
+        "url": "https://blog.cosmos-institute.org/p/we-gave-a-village-personal-ai-agents"
+      },
+      {
+        "label": "AI Objectives Institute, Talk to the City",
+        "url": "https://ai.objectives.institute/talk-to-the-city"
+      },
+      {
+        "label": "Team Mirai, kouchou-ai",
+        "url": "https://github.com/team-mirai/kouchou-ai"
+      },
+      {
+        "label": "AI4COP, Civic AI",
+        "url": "https://www.ai4cop.org/read/civic-ai"
+      }
+    ]
+  }
+}

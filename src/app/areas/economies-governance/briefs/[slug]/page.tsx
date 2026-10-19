@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Breadcrumb from '@/components/Breadcrumb'
+import Explainer from '@/components/briefs/Explainer'
 import Partnership from '@/components/briefs/Partnership'
 import ThreePropositions from '@/components/briefs/ThreePropositions'
 import { BriefFoot, BriefHero } from '@/components/briefs/parts'
-import { briefHref, briefs, plain } from '@/lib/briefs'
+import { briefHref, briefs, plain, type Brief } from '@/lib/briefs'
 import { siteConfig } from '@/lib/site-config'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -50,8 +51,20 @@ export default async function BriefPage({ params }: Props) {
         ]}
       />
       <BriefHero brief={brief} />
-      {brief.layout === 'three-propositions' ? <ThreePropositions brief={brief} /> : <Partnership brief={brief} />}
+      <Layout brief={brief} />
       <BriefFoot brief={brief} />
     </div>
   )
+}
+
+/** The body of the brief, in the shape its layout names. */
+function Layout({ brief }: { brief: Brief }) {
+  switch (brief.layout) {
+    case 'three-propositions':
+      return <ThreePropositions brief={brief} />
+    case 'explainer':
+      return <Explainer brief={brief} />
+    case 'partnership':
+      return <Partnership brief={brief} />
+  }
 }

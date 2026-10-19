@@ -1,6 +1,6 @@
 import type { ThreePropositionsBrief } from '@/lib/briefs'
 import Rich from './Rich'
-import { Evidence, Kicker, SectionLabel, SourceLink, card, cream } from './parts'
+import { Evidence, Kicker, Limit, SectionLabel, SourceLink, card, cream } from './parts'
 
 /**
  * The web edition of the three-propositions layout (Why sovereign AI): three
@@ -61,13 +61,7 @@ export default function ThreePropositions({ brief }: { brief: ThreePropositionsB
       </section>
 
       <section className="mt-16 grid gap-6 md:grid-cols-2">
-        <div className="border-l-2 border-black/10 py-1 pl-5">
-          <Kicker muted>{limit.kicker}</Kicker>
-          <h3 className="mt-2 text-[22px] leading-tight text-black">{limit.title}</h3>
-          <p className="mt-2 text-base leading-relaxed text-gray-600">
-            <Rich text={limit.text} />
-          </p>
-        </div>
+        <Limit limit={limit} />
         <div className="rounded-2xl bg-gray-200 p-6">
           <Kicker>{start.kicker}</Kicker>
           <h3 className="mt-2 text-[22px] leading-tight text-black">{start.title}</h3>

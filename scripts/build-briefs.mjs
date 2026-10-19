@@ -283,21 +283,41 @@ const PARTNER_CSS = `
 .way-in .mail { color: #fff; font-weight: 600; }
 `
 
+/* Blocks the partnership and explainer layouts share. */
+
+/** How a pilot or a round runs: numbered steps on a thread, and the bar under them. */
+const stepsSection = (steps) => `  <section>
+    <div class="label-row"><p class="label">${esc(steps.label)}</p><p class="aside">${esc(steps.aside)}</p></div>
+    <div class="steps">
+${steps.items
+  .map((x, i) => `      <div class="step"><span class="n">${i + 1}</span><h3>${esc(x.title)}</h3><p>${rich(x.text)}</p></div>`)
+  .join('\n')}
+    </div>
+    <p class="bar"><b>${esc(steps.barLead)}</b> ${rich(steps.bar)}</p>
+  </section>`
+
+/** A labelled list of lead-ins, each with an optional source after it. */
+const leadList = (block) => `    <div>
+      <p class="label" style="margin-bottom: 2mm">${esc(block.label)}</p>
+      <ul class="list">
+${block.items
+  .map(
+    (x) => `        <li><b>${esc(x.lead)}</b> ${rich(x.text)}${x.source ? ` <span class="src">${x.url ? `<a href="${esc(x.url)}">${esc(x.source)}</a>` : esc(x.source)}</span>` : ''}</li>`,
+  )
+  .join('\n')}
+      </ul>
+    </div>`
+
+/** The black box with the way in. */
+const wayInBox = (b) =>
+  `<div class="way-in"><span class="k">${esc(b.wayIn.kicker)}</span><h3>${esc(b.wayIn.title)}</h3><p>${rich(b.wayIn.text)} <a class="mail" href="mailto:${esc(b.contact)}">${esc(b.contact)}</a></p><p>${rich(b.wayIn.people)}</p></div>`
+
 function renderPartnership(b) {
   const bring = b.bring.items
     .map(
       (x, i) => `      <div class="card"><span class="k">${String(i + 1).padStart(2, '0')}</span><h3>${esc(x.title)}</h3><p>${rich(x.text)}</p></div>`,
     )
     .join('\n')
-  const steps = b.steps.items
-    .map((x, i) => `      <div class="step"><span class="n">${i + 1}</span><h3>${esc(x.title)}</h3><p>${rich(x.text)}</p></div>`)
-    .join('\n')
-  const list = (items) =>
-    items
-      .map(
-        (x) => `        <li><b>${esc(x.lead)}</b> ${rich(x.text)}${x.source ? ` <span class="src">${x.url ? `<a href="${esc(x.url)}">${esc(x.source)}</a>` : esc(x.source)}</span>` : ''}</li>`,
-      )
-      .join('\n')
   const asks = b.ask.items.map((x) => `        <li><span><b>${esc(x.lead)}</b> ${rich(x.text)}</span></li>`).join('\n')
 
   const body = `  <section class="gap">
@@ -314,27 +334,11 @@ ${bring}
     </div>
   </section>
 
-  <section>
-    <div class="label-row"><p class="label">${esc(b.steps.label)}</p><p class="aside">${esc(b.steps.aside)}</p></div>
-    <div class="steps">
-${steps}
-    </div>
-    <p class="bar"><b>${esc(b.steps.barLead)}</b> ${rich(b.steps.bar)}</p>
-  </section>
+${stepsSection(b.steps)}
 
   <section class="pair">
-    <div>
-      <p class="label" style="margin-bottom: 2mm">${esc(b.starts.label)}</p>
-      <ul class="list">
-${list(b.starts.items)}
-      </ul>
-    </div>
-    <div>
-      <p class="label" style="margin-bottom: 2mm">${esc(b.why.label)}</p>
-      <ul class="list">
-${list(b.why.items)}
-      </ul>
-    </div>
+${leadList(b.starts)}
+${leadList(b.why)}
   </section>
 
   <section class="ask">
@@ -344,12 +348,76 @@ ${list(b.why.items)}
 ${asks}
       </ol>
     </div>
-    <div class="way-in"><span class="k">${esc(b.wayIn.kicker)}</span><h3>${esc(b.wayIn.title)}</h3><p>${rich(b.wayIn.text)} <a class="mail" href="mailto:${esc(b.contact)}">${esc(b.contact)}</a></p><p>${rich(b.wayIn.people)}</p></div>
+    ${wayInBox(b)}
   </section>`
   return page(b, body, PARTNER_CSS)
 }
 
-const LAYOUTS = { 'three-propositions': renderThreePropositions, partnership: renderPartnership }
+/* ───────────────────────────────────────────────────────────────────────
+   Layout: explainer.
+
+   Broad Listening & Simocracy. Two tools as cards, each a claim with two
+   pieces of evidence side by side at its foot; how a round runs, with the
+   rule under it; where the tools have run beside where a government can
+   use them; the honest limit beside the way in. Built from the partnership
+   layout's steps, lists and way in, so it shares their rules too.
+   ─────────────────────────────────────────────────────────────────────── */
+
+const EXPLAINER_CSS = `${PARTNER_CSS}
+.tools { display: grid; grid-template-columns: 1fr 1fr; column-gap: 3.2mm; }
+.tool { display: grid; grid-template-rows: subgrid; grid-row: span 3; padding: 3mm 3.4mm 2.8mm; }
+.tool h2 { font-family: var(--serif); font-weight: 500; font-size: 15pt; line-height: 1.05; color: var(--black); margin-top: 1mm; }
+.tool .promise { font-family: var(--serif); font-style: italic; font-size: 8.8pt; line-height: 1.25; color: var(--blue); margin-top: 1mm; }
+.tool .text { font-size: 7.2pt; line-height: 1.45; color: var(--body); margin-top: 2mm; }
+.tool .evs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 3.2mm; border-top: 0.6pt solid var(--line); padding-top: 1.8mm; margin-top: 2.2mm; }
+.tool .fig { font-size: 15pt; }
+.tool .cap { font-size: 6.4pt; line-height: 1.36; color: var(--ink); margin-top: 0.9mm; }
+.tool .src { margin-top: 0.7mm; }
+
+.close { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2mm; align-items: stretch; }
+.limit { border-left: 1.2pt solid var(--line); padding: 0.4mm 0 0.4mm 3.2mm; align-self: center; }
+.limit .k { display: block; color: var(--muted); }
+.limit h3 { font-family: var(--serif); font-weight: 500; font-size: 10.6pt; line-height: 1.12; color: var(--black); margin-top: 1mm; }
+.limit p { font-size: 6.8pt; line-height: 1.42; color: var(--body); margin-top: 1.1mm; }
+`
+
+function renderExplainer(b) {
+  const tools = b.tools
+    .map(
+      (t, i) => `    <article class="card tool">
+      <div><span class="k">${String(i + 1).padStart(2, '0')}</span><h2>${esc(t.title)}</h2><p class="promise">${esc(t.promise)}</p></div>
+      <p class="text">${rich(t.text)}</p>
+      <div class="evs">
+${t.evidence
+  .map((e) => `        <div class="ev"><span class="fig">${esc(e.figure)}</span><p class="cap">${rich(e.caption)}</p>${source(e.source, e.url)}</div>`)
+  .join('\n')}
+      </div>
+    </article>`,
+    )
+    .join('\n')
+
+  const body = `  <section>
+    <div class="label-row"><p class="label">${esc(b.toolsLabel)}</p><p class="aside">${esc(b.toolsAside)}</p></div>
+    <div class="tools">
+${tools}
+    </div>
+  </section>
+
+${stepsSection(b.steps)}
+
+  <section class="pair">
+${leadList(b.ran)}
+${leadList(b.uses)}
+  </section>
+
+  <section class="close">
+    <div class="limit"><span class="k">${esc(b.limit.kicker)}</span><h3>${esc(b.limit.title)}</h3><p>${rich(b.limit.text)}</p></div>
+    ${wayInBox(b)}
+  </section>`
+  return page(b, body, EXPLAINER_CSS)
+}
+
+const LAYOUTS = { 'three-propositions': renderThreePropositions, partnership: renderPartnership, explainer: renderExplainer }
 
 /* ─── build ─── */
 
