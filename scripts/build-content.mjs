@@ -455,8 +455,29 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Impact Dashboard', summary: 'Ecosystem impact metrics across villages and funding', date: '', type: 'page', relpermalink: '/areas/economies-governance/impact/' },
     { title: 'Project Explorer', summary: '242+ teams building decentralized coordination and public goods', date: '', type: 'page', relpermalink: '/areas/economies-governance/projects/' },
     { title: 'Dependency Graph', summary: 'Strategic dependency trees across 4 inflection points', date: '', type: 'page', relpermalink: '/areas/economies-governance/dependency-graph/' },
+    { title: 'FA2 Briefs', summary: 'One-page briefs for governments, each with a web edition and an A4 PDF', date: '', type: 'page', relpermalink: '/areas/economies-governance/#briefs' },
+    ...buildBriefSearchItems(),
   ]
   return items
+}
+
+// FA2 briefs: one entry per JSON in src/data/fa2/briefs/, titled as printed.
+function buildBriefSearchItems() {
+  const dir = path.join(ROOT, 'src/data/fa2/briefs')
+  if (!fs.existsSync(dir)) return []
+  const plain = (text) => text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1')
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith('.json'))
+    .sort()
+    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')))
+    .map((b) => ({
+      title: `${b.title}: ${b.subtitle}`,
+      summary: plain(b.summary),
+      date: '',
+      type: 'page',
+      relpermalink: `/areas/economies-governance/briefs/${b.slug}/`,
+    }))
 }
 
 // Main

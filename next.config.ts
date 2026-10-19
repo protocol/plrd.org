@@ -151,6 +151,12 @@ const nextConfig: NextConfig = {
         destination: '/areas/neurotech/#opportunity-spaces',
         permanent: true,
       },
+      // The FA2 briefs have no index of their own: the shelf on the FA2 page is it.
+      {
+        source: '/areas/economies-governance/briefs/',
+        destination: '/areas/economies-governance/#briefs',
+        permanent: false,
+      },
       // Old individual opportunity-space URLs -> new shortened paths.
       // Covers both the detail page and its /edit subpath for every area.
       {

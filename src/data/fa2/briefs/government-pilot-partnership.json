@@ -1,0 +1,167 @@
+{
+  "slug": "government-pilot-partnership",
+  "layout": "partnership",
+  "kicker": "Economies & Governance · Partnership",
+  "date": "October 2026",
+  "title": "Sovereign AI",
+  "subtitle": "Government pilot partnership",
+  "label": "Government pilot partnership",
+  "summary": "How PL R&D works with a government to take one public problem to a working AI pilot, and what we ask in return.",
+  "standfirst": "PL R&D helps countries build the technical and institutional capacity to govern, adapt and deploy AI for their own public priorities. We work as an R&D and implementation partner. We assemble the technical expertise, institutional design, evaluation and external resources needed to move from an identified government problem to a working pilot.",
+  "image": "/images/fa2/briefs/government-pilot-partnership.webp",
+  "imageAlt": "A pencil drawing of a stone arch bridge under construction, still resting on its timber centring, with a small classical building on the far bank.",
+  "imagePosition": "50% 60%",
+  "gap": {
+    "paragraphs": [
+      "Most AI offers to government come as a product or a plan. The product is someone else's model on someone else's cloud. The plan stops at the document. Neither leaves a country able to choose, run, test and improve AI itself.",
+      "That capacity decides whose priorities the AI serves. It is what we help build, one pilot at a time, starting from a problem a government already has. Our companion brief, [Why sovereign AI](/areas/economies-governance/briefs/why-sovereign-ai/), sets out what is at stake."
+    ],
+    "figure": "1st",
+    "caption": "In more than 1,500 written submissions to the UN's first Global Dialogue on AI Governance, governments were the only group to rank capacity-building first. Most others put safety first.",
+    "source": "UN press release, Geneva, 6 July 2026",
+    "url": "https://www.un.org/global-dialogue-ai-governance/sites/default/files/2026-07/press_release_global_dialogue_6_july_2026_en.pdf"
+  },
+  "bring": {
+    "label": "What we bring",
+    "aside": "Assembled for each pilot, around the government's own team",
+    "items": [
+      {
+        "title": "Technical expertise",
+        "text": "People who choose, host and adapt open models on infrastructure the government controls, in its languages and with its data. We draw on PL R&D and nearly 400 teams across the Protocol Labs network."
+      },
+      {
+        "title": "Institutional design",
+        "text": "Who owns the system, who may see what, and how each decision stays accountable. Procurement terms, data rules and red lines are agreed before any data moves, and citizens can shape and check the work."
+      },
+      {
+        "title": "Evaluation",
+        "text": "Models are tested against the country's own priorities, languages and values before use. The pilot is measured with real users against the current process, and the results are reported, good or bad."
+      },
+      {
+        "title": "External resources",
+        "text": "Help to line up grants, compute, research partners and convenings through the Protocol Labs network and partner funders, so a promising pilot does not stall waiting for a budget cycle."
+      }
+    ]
+  },
+  "steps": {
+    "label": "How a pilot runs",
+    "aside": "From a named problem to a decision",
+    "items": [
+      {
+        "title": "Pick the problem",
+        "text": "One public problem, owned by a minister or agency, with a measure of success agreed at the start."
+      },
+      {
+        "title": "Set the rules",
+        "text": "Data rules, oversight and red lines first. Then an open model, hosted where the government controls it."
+      },
+      {
+        "title": "Build and test",
+        "text": "Adapt the model to local language and data. Test it with real users against the way the work is done today."
+      },
+      {
+        "title": "Decide and hand over",
+        "text": "Scale it, change it or stop it, on the evidence. The code, the know-how and the team stay with the government."
+      }
+    ],
+    "barLead": "Our bar for a working pilot:",
+    "bar": "a real public service, used by more than 1,000 people over at least 30 days, that matches or beats the current process."
+  },
+  "starts": {
+    "label": "Where a pilot can start",
+    "items": [
+      {
+        "lead": "Policy intelligence.",
+        "text": "Read every response to a public consultation, with each finding linked to what people actually said."
+      },
+      {
+        "lead": "Participatory budgeting.",
+        "text": "Structured deliberation that helps a city or ministry allocate a budget, with people making the final call."
+      },
+      {
+        "lead": "Sensitive documents.",
+        "text": "Translation and drafting on an open model running on government hardware, for texts that must not leave the building."
+      },
+      {
+        "lead": "Citizen services.",
+        "text": "An assistant for forms, benefits and permits in national languages, hosted under national law."
+      },
+      {
+        "lead": "Verified public data.",
+        "text": "Monitoring of environmental and public projects that funders and auditors can check for themselves."
+      }
+    ]
+  },
+  "why": {
+    "label": "Why PL R&D",
+    "items": [
+      {
+        "lead": "Open by default.",
+        "text": "We build on open models, open standards and open code that a government can inspect, keep and run without us."
+      },
+      {
+        "lead": "From research to deployment.",
+        "text": "Protocol Labs spent a decade turning research into open infrastructure used around the world: IPFS, Filecoin and libp2p."
+      },
+      {
+        "lead": "Governance experience.",
+        "text": "Broad Listening and Simocracy, AI-assisted deliberation that has driven a real budget allocation, and AI for Public Goods, a research field PL R&D co-leads, co-funded with Gitcoin."
+      },
+      {
+        "lead": "A field behind each pilot.",
+        "text": "More than 22,000 researchers, builders and residents from over 80 nations work on coordination problems in our Economies & Governance network."
+      },
+      {
+        "lead": "Evidence first.",
+        "text": "We agree what success looks like before we start, and report the evidence for and against afterwards."
+      }
+    ]
+  },
+  "ask": {
+    "label": "What we ask of a partner government",
+    "items": [
+      {
+        "lead": "An owner.",
+        "text": "A minister or agency lead who owns the problem."
+      },
+      {
+        "lead": "Access.",
+        "text": "The people, data and systems the pilot needs, under rules both sides sign."
+      },
+      {
+        "lead": "A decision.",
+        "text": "At the end: scale, change or stop."
+      },
+      {
+        "lead": "Openness.",
+        "text": "Share what we learn, within confidentiality, so other countries can build on it."
+      }
+    ]
+  },
+  "wayIn": {
+    "kicker": "Start here",
+    "title": "Bring us one public problem",
+    "text": "Tell us what your government wants AI to do better, and we will scope a pilot with you.",
+    "people": "David Dao and James Tunningley, co-leads, Economies & Governance."
+  },
+  "about": "Economies & Governance focus area. Programmable infrastructure for more efficient, equitable coordination at global scale.",
+  "contact": "research@protocol.ai",
+  "checked": "8 October 2026",
+  "footerCta": {
+    "label": "plrd.org",
+    "href": "https://www.plrd.org/areas/economies-governance/"
+  },
+  "notes": {
+    "label": "Network figures from PL R&D:",
+    "items": [
+      {
+        "label": "How PL R&D Accelerates Breakthroughs, 14 July 2026",
+        "url": "https://www.plrd.org/blog/how-pl-rd-accelerates-breakthroughs/"
+      },
+      {
+        "label": "Programmable Economies & Governance, 23 July 2026",
+        "url": "https://www.plrd.org/blog/better-economies-governance-systems/"
+      }
+    ]
+  }
+}
