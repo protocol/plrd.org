@@ -358,7 +358,7 @@ FA2 is special-cased: **hardcoded routes** under `/areas/economies-governance/` 
 | `.../edit/` | `edit/page.tsx` | inline editor over `area-economies-governance` |
 | `.../briefs/[slug]/` | SSG via `generateStaticParams` | `src/data/fa2/briefs/<slug>.json`; PDF and shelf plate in `public/briefs/` |
 
-**Briefs.** One-page briefs for governments (now *Why sovereign AI*, *Broad Listening & Simocracy* and *Sovereign AI: government pilot partnership*). Each is one JSON file in `src/data/fa2/briefs/` that names its layout (`three-propositions`, `explainer` or `partnership`) and is registered in `src/lib/briefs.ts`, whose order is the shelf's order; `scripts/fa2-briefs.test.mjs` fails if a JSON is not registered. The JSON is published three ways:
+**Briefs.** One-page briefs for governments, such as *Why sovereign AI* and *Hypercerts*. Each is one JSON file in `src/data/fa2/briefs/` that names its layout (`three-propositions`, `explainer` or `partnership`) and is registered in `src/lib/briefs.ts`, whose order is the shelf's order; `scripts/fa2-briefs.test.mjs` fails if a JSON is not registered. The JSON is published three ways:
 
 - the web edition at `.../briefs/<slug>/` (`src/components/briefs/`, one component per layout, built from the shared blocks in `parts.tsx`);
 - `npm run build-briefs [slug]` prints it to `public/briefs/<slug>.pdf` with headless Chrome (`scripts/build-briefs.mjs` holds the print layouts, `scripts/briefs/sheet.css` the shared look) and renders page one to `public/briefs/<slug>.webp`. It needs local Chrome, Python 3, `pdftoppm` and `magick`, reports the shrink-to-fit factor, and fails if a page still overflows A4. The PDFs are the one exception to the `*.pdf` ignore rule; rebuild and commit PDF and plate whenever the JSON changes;

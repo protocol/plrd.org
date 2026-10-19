@@ -60,9 +60,12 @@ export default function BriefShelf({ briefs }: { briefs: ShelfBrief[] }) {
   const brief = briefs.find((b) => b.slug === taken)
 
   return (
-    <div className="brief-shelf relative">
+    <div className="brief-shelf relative -mx-6 sm:mx-0">
       <div aria-hidden className="brief-board absolute inset-x-0" />
-      <div ref={rowRef} className="brief-row relative flex gap-x-12 overflow-x-auto pt-4 pb-1 sm:gap-x-20">
+      <div
+        ref={rowRef}
+        className="brief-row relative flex gap-x-8 overflow-x-auto px-6 pt-4 pb-1 sm:px-0 md:gap-x-10 lg:gap-x-20"
+      >
         {briefs.map((b) => (
           <a
             key={b.slug}

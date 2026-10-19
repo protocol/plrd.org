@@ -1,5 +1,6 @@
 import whySovereignAi from '@/data/fa2/briefs/why-sovereign-ai.json'
 import broadListeningSimocracy from '@/data/fa2/briefs/broad-listening-simocracy.json'
+import hypercerts from '@/data/fa2/briefs/hypercerts.json'
 import governmentPilotPartnership from '@/data/fa2/briefs/government-pilot-partnership.json'
 
 /**
@@ -105,6 +106,7 @@ function laidOut<L extends Brief['layout']>(json: { slug: string; layout: string
 export const briefs: Brief[] = [
   { ...whySovereignAi, layout: laidOut(whySovereignAi, 'three-propositions') },
   { ...broadListeningSimocracy, layout: laidOut(broadListeningSimocracy, 'explainer') },
+  { ...hypercerts, layout: laidOut(hypercerts, 'explainer') },
   { ...governmentPilotPartnership, layout: laidOut(governmentPilotPartnership, 'partnership') },
 ]
 

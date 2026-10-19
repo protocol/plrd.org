@@ -697,17 +697,22 @@ html.dark .hypercert-on-photo {
    white paper in both themes; only the board and the shadow follow the
    theme. */
 .brief-shelf {
-  --sheet-w: 8.5rem;
+  --sheet-w: 7.5rem;
   --sheet-turn: 33deg;
 }
 @media (min-width: 768px) {
+  .brief-shelf { --sheet-w: 9rem; }
+}
+@media (min-width: 1024px) {
   .brief-shelf { --sheet-w: 10rem; }
 }
 
 /* The row scrolls rather than wraps, so every sheet stands on one board.
    `safe center` centres the row while it fits and falls back to the start
    edge once it does not, so the first sheet can never be pushed out of
-   reach. The top padding leaves room for a sheet to lift on hover. */
+   reach. On a phone the shelf runs to the screen edges, so the next sheet
+   shows past the edge and the row reads as one you can scroll. The top
+   padding leaves room for a sheet to lift on hover. */
 .brief-row {
   justify-content: safe center;
   scrollbar-width: none;
