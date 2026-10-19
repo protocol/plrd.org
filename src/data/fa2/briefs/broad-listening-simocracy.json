@@ -7,7 +7,7 @@
   "subtitle": "Hear everyone, then decide in the open",
   "label": "Broad Listening & Simocracy",
   "summary": "What the two tools do, where they have run, and how a government can use them.",
-  "standfirst": "Broad Listening reads every answer to an open question, not a sample, and links each finding to the words behind it. Simocracy gives every participant an AI representative, a sim, that argues their case in public and helps split a real budget. Together they let a government hear everyone before it decides, and show its working afterwards. Both are open source, so they can run on machines the government controls.",
+  "standfirst": "Broad Listening reads every answer to an open question, not a sample, and links each finding to the words behind it. Simocracy gives every participant an AI representative, a sim, that argues their case in public and helps split a real budget. Together they let a government hear everyone before it decides, and show its working afterwards. Both run on the AT Protocol, so the whole record is open. Anyone can read every sim, claim, proposal and decision, and check it.",
   "image": "/images/fa2/briefs/broad-listening-simocracy.webp",
   "imageAlt": "A pencil drawing of an open-air Greek theatre set into a hillside, its stone tiers curving around a round stage with a colonnade behind it.",
   "imagePosition": "50% 66%",
