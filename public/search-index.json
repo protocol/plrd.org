@@ -1930,5 +1930,26 @@
     "date": "",
     "type": "page",
     "relpermalink": "/areas/economies-governance/dependency-graph/"
+  },
+  {
+    "title": "FA2 Briefs",
+    "summary": "One-page briefs for governments, each with a web edition and an A4 PDF",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/#briefs"
+  },
+  {
+    "title": "Sovereign AI: Government pilot partnership",
+    "summary": "How PL R&D works with a government to take one public problem to a working AI pilot, and what we ask in return.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/briefs/government-pilot-partnership/"
+  },
+  {
+    "title": "Why sovereign AI: Better public institutions, on your own terms",
+    "summary": "Three reasons a country should run its own AI, with the evidence behind each, and where to start.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/briefs/why-sovereign-ai/"
   }
 ]

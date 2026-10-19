@@ -10,7 +10,9 @@ import { AreaIcon } from '@/components/AreaIcons'
 import MarkdownContent from '@/components/MarkdownContent'
 import FA2LiveStatsBand from '@/components/FA2LiveStatsBand'
 import FocusAreaInterventions from '@/components/FocusAreaInterventions'
+import BriefShelf from '@/components/briefs/BriefShelf'
 import opportunityData from '@/data/fa2/opportunityspaces.json'
+import { briefCover, briefHref, briefKind, briefPdf, briefs, plain } from '@/lib/briefs'
 import { FOCUS_AREA_DESCRIPTIONS } from '@/lib/focus-area-descriptions'
 import { fetchPage, getSection, fetchOpportunitySpaces } from '@/lib/indexer'
 import { fetchSimocracyStats } from '@/lib/simocracy'
@@ -205,6 +207,31 @@ export default async function FA2MainPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Briefs: the one-pagers on a shelf, each with a web edition and a PDF */}
+      <section id="briefs" className="mb-16 scroll-mt-24">
+        <div className="mb-6">
+          <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-2">For governments</h2>
+          <h3 className="text-2xl lg:text-[32px] font-semibold mb-3">Briefs</h3>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl">
+            One page each, for ministries and their advisers, with a source for every figure. Open one to
+            read it on the web or download the A4 PDF.
+          </p>
+        </div>
+        <BriefShelf
+          briefs={briefs.map((b) => ({
+            slug: b.slug,
+            label: b.label,
+            kind: briefKind(b),
+            title: b.title,
+            subtitle: b.subtitle,
+            summary: plain(b.summary),
+            href: briefHref(b.slug),
+            pdf: briefPdf(b.slug),
+            cover: briefCover(b.slug),
+          }))}
+        />
       </section>
 
       {/* Opportunity Spaces (inlined) */}
