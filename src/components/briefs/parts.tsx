@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { briefPdf, type Brief } from '@/lib/briefs'
+import { briefPdf, type Brief, type Lead, type Limit as LimitBlock, type Steps as StepsBlock, type WayIn as WayInBlock } from '@/lib/briefs'
 import Rich from './Rich'
 
 /*
@@ -148,6 +148,85 @@ export function BriefFoot({ brief }: { brief: Brief }) {
       <p className="mt-3 max-w-3xl">
         <span className="font-semibold text-black">Protocol Labs R&amp;D</span> · <Rich text={brief.about} /> Evidence
         checked {brief.checked}.
+      </p>
+    </div>
+  )
+}
+
+/** Numbered steps on a thread, and the bar or rule under them. */
+export function Steps({ steps }: { steps: StepsBlock }) {
+  return (
+    <section className="mt-16">
+      <SectionLabel label={steps.label} aside={steps.aside} />
+      <ol className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {steps.items.map((x, i) => (
+          <li key={x.title} className="relative">
+            {/* The thread from one step to the next, on one row only. */}
+            {i < steps.items.length - 1 && (
+              <span aria-hidden className="absolute left-10 -right-6 top-4 hidden h-px bg-blue-200 dark:bg-blue/40 lg:block" />
+            )}
+            <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue font-serif text-base text-white">
+              {i + 1}
+            </span>
+            <h3 className="mt-3 text-[20px] leading-tight text-black">{x.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-gray-600">
+              <Rich text={x.text} />
+            </p>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-6 rounded-xl bg-gray-200 px-5 py-3 text-base leading-relaxed text-gray-700">
+        <span className="font-semibold text-black">{steps.barLead}</span> <Rich text={steps.bar} />
+      </p>
+    </section>
+  )
+}
+
+/** A labelled list of lead-ins, each with its source under it when it has one. */
+export function LeadList({ label, items }: { label: string; items: Lead[] }) {
+  return (
+    <div>
+      <SectionLabel label={label} />
+      <ul className="divide-y divide-black/5">
+        {items.map((x) => (
+          <li key={x.lead} className="py-3 text-base leading-relaxed text-gray-600 first:pt-0">
+            <span className="font-semibold text-black">{x.lead}</span> <Rich text={x.text} />
+            {x.source && <SourceLink label={x.source} url={x.url} />}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/** The honest limit: a quiet rule on the left, no box. */
+export function Limit({ limit }: { limit: LimitBlock }) {
+  return (
+    <div className="border-l-2 border-black/10 py-1 pl-5">
+      <Kicker muted>{limit.kicker}</Kicker>
+      <h3 className="mt-2 text-[22px] leading-tight text-black">{limit.title}</h3>
+      <p className="mt-2 text-base leading-relaxed text-gray-600">
+        <Rich text={limit.text} />
+      </p>
+    </div>
+  )
+}
+
+/** The way in: black on paper; the dark theme inverts it, like the site's
+    other solid calls to action. */
+export function WayIn({ wayIn, contact }: { wayIn: WayInBlock; contact: string }) {
+  return (
+    <div className="flex flex-col justify-center rounded-2xl bg-black p-6 text-white">
+      <span className="block text-xs uppercase tracking-widest text-[#ff7aa8] dark:text-pink">{wayIn.kicker}</span>
+      <h3 className="mt-2 text-[24px] leading-tight text-white">{wayIn.title}</h3>
+      <p className="mt-2 text-base leading-relaxed text-white/75">
+        <Rich text={wayIn.text} linkClassName="font-semibold text-white no-underline hover:underline" />{' '}
+        <a href={`mailto:${contact}`} className="font-semibold text-white no-underline hover:underline">
+          {contact}
+        </a>
+      </p>
+      <p className="mt-2 text-base leading-relaxed text-white/75">
+        <Rich text={wayIn.people} />
       </p>
     </div>
   )
