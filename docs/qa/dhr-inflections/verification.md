@@ -15,6 +15,14 @@ Requested follow-up to PR #143: separate the “Observable, and not yet true” 
 - `inflection-1440.png`, `inflection-390.png`, `inflection-dark-1440.png`, `byline-1440.png`: real headed-Chrome captures of the local production build at `2ea712a`, not hosted-deployment screenshots. The full browser replay also passed after the current-main refresh at `fb2b5c2`; the DHR article, author, and inflection styling are unchanged between those revisions.
 - `browser-results.json`: all four cards measured at 1440, 768, 390, and 320px. Checks include viewport/document bounds, no text overflow, separated heading/criterion geometry, visible divider, and author readback.
 
+## Approved heading wording follow-up
+
+- All four headings now read exactly **What we’re watching for**. The updated regression failed on the former heading, then passed after the source/generated-content change.
+- `wording-inflection-1440.png`, `wording-inflection-390.png`, and `wording-inflection-dark-1440.png` are local production browser captures at runtime source `e79224a7069247f04c7bec1f8a44ff4f7a4916c2`. Earlier images above deliberately retain the preceding label for provenance.
+- `wording-browser-results.json`: all four headings and geometry pass at 1440, 768, 390, and 320px. Molly’s byline is unchanged.
+- Seven focused tests, TypeScript, and the production build pass. The full suite again reports 152 passing and only the same known methodology assertion failure described below.
+- Fresh skeptical review: PASS. Exact source/generated-data comparison proves only four heading replacements; paragraph copy, author metadata, structure, unlisted preview and other articles are unchanged. Desktop/mobile captures show the approved label without clipping or overlap.
+
 ## Checks
 
 - Fresh pnpm 10 frozen-lockfile install passed; no dependency or lockfile change.
