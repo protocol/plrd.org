@@ -3,7 +3,7 @@ title: "Securing Fundamental Rights in the Digital Realm: The Infrastructure Fre
 date: 2026-08-30
 summary: "The digital foundations our fundamental rights now depend on — censorship-resistant communication, portable identity, verifiable public knowledge, and sovereign infrastructure for AI and agents — the four opportunity spaces we are backing and the inflection points we believe are within reach."
 authors:
-  - will-scott
+  - molly-mackinlay
 cover_image: "/images/blog/securing-fundamental-rights-in-the-digital-realm/hero.webp"
 areas:
   - digital-human-rights
@@ -96,8 +96,13 @@ Nation-state-independent connectivity is appearing: low-earth-orbit satellite ne
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span><span class="inflection-eyebrow">Inflection point</span></div>
-<p class="inflection-title">Communication that cannot be switched off</p>
-<p class="inflection-body">The step-change comes when nation-state-independent connectivity and metadata-resistant messaging reach consumer scale, so that during a deliberate shutdown a measurable share of a population stays connected and able to organize. Observable, and not yet true: a global connectivity provider offers consumer-scale service without state licensing or identity gating, and a metadata-resistant messenger crosses tens of millions of users under real adversarial conditions. At that point, censoring who may speak or gather online becomes impractical rather than merely illegal.</p>
+<h3 class="inflection-title">Communication that cannot be switched off</h3>
+<p class="inflection-body">The step-change comes when nation-state-independent connectivity and metadata-resistant messaging reach consumer scale, so that during a deliberate shutdown a measurable share of a population stays connected and able to organize.</p>
+<div class="inflection-observable">
+<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<p class="inflection-body">A global connectivity provider offers consumer-scale service without state licensing or identity gating, and a metadata-resistant messenger crosses tens of millions of users under real adversarial conditions.</p>
+</div>
+<p class="inflection-body inflection-implication">At that point, censoring who may speak or gather online becomes impractical rather than merely illegal.</p>
 </div>
 
 <h2 class="os-heading">Opportunity Space <span class="os-num">2</span> Portable Identity, Credentials &amp; Trust</h2>
@@ -118,8 +123,13 @@ Open social protocols such as the [Authenticated Transfer (AT) Protocol](https:/
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span><span class="inflection-eyebrow">Inflection point</span></div>
-<p class="inflection-title">Personhood without the state in the loop</p>
-<p class="inflection-body">The step-change comes when a service at real scale — more than 100 million people — verifies unique humans for everyday services without anchoring them to a nation-state identity or KYC. Observable, and not yet true: today's proof-of-personhood systems operate well below that scale and outside mainstream services. When one crosses it, recognition as a person need no longer be rented from a state or a platform, and privacy-preserving personhood becomes safe to build on.</p>
+<h3 class="inflection-title">Personhood without the state in the loop</h3>
+<p class="inflection-body">The step-change comes when a service at real scale — more than 100 million people — verifies unique humans for everyday services without anchoring them to a nation-state identity or KYC.</p>
+<div class="inflection-observable">
+<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<p class="inflection-body">Today's proof-of-personhood systems operate well below that scale and outside mainstream services.</p>
+</div>
+<p class="inflection-body inflection-implication">When one crosses it, recognition as a person need no longer be rented from a state or a platform, and privacy-preserving personhood becomes safe to build on.</p>
 </div>
 
 <h2 class="os-heading">Opportunity Space <span class="os-num">3</span> Verifiable Public Knowledge &amp; Provenance</h2>
@@ -140,8 +150,13 @@ Content addressing, as in [IPFS](https://ipfs.tech/), gives every file a verifia
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span><span class="inflection-eyebrow">Inflection point</span></div>
-<p class="inflection-title">Provenance becomes the default for truth</p>
-<p class="inflection-body">The step-change comes when content authenticity stops being optional. Observable, and not yet true: two consecutive generations of frontier AI models ship attested provenance tooling by default, and at least one major platform or archive adopts content-addressed provenance as the default for its public record. As synthetic content becomes indistinguishable from the real thing, a public record that can prove its own integrity becomes the precondition for accurate information meaning anything at all.</p>
+<h3 class="inflection-title">Provenance becomes the default for truth</h3>
+<p class="inflection-body">The step-change comes when content authenticity stops being optional.</p>
+<div class="inflection-observable">
+<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<p class="inflection-body">Two consecutive generations of frontier AI models ship attested provenance tooling by default, and at least one major platform or archive adopts content-addressed provenance as the default for its public record.</p>
+</div>
+<p class="inflection-body inflection-implication">As synthetic content becomes indistinguishable from the real thing, a public record that can prove its own integrity becomes the precondition for accurate information meaning anything at all.</p>
 </div>
 
 <h2 class="os-heading">Opportunity Space <span class="os-num">4</span> Sovereign Infrastructure for AI &amp; Agents</h2>
@@ -162,8 +177,13 @@ Open storage markets such as [Filecoin](https://www.filecoin.io/) run on indepen
 
 <div class="inflection">
 <div class="inflection-head"><span class="inflection-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span><span class="inflection-eyebrow">Inflection point</span></div>
-<p class="inflection-title">Agents run on open rails</p>
-<p class="inflection-body">The step-change comes when serious AI capability no longer requires a single provider's stack. Observable, and not yet true: a frontier-scale model is trained across independent, decentralized hardware rather than one company's cluster, or a meaningful share of agent-to-agent economic activity settles on open, permissionless compute, storage, and identity rather than inside one platform. At that point the rights architecture of the agent economy is set in the open rather than by whoever owns the cluster.</p>
+<h3 class="inflection-title">Agents run on open rails</h3>
+<p class="inflection-body">The step-change comes when serious AI capability no longer requires a single provider's stack.</p>
+<div class="inflection-observable">
+<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<p class="inflection-body">A frontier-scale model is trained across independent, decentralized hardware rather than one company's cluster, or a meaningful share of agent-to-agent economic activity settles on open, permissionless compute, storage, and identity rather than inside one platform.</p>
+</div>
+<p class="inflection-body inflection-implication">At that point the rights architecture of the agent economy is set in the open rather than by whoever owns the cluster.</p>
 </div>
 
 ## Building the field

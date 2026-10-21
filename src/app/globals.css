@@ -964,6 +964,29 @@ html.dark .hypercert-on-photo {
   margin: 0;
   color: var(--color-gray-600);
 }
+/* A distinct, labeled criterion within the DHR inflection cards. */
+.page-content h3.inflection-title {
+  font-family: var(--font-body);
+}
+.page-content .inflection-observable {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(25, 130, 244, 0.22);
+}
+.page-content .inflection-observable-heading {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-black);
+}
+.page-content .inflection-implication {
+  margin-top: 1rem;
+}
+html.dark .page-content .inflection-observable {
+  border-color: rgba(59, 150, 246, 0.32);
+}
 html.dark .page-content .inflection {
   background: rgba(59, 150, 246, 0.10);
   border-color: rgba(59, 150, 246, 0.32);
