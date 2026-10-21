@@ -690,6 +690,109 @@ html.dark .hypercert-on-photo {
   .hypercert-pulse-dot { animation: none; }
 }
 
+/* ===== FA2 briefs shelf (BriefShelf.tsx) =====
+   After ai4cop.org's field sheets: each one-pager stands on a board as the
+   A4 page it prints, turned so it reads as an object, and straightens when
+   reached for. The plates are page one of the shipped PDFs, so they stay
+   white paper in both themes; only the board and the shadow follow the
+   theme. */
+.brief-shelf {
+  --sheet-w: 7.5rem;
+  --sheet-turn: 33deg;
+}
+@media (min-width: 768px) {
+  .brief-shelf { --sheet-w: 9rem; }
+}
+@media (min-width: 1024px) {
+  .brief-shelf { --sheet-w: 10rem; }
+}
+
+/* The row scrolls rather than wraps, so every sheet stands on one board.
+   `safe center` centres the row while it fits and falls back to the start
+   edge once it does not, so the first sheet can never be pushed out of
+   reach. On a phone the shelf runs to the screen edges, so the next sheet
+   shows past the edge and the row reads as one you can scroll. The top
+   padding leaves room for a sheet to lift on hover. */
+.brief-row {
+  justify-content: safe center;
+  scrollbar-width: none;
+}
+.brief-row::-webkit-scrollbar { display: none; }
+
+.brief-sheet {
+  position: relative;
+  display: block;
+  width: var(--sheet-w);
+  height: calc(var(--sheet-w) * 297 / 210); /* A4 */
+  transform: perspective(950px) rotateY(var(--sheet-turn));
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  background: #fff;
+  border: 1px solid rgba(19, 19, 22, 0.12);
+  overflow: hidden;
+}
+html.dark .brief-sheet { border-color: rgba(255, 255, 255, 0.08); }
+/* A soft sheen down the hinge edge, so the leaf reads as a surface. */
+.brief-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(15, 47, 82, 0.1) 0%, rgba(255, 255, 255, 0.12) 4%, rgba(15, 47, 82, 0.04) 9%, transparent 24%);
+}
+.brief-item:hover .brief-sheet,
+.brief-item:focus-visible .brief-sheet {
+  transform: perspective(950px) rotateY(4deg) translateY(-0.5rem);
+}
+
+/* The contact shadow under each sheet, cast on the board. */
+.brief-shadow {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgba(15, 47, 82, 0.18);
+  filter: blur(5px);
+  transform: scaleX(0.9);
+}
+html.dark .brief-shadow { background: rgba(0, 0, 0, 0.55); }
+
+/* The board: a hairline at floor level and a shallow apron below it, rules
+   rather than a box. It sits where the sheets stand: the row's top padding
+   plus one sheet. */
+.brief-board {
+  top: calc(1rem + var(--sheet-w) * 297 / 210 + 0.6rem);
+  height: 2.75rem;
+  border-top: 1px solid rgba(19, 19, 22, 0.12);
+  background: linear-gradient(to bottom, var(--color-gray-100), transparent);
+}
+html.dark .brief-board { border-top-color: rgba(255, 255, 255, 0.1); }
+
+.brief-caption {
+  width: var(--sheet-w);
+  text-wrap: balance;
+}
+
+/* A sheet taken down. The flyer is the FLIP wrapper: the card lays it out at
+   centre stage, script transforms it back onto its shelf spot, then releases
+   it; the leaf straightens on the same clock and answers the cursor once it
+   has landed. */
+.brief-flyer {
+  --sheet-w: clamp(10rem, 32vw, 17rem);
+  will-change: transform;
+}
+.brief-flyer.is-animating,
+.brief-flyer .brief-sheet {
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.brief-flyer[data-stage="open"] .brief-sheet {
+  transform: perspective(950px) rotateX(var(--tilt-x, 0deg)) rotateY(calc(4deg + var(--tilt-y, 0deg)));
+}
+.brief-flyer.is-settled .brief-sheet {
+  transition: transform 0.18s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .brief-sheet,
+  .brief-flyer,
+  .brief-flyer .brief-sheet { transition: none; }
+}
+
 /* ===== Sticky nav ===== */
 [data-selector="nav"] [data-selector="nav-contents"] {
   transition: padding-top .4s ease-in-out, padding-bottom .4s ease-in-out;

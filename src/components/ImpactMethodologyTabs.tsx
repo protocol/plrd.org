@@ -3,24 +3,13 @@
 import { Children, isValidElement, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import styles from '@/app/impact-preview-eb61fba1b98e/page.module.css'
 import { navigateImpact, useImpactNavigation } from '@/components/useImpactNavigation'
+import { FIELD_LOOP_STEPS } from '@/lib/interventions'
 
-const TABS = [
-  {
-    id: 'diagnose',
-    label: 'Diagnose',
-    blurb: 'Name the binding constraint.',
-  },
-  {
-    id: 'intervene',
-    label: 'Intervene',
-    blurb: 'Apply the lever that matches that bottleneck.',
-  },
-  {
-    id: 'learn',
-    label: 'Learn',
-    blurb: 'Read field velocity, then check the inflection points.',
-  },
-] as const
+const TABS = FIELD_LOOP_STEPS.map((step) => ({
+  id: step.label.toLowerCase() as 'diagnose' | 'intervene' | 'learn',
+  label: step.label,
+  blurb: step.blurb,
+}))
 
 type TabId = (typeof TABS)[number]['id']
 

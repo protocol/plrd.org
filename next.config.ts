@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     // Defense in depth; Atlas must emit noindex itself for external responses.
+    // The old interventions preview prefix stays noindex because every path
+    // under it now redirects to the public methodology page.
     return [{
       source: `${previewConfig.basePath}/:path*`,
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
@@ -41,7 +43,70 @@ const nextConfig: NextConfig = {
     ]
   },
   async redirects() {
+    const methodology = '/methodology/'
     return [
+      // The methodology page is public. Old cryptic and catalogue URLs redirect
+      // there so shared links do not 404. The retired catalogue prefix stays
+      // noindex above.
+      {
+        source: `${previewConfig.basePath}/methodology`,
+        destination: methodology,
+        permanent: true,
+      },
+      {
+        source: `${previewConfig.basePath}/methodology/`,
+        destination: methodology,
+        permanent: true,
+      },
+      {
+        source: previewConfig.basePath,
+        destination: methodology,
+        permanent: false,
+      },
+      {
+        source: `${previewConfig.basePath}/`,
+        destination: methodology,
+        permanent: false,
+      },
+      {
+        source: `${previewConfig.basePath}/data`,
+        destination: methodology,
+        permanent: false,
+      },
+      {
+        source: `${previewConfig.basePath}/data/`,
+        destination: methodology,
+        permanent: false,
+      },
+      // Named catalogue slugs only. A wildcard would also match methodology
+      // and redirect the kept page onto itself.
+      ...[
+        'juan-benet-neuropodcast',
+        'bci-roadmap',
+        'pl-neuro-salon',
+        'bci-founders-retreat',
+        'connectomics-workshop',
+        'ierr-2025',
+        'dacc-2025',
+        'sovereign-ai',
+        'evaluation-commons',
+        'broad-listening',
+        'ai4pg',
+        'ai4cop',
+        'evidence-research',
+        'compute-alliance',
+        'eg-fellowship',
+        'connectomics-benchmark',
+        'macaque-projectome',
+        'discovery-challenge',
+        'mouse-connectome',
+        'neuroai-commons',
+        'virtual-neuro',
+        'neuroai-fellows',
+      ].flatMap((slug) => ([
+        { source: `${previewConfig.basePath}/${slug}`, destination: methodology, permanent: false },
+        { source: `${previewConfig.basePath}/${slug}/`, destination: methodology, permanent: false },
+      ])),
       // Preserve shared preview links when the approved Neuro article goes live.
       {
         source: '/blog/preview-neurotech-4972678300d0a37a2a1e0b9d1b40e852/',
@@ -85,6 +150,12 @@ const nextConfig: NextConfig = {
         source: '/areas/neurotech/opportunity-spaces/',
         destination: '/areas/neurotech/#opportunity-spaces',
         permanent: true,
+      },
+      // The FA2 briefs have no index of their own: the shelf on the FA2 page is it.
+      {
+        source: '/areas/economies-governance/briefs/',
+        destination: '/areas/economies-governance/#briefs',
+        permanent: false,
       },
       // Old individual opportunity-space URLs -> new shortened paths.
       // Covers both the detail page and its /edit subpath for every area.

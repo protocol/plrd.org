@@ -1,22 +1,19 @@
 import type { Metadata } from 'next'
 import styles from './page.module.css'
 import { INTERVENTION_GLYPHS, ItemGlyph, type ItemIcon } from './InterveneIcons'
-import Breadcrumb from '@/components/Breadcrumb'
-import { catalogHref } from '@/lib/interventions'
+import { methodologyHref } from '@/lib/interventions'
 import ImpactDashboardV2 from '@/components/ImpactDashboardV2'
 import ImpactSectionLink from '@/components/ImpactSectionLink'
 import ImpactMethodologyTabs from '@/components/ImpactMethodologyTabs'
-import { fetchLiveOutputs } from '@/lib/field-velocity-live'
 import { isFocusAreaKey, loadFieldVelocity } from '@/lib/field-velocity-data'
 
 export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Intervention methodology',
-  alternates: { canonical: `${catalogHref()}methodology/` },
+  alternates: { canonical: methodologyHref() },
   description:
     'How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.',
-  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 }
 
 const bottlenecks = [
@@ -141,32 +138,42 @@ const interventions = [
     evidence:
       'Standards adopted, procurement enabled, barriers removed, and third parties increasingly able to deploy or replicate what works.',
   },
-] as const
-
-// The spanning conditions that run through every lever, shown as banners under
-// the six levers rather than as a seventh category.
-const spanningLayers = [
   {
     title: 'Culture',
-    body: 'The spanning condition, not a seventh category. It shapes what people notice, believe is possible, and choose to join — across all six levers.',
+    subtitle: 'Make the field worth joining.',
+    failure:
+      'The work exists, but the stories and norms around it do not make people want to join, stay, or celebrate what is improving.',
+    actions: [
+      { icon: 'flag', label: 'Field stories' },
+      { icon: 'people', label: 'Communities of practice' },
+      { icon: 'doc', label: 'Public writing' },
+      { icon: 'trophy', label: 'Recognition' },
+      { icon: 'arrow', label: 'Open rituals' },
+      { icon: 'check', label: 'Shared norms' },
+    ] as { icon: ItemIcon; label: string }[],
+    evidence:
+      'More people can picture themselves in the field, stay in it, and treat improving culture as something worth celebrating.',
   },
-  {
-    title: 'Narrative',
-    body: 'The stories that make a field worth joining: how the opportunity is told, and who can picture themselves in it.',
-  },
+] as const
+
+// Talent still runs through every lever. Culture, including the stories that
+// make a field worth joining, is a lever of its own.
+const spanningLayers = [
   {
     title: 'Talent',
     body: 'The people who carry a field — discovering it, joining networks, receiving resources, building infrastructure, running pilots, creating institutions.',
   },
-]
+] as const
 
 export default async function ImpactPage({
   searchParams,
 }: {
   searchParams: Promise<{ area?: string | string[] }>
 }) {
-  const [liveOutputs, fieldVelocity, query] = await Promise.all([
-    fetchLiveOutputs(),
+  // The Learn tab reads field velocity, not the live contribution metrics.
+  // Those fetches (Glow weeks, GainForest, Simocracy) were blocking first paint
+  // of /methodology/ for several seconds and the result was never rendered.
+  const [fieldVelocity, query] = await Promise.all([
     loadFieldVelocity(),
     searchParams,
   ])
@@ -188,12 +195,7 @@ export default async function ImpactPage({
   return (
     <div className="overflow-hidden">
       <div className="mx-auto max-w-6xl px-6 pt-8">
-        <Breadcrumb items={[
-          { label: 'Interventions', href: catalogHref() },
-          { label: 'Methodology' },
-        ]} />
-
-        <section className="pb-12 pt-10 lg:pb-16 lg:pt-14">
+        <section className="pb-12 pt-6 lg:pb-16 lg:pt-10">
           <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
             Our impact methodology
           </div>
@@ -245,7 +247,7 @@ export default async function ImpactPage({
                     key={title}
                     className="rounded-2xl border border-black/10 bg-white px-5 py-6 sm:px-6 sm:py-8"
                   >
-                    <div className="text-[28px] font-semibold leading-[1.05] tracking-[-0.03em] text-black sm:text-[32px]">
+                    <div className="text-[22px] font-semibold leading-[1.1] tracking-[-0.02em] text-black sm:text-[24px]">
                       {title}
                     </div>
                     <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
@@ -254,16 +256,6 @@ export default async function ImpactPage({
                   </div>
                 ))}
               </div>
-
-              <p
-                className={`${styles.diagnosisQuote} max-w-3xl text-[15px] leading-relaxed text-gray-500`}
-              >
-                Binding question, after the blockers:{' '}
-                <span className="font-medium text-black">
-                  which of these is preventing this field from moving faster
-                  now?
-                </span>
-              </p>
 
             </div>
           </div>
@@ -278,7 +270,7 @@ export default async function ImpactPage({
               </div>
 
               <h2 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.025em] text-black">
-                Six repeatable ways to unblock a field.
+                Seven repeatable ways to unblock a field.
               </h2>
 
               <p className="mt-5 text-[17px] leading-[1.65] text-gray-600">
@@ -405,12 +397,19 @@ export default async function ImpactPage({
                   velocity across the instruments that apply to it. The
                   inflection points below are the markers we track.
                 </p>
+
+                <p className="mt-4 text-[13px] leading-relaxed text-gray-500">
+                  <span className="font-semibold uppercase tracking-[0.14em] text-gray-400">
+                    Work in progress.
+                  </span>{' '}
+                  Charts may change as information is updated.
+                </p>
               </div>
 
               <ImpactDashboardV2
                 key={initialArea}
                 initialArea={initialArea}
-                liveOutputs={liveOutputs}
+                liveOutputs={{}}
                 marketSignals={marketSignals}
                 recordsByArea={recordsByArea}
                 measurementSeriesByArea={measurementSeriesByArea}

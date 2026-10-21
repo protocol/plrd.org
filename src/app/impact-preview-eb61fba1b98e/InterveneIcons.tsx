@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-// Minimal inline glyph set for the six intervention levers, in the site's
+// Minimal inline glyph set for the intervention levers, in the site's
 // currentColor stroke style. No icon dependency; keep paths on a 24px grid.
 type GlyphProps = { className?: string }
 
@@ -82,6 +82,16 @@ export function EnableGlyph({ className }: GlyphProps) {
   )
 }
 
+export function CultureGlyph({ className }: GlyphProps) {
+  // a mark people gather around
+  return (
+    <Glyph className={className}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+    </Glyph>
+  )
+}
+
 export const INTERVENTION_GLYPHS = {
   Orient: OrientGlyph,
   Coordinate: CoordinateGlyph,
@@ -89,6 +99,7 @@ export const INTERVENTION_GLYPHS = {
   Build: BuildGlyph,
   Prove: ProveGlyph,
   Enable: EnableGlyph,
+  Culture: CultureGlyph,
 } as const
 
 export type InterventionGlyphKey = keyof typeof INTERVENTION_GLYPHS

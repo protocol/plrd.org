@@ -514,7 +514,7 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
             {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}{isStaleReading(record) && <StaleMarker />}
             {record.measuredAt && <span className="text-[10px] text-gray-500">measured {shortDate(record.measuredAt)}</span>}
           </span>
-        </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Not yet wired' : 'Not applicable to this field'}</span></>}
+        </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Coming soon' : 'Not applicable to this field'}</span></>}
         <span className="mt-auto text-[11px] font-medium text-blue">{multi ? 'Hover or tap to choose a chart' : items.length ? 'Open chart ↗' : 'View evidence & status'}</span>
       </span>
     </button>
@@ -620,7 +620,7 @@ function RecordEvidence({ record: r }: { record: InstrumentRecord }) {
       {r.provenance && <p className="text-xs break-words">{r.provenance.query && <>Cohort / query: {r.provenance.query}. </>}{r.provenance.generated && <>Retrieved {r.provenance.generated}</>}</p>}
       {r.sources && <SourceLinks sources={r.sources} />}
     </> : r.state === 'unwired' ? <>
-      <p className="font-semibold text-black">Not yet wired</p>
+      <p className="font-semibold text-black">Coming soon</p>
       <p>Intended metric: {r.candidateMetric}</p><p>Blocked by: {r.blocker}</p>
       {r.owner && <p>Owner: {r.owner}</p>}
     </> : <p>Not applicable to this field: {r.reason}</p>}
@@ -760,7 +760,7 @@ function VelocityModal({ area, record, markets, measurements, examples, itemId, 
           {items.length === 0 && <p className="mb-5 text-sm text-gray-500">No chart is wired for this instrument. Evidence and status are shown without inventing a time series.</p>}
           {pv && !items.some(i => i.kind === 'patent') && <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-600">
             <h3 className="font-semibold text-black">Patent vintage · invention side</h3>
-            {pv.state === 'unwired' ? <><p className="mt-2">Not yet wired. Intended metric: {pv.candidateMetric}</p><p>Blocked by: {pv.blocker}</p></> : pv.state === 'not_applicable' ? <p className="mt-2">Not applicable: {pv.reason}</p> : record.state === 'reading' ? <><p>{pv.value}</p>{pv.measuredAt && <p>measured {shortDate(pv.measuredAt)}</p>}{pv.sources && <SourceLinks sources={pv.sources} />}</> : <p>Not shown while this instrument is {record.state.replace('_', ' ')}.</p>}
+            {pv.state === 'unwired' ? <><p className="mt-2">Coming soon. Intended metric: {pv.candidateMetric}</p><p>Blocked by: {pv.blocker}</p></> : pv.state === 'not_applicable' ? <p className="mt-2">Not applicable: {pv.reason}</p> : record.state === 'reading' ? <><p>{pv.value}</p>{pv.measuredAt && <p>measured {shortDate(pv.measuredAt)}</p>}{pv.sources && <SourceLinks sources={pv.sources} />}</> : <p>Not shown while this instrument is {record.state.replace('_', ' ')}.</p>}
           </div>}
         </div>
       </section>

@@ -8,6 +8,7 @@ import {
   blogPosts,
   areas,
 } from '@/lib/content'
+import { briefHref, briefs } from '@/lib/briefs'
 
 const BASE = siteConfig.baseUrl
 
@@ -28,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: url(''), changeFrequency: 'weekly', priority: 1 },
     { url: url('about'), changeFrequency: 'monthly', priority: 0.7 },
+    { url: url('methodology'), changeFrequency: 'monthly', priority: 0.7 },
     { url: url('areas'), changeFrequency: 'monthly', priority: 0.8 },
     { url: url('insights'), changeFrequency: 'weekly', priority: 0.8 },
     { url: url('authors'), changeFrequency: 'weekly', priority: 0.7 },
@@ -82,9 +84,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }))
 
+  const briefRoutes: MetadataRoute.Sitemap = briefs.map((b) => ({
+    url: url(briefHref(b.slug)),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }))
+
   return [
     ...staticRoutes,
     ...areaRoutes,
+    ...briefRoutes,
     ...publicationRoutes,
     ...talkRoutes,
     ...authorRoutes,

@@ -4,7 +4,7 @@ import InterventionCard from '@/components/InterventionCard'
 import {
   INTERVENTION_AREA_LABEL,
   INTERVENTIONS_UNLISTED,
-  catalogHref,
+  methodologyHref,
   interventionsForArea,
   type InterventionAreaSlug,
 } from '@/lib/interventions'
@@ -21,13 +21,8 @@ export default function FocusAreaInterventions({ area }: { area: InterventionAre
         <h3 className="mb-3 text-2xl font-semibold lg:text-[32px]">How we move this field forward</h3>
         <p className="text-base leading-relaxed text-gray-600">
           Diagnose the bottleneck in {label}, match the intervention, then learn from the evidence.
-          These are the same records as the{' '}
-          <Link href={catalogHref()} className="text-blue hover:underline">
-            global catalog
-          </Link>
-          — not a second list.
         </p>
-        <Link href={`${catalogHref()}methodology/`} className="mt-3 inline-block text-sm text-blue hover:underline">
+        <Link href={methodologyHref()} className="mt-3 inline-block text-sm text-blue hover:underline">
           What is an intervention? →
         </Link>
       </div>
@@ -41,9 +36,6 @@ export default function FocusAreaInterventions({ area }: { area: InterventionAre
       ) : (
         <div className="max-w-sm">
           <ComingSoonTile area={area} />
-          <Link href={catalogHref()} className="mt-4 inline-block text-sm text-blue hover:underline">
-            Browse the full catalog →
-          </Link>
         </div>
       )}
     </section>
