@@ -99,7 +99,7 @@ Nation-state-independent connectivity is appearing: low-earth-orbit satellite ne
 <h3 class="inflection-title">Communication that cannot be switched off</h3>
 <p class="inflection-body">The step-change comes when nation-state-independent connectivity and metadata-resistant messaging reach consumer scale, so that during a deliberate shutdown a measurable share of a population stays connected and able to organize.</p>
 <div class="inflection-observable">
-<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<h4 class="inflection-observable-heading">What we’re watching for</h4>
 <p class="inflection-body">A global connectivity provider offers consumer-scale service without state licensing or identity gating, and a metadata-resistant messenger crosses tens of millions of users under real adversarial conditions.</p>
 </div>
 <p class="inflection-body inflection-implication">At that point, censoring who may speak or gather online becomes impractical rather than merely illegal.</p>
@@ -126,7 +126,7 @@ Open social protocols such as the [Authenticated Transfer (AT) Protocol](https:/
 <h3 class="inflection-title">Personhood without the state in the loop</h3>
 <p class="inflection-body">The step-change comes when a service at real scale — more than 100 million people — verifies unique humans for everyday services without anchoring them to a nation-state identity or KYC.</p>
 <div class="inflection-observable">
-<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<h4 class="inflection-observable-heading">What we’re watching for</h4>
 <p class="inflection-body">Today's proof-of-personhood systems operate well below that scale and outside mainstream services.</p>
 </div>
 <p class="inflection-body inflection-implication">When one crosses it, recognition as a person need no longer be rented from a state or a platform, and privacy-preserving personhood becomes safe to build on.</p>
@@ -153,7 +153,7 @@ Content addressing, as in [IPFS](https://ipfs.tech/), gives every file a verifia
 <h3 class="inflection-title">Provenance becomes the default for truth</h3>
 <p class="inflection-body">The step-change comes when content authenticity stops being optional.</p>
 <div class="inflection-observable">
-<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<h4 class="inflection-observable-heading">What we’re watching for</h4>
 <p class="inflection-body">Two consecutive generations of frontier AI models ship attested provenance tooling by default, and at least one major platform or archive adopts content-addressed provenance as the default for its public record.</p>
 </div>
 <p class="inflection-body inflection-implication">As synthetic content becomes indistinguishable from the real thing, a public record that can prove its own integrity becomes the precondition for accurate information meaning anything at all.</p>
@@ -180,7 +180,7 @@ Open storage markets such as [Filecoin](https://www.filecoin.io/) run on indepen
 <h3 class="inflection-title">Agents run on open rails</h3>
 <p class="inflection-body">The step-change comes when serious AI capability no longer requires a single provider's stack.</p>
 <div class="inflection-observable">
-<h4 class="inflection-observable-heading">Observable, and not yet true</h4>
+<h4 class="inflection-observable-heading">What we’re watching for</h4>
 <p class="inflection-body">A frontier-scale model is trained across independent, decentralized hardware rather than one company's cluster, or a meaningful share of agent-to-agent economic activity settles on open, permissionless compute, storage, and identity rather than inside one platform.</p>
 </div>
 <p class="inflection-body inflection-implication">At that point the rights architecture of the agent economy is set in the open rather than by whoever owns the cluster.</p>

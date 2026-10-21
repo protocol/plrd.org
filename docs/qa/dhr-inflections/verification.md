@@ -5,7 +5,7 @@ Requested follow-up to PR #143: separate the “Observable, and not yet true” 
 ## Scope
 
 - All four inflections now have a semantic title, an opening explanation, a divider and explicit criterion heading, and a separate concluding implication.
-- Original article wording is preserved except for the removed label colon and capitalization at the new paragraph starts.
+- Original article wording is preserved except for the removed label colon and capitalization at the new paragraph starts. After owner approval later on October 21, all four criterion headings use “What we’re watching for”; the criterion text itself is unchanged.
 - The author is `molly-mackinlay`, resolved through the existing Molly Mackinlay author record. No team/area ownership was changed.
 - The old unlisted DHR preview and all non-DHR blog records remain unchanged. No merge or production publication is performed by this follow-up.
 
