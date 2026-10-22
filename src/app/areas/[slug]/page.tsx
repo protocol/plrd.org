@@ -248,19 +248,29 @@ export default async function AreaPage({ params }: Props) {
             </div>
             <div className="text-base text-gray-700 leading-relaxed">
               <p className="mb-4">
-                Starting with POSSUM, we are building shared infrastructure to find, fix, and distribute open-source security patches using AI. The program combines AI-assisted engineering, expert validation, and maintainer participation to get trusted repairs into use and keep them maintained.
+                Starting with POSSUM (Prosperous Open Source Software Universe Maintenance), we are building shared infrastructure to find, fix, and distribute open-source security patches using AI. The program combines AI-assisted engineering, expert validation, and maintainer participation to get trusted repairs into use and keep them maintained.
               </p>
               <p className="mb-6">
                 The focus is utilities, governments, and other organizations underserved by the security market—protecting the shared software people rely on.
               </p>
-              <a
-                href="https://www.publicgoods.foundation/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
-              >
-                Visit Public Goods Foundation <span aria-hidden="true">↗</span>
-              </a>
+              <div className="flex flex-col items-start gap-3">
+                <a
+                  href="https://www.papermark.com/view/cmun40jb4002wl904fozsoy98"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
+                >
+                  Explore POSSUM <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                  href="https://www.publicgoods.foundation/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
+                >
+                  Visit Public Goods Foundation <span aria-hidden="true">↗</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>
