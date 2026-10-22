@@ -222,6 +222,60 @@ export default async function AreaPage({ params }: Props) {
         </div>
       )}
 
+      {slug === 'digital-human-rights' && (
+        <section
+          id="flagship-program"
+          aria-labelledby="flagship-program-title"
+          className="mb-12 scroll-mt-24 border border-blue/20 bg-gray-200 p-6 md:p-8"
+        >
+          <p className="text-xs text-gray-500 uppercase tracking-widest mb-5">Flagship program</p>
+          <div className="grid md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+              <h2 id="flagship-program-title" className="text-[28px] lg:text-[32px] font-semibold leading-tight tracking-tight mb-4">
+                Open-Source Security Acceleration
+              </h2>
+              <p className="text-base text-gray-600 leading-relaxed">
+                A PL R&amp;D flagship program, built with{' '}
+                <a
+                  href="https://www.publicgoods.foundation/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-dark-blue dark:text-blue-200 underline underline-offset-4 hover:decoration-2"
+                >
+                  Public Goods Foundation
+                </a>
+              </p>
+            </div>
+            <div className="text-base text-gray-700 leading-relaxed">
+              <p className="mb-4">
+                Starting with POSSUM (Prosperous Open Source Software Universe Maintenance), we are building shared infrastructure to find, fix, and distribute open-source security patches using AI. The program combines AI-assisted engineering, expert validation, and maintainer participation to get trusted repairs into use and keep them maintained.
+              </p>
+              <p className="mb-6">
+                The focus is utilities, governments, and other organizations underserved by the security market—protecting the shared software people rely on.
+              </p>
+              <div className="flex flex-col items-start gap-3">
+                <a
+                  href="https://www.papermark.com/view/cmun40jb4002wl904fozsoy98"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
+                >
+                  Explore POSSUM <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                  href="https://www.publicgoods.foundation/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
+                >
+                  Visit Public Goods Foundation <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Advisors */}
       {advisors && advisors.length > 0 && (
         <div className="mb-12 pb-12 border-b border-gray-100 max-w-3xl">
