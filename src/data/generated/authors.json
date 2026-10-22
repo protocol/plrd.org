@@ -1445,13 +1445,11 @@
   {
     "slug": "ilan-gur",
     "name": "Ilan Gur",
-    "role": "Neuro Advisor",
+    "role": "Former Neuro Advisor",
     "groups": [
       "ARIA"
     ],
-    "user_groups": [
-      "Neuro Advisors"
-    ],
+    "user_groups": [],
     "interests": [],
     "quote": "",
     "social": [],

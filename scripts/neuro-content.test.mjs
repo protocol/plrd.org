@@ -63,3 +63,14 @@ test('Neuro interface wording uses directly', () => {
   assert.ok(article.html.includes('how directly they interact with neural tissue'))
   assert.ok(!article.html.includes('how invasively they interact'))
 })
+
+test('Former Neuro advisor Ilan Gur is absent from current SAB listings', () => {
+  const neuro = JSON.parse(read('src/data/generated/areas.json')).find(area => area.slug === 'neurotech')
+  assert.ok(!neuro.advisors.includes('ilan-gur'), 'The public Neuro area must not list Ilan as a current advisor')
+  assert.ok(!read('content/areas/neurotech/_index.md').includes('  - ilan-gur'), 'The source roster must agree')
+  assert.ok(!read('src/app/areas/[slug]/edit/page.tsx').includes("'ilan-gur'"), 'The editor roster must agree')
+  const author = JSON.parse(read('src/data/generated/authors.json')).find(author => author.slug === 'ilan-gur')
+  assert.ok(author, 'Preserve the historical profile and its URL')
+  assert.ok(!author.user_groups.includes('Neuro Advisors'), 'The Team advisor tab must not list him as current')
+  assert.equal(author.role, 'Former Neuro Advisor')
+})
