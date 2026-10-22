@@ -76,7 +76,7 @@ export default function AreaEditPage() {
     'neurotech': ['sean-escola'],
   }
   const KNOWN_ADVISORS: Record<string, string[]> = {
-    'neurotech': ['adam-marblestone', 'david-markowitz', 'doris-tsao', 'edward-chang', 'greg-wayne', 'ilan-gur', 'matthew-botvinick', 'max-hodak'],
+    'neurotech': ['adam-marblestone', 'david-markowitz', 'doris-tsao', 'edward-chang', 'greg-wayne', 'matthew-botvinick', 'max-hodak'],
   }
 
   const leads = KNOWN_LEADS[slug] || []
