@@ -8,7 +8,7 @@ import {
   blogPosts,
   areas,
 } from '@/lib/content'
-import { briefHref, briefs } from '@/lib/briefs'
+import { programHref, programs } from '@/lib/programs'
 
 const BASE = siteConfig.baseUrl
 
@@ -84,8 +84,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }))
 
-  const briefRoutes: MetadataRoute.Sitemap = briefs.map((b) => ({
-    url: url(briefHref(b.slug)),
+  const programRoutes: MetadataRoute.Sitemap = programs.map((p) => ({
+    url: url(programHref(p.slug)),
     changeFrequency: 'monthly',
     priority: 0.6,
   }))
@@ -93,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticRoutes,
     ...areaRoutes,
-    ...briefRoutes,
+    ...programRoutes,
     ...publicationRoutes,
     ...talkRoutes,
     ...authorRoutes,

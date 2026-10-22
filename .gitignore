@@ -12,10 +12,10 @@
 .DS_Store
 *.pem
 *.pdf
-# The FA2 briefs are one-page PDFs printed by `npm run build-briefs`, and the
-# site links to them, so they are the one exception.
-!public/briefs/*.pdf
-.briefs-build/
+# The FA2 programs are one-page PDFs printed by `npm run build-programs`, and
+# the site links to them, so they are the one exception.
+!public/programs/*.pdf
+.programs-build/
 .env
 .env.*
 .env*.local
