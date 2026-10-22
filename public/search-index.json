@@ -1939,38 +1939,45 @@
     "relpermalink": "/areas/economies-governance/dependency-graph/"
   },
   {
-    "title": "FA2 Briefs",
-    "summary": "One-page briefs for governments, each with a web edition and an A4 PDF",
+    "title": "FA2 Programs",
+    "summary": "One-page program sheets for governments and funders, each with a web edition and an A4 PDF",
     "date": "",
     "type": "page",
-    "relpermalink": "/areas/economies-governance/#briefs"
+    "relpermalink": "/areas/economies-governance/#programs"
   },
   {
     "title": "Broad Listening & Simocracy: Hear everyone, then decide in the open",
     "summary": "What the two tools do, where they have run, and how a government can use them.",
     "date": "",
     "type": "page",
-    "relpermalink": "/areas/economies-governance/briefs/broad-listening-simocracy/"
+    "relpermalink": "/areas/economies-governance/programs/broad-listening-simocracy/"
   },
   {
     "title": "Sovereign AI: Government pilot partnership",
     "summary": "How PL R&D works with a government to take one public problem to a working AI pilot, and what we ask in return.",
     "date": "",
     "type": "page",
-    "relpermalink": "/areas/economies-governance/briefs/government-pilot-partnership/"
+    "relpermalink": "/areas/economies-governance/programs/government-pilot-partnership/"
   },
   {
     "title": "Hypercerts: Fund the work on a record anyone can check",
     "summary": "What a hypercert records, how funders use it, where it runs today, and where a government can use it.",
     "date": "",
     "type": "page",
-    "relpermalink": "/areas/economies-governance/briefs/hypercerts/"
+    "relpermalink": "/areas/economies-governance/programs/hypercerts/"
+  },
+  {
+    "title": "Sovereign AI: A summary for funders",
+    "summary": "Why the Sovereign AI program is worth funding, what the money pays for, how each pilot runs and how funders can take part.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/programs/sovereign-ai-for-funders/"
   },
   {
     "title": "Why sovereign AI: Better public institutions, on your own terms",
     "summary": "Three reasons a country should run its own AI, with the evidence behind each, and where to start.",
     "date": "",
     "type": "page",
-    "relpermalink": "/areas/economies-governance/briefs/why-sovereign-ai/"
+    "relpermalink": "/areas/economies-governance/programs/why-sovereign-ai/"
   }
 ]

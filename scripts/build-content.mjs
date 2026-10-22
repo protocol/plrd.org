@@ -455,15 +455,15 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Impact Dashboard', summary: 'Ecosystem impact metrics across villages and funding', date: '', type: 'page', relpermalink: '/areas/economies-governance/impact/' },
     { title: 'Project Explorer', summary: '242+ teams building decentralized coordination and public goods', date: '', type: 'page', relpermalink: '/areas/economies-governance/projects/' },
     { title: 'Dependency Graph', summary: 'Strategic dependency trees across 4 inflection points', date: '', type: 'page', relpermalink: '/areas/economies-governance/dependency-graph/' },
-    { title: 'FA2 Briefs', summary: 'One-page briefs for governments, each with a web edition and an A4 PDF', date: '', type: 'page', relpermalink: '/areas/economies-governance/#briefs' },
-    ...buildBriefSearchItems(),
+    { title: 'FA2 Programs', summary: 'One-page program sheets for governments and funders, each with a web edition and an A4 PDF', date: '', type: 'page', relpermalink: '/areas/economies-governance/#programs' },
+    ...buildProgramSearchItems(),
   ]
   return items
 }
 
-// FA2 briefs: one entry per JSON in src/data/fa2/briefs/, titled as printed.
-function buildBriefSearchItems() {
-  const dir = path.join(ROOT, 'src/data/fa2/briefs')
+// FA2 programs: one entry per JSON in src/data/fa2/programs/, titled as printed.
+function buildProgramSearchItems() {
+  const dir = path.join(ROOT, 'src/data/fa2/programs')
   if (!fs.existsSync(dir)) return []
   const plain = (text) => text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1')
   return fs
@@ -476,7 +476,7 @@ function buildBriefSearchItems() {
       summary: plain(b.summary),
       date: '',
       type: 'page',
-      relpermalink: `/areas/economies-governance/briefs/${b.slug}/`,
+      relpermalink: `/areas/economies-governance/programs/${b.slug}/`,
     }))
 }
 

@@ -151,12 +151,23 @@ const nextConfig: NextConfig = {
         destination: '/areas/neurotech/#opportunity-spaces',
         permanent: true,
       },
-      // The FA2 briefs have no index of their own: the shelf on the FA2 page is it.
-      {
-        source: '/areas/economies-governance/briefs/',
-        destination: '/areas/economies-governance/#briefs',
-        permanent: false,
-      },
+      // The FA2 programs have no index of their own: the shelf on the FA2 page
+      // is it. They were called briefs until October 2026, and their PDFs went
+      // out with /briefs/ links, so every old address lands on its program.
+      // Trailing slashes are not added for us, so both spellings are listed.
+      ...[
+        '/areas/economies-governance/programs',
+        '/areas/economies-governance/programs/',
+        '/areas/economies-governance/briefs',
+        '/areas/economies-governance/briefs/',
+      ].map((source) => ({ source, destination: '/areas/economies-governance/#programs', permanent: false })),
+      ...['/areas/economies-governance/briefs/:slug', '/areas/economies-governance/briefs/:slug/'].map((source) => ({
+        source,
+        destination: '/areas/economies-governance/programs/:slug/',
+        permanent: true,
+      })),
+      { source: '/briefs/:file', destination: '/programs/:file', permanent: true },
+      { source: '/images/fa2/briefs/:file', destination: '/images/fa2/programs/:file', permanent: true },
       // Old individual opportunity-space URLs -> new shortened paths.
       // Covers both the detail page and its /edit subpath for every area.
       {

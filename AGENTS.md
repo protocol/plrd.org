@@ -356,15 +356,17 @@ FA2 is special-cased: **hardcoded routes** under `/areas/economies-governance/` 
 | `.../dependency-graph/` | `dependency-graph/page.tsx` | `lib/content` dep-graph entries |
 | `.../dependency-graph/[slug]/` | `DependencyGraph.tsx` (d3-force) | `dependency-graph/data/` |
 | `.../edit/` | `edit/page.tsx` | inline editor over `area-economies-governance` |
-| `.../briefs/[slug]/` | SSG via `generateStaticParams` | `src/data/fa2/briefs/<slug>.json`; PDF and shelf plate in `public/briefs/` |
+| `.../programs/[slug]/` | SSG via `generateStaticParams` | `src/data/fa2/programs/<slug>.json`; PDF and shelf plate in `public/programs/` |
 
-**Briefs.** One-page briefs for governments, such as *Why sovereign AI* and *Hypercerts*. Each is one JSON file in `src/data/fa2/briefs/` that names its layout (`three-propositions`, `explainer` or `partnership`) and is registered in `src/lib/briefs.ts`, whose order is the shelf's order; `scripts/fa2-briefs.test.mjs` fails if a JSON is not registered. The JSON is published three ways:
+**Programs.** One-page program sheets for governments and funders, such as *Why sovereign AI*, *Hypercerts* and *Sovereign AI for funders*. Each is one JSON file in `src/data/fa2/programs/` that names its layout (`three-propositions`, `explainer`, `partnership` or `summary`) and is registered in `src/lib/programs.ts`, whose order is the shelf's order; `scripts/fa2-programs.test.mjs` fails if a JSON is not registered. The JSON is published three ways:
 
-- the web edition at `.../briefs/<slug>/` (`src/components/briefs/`, one component per layout, built from the shared blocks in `parts.tsx`);
-- `npm run build-briefs [slug]` prints it to `public/briefs/<slug>.pdf` with headless Chrome (`scripts/build-briefs.mjs` holds the print layouts, `scripts/briefs/sheet.css` the shared look) and renders page one to `public/briefs/<slug>.webp`. It needs local Chrome, Python 3, `pdftoppm` and `magick`, reports the shrink-to-fit factor, and fails if a page still overflows A4. The PDFs are the one exception to the `*.pdf` ignore rule; rebuild and commit PDF and plate whenever the JSON changes;
-- the shelf on the FA2 page (`#briefs`, `BriefShelf.tsx`, a client component after ai4cop.org's field sheets). Each sheet is a real link to its web edition; a plain click takes it down into a card offering the web edition and the PDF.
+- the web edition at `.../programs/<slug>/` (`src/components/programs/`, one component per layout, built from the shared blocks in `parts.tsx`);
+- `npm run build-programs [slug]` prints it to `public/programs/<slug>.pdf` with headless Chrome (`scripts/build-programs.mjs` holds the print layouts and the blocks they share, `scripts/programs/sheet.css` the shared look) and renders page one to `public/programs/<slug>.webp`. It needs local Chrome, Python 3, `pdftoppm` and `magick`, reports the shrink-to-fit factor, and fails if a page still overflows A4. The PDFs are the one exception to the `*.pdf` ignore rule; rebuild and commit PDF and plate whenever the JSON changes;
+- the shelf on the FA2 page (`#programs`, `ProgramShelf.tsx`, a client component after ai4cop.org's field sheets). Each sheet is a real link to its web edition; a plain click takes it down into a card offering the web edition and the PDF. Five sheets fit on one board from tablet width up; a sixth needs narrower gaps or sheets in `globals.css` and the row's gap classes.
 
-Prose fields may carry `[label](/site/path/)` links; the web edition keeps them on the site and the PDF prints them as full plrd.org links. To print a brief that should not be public yet, such as a country edition of the partnership brief, keep its JSON outside the repo and pass the path: `npm run build-briefs ~/somewhere/edition.json` prints the PDF beside it and touches nothing in the site. `/areas/economies-governance/briefs/` redirects to the shelf.
+Prose fields may carry `[label](/site/path/)` links; the web edition keeps them on the site and the PDF prints them as full plrd.org links (unstyled on paper, so a link never changes the printed layout). To print a sheet that should not be public yet, such as a country edition of the partnership sheet, keep its JSON outside the repo and pass the path: `npm run build-programs ~/somewhere/edition.json` prints the PDF beside it and touches nothing in the site.
+
+The sheets were called briefs until October 2026, and PDFs went out with those links. `next.config.ts` redirects every old address: `/areas/economies-governance/briefs/<slug>/` to its program, `/briefs/<file>` to `/programs/<file>`, the drawings under `/images/fa2/briefs/`, and the bare `.../briefs/` and `.../programs/` paths to the shelf. Keep those redirects.
 
 The *other* areas (`ai-robotics`, `digital-human-rights`, `neurotech`) each have their own `opportunity-spaces/` + `[slug]` pair powered by `src/data/fa2/{ai,dhr,neuro}-opportunityspaces.json` (yes, named under `fa2/` for historical reasons).
 
@@ -436,7 +438,7 @@ Only `COOKIE_SECRET`, `PUBLIC_URL`, `ATPROTO_JWK_PRIVATE`, `ATPROTO_HANDLE`, `AT
 
 ## 10. Deployment
 
-The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`; `daviddao/plrd-v2` was an earlier name). `main` auto-deploys to Vercel. `vercel.json` sets only `framework: nextjs` + `buildCommand: npm run build`. `*.pdf` is gitignored, except the FA2 briefs in `public/briefs/`.
+The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`; `daviddao/plrd-v2` was an earlier name). `main` auto-deploys to Vercel. `vercel.json` sets only `framework: nextjs` + `buildCommand: npm run build`. `*.pdf` is gitignored, except the FA2 program sheets in `public/programs/`.
 
 ---
 
