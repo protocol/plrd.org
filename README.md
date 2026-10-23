@@ -21,7 +21,7 @@ Open http://localhost:3000.
 | `npm run build` | Production build (content + Next.js) |
 | `npm start` | Start production server |
 | `npx tsc --noEmit` | Type-check without emitting files |
-| `npm run build-programs` | Print the FA2 program sheets in `src/data/fa2/programs/` to `public/programs/*.pdf`, with a cover plate each (needs local Chrome, poppler and ImageMagick) |
+| `npm run build-sheets` | Print the Sovereign AI sheets in `src/data/fa2/sovereign-ai/` to `public/sovereign-ai/*.pdf`, with a cover plate each (needs local Chrome, poppler and ImageMagick) |
 
 No ESLint or test runner is configured. Use `npx tsc --noEmit` to verify types before pushing.
 
@@ -90,7 +90,7 @@ Run `node --test scripts/radar-local.test.mjs` for the Radar regression tests; t
 | `/areas/` | Focus areas listing |
 | `/areas/[slug]/` | Individual focus area (Markdown-driven; leads defined in frontmatter) |
 | `/areas/economies-governance/` | FA2 focus area with sub-pages (impact, projects, opportunity spaces) — hardcoded, not Markdown |
-| `/areas/economies-governance/programs/[slug]/` | FA2 one-page program sheets, each with a printed A4 PDF at `/programs/<slug>.pdf`; the FA2 page shows them on a shelf at `#programs`. Old `/briefs/` links redirect here |
+| `/areas/economies-governance/sovereign-ai/[slug]/` | The Sovereign AI program's one-page sheets, each with a printed A4 PDF at `/sovereign-ai/<slug>.pdf`; the FA2 page shows them on a shelf at `#sovereign-ai`, and `/sovereign-ai/` links there. Old `/briefs/` and `/programs/` links redirect here |
 | `/research/` | Research hub |
 | `/publications/` | All publications, sorted by date |
 | `/publications/[slug]/` | Publication detail |
@@ -111,7 +111,7 @@ The FA2 (Upgrade Economies & Governance) focus area has hand-curated JSON data i
 - **`projects.json`** -- 242 ecosystem teams/projects with metadata (name, logo, website, tier, tags, etc.)
 - **`impact.json`** -- Impact dashboard data with headline metrics and initiative details
 - **`opportunityspaces.json`** -- 4 opportunity spaces with descriptions, assumptions, tipping signals
-- **`programs/<slug>.json`** -- one-page program sheets for governments and funders: every word, figure and source. The web edition renders the JSON; `npm run build-programs` prints it to `public/programs/<slug>.pdf` and a cover plate, both committed. See AGENTS.md §7
+- **`sovereign-ai/<slug>.json`** -- the Sovereign AI program's one-page sheets for governments and funders: every word, figure and source. The web edition renders the JSON; `npm run build-sheets` prints it to `public/sovereign-ai/<slug>.pdf` and a cover plate, both committed. See AGENTS.md §7
 
 These files are edited directly as JSON and consumed by hardcoded FA2 sub-pages under `/areas/economies-governance/`.
 
@@ -149,7 +149,7 @@ The `vercel.json` config is minimal:
 ## Gotchas
 
 - `src/data/generated/` is checked into git -- Vercel needs it at build time
-- `*.pdf` files are gitignored (removed to reduce repo size), except the FA2 program sheets in `public/programs/`
+- `*.pdf` files are gitignored (removed to reduce repo size), except the Sovereign AI sheets in `public/sovereign-ai/`
 - Images must use `unoptimized: true` (configured in `next.config.ts`)
 - Hugo shortcodes like `{{< youtube ID >}}` in talk Markdown are rendered as iframes at the component level
 - After deleting pages, remove `.next/` to clear stale type cache before type-checking

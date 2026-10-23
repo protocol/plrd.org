@@ -455,15 +455,15 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Impact Dashboard', summary: 'Ecosystem impact metrics across villages and funding', date: '', type: 'page', relpermalink: '/areas/economies-governance/impact/' },
     { title: 'Project Explorer', summary: '242+ teams building decentralized coordination and public goods', date: '', type: 'page', relpermalink: '/areas/economies-governance/projects/' },
     { title: 'Dependency Graph', summary: 'Strategic dependency trees across 4 inflection points', date: '', type: 'page', relpermalink: '/areas/economies-governance/dependency-graph/' },
-    { title: 'FA2 Programs', summary: 'One-page program sheets for governments and funders, each with a web edition and an A4 PDF', date: '', type: 'page', relpermalink: '/areas/economies-governance/#programs' },
-    ...buildProgramSearchItems(),
+    { title: 'Sovereign AI program', summary: 'One-page sheets on the Sovereign AI program for governments and funders, each with a web edition and an A4 PDF', date: '', type: 'page', relpermalink: '/areas/economies-governance/#sovereign-ai' },
+    ...buildSovereignAiSearchItems(),
   ]
   return items
 }
 
-// FA2 programs: one entry per JSON in src/data/fa2/programs/, titled as printed.
-function buildProgramSearchItems() {
-  const dir = path.join(ROOT, 'src/data/fa2/programs')
+// Sovereign AI sheets: one entry per JSON in src/data/fa2/sovereign-ai/, titled as printed.
+function buildSovereignAiSearchItems() {
+  const dir = path.join(ROOT, 'src/data/fa2/sovereign-ai')
   if (!fs.existsSync(dir)) return []
   const plain = (text) => text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1')
   return fs
@@ -476,7 +476,7 @@ function buildProgramSearchItems() {
       summary: plain(b.summary),
       date: '',
       type: 'page',
-      relpermalink: `/areas/economies-governance/programs/${b.slug}/`,
+      relpermalink: `/areas/economies-governance/sovereign-ai/${b.slug}/`,
     }))
 }
 
