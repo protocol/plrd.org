@@ -151,23 +151,26 @@ const nextConfig: NextConfig = {
         destination: '/areas/neurotech/#opportunity-spaces',
         permanent: true,
       },
-      // The FA2 programs have no index of their own: the shelf on the FA2 page
-      // is it. They were called briefs until October 2026, and their PDFs went
-      // out with /briefs/ links, so every old address lands on its program.
-      // Trailing slashes are not added for us, so both spellings are listed.
+      // The Sovereign AI sheets have no index of their own: the program's shelf
+      // on the FA2 page is it, and /sovereign-ai/ is its short link. The sheets
+      // lived under /briefs/ until 22 October 2026 and under /programs/ for a
+      // day after, and PDFs went out with /briefs/ links, so every old address
+      // lands on its sheet. Trailing slashes are not added for us, so both
+      // spellings are listed.
       ...[
-        '/areas/economies-governance/programs',
-        '/areas/economies-governance/programs/',
-        '/areas/economies-governance/briefs',
-        '/areas/economies-governance/briefs/',
-      ].map((source) => ({ source, destination: '/areas/economies-governance/#programs', permanent: false })),
-      ...['/areas/economies-governance/briefs/:slug', '/areas/economies-governance/briefs/:slug/'].map((source) => ({
-        source,
-        destination: '/areas/economies-governance/programs/:slug/',
-        permanent: true,
-      })),
-      { source: '/briefs/:file', destination: '/programs/:file', permanent: true },
-      { source: '/images/fa2/briefs/:file', destination: '/images/fa2/programs/:file', permanent: true },
+        '/sovereign-ai',
+        '/sovereign-ai/',
+        ...['sovereign-ai', 'programs', 'briefs'].flatMap((dir) => [
+          `/areas/economies-governance/${dir}`,
+          `/areas/economies-governance/${dir}/`,
+        ]),
+      ].map((source) => ({ source, destination: '/areas/economies-governance/#sovereign-ai', permanent: false })),
+      ...['programs', 'briefs'].flatMap((dir) => [
+        { source: `/areas/economies-governance/${dir}/:slug`, destination: '/areas/economies-governance/sovereign-ai/:slug/', permanent: true },
+        { source: `/areas/economies-governance/${dir}/:slug/`, destination: '/areas/economies-governance/sovereign-ai/:slug/', permanent: true },
+        { source: `/${dir}/:file`, destination: '/sovereign-ai/:file', permanent: true },
+        { source: `/images/fa2/${dir}/:file`, destination: '/images/fa2/sovereign-ai/:file', permanent: true },
+      ]),
       // Old individual opportunity-space URLs -> new shortened paths.
       // Covers both the detail page and its /edit subpath for every area.
       {

@@ -8,7 +8,7 @@ import {
   blogPosts,
   areas,
 } from '@/lib/content'
-import { programHref, programs } from '@/lib/programs'
+import { sheetHref, sheets } from '@/lib/sovereign-ai'
 
 const BASE = siteConfig.baseUrl
 
@@ -84,8 +84,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }))
 
-  const programRoutes: MetadataRoute.Sitemap = programs.map((p) => ({
-    url: url(programHref(p.slug)),
+  const sheetRoutes: MetadataRoute.Sitemap = sheets.map((s) => ({
+    url: url(sheetHref(s.slug)),
     changeFrequency: 'monthly',
     priority: 0.6,
   }))
@@ -93,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticRoutes,
     ...areaRoutes,
-    ...programRoutes,
+    ...sheetRoutes,
     ...publicationRoutes,
     ...talkRoutes,
     ...authorRoutes,

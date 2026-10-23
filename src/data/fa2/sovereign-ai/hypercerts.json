@@ -1,0 +1,163 @@
+{
+  "slug": "hypercerts",
+  "layout": "explainer",
+  "kicker": "Economies & Governance · Sovereign AI program",
+  "date": "October 2026",
+  "title": "Hypercerts",
+  "subtitle": "Fund the work on a record anyone can check",
+  "label": "Hypercerts",
+  "summary": "What a hypercert records, how funders use it, where it runs today, and where a government can use it.",
+  "standfirst": "Every funder asks projects the same questions and checks the answers from scratch. With AI, a polished application now takes minutes to write and proves little. A hypercert gives a piece of work one public record: what was done, where and when, with the evidence, the reviews and the funding attached. The records live on the AT Protocol, in accounts the projects control, so any funder or tool can read them and add to them.",
+  "image": "/images/fa2/sovereign-ai/hypercerts.webp",
+  "imageAlt": "A pencil drawing of a small classical treasury with two columns, reached by a stone path between two tall inscribed stelae, beside an olive grove and a field of young saplings.",
+  "imagePosition": "50% 64%",
+  "toolsLabel": "What hypercerts do",
+  "toolsAside": "Two jobs, with the evidence behind each",
+  "tools": [
+    {
+      "title": "Record the work",
+      "promise": "One record, added to by many hands",
+      "text": "A project publishes an activity claim from its own account: what it did, where and when. Others add to it over time. The team posts updates and evidence, a monitoring partner adds measurements, and peers, local people and experts add evaluations. Each signal stays with whoever published it, so the record shows who said what.",
+      "evidence": [
+        {
+          "figure": "1,671",
+          "caption": "hypercerts published in the GainForest commons, where 1,231 conservation organisations are certified. Each is a signed record of field work: what was done, where and when.",
+          "source": "PL R&D live dashboard, from GainForest's hypercerts indexer, 19 October 2026",
+          "url": "https://www.plrd.org/areas/economies-governance/impact/live-dashboard/"
+        },
+        {
+          "figure": "437",
+          "caption": "funding proposals in Simocracy, each published as a hypercert activity claim that sims then debate in public.",
+          "source": "PL R&D live dashboard, from the Simocracy indexer, 19 October 2026",
+          "url": "https://www.plrd.org/areas/economies-governance/impact/live-dashboard/"
+        }
+      ]
+    },
+    {
+      "title": "Fund the work",
+      "promise": "Each funder starts from what others already know",
+      "text": "A funder reads the record, chooses which signals to trust and how to weigh them, and adds its own support to the same record. The next funder starts from that history instead of a blank form. Today hypercerts back crowdfunding with matching funds. The same records could carry outcome payments, prizes and milestone bounties.",
+      "evidence": [
+        {
+          "figure": "$2.19M",
+          "caption": "to 201 community-led regeneration projects in 56 countries in Ma Earth's third round. Gifts from 11,700+ donors decided how a $1M matching pool was shared.",
+          "source": "Ma Earth, Round 3, and the Hypercerts Foundation case study",
+          "url": "https://maearth.com/"
+        },
+        {
+          "figure": "22",
+          "caption": "published works recorded on the hypercert of PL R&D's 2025 Impact Evaluator Research Retreat in Reykjavík, next to the $140k invested in it.",
+          "source": "PL R&D, Research Retreat hypercerts",
+          "url": "https://www.plrd.org/areas/economies-governance/impact/hypercerts/"
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "label": "How a record builds up",
+    "aside": "From one claim to the next funding decision",
+    "items": [
+      {
+        "title": "Claim",
+        "text": "The project publishes what it did, where and when, from its own account."
+      },
+      {
+        "title": "Evidence",
+        "text": "It attaches updates, photos, data and measurements as the work goes on."
+      },
+      {
+        "title": "Review",
+        "text": "Peers, local people, experts and certifiers add their own evaluations, under their own names."
+      },
+      {
+        "title": "Fund",
+        "text": "Funders record their support and, if they choose, why. The next funder starts from this history."
+      }
+    ],
+    "barLead": "What keeps it honest:",
+    "bar": "every signal is a separate record, published by whoever gave it. An evaluator adds an assessment of its own, and only the project can change the project's account."
+  },
+  "ran": {
+    "label": "Where hypercerts run today",
+    "items": [
+      {
+        "lead": "Ma Earth.",
+        "text": "Funding rounds for grassroots nature projects, where crowdfunding signals steer the matching pool. Round 4 opens on Earth Day 2027.",
+        "source": "maearth.com",
+        "url": "https://maearth.com/"
+      },
+      {
+        "lead": "GainForest.",
+        "text": "Communities log species, sounds and field work from their phones, and publish it as Certs they can take to other apps and funding rounds.",
+        "source": "gainforest.app",
+        "url": "https://www.gainforest.app/"
+      },
+      {
+        "lead": "PL R&D research retreats.",
+        "text": "Each edition is a hypercert with its evidence timeline, outputs and funding.",
+        "source": "plrd.org",
+        "url": "https://www.plrd.org/areas/economies-governance/impact/hypercerts/"
+      }
+    ]
+  },
+  "uses": {
+    "label": "Where a government can use them",
+    "items": [
+      {
+        "lead": "Grant programmes.",
+        "text": "Let applicants bring the record they already have, and add your review to it for the next funder."
+      },
+      {
+        "lead": "Matching funds.",
+        "text": "Match what citizens give to local projects, and let their gifts steer the match."
+      },
+      {
+        "lead": "Paying for results.",
+        "text": "Release payments when the agreed measurements and evaluations appear on the record."
+      },
+      {
+        "lead": "Public reporting.",
+        "text": "Publish what a programme funded and what came of it, in a format any auditor or tool can read."
+      },
+      {
+        "lead": "A pilot.",
+        "text": "The [government pilot partnership](/areas/economies-governance/sovereign-ai/government-pilot-partnership/) sets out how we run one with you."
+      }
+    ]
+  },
+  "limit": {
+    "kicker": "The honest limit",
+    "title": "A record is not proof",
+    "text": "A hypercert records a claim. It does not prove it. Trust comes from the evidence attached and from who vouches for it, and a false claim is as easy to publish as a true one. Hypercerts do not decide which work is valuable or whose judgement counts. Each funder chooses which signals to trust."
+  },
+  "wayIn": {
+    "kicker": "Start here",
+    "title": "Bring us one funding programme",
+    "text": "Tell us about a grant, prize or matching scheme you run, and we will help you put its applications, reviews and payments on hypercerts.",
+    "people": "David Dao and James Tunningley, co-leads, Economies & Governance."
+  },
+  "about": "Economies & Governance focus area. We welcome feedback, case studies and partners.",
+  "contact": "research@protocol.ai",
+  "checked": "19 October 2026",
+  "notes": {
+    "label": "Also drawn on:",
+    "items": [
+      {
+        "label": "Hypercerts Foundation, hypercerts.org",
+        "url": "https://hypercerts.org/"
+      },
+      {
+        "label": "Hypercerts Guide",
+        "url": "https://docs.hypercerts.org/guide"
+      },
+      {
+        "label": "GainForest, What is a Cert",
+        "url": "https://www.gainforest.app/"
+      },
+      {
+        "label": "PL R&D, Programmable Economies & Governance, 23 July 2026",
+        "url": "https://www.plrd.org/blog/better-economies-governance-systems/"
+      }
+    ]
+  }
+}

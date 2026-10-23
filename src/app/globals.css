@@ -690,23 +690,23 @@ html.dark .hypercert-on-photo {
   .hypercert-pulse-dot { animation: none; }
 }
 
-/* ===== FA2 programs shelf (ProgramShelf.tsx) =====
+/* ===== Sovereign AI sheets shelf (SheetShelf.tsx) =====
    After ai4cop.org's field sheets: each one-pager stands on a board as the
    A4 page it prints, turned so it reads as an object, and straightens when
    reached for. The plates are page one of the shipped PDFs, so they stay
    white paper in both themes; only the board and the shadow follow the
    theme. */
-.program-shelf {
+.sheet-shelf {
   --sheet-w: 7.5rem;
   --sheet-turn: 33deg;
 }
 /* From tablet width up all five sheets stand on one board without
-   scrolling; the row's gaps (ProgramShelf.tsx) widen with the screen. */
+   scrolling; the row's gaps (SheetShelf.tsx) widen with the screen. */
 @media (min-width: 768px) {
-  .program-shelf { --sheet-w: 8rem; }
+  .sheet-shelf { --sheet-w: 8rem; }
 }
 @media (min-width: 1024px) {
-  .program-shelf { --sheet-w: 10rem; }
+  .sheet-shelf { --sheet-w: 10rem; }
 }
 
 /* The row scrolls rather than wraps, so every sheet stands on one board.
@@ -715,13 +715,13 @@ html.dark .hypercert-on-photo {
    reach. On a phone the shelf runs to the screen edges, so the next sheet
    shows past the edge and the row reads as one you can scroll. The top
    padding leaves room for a sheet to lift on hover. */
-.program-row {
+.sheet-row {
   justify-content: safe center;
   scrollbar-width: none;
 }
-.program-row::-webkit-scrollbar { display: none; }
+.sheet-row::-webkit-scrollbar { display: none; }
 
-.program-sheet {
+.sheet-leaf {
   position: relative;
   display: block;
   width: var(--sheet-w);
@@ -732,41 +732,41 @@ html.dark .hypercert-on-photo {
   border: 1px solid rgba(19, 19, 22, 0.12);
   overflow: hidden;
 }
-html.dark .program-sheet { border-color: rgba(255, 255, 255, 0.08); }
+html.dark .sheet-leaf { border-color: rgba(255, 255, 255, 0.08); }
 /* A soft sheen down the hinge edge, so the leaf reads as a surface. */
-.program-sheet::after {
+.sheet-leaf::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(100deg, rgba(15, 47, 82, 0.1) 0%, rgba(255, 255, 255, 0.12) 4%, rgba(15, 47, 82, 0.04) 9%, transparent 24%);
 }
-.program-item:hover .program-sheet,
-.program-item:focus-visible .program-sheet {
+.sheet-item:hover .sheet-leaf,
+.sheet-item:focus-visible .sheet-leaf {
   transform: perspective(950px) rotateY(4deg) translateY(-0.5rem);
 }
 
 /* The contact shadow under each sheet, cast on the board. */
-.program-shadow {
+.sheet-shadow {
   height: 0.5rem;
   border-radius: 9999px;
   background: rgba(15, 47, 82, 0.18);
   filter: blur(5px);
   transform: scaleX(0.9);
 }
-html.dark .program-shadow { background: rgba(0, 0, 0, 0.55); }
+html.dark .sheet-shadow { background: rgba(0, 0, 0, 0.55); }
 
 /* The board: a hairline at floor level and a shallow apron below it, rules
    rather than a box. It sits where the sheets stand: the row's top padding
    plus one sheet. */
-.program-board {
+.sheet-board {
   top: calc(1rem + var(--sheet-w) * 297 / 210 + 0.6rem);
   height: 2.75rem;
   border-top: 1px solid rgba(19, 19, 22, 0.12);
   background: linear-gradient(to bottom, var(--color-gray-100), transparent);
 }
-html.dark .program-board { border-top-color: rgba(255, 255, 255, 0.1); }
+html.dark .sheet-board { border-top-color: rgba(255, 255, 255, 0.1); }
 
-.program-caption {
+.sheet-caption {
   width: var(--sheet-w);
   text-wrap: balance;
 }
@@ -775,24 +775,24 @@ html.dark .program-board { border-top-color: rgba(255, 255, 255, 0.1); }
    centre stage, script transforms it back onto its shelf spot, then releases
    it; the leaf straightens on the same clock and answers the cursor once it
    has landed. */
-.program-flyer {
+.sheet-flyer {
   --sheet-w: clamp(10rem, 32vw, 17rem);
   will-change: transform;
 }
-.program-flyer.is-animating,
-.program-flyer .program-sheet {
+.sheet-flyer.is-animating,
+.sheet-flyer .sheet-leaf {
   transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.program-flyer[data-stage="open"] .program-sheet {
+.sheet-flyer[data-stage="open"] .sheet-leaf {
   transform: perspective(950px) rotateX(var(--tilt-x, 0deg)) rotateY(calc(4deg + var(--tilt-y, 0deg)));
 }
-.program-flyer.is-settled .program-sheet {
+.sheet-flyer.is-settled .sheet-leaf {
   transition: transform 0.18s ease-out;
 }
 @media (prefers-reduced-motion: reduce) {
-  .program-sheet,
-  .program-flyer,
-  .program-flyer .program-sheet { transition: none; }
+  .sheet-leaf,
+  .sheet-flyer,
+  .sheet-flyer .sheet-leaf { transition: none; }
 }
 
 /* ===== Sticky nav ===== */

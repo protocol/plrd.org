@@ -12,10 +12,10 @@
 .DS_Store
 *.pem
 *.pdf
-# The FA2 programs are one-page PDFs printed by `npm run build-programs`, and
-# the site links to them, so they are the one exception.
-!public/programs/*.pdf
-.programs-build/
+# The Sovereign AI sheets are one-page PDFs printed by `npm run build-sheets`,
+# and the site links to them, so they are the one exception.
+!public/sovereign-ai/*.pdf
+.sheets-build/
 .env
 .env.*
 .env*.local
