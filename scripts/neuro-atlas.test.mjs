@@ -1,73 +1,64 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { NextRequest } from 'next/server.js'
 import { source } from './velocity/test-source-loader.mjs'
 
 const { default: config } = source('../next.config.ts')
 
-function atlasEnv(t, values = {}) {
-  for (const key of ['NEURO_ATLAS_ORIGIN', 'NEURO_ATLAS_LOCAL_QA', 'VERCEL', 'VERCEL_ENV', 'VERCEL_URL']) {
-    const original = process.env[key]
-    delete process.env[key]
-    if (values[key] !== undefined) process.env[key] = values[key]
-    t.after(() => {
-      if (original === undefined) delete process.env[key]
-      else process.env[key] = original
-    })
-  }
-}
+const { middleware } = source('middleware.ts')
+const responseFor = (path) => middleware(new NextRequest(`https://www.plrd.org${path}`))
 
-test('configured Atlas origins are strict HTTPS origins, never paths or credentials', async (t) => {
-  atlasEnv(t, { NEURO_ATLAS_ORIGIN: 'https://atlas-preview.example:8443/' })
-  assert.equal((await config.rewrites())[1].destination, 'https://atlas-preview.example:8443/neuro-atlas/:path*')
-  for (const invalid of [
-    '', 'not-a-url', 'http://atlas.example', '//atlas.example',
-    'https://user:secret@atlas.example', 'https://atlas.example/neuro-atlas',
-    'https://atlas.example/?token=secret', 'https://atlas.example/#fragment',
-    'https://atlas.example?', 'https://atlas.example#',
-    'https://atlas.example/..', ' https://atlas.example', 'https://atlas.example\\n',
-    'https://atlas.example\\\\other', 'ftp://atlas.example',
+test('legacy Atlas root temporarily redirects to the canonical PL Neuro mount', async () => {
+  const response = await responseFor('/neuro-atlas')
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get('location'), 'https://www.plneuro.xyz/neuro-atlas')
+  assert.equal(response.headers.get('x-middleware-rewrite'), null)
+})
+
+test('legacy Atlas deep links and assets retain their path and query on PL Neuro', async () => {
+  for (const [path, destination] of [
+    ['/neuro-atlas/', '/neuro-atlas'],
+    ['/neuro-atlas/methods?view=table&tag=one&tag=two', '/neuro-atlas/methods?view=table&tag=one&tag=two'],
+    ['/NeUrO-aTlAs/Methods?view=table', '/neuro-atlas/Methods?view=table'],
+    ['/neuro-atlas/methods/', '/neuro-atlas/methods'],
+    ['/neuro-atlas/_next/static/chunks/app.js?v=1', '/neuro-atlas/_next/static/chunks/app.js?v=1'],
+    ['/neuro-atlas/fonts/test.woff2', '/neuro-atlas/fonts/test.woff2'],
+    ['/neuro-atlas/data.csv?download=1', '/neuro-atlas/data.csv?download=1'],
   ]) {
-    process.env.NEURO_ATLAS_ORIGIN = invalid
-    await assert.rejects(config.rewrites(), /NEURO_ATLAS_ORIGIN/, invalid)
+    const response = await responseFor(path)
+    assert.equal(response.status, 307, path)
+    assert.equal(response.headers.get('location'), `https://www.plneuro.xyz${destination}`, path)
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow', path)
+    assert.equal(response.headers.get('x-middleware-rewrite'), null, path)
   }
 })
 
-test('loopback is opt-in local QA even for production builds, never hosted or remote HTTP', async (t) => {
-  atlasEnv(t)
-  const previous = process.env.NODE_ENV
-  process.env.NODE_ENV = 'production'
-  t.after(() => { if (previous === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previous })
-  for (const origin of ['http://127.0.0.1:3491', 'http://localhost:3491', 'http://[::1]:3491', 'https://localhost:3491']) {
-    process.env.NEURO_ATLAS_ORIGIN = origin
-    delete process.env.NEURO_ATLAS_LOCAL_QA
-    await assert.rejects(config.rewrites(), /NEURO_ATLAS_ORIGIN/)
-    process.env.NEURO_ATLAS_LOCAL_QA = '1'
-    assert.equal((await config.rewrites())[0].destination, `${origin}/neuro-atlas`)
-    for (const key of ['VERCEL', 'VERCEL_ENV', 'VERCEL_URL']) {
-      process.env[key] = key === 'VERCEL' ? '1' : 'preview'
-      await assert.rejects(config.rewrites(), /NEURO_ATLAS_ORIGIN/)
-      delete process.env[key]
-    }
-  }
-  for (const origin of ['http://atlas.example', 'http://localhost.example', 'http://0.0.0.0:3491', 'http://127.1:3491']) {
-    process.env.NEURO_ATLAS_ORIGIN = origin
-    await assert.rejects(config.rewrites(), /NEURO_ATLAS_ORIGIN/)
+test('near-prefix and ordinary PLRD routes do not enter the Atlas namespace', async () => {
+  for (const path of ['/', '/areas/neurotech/', '/neuro-atlas-other/', '/neuro-atlasfoo/', '/neuro-atlas.json']) {
+    const response = await responseFor(path)
+    assert.equal(response.headers.get('location'), null, path)
+    assert.equal(response.headers.get('x-middleware-rewrite'), null, path)
+    assert.equal(response.headers.get('x-robots-tag'), null, path)
   }
 })
 
-test('Atlas namespace declares a defense-in-depth route header', async () => {
-  assert.equal(typeof config.headers, 'function', 'scoped response-header policy must be configured')
+test('retired proxy environment cannot change the redirect target', async (t) => {
+  const key = 'NEURO_ATLAS_ORIGIN'
+  const previous = process.env[key]
+  t.after(() => {
+    if (previous === undefined) delete process.env[key]
+    else process.env[key] = previous
+  })
+  process.env[key] = 'https://obsolete-preview.example'
+  const response = await responseFor('/neuro-atlas')
+  assert.equal(response.headers.get('location'), 'https://www.plneuro.xyz/neuro-atlas')
+  assert.equal(config.rewrites, undefined, 'the retired external proxy is removed')
+})
+
+test('Atlas declares noindex without config redirects bypassing middleware', async () => {
+  assert.deepEqual((await config.redirects()).filter(rule => /neuro-atlas/i.test(rule.source)), [])
   assert.deepEqual((await config.headers()).filter(rule => rule.source === '/neuro-atlas/:path*'), [{
     source: '/neuro-atlas/:path*',
     headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
   }])
-})
-
-test('Atlas rewrites only its root and descendants, retaining the exclusive namespace', async (t) => {
-  atlasEnv(t)
-  assert.equal(typeof config.rewrites, 'function', 'Atlas must have scoped rewrites')
-  assert.deepEqual(await config.rewrites(), [
-    { source: '/neuro-atlas', destination: 'https://neuro-atlas-app.vercel.app/neuro-atlas' },
-    { source: '/neuro-atlas/:path*', destination: 'https://neuro-atlas-app.vercel.app/neuro-atlas/:path*' },
-  ])
 })

@@ -20,12 +20,14 @@ const REGION_COOKIE = 'pl-consent-region'
 
 export function middleware(req: NextRequest) {
   if (/^\/neuro-atlas(?:\/|$)/i.test(req.nextUrl.pathname)) {
-    // A separate deployment does not need PLRD session or consent cookies.
-    // Keep Authorization intact: Atlas's existing hosted Basic gate still applies.
-    const headers = new Headers(req.headers)
-    headers.delete('cookie')
-    const response = NextResponse.next({ request: { headers } })
-    // Defense in depth; Atlas emits authoritative noindex response headers.
+    // Next config redirects discard custom headers in production. Own this
+    // scoped response here so noindex survives; do not proxy cookies or auth.
+    const destination = new URL('https://www.plneuro.xyz')
+    destination.pathname = req.nextUrl.pathname
+      .replace(/^\/neuro-atlas/i, '/neuro-atlas')
+      .replace(/\/$/, '')
+    destination.search = req.nextUrl.search
+    const response = NextResponse.redirect(destination, 307)
     response.headers.set('X-Robots-Tag', 'noindex, nofollow')
     return response
   }
@@ -50,7 +52,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Next external rewrites are case-insensitive, including static assets.
-  // Mirror that namespace here without broadening ordinary PLRD matching.
+  // Redirect the entire legacy Atlas namespace, including mixed-case assets.
+  // Ordinary PLRD matching is unchanged.
   matcher: ['/:atlas([nN][eE][uU][rR][oO]-[aA][tT][lL][aA][sS])/:path*', '/((?!api|_next/static|_next/image|favicon.ico|.*\\.[\\w]+$).*)'],
 }
