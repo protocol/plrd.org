@@ -1,23 +1,32 @@
-# Gated Neuro Atlas hosting
+# Legacy Neuro Atlas redirects
 
-This routing-only change reserves `/neuro-atlas` and its descendants for the separate Atlas deployment. It adds no page, promotion, navigation, preview image, search entry, or sitemap entry. Keep public-integration PR #169 open and unmerged; its UI work is not part of this change.
+PLRD's `/neuro-atlas` namespace now redirects to `https://www.plneuro.xyz/neuro-atlas`. This routing-only change adds no page, promotion, navigation, preview image, search entry, or sitemap entry. Public-integration PR #169 remains separate and must not be merged as part of the move.
 
-## Configuration
+## Routing contract
 
-- PLRD: set `NEURO_ATLAS_ORIGIN` to the exact verified Atlas deployment's HTTPS origin (no credentials, path, query, or fragment). The default is `https://neuro-atlas-app.vercel.app`; it is **not evidence that that deployment is prefix-ready**. Rewrites are resolved at build time: rebuild PLRD after changing this value.
-- Atlas: build with `NEXT_PUBLIC_BASE_PATH=/neuro-atlas`, `ATLAS_SITE_URL=https://www.plrd.org`, and `ATLAS_INDEXABLE=false` at build and runtime. PR #48 supplies prefix support, but **also require the bare-base-path auth fix** (`fix/gated-subpath-root`): its explicit `/` proxy matcher protects `/neuro-atlas`, which the prior catch-all misses. Do not cut over using PR #48 alone.
-- Retain Atlas's existing Basic password gate. PLRD strips all inbound cookies from the scoped namespace, including static assets and case variants, while preserving `Authorization`. Other PLRD routes retain existing consent behavior.
-- Require Atlas PR49's originating `X-Robots-Tag: noindex, nofollow` on pages/assets and auth challenges when configured nonindexable. PLRD also declares scoped headers as defense in depth, but Next external rewrites can discard locally added headers: verify the actual upstream-proxied response, not just middleware unit output. This is indexing policy, not authentication.
-- For isolated loopback QA only, set `NEURO_ATLAS_LOCAL_QA=1` and a loopback `NEURO_ATLAS_ORIGIN`. This opt-in is rejected when any of `VERCEL`, `VERCEL_ENV`, or `VERCEL_URL` is present. Never deploy it.
+- Root, trailing-slash, deep-page and asset URLs return **307 Temporary Redirect**. Next matches the namespace case-insensitively; the destination prefix is canonical lowercase while descendant path casing is retained.
+- Deep routes and query parameters are retained. Trailing slashes are normalized away on the destination, matching the Atlas mount. Redirects contain no fragment, so browsers inherit the original fragment; fragments are never sent to the server.
+- The destination uses canonical `www.plneuro.xyz` directly, avoiding an extra apex-to-www hop. Near-prefix names such as `/neuro-atlas-other/` do not match.
+- PLRD keeps `X-Robots-Tag: noindex, nofollow` on the legacy namespace. The destination must independently retain Atlas's nonindexable policy and existing password gate. A redirect does not authenticate the visitor; a browser may ask for the same password again on the new host.
+- PLRD no longer proxies Atlas or forwards its request headers. The old Atlas-only cookie-isolation branch is replaced with the redirect; the case-insensitive asset matcher is retained. Ordinary PLRD consent behavior is unchanged. Redirects intentionally live in middleware, not `next.config`: Next 15's production config-redirect handler drops configured response headers, including noindex.
+- `NEURO_ATLAS_ORIGIN` and `NEURO_ATLAS_LOCAL_QA` are obsolete in PLRD. Existing hosted values are ignored; this change does not alter hosted environment settings.
 
-## Verification and production cutover gate
+## Verification
 
-Run `npx --yes pnpm@10 install --frozen-lockfile`, `npm test`, `npx --yes pnpm@10 exec tsc --noEmit`, and `npx --yes pnpm@10 run build`. The normal test command includes routing, cookie isolation, Basic-header preservation and noindex regression tests.
+```sh
+npx --yes pnpm@10 install --frozen-lockfile
+npm test
+npx --yes pnpm@10 exec tsc --noEmit
+npx --yes pnpm@10 run build
+npx --yes pnpm@10 start --hostname 127.0.0.1 --port 3492
+# In a separate shell:
+node scripts/verify-neuro-atlas-redirects.mjs http://127.0.0.1:3492
+```
 
-Before production cutover, independently review the exact routing SHA and verify a paired Atlas/PLRD preview: prefixed HTML/assets and canonicals, 401 challenge and invalid-password rejection, noindex on page/asset/401, cookie stripping, preserved Authorization, and unaffected PLRD pages. Use only synthetic local credentials for successful-login fixtures; local success is not hosted-password verification.
+The local production HTTP verifier never follows the external redirect and needs no production password. It checks mixed-case pages/assets, repeated query keys, encoded paths, bare/trailing-slash links, noindex, invalid auth, cookie-free responses, near-prefix boundaries and ordinary PLRD routes. These runtime checks matter: Next 15's experimental config-test helper does not faithfully handle case-insensitive regex matching or repeated query parameters.
 
-**Remaining deployment gate:** explicitly approve production cutover after the prefix-configured Atlas deployment is verified, then build/deploy PLRD against that exact origin. Do not change project-wide production environment, promote deployments, remove the password, or merge PR #169 as part of preview validation. Plan legacy root-link handling separately; do not add permanent redirects without approval.
+## Cutover and rollback
 
-Run Atlas's `scripts/verify-auth-gate.mjs <origin> /neuro-atlas` against both exact preview origins; the bare prefix, trailing slash, deep pages and sitemap must finish at 401 without credentials and with invalid credentials. Do not treat a deep-page-only challenge as full gate coverage.
+Before an approved production cutover, independently verify the exact PL Neuro/Atlas revisions: the mounted HTML/assets and canonicals, unchanged password/content, bare prefix and deep-route authentication, invalid-password rejection, and noindex on pages/assets/auth challenges. In a browser, follow a legacy deep link with a query and fragment to the new mount. PLRD's local redirect tests do not prove the destination is deployed or password-protected.
 
-**Rollback:** record previous production deployment IDs and build settings before cutover. Restore PLRD's previous deployment/config first to remove the new route, then restore Atlas's prior standalone deployment/settings if those were changed. Preserve its password gate and recheck both domains and old deep links. Preview validation never changes production aliases.
+Deploy the verified destination before enabling the PLRD redirect. Keep the redirects temporary initially. Record previous deployment IDs and configuration; to roll back, restore PLRD's previous deployment first and preserve the Atlas deployment/settings that its old proxy expects. Then recheck old root/deep links and the gate. Local validation is not authorization to push, deploy, promote aliases, change production environment or remove authentication.
