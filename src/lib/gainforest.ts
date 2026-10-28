@@ -98,11 +98,13 @@ function times(conn: EdgeList | undefined): number[] {
 }
 
 export async function fetchGainforestStats(): Promise<GainforestStats> {
+  const signal = AbortSignal.timeout(20_000)
   try {
     const res = await fetch(GAINFOREST_INDEXER_URL, {
       method: "POST",
       headers: { "content-type": "application/json" },
       next: { revalidate: REVALIDATE, tags: ["gainforest"] },
+      signal,
       body: JSON.stringify({ query: TOTALS_QUERY }),
     })
     // Hyperindex can return HTTP 400 with a *valid partial* `data` payload when
@@ -118,6 +120,7 @@ export async function fetchGainforestStats(): Promise<GainforestStats> {
         occ?: ({ totalCount?: number | null } & EdgeList) | null
       } | null
     } | null
+    signal.throwIfAborted()
     const d = json?.data
     if (!d) throw new Error(`status ${res.status}: no data`)
 

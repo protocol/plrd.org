@@ -89,11 +89,12 @@ type MatchingPool = {
 /** POST one oRPC procedure. oRPC wraps I/O in a `{ json }` envelope and can
  *  answer non-2xx with a valid body; parse regardless and only fail when the
  *  `json` payload is truly absent. */
-async function rpc<T>(procedure: string, input: unknown): Promise<T> {
+async function rpc<T>(procedure: string, input: unknown, signal: AbortSignal): Promise<T> {
   const res = await fetch(`${MAEARTH_RPC_BASE}/${procedure}`, {
     method: "POST",
     headers: { "content-type": "application/json", "user-agent": UA },
     next: { revalidate: REVALIDATE, tags: ["maearth"] },
+    signal,
     body: JSON.stringify({ json: input }),
   })
   const body = (await res.json().catch(() => null)) as { json?: T } | null
@@ -104,17 +105,20 @@ async function rpc<T>(procedure: string, input: unknown): Promise<T> {
 }
 
 export async function fetchMaEarthStats(): Promise<MaEarthStats> {
+  // Includes current-round discovery and both dependent RPCs, not 20s each.
+  const signal = AbortSignal.timeout(20_000)
   try {
-    const round = await rpc<Round>("rounds/getCurrent", {})
+    const round = await rpc<Round>("rounds/getCurrent", {}, signal)
     if (!round?.id) throw new Error("no current round")
 
     const [estimates, pool] = await Promise.all([
-      rpc<MatchingEstimates>("rounds/getMatchingEstimates", { id: round.id }),
+      rpc<MatchingEstimates>("rounds/getMatchingEstimates", { id: round.id }, signal),
       rpc<MatchingPool | null>("rounds/getMatchingPoolOrNull", {
         id: round.id,
-      }).catch(() => null),
+      }, signal).catch(() => null),
     ])
 
+    signal.throwIfAborted()
     const projects = estimates.projects ?? []
     const donationCents = projects.reduce((s, p) => s + (p.directDonations ?? 0), 0)
     const donors = projects.reduce((s, p) => s + (p.donorCount ?? 0), 0)
