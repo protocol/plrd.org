@@ -1,6 +1,6 @@
 # Refreshing the field-velocity dashboard (agent runbook)
 
-The `/impact` page (impact dashboard) reads **field velocity** through six
+The `/methodology/#learn` page reads **field velocity** through five
 instruments per focus area, plus inflection points. This is the master runbook
 for keeping all of it current: what each piece is, where it lives, how to refresh
 it, and what needs a human. Hand this file to an agent ("follow
@@ -43,25 +43,30 @@ Idea vintage is the one exemption (its data is structurally ~2 years lagged).
   in their own data PR.
 - **Cadence:** yearly (the reliable window advances one year at a time).
 
-## 2. Latency compression — curated corpora (DHR, Neurotech)
+## 2. Latency compression — reviewed corpora
 
-- **Files:** `src/data/velocity/corpora/dhr-latency-crypto.json` (crypto
-  standard → first OpenSSL release) and `neuro-latency-modalities.json` (BCI
-  modality preclinical → first-in-human). **Ingestion:** `src/lib/velocity-latency.ts`.
-- **Refresh / extend:** edit the JSON by hand. Every entry needs a source URL for
-  **both** dates. Each corpus's `meta` carries its own date keys (`fromKey`/`toKey`)
-  and reading copy, so the loader is generic. Add entries to densify; do not
-  scrape at build time. Bump `meta.generated`.
-- **Cadence:** when a notable new primitive ships (DHR) or a new BCI modality
-  reaches first-in-human (Neuro).
+- Read [`src/data/velocity/latency/README.md`](../../src/data/velocity/latency/README.md)
+  before collection. It records the October 28, 2026 audit and endpoint limitations.
+- DHR remains wired: final RFC/FIPS publication → first stable OpenSSL support,
+  displayed in **years**, with row-level date precision and both source endpoints.
+- Neurotech evidence is retained but **withheld from plotting**. Do not remove
+  `meta.approvedForPlot=false` merely because dates parse or a new company ships.
+  Selected preclinical disclosure dates are not animal-event dates; the existing
+  first-modality contract has not been replaced with a device/company proxy.
+- An evidence audit may advance `checkedAt`/`meta.generated`, never the actual
+  observation endpoint. Do not change dates to make a reading appear current.
 
-## 3. Latency compression — AI & Robotics (Papers With Code)
+## 3. Latency compression — AI & Robotics and Economies & Governance
 
-- **Generator:** `scripts/velocity/latency_pwc.py` → `src/data/velocity/latency/ai-robotics.csv`.
-- **Refresh:** obtain the archived CC-BY-SA Papers With Code `links-between-papers-and-code`
-  file, then run with `--links <file>` and `GITHUB_TOKEN` in the env (see the
-  script header + `src/data/velocity/latency/README.md`). Until run, the AI
-  latency record stays `unwired` — that is correct.
+- AI's PWC generator is an unvalidated prototype, **not simply awaiting a run**.
+  The [archive](https://huggingface.co/datasets/pwc-archive/links-between-paper-and-code)
+  is frozen in July 2025. Category filtering, paper-level aggregation, negative
+  lags, first-commit semantics and a compatible loader require review. No
+  fabricated annual CSV or substituted well-known-model timeline.
+- E&G has completed DPI transitions; it lacks a curated comparable cohort with
+  consistent pilot/production boundaries. Do not claim that no completed cases
+  exist, and do not pool unlike pilot types to force an acceleration chart.
+- Keep both evidence gaps explicit until the metrics have defensible observations.
 
 ## 4. Static readings (hand-maintained in `velocity-instruments.ts`)
 
@@ -127,6 +132,6 @@ editing the record and **bumping `measuredAt`** (and adding series points):
 node -e "import('./scripts/velocity/vintage-direction.mjs').then(async m=>{const fs=await import('fs');for(const a of['digital-human-rights','economies-governance','ai-robotics','neurotech']){const L=fs.readFileSync('src/data/velocity/'+a+'.csv','utf8').split(/\r?\n/).filter(x=>x&&!x.startsWith('#'));const h=L.shift().split(',');const iy=h.indexOf('year'),im=h.indexOf('idea_vintage_median_years'),ir=h.indexOf('reliable');const p=[];for(const l of L){const c=l.split(',');if(c[im]==='')continue;if((c[ir]||'').trim()==='1')p.push({x:+c[iy],y:+c[im]})}console.log(a,m.ideaVintageDirection(p))}})"
 ```
 
-Where things render: the field-velocity box + its modal show the six instruments
+Where things render: the field-velocity box + its modal show the five instruments
 per focus area; the inflection cards show markers + interventions; the
 methodology section explains all of it. Keep the two in sync.

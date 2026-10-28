@@ -44,7 +44,7 @@ test('single covers and two/three-view spreads share the same bounded horizontal
     for (const [index, group] of ['latency_compression', 'revealed_commitments', 'performance_curves'].entries()) {
       const deck = document.querySelector(`[data-chart-deck="${group}"]`)
       const cover = deck.querySelector('[data-instrument]')
-      assert.equal(Number(cover.dataset.viewCount), index + 1)
+      assert.equal(Number(cover.dataset.viewCount), index === 0 ? 0 : index + 1)
       await click(cover)
       if (index === 0) {
         assert.equal(deck.querySelector('[data-chart-fan]'), null, 'single views open directly')
@@ -70,22 +70,31 @@ test('multi-view covers visibly retain layered backs at rest while single charts
   } finally { await unmount() }
 })
 
-test('latency animal-model qualifier appears only on the data face, not chart titles or previews', async () => {
+test('withheld Neurotech latency opens its evidence gap, not the retired four-point plot', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
   try {
     const cover = document.querySelector('[data-instrument="latency_compression"]')
+    assert.equal(Number(cover.dataset.viewCount), 0)
     await click(cover)
-    const target = cover.closest('[data-chart-deck]').querySelector('[data-chart-target]')
-    assert.doesNotMatch(target.textContent, /Most entries are/)
-    assert.ok(target === cover, 'single latency chart opens directly, without another preview')
     const dialog = document.querySelector('[role="dialog"]')
-    assert.equal(dialog.querySelector('[data-gallery-item]').dataset.galleryItem, cover.dataset.chartTarget)
-    assert.doesNotMatch(dialog.querySelector('h2').textContent, /Most entries are/)
-    assert.doesNotMatch(dialog.querySelector('[data-face="chart"]').textContent, /Most entries are/)
+    assert.equal(dialog.querySelectorAll('[data-is-chart=true]').length, 0)
+    assert.match(dialog.textContent, /mixed publication dates with implant events/)
+    assert.match(dialog.textContent, /Evidence gap/)
+    assert.doesNotMatch(dialog.textContent, /Coming soon/)
+    assert.doesNotMatch(dialog.textContent, /Median ~3.2|Accelerating/)
+    assert.ok(dialog.querySelector('a[href*="neuro-latency-modalities.json"]'))
+  } finally { await unmount() }
+})
+
+test('DHR latency chart and data table explicitly label their values in years', async () => {
+  const unmount = await mount({ fixedArea: 'digital-human-rights' })
+  try {
+    await click(document.querySelector('[data-instrument="latency_compression"]'))
+    const dialog = document.querySelector('[role="dialog"]')
+    assert.match(dialog.querySelector('[data-face="chart"]').textContent, /Linear scale · years/)
+    assert.equal(dialog.querySelector('h2').textContent, 'Final specification → stable OpenSSL')
     await click(dialog.querySelector('[data-flip-action]'))
-    const data = dialog.querySelector('[data-face="data"]')
-    assert.equal(data.getAttribute('aria-hidden'), 'false')
-    assert.match(data.textContent, /Most entries are nonhuman-primate; the animal model is recorded per entry \(Synchron's pivotal preclinical work was in sheep\)\./)
+    assert.match(dialog.querySelector('[data-face="data"]').textContent, /Value \(y\)/)
   } finally { await unmount() }
 })
 

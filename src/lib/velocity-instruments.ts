@@ -265,7 +265,12 @@ export const INSTRUMENT_RECORDS: Partial<Record<FocusAreaKey, InstrumentRecord[]
       instrument: 'latency_compression',
       state: 'unwired',
       candidateMetric: 'Pilot-to-production lag for digital public infrastructure',
-      blocker: 'Too few completed pilot-to-production transitions exist yet to time a lag.',
+      blocker: 'Completed DPI transitions are documented, but a reviewed cohort with comparable pilot and production boundaries is not yet curated. Restricted-live rollouts, regional pilots and infrastructure types cannot be pooled into a comparable trend.',
+      checkedAt: '2026-10-28',
+      sources: [
+        { label: 'UPI — official pilot and operation dates', url: 'https://ies.gov.in/arthapedia/concept/unified-payments-interface-upi' },
+        { label: 'Sand Dollar — pilot-to-production history', url: 'https://www.sanddollar.bs/history' },
+      ],
     },
     {
       instrument: 'idea_vintage',
@@ -315,7 +320,11 @@ export const INSTRUMENT_RECORDS: Partial<Record<FocusAreaKey, InstrumentRecord[]
       candidateMetric:
         "Median days from a paper's arXiv publication to the first commit of a linked open-source implementation, per year (a falling lag = faster paper-to-code)",
       blocker:
-        'Generator is built (scripts/velocity/latency_pwc.py, over the CC-BY-SA Papers With Code link archive + arXiv + GitHub first-commit dates); awaiting a run against the archived links file to emit src/data/velocity/latency/ai-robotics.csv.',
+        'The Papers With Code archive is frozen in July 2025. A repository first commit does not establish a working implementation or public release. Cohort filtering, paper-level aggregation and signed-lag handling need correction before a reviewed series and loader can be wired.',
+      checkedAt: '2026-10-28',
+      sources: [
+        { label: 'Papers With Code — frozen link archive', url: 'https://huggingface.co/datasets/pwc-archive/links-between-paper-and-code' },
+      ],
       owner: 'Lukas',
     },
     {
@@ -380,8 +389,13 @@ export const INSTRUMENT_RECORDS: Partial<Record<FocusAreaKey, InstrumentRecord[]
     {
       instrument: 'latency_compression',
       state: 'unwired',
-      candidateMetric: 'Lag from animal study to first human trial, and from IDE approval to first implant',
-      blocker: 'The sample of completed transitions is too small to trend.',
+      candidateMetric: "Years from a BCI modality's first pivotal preclinical animal demonstration to its first-in-human implant",
+      blocker: 'The prior four-point series mixed publication dates with implant events. Corrected evidence is retained, but comparable animal-event dates and modality boundaries are not established; the latency trend is withheld.',
+      checkedAt: '2026-10-28',
+      sources: [
+        { label: 'BCI latency evidence review', url: 'https://github.com/protocol/plrd.org/blob/main/src/data/velocity/corpora/neuro-latency-modalities.json' },
+        { label: 'Kennedy et al. — implant chronology (Table I)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2574508/' },
+      ],
     },
     {
       instrument: 'idea_vintage',

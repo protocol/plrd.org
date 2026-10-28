@@ -49,7 +49,7 @@ test('Neuro galleries use declared instrument attribution and retain every augme
   const records = data.recordsByArea.neurotech
   const measures = data.measurementSeriesByArea.neurotech
   const groups = records.map(record => gallery(record, measures, [], data.ideaVintageExamples, 'Neurotech'))
-  assert.deepEqual(groups.map(g => g.chartCount), [3, 1, 1, 1, 0])
+  assert.deepEqual(groups.map(g => g.chartCount), [3, 0, 1, 1, 0])
   const mapped = groups.flatMap(g => g.items.filter(i => i.kind === 'measurement').map(i => i.measure))
   assert.deepEqual(mapped.map(m => m.id).sort(), measures.map(m => m.id).sort())
   assert.equal(mapped.flatMap(m => m.tracks.flatMap(t => t.points)).length, 27)

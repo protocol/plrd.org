@@ -35,11 +35,14 @@ Usage:
 import argparse
 import datetime as dt
 import json
+import math
+from email.utils import parsedate_to_datetime
 import os
 import random
 import ssl
 import statistics
 import sys
+import tempfile
 import time
 import urllib.parse
 import urllib.request
@@ -65,6 +68,23 @@ def build_url(params):
     return API + "?" + urllib.parse.urlencode(params, safe="|:,")
 
 
+def retry_wait(value, fallback):
+    """Bound both delta-seconds and HTTP dates; never expose invalid headers."""
+    try:
+        try:
+            seconds = float(value)
+        except (TypeError, ValueError):
+            date = parsedate_to_datetime(value)
+            if date.tzinfo is None:
+                date = date.replace(tzinfo=dt.timezone.utc)
+            seconds = max(0.0, date.timestamp() - time.time())
+        if not math.isfinite(seconds) or seconds < 0:
+            return fallback
+        return min(seconds + 1, 120.0)
+    except (TypeError, ValueError, OverflowError, AttributeError):
+        return fallback
+
+
 def fetch(params, email, api_key, tries=6):
     params = dict(params)
     if email:
@@ -79,21 +99,34 @@ def fetch(params, email, api_key, tries=6):
             with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as r:
                 return json.load(r)
         except urllib.error.HTTPError as e:
+            # Inspect only a bounded body for classification; never echo it.
+            daily_limit = False
+            if e.code == 429:
+                try:
+                    body = e.read(65536).decode("utf-8", errors="replace").lower()
+                    daily_limit = "daily" in body and any(word in body for word in ("limit", "quota", "budget"))
+                except Exception:
+                    pass  # A broken error body must not leak its exception either.
+            e.close()
+            if daily_limit:
+                raise RuntimeError("OpenAlex daily quota exhausted; retry after quota reset or use an owner-provided key") from None
             if e.code in (429, 503, 500, 502, 504):
-                retry = e.headers.get("retryAfter") or e.headers.get("Retry-After")
-                # Cap the wait: anonymous search can hand back multi-hour backoffs.
-                # Fail fast instead of sleeping for hours; use an API key to lift limits.
-                wait = min(float(retry) + 1 if retry else delay, 120.0)
+                if attempt + 1 >= tries:
+                    break
+                headers = e.headers or {}
+                retry = headers.get("Retry-After") or headers.get("retryAfter")
+                wait = retry_wait(retry, delay)
                 print(f"  … {e.code}, waiting {wait:.0f}s (attempt {attempt+1})", file=sys.stderr)
                 time.sleep(wait)
                 delay = min(delay * 2, 60)
                 continue
-            raise
-        except Exception as ex:  # noqa: BLE001
-            print(f"  … {ex}, retrying (attempt {attempt+1})", file=sys.stderr)
-            time.sleep(delay)
-            delay = min(delay * 2, 60)
-    raise RuntimeError(f"failed after {tries} attempts: {url}")
+            raise RuntimeError(f"OpenAlex request rejected (HTTP {e.code})") from None
+        except Exception:  # noqa: BLE001 — never log upstream exceptions or URLs
+            if attempt + 1 < tries:
+                print(f"  … request failed, retrying (attempt {attempt+1})", file=sys.stderr)
+                time.sleep(delay)
+                delay = min(delay * 2, 60)
+    raise RuntimeError(f"OpenAlex request failed after {tries} attempts") from None
 
 
 def count(filt, email, api_key):
@@ -284,8 +317,22 @@ def main():
                 ]
             )
         )
-    with open(a.out, "w") as f:
-        f.write("\n".join(lines) + "\n")
+    # Finish every request before touching disk; replace only a complete CSV.
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=os.path.dirname(os.path.abspath(a.out)),
+            prefix=".openalex-", suffix=".tmp", delete=False,
+        ) as f:
+            temporary = f.name
+            f.write("\n".join(lines) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temporary, a.out)
+        temporary = None
+    finally:
+        if temporary is not None:
+            os.unlink(temporary)
     print(f"wrote {a.out} ({len(rows)} rows)", file=sys.stderr)
 
 

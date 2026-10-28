@@ -73,6 +73,21 @@ python scripts/velocity/field_velocity_openalex.py \
   --out src/data/velocity/neurotech.csv
 ```
 
+## Offline failure-handling checks
+
+Run `python3 -B -m unittest scripts.velocity.test_openalex_refresh -v` from the
+repository root. Tests mock the HTTP transport, use only synthetic fixtures and
+an explicitly fake sentinel key, and write only into temporary directories.
+They do not read credentials or contact OpenAlex.
+
+Request diagnostics omit URLs, parameters, response bodies, and upstream exception
+messages. Explicit daily-quota exhaustion stops immediately; transient failures
+have bounded retries (at most six attempts, waits capped at 120 seconds, numeric
+or HTTP-date `Retry-After`). Existing output survives request failures. A complete
+CSV is flushed to a temporary file beside `--out`, then atomically replaced;
+this guarantee is per file, not a transaction across all four refresh commands.
+Queries, cohorts, sampling, and bootstrap/direction calculations are unchanged.
+
 ## Checks before committing
 
 - Each CSV header row includes `n_works_sampled`, and the `# sample:` provenance
