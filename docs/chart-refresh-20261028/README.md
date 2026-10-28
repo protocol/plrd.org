@@ -1,5 +1,8 @@
 # October 28, 2026 chart refresh — latency corrections
 
+Latest combined replay and review corrections: [final verification](final/README.md).
+The earlier test counts and screenshots below are retained as historical checkpoints.
+
 ## Scope and status
 
 This is the latency/data-integrity part of the request to refresh Idea vintage

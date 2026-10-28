@@ -1,0 +1,558 @@
+{
+  "origin": "http://127.0.0.1:3351",
+  "pass": true,
+  "results": [
+    {
+      "width": 1440,
+      "area": "digital-human-rights",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=digital-human-rights#fv/digital-human-rights/idea_vintage/primary",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 85.046875,
+          "width": 832,
+          "height": 829.890625,
+          "top": 85.046875,
+          "right": 1136,
+          "bottom": 914.9375,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "digital-human-rights",
+      "instrument": "latency_compression",
+      "charts": 1,
+      "points": 13,
+      "url": "http://127.0.0.1:3351/methodology/?area=digital-human-rights#fv/digital-human-rights/latency_compression/primary",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 145.40625,
+          "width": 832,
+          "height": 709.1875,
+          "top": 145.40625,
+          "right": 1136,
+          "bottom": 854.59375,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "economies-governance",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=economies-governance#fv/economies-governance/idea_vintage/primary",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 85.046875,
+          "width": 832,
+          "height": 829.890625,
+          "top": 85.046875,
+          "right": 1136,
+          "bottom": 914.9375,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "economies-governance",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=economies-governance#fv/economies-governance/latency_compression/evidence",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 277.6875,
+          "width": 832,
+          "height": 444.625,
+          "top": 277.6875,
+          "right": 1136,
+          "bottom": 722.3125,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "ai-robotics",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=ai-robotics#fv/ai-robotics/idea_vintage/primary",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 75.046875,
+          "width": 832,
+          "height": 849.890625,
+          "top": 75.046875,
+          "right": 1136,
+          "bottom": 924.9375,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "ai-robotics",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=ai-robotics#fv/ai-robotics/latency_compression/evidence",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 250.9375,
+          "width": 832,
+          "height": 498.125,
+          "top": 250.9375,
+          "right": 1136,
+          "bottom": 749.0625,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "neurotech",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 27,
+      "url": "http://127.0.0.1:3351/methodology/?area=neurotech#fv/neurotech/idea_vintage/primary",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 65.046875,
+          "width": 832,
+          "height": 869.890625,
+          "top": 65.046875,
+          "right": 1136,
+          "bottom": 934.9375,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "area": "neurotech",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=neurotech#fv/neurotech/latency_compression/evidence",
+      "bounds": {
+        "width": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "dialog": {
+          "x": 304,
+          "y": 289.0625,
+          "width": 832,
+          "height": 421.875,
+          "top": 289.0625,
+          "right": 1136,
+          "bottom": 710.9375,
+          "left": 304
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "digital-human-rights",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=digital-human-rights#fv/digital-human-rights/idea_vintage/primary",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 77.71875,
+          "width": 374,
+          "height": 844.546875,
+          "top": 77.71875,
+          "right": 382,
+          "bottom": 922.265625,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "digital-human-rights",
+      "instrument": "latency_compression",
+      "charts": 1,
+      "points": 13,
+      "url": "http://127.0.0.1:3351/methodology/?area=digital-human-rights#fv/digital-human-rights/latency_compression/primary",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 140.078125,
+          "width": 374,
+          "height": 719.84375,
+          "top": 140.078125,
+          "right": 382,
+          "bottom": 859.921875,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "economies-governance",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=economies-governance#fv/economies-governance/idea_vintage/primary",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 65.125,
+          "width": 374,
+          "height": 869.734375,
+          "top": 65.125,
+          "right": 382,
+          "bottom": 934.859375,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "economies-governance",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=economies-governance#fv/economies-governance/latency_compression/evidence",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 205.25,
+          "width": 374,
+          "height": 589.5,
+          "top": 205.25,
+          "right": 382,
+          "bottom": 794.75,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "ai-robotics",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=ai-robotics#fv/ai-robotics/idea_vintage/primary",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 63.71875,
+          "width": 374,
+          "height": 872.546875,
+          "top": 63.71875,
+          "right": 382,
+          "bottom": 936.265625,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "ai-robotics",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=ai-robotics#fv/ai-robotics/latency_compression/evidence",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 178.0625,
+          "width": 374,
+          "height": 643.875,
+          "top": 178.0625,
+          "right": 382,
+          "bottom": 821.9375,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "neurotech",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 27,
+      "url": "http://127.0.0.1:3351/methodology/?area=neurotech#fv/neurotech/idea_vintage/primary",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 43.71875,
+          "width": 374,
+          "height": 912.546875,
+          "top": 43.71875,
+          "right": 382,
+          "bottom": 956.265625,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 390,
+      "area": "neurotech",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=neurotech#fv/neurotech/latency_compression/evidence",
+      "bounds": {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "dialog": {
+          "x": 8,
+          "y": 205.25,
+          "width": 374,
+          "height": 589.5,
+          "top": 205.25,
+          "right": 382,
+          "bottom": 794.75,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "digital-human-rights",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=digital-human-rights#fv/digital-human-rights/idea_vintage/primary",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 52.6875,
+          "width": 304,
+          "height": 894.625,
+          "top": 52.6875,
+          "right": 312,
+          "bottom": 947.3125,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "digital-human-rights",
+      "instrument": "latency_compression",
+      "charts": 1,
+      "points": 13,
+      "url": "http://127.0.0.1:3351/methodology/?area=digital-human-rights#fv/digital-human-rights/latency_compression/primary",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 117.03125,
+          "width": 304,
+          "height": 765.921875,
+          "top": 117.03125,
+          "right": 312,
+          "bottom": 882.953125,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "economies-governance",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=economies-governance#fv/economies-governance/idea_vintage/primary",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 36.6875,
+          "width": 304,
+          "height": 926.625,
+          "top": 36.6875,
+          "right": 312,
+          "bottom": 963.3125,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "economies-governance",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=economies-governance#fv/economies-governance/latency_compression/evidence",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 175.875,
+          "width": 304,
+          "height": 648.25,
+          "top": 175.875,
+          "right": 312,
+          "bottom": 824.125,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "ai-robotics",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 22,
+      "url": "http://127.0.0.1:3351/methodology/?area=ai-robotics#fv/ai-robotics/idea_vintage/primary",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 53.28125,
+          "width": 304,
+          "height": 893.4375,
+          "top": 53.28125,
+          "right": 312,
+          "bottom": 946.71875,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "ai-robotics",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=ai-robotics#fv/ai-robotics/latency_compression/evidence",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 156.6875,
+          "width": 304,
+          "height": 686.625,
+          "top": 156.6875,
+          "right": 312,
+          "bottom": 843.3125,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "neurotech",
+      "instrument": "idea_vintage",
+      "charts": 1,
+      "points": 27,
+      "url": "http://127.0.0.1:3351/methodology/?area=neurotech#fv/neurotech/idea_vintage/primary",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 33.28125,
+          "width": 304,
+          "height": 933.4375,
+          "top": 33.28125,
+          "right": 312,
+          "bottom": 966.71875,
+          "left": 8
+        }
+      }
+    },
+    {
+      "width": 320,
+      "area": "neurotech",
+      "instrument": "latency_compression",
+      "charts": 0,
+      "points": 0,
+      "url": "http://127.0.0.1:3351/methodology/?area=neurotech#fv/neurotech/latency_compression/evidence",
+      "bounds": {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "dialog": {
+          "x": 8,
+          "y": 183.875,
+          "width": 304,
+          "height": 632.25,
+          "top": 183.875,
+          "right": 312,
+          "bottom": 816.125,
+          "left": 8
+        }
+      }
+    }
+  ]
+}
