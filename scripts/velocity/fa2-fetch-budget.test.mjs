@@ -1,6 +1,23 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { source } from './test-source-loader.mjs'
+import 'next/dist/server/node-environment.js'
+import { createRequire } from 'node:module'
+import { createServer } from 'node:http'
+import { createHash } from 'node:crypto'
+const require = createRequire(import.meta.url)
+const { createPatchedFetcher } = require('next/dist/server/lib/patch-fetch.js')
+const { workAsyncStorage } = require('next/dist/server/app-render/work-async-storage.external.js')
+const { workUnitAsyncStorage } = require('next/dist/server/app-render/work-unit-async-storage.external.js')
+const { executeRevalidates } = require('next/dist/server/revalidation-utils.js')
+const { AfterRunner } = require('next/dist/server/after/run-with-after.js')
+const cacheReads = []
+globalThis.__incrementalCache = {
+  generateSimpleCacheKey: async (key) => key,
+  get: async (_key, options) => { cacheReads.push(options); return null },
+  set: async () => {},
+}
+
 
 const providers = [
   ['glow', 'fetchGlowStats'],
@@ -111,7 +128,8 @@ for (const [file, entry] of providers) {
     })
     const stats = await source(`lib/${file}.ts`)[entry]()
     assert.equal(stats.degraded, false)
-    assert.ok(calls.every((o) => o.next.tags.includes(file) && o.next.revalidate > 0))
+    assert.ok(calls.every((o) => o.cache === 'no-store'))
+    assert.ok(cacheReads.some((o) => o.revalidate > 0 && o.tags.includes(file)))
     assert.equal(new Set(calls.map((o) => o.signal)).size, 1)
     if (file === 'glow') {
       assert.equal(stats.powerOutput, 12); assert.equal(stats.carbon, 1.5); assert.equal(stats.activeFarms, 2)
@@ -166,3 +184,105 @@ for (const file of ['simocracy', 'ftc', 'maearth', 'glow']) {
   })
 }
 
+
+
+for (const [file, entry] of providers) {
+for (const mode of ['miss', 'stale-foreground', 'stale-background']) {
+  for (const phase of ['headers', 'body']) {
+    test(`Next cache ${file}: ${mode} ${phase} stall cannot block export completion`, { timeout: 5000 }, async (t) => {
+      const load = source(`lib/${file}.ts`)[entry]
+      const nativeFetch = globalThis.fetch
+      const nativeTimeout = AbortSignal.timeout.bind(AbortSignal)
+      t.mock.method(console, 'warn', () => {})
+      t.mock.method(console, 'error', () => {})
+      let stall = false
+      const server = createServer((request, response) => {
+        let body = ''
+        request.on('data', (chunk) => { body += chunk })
+        request.on('end', () => {
+          if (stall) {
+            if (phase === 'body') { response.writeHead(200, { 'content-type': 'application/json' }); response.write('{') }
+            return
+          }
+          let data
+          if (file === 'glow') data = [{hexlifiedPublicKey:'fixture',powerOutput:12000,carbonCredit:1.5}]
+          else if (file === 'gainforest') data = {data:{orgs:{totalCount:2},certs:{totalCount:3},occ:{totalCount:4}}}
+          else if (file === 'maearth') data = {json: request.url.endsWith('getCurrent') ? {id:'fixture',name:'Fixture'} : request.url.endsWith('getMatchingEstimates') ? {projects:[{directDonations:12300,donorCount:5}]} : {amountCents:25000}}
+          else if (file === 'simocracy') {
+            const root = JSON.parse(body).query.match(/\{\s*(\w+)\(/)[1]
+            const node = root === 'orgSimocracyHistory' ? {type:'chat',actorDid:'did:example:qa',simNames:['Fixture'],createdAt:'2026-01-01'} : {did:'did:example:qa',uri:'at://fixture',name:'Fixture',createdAt:'2026-01-01'}
+            data = {data:{[root]:{edges:[{node}],pageInfo:{hasNextPage:false}}}}
+          } else data = {data:{ioFundingthecommonsImpactMetricPoint:{edges:[{node:{metric:'total-pgf-distributed',value:42,date:'2026-01-01'}}],pageInfo:{hasNextPage:false}}}}
+          response.end(JSON.stringify(data))
+        })
+      })
+      await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+      const origin = `http://127.0.0.1:${server.address().port}`
+      const entries = new Map()
+      let stale = false
+      const hash = async (...args) => createHash('sha256').update(JSON.stringify(args)).digest('hex')
+      const cache = {
+        generateCacheKey: hash, generateSimpleCacheKey: hash,
+        get: async (key) => entries.has(key) ? { value: entries.get(key), isStale: stale } : null,
+        set: async (key, value) => { entries.set(key, value) },
+        lock: async () => () => {},
+      }
+      const signals = []
+      const wrapped = createPatchedFetcher((url, init) => {
+        signals.push(init.signal)
+        return nativeFetch(origin + new URL(url).pathname, init)
+      }, { workAsyncStorage, workUnitAsyncStorage })
+      t.mock.method(globalThis, 'fetch', wrapped)
+      async function render(isRevalidate = false) {
+        const work = { route:'/budget-test', page:'/budget-test/page', isStaticGeneration:true, isRevalidate, incrementalCache:cache }
+        const unit = { type:'prerender-legacy', phase:'render', revalidate:60, tags:[], implicitTags:{tags:[]} }
+        return workAsyncStorage.run(work, () => workUnitAsyncStorage.run(unit, async () => {
+          const stats = await load()
+          const after = new AfterRunner()
+          after.context.waitUntil(executeRevalidates(work))
+          await after.executeAfter()
+          return stats
+        }))
+      }
+      let pending
+      let observation
+      let prime
+      try {
+        if (mode !== 'miss') {
+          prime = await render()
+          assert.equal(prime.degraded, false)
+          assert.ok(entries.size)
+          stale = true
+        }
+        const cacheBeforeFailure = JSON.stringify([...entries])
+        stall = true
+        signals.length = 0
+        t.mock.method(AbortSignal, 'timeout', (ms) => nativeTimeout(ms === 20_000 ? 40 : ms))
+        pending = render(mode === 'stale-foreground')
+        const sentinel = Symbol('export still pending')
+        const stats = await Promise.race([pending, new Promise((resolve) => { observation = setTimeout(() => resolve(sentinel), 200) })])
+        assert.notEqual(stats, sentinel, 'stale cache stripped origin cancellation and blocked export')
+        assert.ok(signals.length > 0)
+        assert.ok(signals.every((signal) => signal instanceof AbortSignal && signal.aborted))
+        if (mode === 'miss') { assert.equal(stats.degraded, true); assert.equal(entries.size, 0) }
+        else assert.deepEqual(stats, JSON.parse(JSON.stringify(prime)), 'failed refresh must retain original values AND original fetchedAt')
+        assert.equal(JSON.stringify([...entries]), cacheBeforeFailure, 'failure must not overwrite the successful cache')
+        stall = false
+        const recovered = await render(true)
+        assert.equal(recovered.degraded, false)
+        assert.ok(entries.size)
+        if (prime) assert.notEqual(recovered.fetchedAt, prime.fetchedAt)
+        stale = false
+        signals.length = 0
+        assert.deepEqual(await render(), JSON.parse(JSON.stringify(recovered)))
+        assert.equal(signals.length, 0, 'fresh cache must not refetch')
+      } finally {
+        clearTimeout(observation)
+        server.closeAllConnections()
+        await new Promise((resolve) => server.close(resolve))
+        if (pending) await pending.catch(() => {})
+      }
+    })
+  }
+}
+}

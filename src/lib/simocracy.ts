@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries, cumulativeOnAxis, dayAxis, ms } from "./trends"
 
 export type { MetricSeries }
@@ -118,7 +119,7 @@ async function fetchRoot<T extends Record<string, unknown>>(
     const res = await fetch(SIMOCRACY_INDEXER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 60, tags: ["simocracy"] },
+      cache: "no-store",
       signal,
       body: JSON.stringify({ query }),
     })
@@ -288,9 +289,8 @@ function buildTrends(args: {
  * Fetch + aggregate Simocracy data for the live dashboard. Falls back to a
  * `degraded: true` empty result if the indexer is unreachable.
  */
-export async function fetchSimocracyStats(): Promise<SimocracyStats> {
+async function loadSimocracyStats(signal = AbortSignal.timeout(20_000)): Promise<SimocracyStats> {
   // A per-request timeout would restart on each page; share one whole-read budget.
-  const signal = AbortSignal.timeout(20_000)
   type HistoryNode = RawHistoryRecord
   type SimNode = RawSimRecord & { did?: string; uri?: string }
   type GatheringNode = RawGatheringRecord & { did?: string }
@@ -479,3 +479,5 @@ export async function resolveBlueskyProfiles(
   }
   return out
 }
+
+export const fetchSimocracyStats = cacheProviderStats("simocracy", 60, loadSimocracyStats)

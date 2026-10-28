@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries } from "./trends"
 
 /**
@@ -110,10 +111,10 @@ function sumScalarField(text: string, key: string): number {
 /** Fetch + aggregate one protocol week from its R2 snapshot, or null when
  *  the week isn't published yet (404) or carries no farms. */
 async function fetchWeek(week: number, signal: AbortSignal): Promise<WeekTotals | null> {
-  if (week < 0) return null
+  if (week < 0 || signal.aborted) return null
   try {
     const res = await fetch(`${GLOW_R2_BASE}/week-${week}/filtered-data.json`, {
-      next: { revalidate: REVALIDATE, tags: ["glow"] },
+      cache: "no-store",
       signal,
     })
     if (!res.ok) return null
@@ -132,9 +133,8 @@ async function fetchWeek(week: number, signal: AbortSignal): Promise<WeekTotals 
   }
 }
 
-export async function fetchGlowStats(): Promise<GlowStats> {
+async function loadGlowStats(signal = AbortSignal.timeout(20_000)): Promise<GlowStats> {
   // One budget covers all concurrent weeks, including response bodies.
-  const signal = AbortSignal.timeout(20_000)
   const nominal = currentWeek()
   const weeks = Array.from({ length: WEEK_LOOKBACK + 1 }, (_, i) => nominal - i)
 
@@ -179,3 +179,5 @@ export async function fetchGlowStats(): Promise<GlowStats> {
     degraded: false,
   }
 }
+
+export const fetchGlowStats = cacheProviderStats("glow", REVALIDATE, loadGlowStats)
