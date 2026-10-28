@@ -98,6 +98,34 @@ test('DHR latency chart and data table explicitly label their values in years', 
   } finally { await unmount() }
 })
 
+test('each reviewed latency hold is an evidence gap on the overview, not a delivery promise', async () => {
+  for (const area of ['economies-governance', 'ai-robotics', 'neurotech']) {
+    const unmount = await mount({ fixedArea: area })
+    try {
+      const cover = document.querySelector('[data-instrument="latency_compression"]')
+      assert.equal(cover.dataset.chartCount, '0')
+      assert.match(cover.textContent, /Evidence gap/, area)
+      assert.doesNotMatch(cover.textContent, /Coming soon/, area)
+    } finally { await unmount() }
+  }
+})
+
+test('selected completed OpenSSL transitions never imply field acceleration on either visible face', async () => {
+  const unmount = await mount({ fixedArea: 'digital-human-rights' })
+  try {
+    const cover = document.querySelector('[data-instrument="latency_compression"]')
+    assert.doesNotMatch(cover.textContent, /Accelerating|Decelerating/)
+    assert.match(cover.textContent, /Selected completions/)
+    await click(cover)
+    const face = document.querySelector('[role="dialog"] [data-face="chart"]')
+    assert.doesNotMatch(face.textContent, /Accelerating|Decelerating/)
+    assert.match(face.textContent, /Median lag by final-specification publication year/)
+    assert.match(face.textContent, /not a field-wide trend/)
+    assert.match(face.textContent, /exclude unfinished transitions/)
+    assert.match(face.textContent, /month-normalized/)
+  } finally { await unmount() }
+})
+
 test('opening another deck replaces a pinned or focused fan for every input mode', async () => {
   const unmount = await mount({ fixedArea: 'neurotech' })
   const pointer = async (target, type, relatedTarget = null) => {

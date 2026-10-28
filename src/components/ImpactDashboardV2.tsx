@@ -511,11 +511,12 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
           {record.series && record.series.length > 1 && <span className="instrument-preview-plot" aria-hidden="true"><Sparkline series={record.series} scale={record.seriesScale} band={record.series.some(p => p.lo != null)} /></span>}
           {!(record.series && record.series.length > 1) && previewMeasure?.kind === 'measurement' && <MeasurementChart measure={previewMeasure.measure} face="preview" />}
           <span className="line-clamp-3 text-xs font-medium leading-relaxed text-black">{record.value}</span>
+          {record.instrument === 'latency_compression' && area === 'digital-human-rights' && <span className="text-[10px] text-gray-500">Selected completions · not a field-wide trend</span>}
           <span className="mt-auto flex flex-wrap items-center gap-1.5">
             {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}{isStaleReading(record) && <StaleMarker />}
             {record.measuredAt && <span className="text-[10px] text-gray-500">measured {shortDate(record.measuredAt)}</span>}
           </span>
-        </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? 'Coming soon' : 'Not applicable to this field'}</span></>}
+        </> : <>{record.state === 'unwired' && <GhostChart />}<span className="text-xs text-gray-500">{record.state === 'unwired' ? record.checkedAt ? 'Evidence gap' : 'Coming soon' : 'Not applicable to this field'}</span></>}
         <span className="mt-auto text-[11px] font-medium text-blue">{multi ? 'Hover or tap to choose a chart' : items.length ? 'Open chart ↗' : 'View evidence & status'}</span>
       </span>
     </button>
@@ -690,6 +691,7 @@ function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; re
     <RecordPlot series={(secondary ? record.series2 : record.series)!} scale={secondary ? 'linear' : record.seriesScale} unit={record.instrument === 'idea_vintage' || record.instrument === 'latency_compression' ? 'y' : ''} dataOnly={dataOnly} />
     {dataOnly ? <div className="mt-4"><RecordEvidence record={record} /></div> : <div className="mt-4 space-y-2 text-sm text-gray-600">
       {!secondary && <p>{record.value}</p>}
+      {record.instrument === 'latency_compression' && areaLabel === 'Digital Human Rights' && <p className="text-xs">Median lag by final-specification publication year; selected completed OpenSSL transitions, not a field-wide trend. Recent cohorts exclude unfinished transitions; RFC dates are month-normalized.</p>}
       {record.measuredAt && <p className="text-xs">measured {shortDate(record.measuredAt)}</p>}
       {isStaleReading(record) && <StaleMarker />}
       {shownDirection(record) && <DirectionChip direction={shownDirection(record)!} />}

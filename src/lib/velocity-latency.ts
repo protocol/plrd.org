@@ -153,7 +153,9 @@ export function withLatency(records: InstrumentRecord[], data?: LatencyPayload |
       metric: m.metric,
       value: `Median ~${data.overallMedianYears.toFixed(1)} years, ${m.valueNoun} (${data.n} ${m.unitNoun})`,
       trend: `Early cohort (\u2264${data.splitYear}) ~${data.earlyMedianYears.toFixed(1)}y; recent (>${data.splitYear}) ~${data.recentMedianYears.toFixed(1)}y. A falling lag ${m.trendVerb}.${m.readingCaveat ? ` ${m.readingCaveat}` : ''}`,
-      direction: data.direction,
+      // A selected, completed-only sample has unequal follow-up and omits
+      // unfinished transitions. Keep descriptive medians, not a field direction.
+      direction: undefined,
       window: data.window,
       measuredAt: data.lastToDate,
       checkedAt: m.generated,
