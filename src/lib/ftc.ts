@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries } from "./trends"
 
 /**
@@ -92,7 +93,7 @@ async function fetchAllPoints(signal: AbortSignal): Promise<RawPoint[]> {
     const res = await fetch(PLRESEARCH_INDEXER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: REVALIDATE, tags: ["ftc"] },
+      cache: "no-store",
       signal,
       body: JSON.stringify({ query }),
     })
@@ -117,8 +118,7 @@ async function fetchAllPoints(signal: AbortSignal): Promise<RawPoint[]> {
   return out
 }
 
-export async function fetchFtcStats(): Promise<FtcStats> {
-  const signal = AbortSignal.timeout(20_000)
+async function loadFtcStats(signal = AbortSignal.timeout(20_000)): Promise<FtcStats> {
   let points: RawPoint[] = []
   try {
     points = await fetchAllPoints(signal)
@@ -162,3 +162,5 @@ export async function fetchFtcStats(): Promise<FtcStats> {
     degraded: !any,
   }
 }
+
+export const fetchFtcStats = cacheProviderStats("ftc", REVALIDATE, loadFtcStats)

@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 
 /**
  * Read-only Ma Earth crowdfunding stats for the FA2 Live Dashboard: total live
@@ -90,10 +91,11 @@ type MatchingPool = {
  *  answer non-2xx with a valid body; parse regardless and only fail when the
  *  `json` payload is truly absent. */
 async function rpc<T>(procedure: string, input: unknown, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted()
   const res = await fetch(`${MAEARTH_RPC_BASE}/${procedure}`, {
     method: "POST",
     headers: { "content-type": "application/json", "user-agent": UA },
-    next: { revalidate: REVALIDATE, tags: ["maearth"] },
+    cache: "no-store",
     signal,
     body: JSON.stringify({ json: input }),
   })
@@ -104,9 +106,8 @@ async function rpc<T>(procedure: string, input: unknown, signal: AbortSignal): P
   return body.json
 }
 
-export async function fetchMaEarthStats(): Promise<MaEarthStats> {
+async function loadMaEarthStats(signal = AbortSignal.timeout(20_000)): Promise<MaEarthStats> {
   // Includes current-round discovery and both dependent RPCs, not 20s each.
-  const signal = AbortSignal.timeout(20_000)
   try {
     const round = await rpc<Round>("rounds/getCurrent", {}, signal)
     if (!round?.id) throw new Error("no current round")
@@ -145,3 +146,5 @@ export async function fetchMaEarthStats(): Promise<MaEarthStats> {
     }
   }
 }
+
+export const fetchMaEarthStats = cacheProviderStats("maearth", REVALIDATE, loadMaEarthStats)

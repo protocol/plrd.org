@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries, cumulativeOnAxis, dayAxis, ms } from "./trends"
 
 /**
@@ -97,13 +98,13 @@ function times(conn: EdgeList | undefined): number[] {
     .filter((t) => !Number.isNaN(t))
 }
 
-export async function fetchGainforestStats(): Promise<GainforestStats> {
-  const signal = AbortSignal.timeout(20_000)
+async function loadGainforestStats(signal = AbortSignal.timeout(20_000)): Promise<GainforestStats> {
   try {
+    signal.throwIfAborted()
     const res = await fetch(GAINFOREST_INDEXER_URL, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      next: { revalidate: REVALIDATE, tags: ["gainforest"] },
+      cache: "no-store",
       signal,
       body: JSON.stringify({ query: TOTALS_QUERY }),
     })
@@ -160,3 +161,5 @@ export async function fetchGainforestStats(): Promise<GainforestStats> {
     }
   }
 }
+
+export const fetchGainforestStats = cacheProviderStats("gainforest", REVALIDATE, loadGainforestStats)
