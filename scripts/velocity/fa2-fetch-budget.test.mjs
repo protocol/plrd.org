@@ -257,7 +257,9 @@ for (const mode of ['miss', 'stale-foreground', 'stale-background']) {
         const cacheBeforeFailure = JSON.stringify([...entries])
         stall = true
         signals.length = 0
-        t.mock.method(AbortSignal, 'timeout', (ms) => nativeTimeout(ms === 20_000 ? 40 : ms))
+        // Accelerate only the deliberate stall; healthy recovery keeps its real
+        // budget even when the full suite and production build load the CPU.
+        t.mock.method(AbortSignal, 'timeout', (ms) => nativeTimeout(ms === 20_000 && stall ? 40 : ms))
         pending = render(mode === 'stale-foreground')
         const sentinel = Symbol('export still pending')
         const stats = await Promise.race([pending, new Promise((resolve) => { observation = setTimeout(() => resolve(sentinel), 200) })])
