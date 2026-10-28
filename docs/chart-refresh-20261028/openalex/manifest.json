@@ -1,0 +1,86 @@
+[
+  {
+    "area": "digital-human-rights",
+    "rows": 22,
+    "csv_sha256": "74afe0be0771a97b78846cbe33cc584cffd8d156a2fabb1729d3829d561ad4a3",
+    "generated": "2026-10-28T10:41:05+00:00",
+    "first_underindexed_year": 2024,
+    "latest_reliable": {
+      "year": "2023",
+      "field_works": "29709",
+      "all_works": "10915533",
+      "corpus_share_per_100k": "272.172",
+      "first_time_authors": "",
+      "idea_vintage_median_years": "7",
+      "vintage_ci_lo": "5.0",
+      "vintage_ci_hi": "8",
+      "n_refs_sampled": "2029",
+      "n_works_sampled": "61",
+      "reliable": "1"
+    },
+    "response_receipts": 665
+  },
+  {
+    "area": "economies-governance",
+    "rows": 22,
+    "csv_sha256": "7e6cfbc80d259f95e31e70a59458ecad5e6e2278154fba5d47ada7454da2b9d2",
+    "generated": "2026-10-28T10:42:05+00:00",
+    "first_underindexed_year": 2024,
+    "latest_reliable": {
+      "year": "2023",
+      "field_works": "72218",
+      "all_works": "10915533",
+      "corpus_share_per_100k": "661.608",
+      "first_time_authors": "",
+      "idea_vintage_median_years": "7.0",
+      "vintage_ci_lo": "6.0",
+      "vintage_ci_hi": "8",
+      "n_refs_sampled": "2438",
+      "n_works_sampled": "68",
+      "reliable": "1"
+    },
+    "response_receipts": 786
+  },
+  {
+    "area": "ai-robotics",
+    "rows": 22,
+    "csv_sha256": "b75a15babcffc3f8c93e9eae7d7ebecdf4bc3d7a8a5f641155530000342a7d81",
+    "generated": "2026-10-28T10:45:32+00:00",
+    "first_underindexed_year": 2024,
+    "latest_reliable": {
+      "year": "2023",
+      "field_works": "9383",
+      "all_works": "10915533",
+      "corpus_share_per_100k": "85.96",
+      "first_time_authors": "",
+      "idea_vintage_median_years": "3.0",
+      "vintage_ci_lo": "3",
+      "vintage_ci_hi": "4",
+      "n_refs_sampled": "1742",
+      "n_works_sampled": "65",
+      "reliable": "1"
+    },
+    "response_receipts": 585
+  },
+  {
+    "area": "neurotech",
+    "rows": 27,
+    "csv_sha256": "57366c9c5a273ff29177a34e5b94f07ac41f77b236d3b4872cf5c790bde199fe",
+    "generated": "2026-10-28T10:49:13+00:00",
+    "first_underindexed_year": 2024,
+    "latest_reliable": {
+      "year": "2023",
+      "field_works": "5638",
+      "all_works": "10915533",
+      "corpus_share_per_100k": "51.651",
+      "first_time_authors": "",
+      "idea_vintage_median_years": "8.0",
+      "vintage_ci_lo": "7.0",
+      "vintage_ci_hi": "9.0",
+      "n_refs_sampled": "2364",
+      "n_works_sampled": "68",
+      "reliable": "1"
+    },
+    "response_receipts": 951
+  }
+]
