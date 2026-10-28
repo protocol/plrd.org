@@ -36,6 +36,9 @@ type CorpusMeta = {
   sources: { label: string; url: string }[]
   splitYear?: number
   generated?: string
+  readingCaveat?: string
+  /** A reviewed evidence hold overrides even otherwise parseable dates. */
+  approvedForPlot?: boolean
 }
 type Corpus = { meta: CorpusMeta; entries: Record<string, unknown>[] }
 
@@ -69,6 +72,7 @@ export type LatencyPayload = {
 
 function toPayload(corpus: Corpus): LatencyPayload | null {
   const { meta } = corpus
+  if (meta.approvedForPlot === false) return null
   const rows = corpus.entries
     .map((e) => {
       const from = e[meta.fromKey]
@@ -89,7 +93,7 @@ function toPayload(corpus: Corpus): LatencyPayload | null {
     .sort((a, b) => a.x - b.x)
 
   // Direction from an early vs recent cohort split (falling lag = accelerating).
-  // Median-based so a single outlier cannot flip the call.
+  // This is descriptive of the selected cohort, not a field-wide causal estimate.
   const splitYear = meta.splitYear ?? 2017
   const early = rows.filter((r) => r.year <= splitYear).map((r) => r.lag)
   const recent = rows.filter((r) => r.year > splitYear).map((r) => r.lag)
@@ -148,8 +152,10 @@ export function withLatency(records: InstrumentRecord[], data?: LatencyPayload |
       state: 'reading',
       metric: m.metric,
       value: `Median ~${data.overallMedianYears.toFixed(1)} years, ${m.valueNoun} (${data.n} ${m.unitNoun})`,
-      trend: `Early cohort (\u2264${data.splitYear}) ~${data.earlyMedianYears.toFixed(1)}y; recent (>${data.splitYear}) ~${data.recentMedianYears.toFixed(1)}y. A falling lag means the field ${m.trendVerb}.`,
-      direction: data.direction,
+      trend: `Early cohort (\u2264${data.splitYear}) ~${data.earlyMedianYears.toFixed(1)}y; recent (>${data.splitYear}) ~${data.recentMedianYears.toFixed(1)}y. A falling lag ${m.trendVerb}.${m.readingCaveat ? ` ${m.readingCaveat}` : ''}`,
+      // A selected, completed-only sample has unequal follow-up and omits
+      // unfinished transitions. Keep descriptive medians, not a field direction.
+      direction: undefined,
       window: data.window,
       measuredAt: data.lastToDate,
       checkedAt: m.generated,

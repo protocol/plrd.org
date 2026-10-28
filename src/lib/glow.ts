@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries } from "./trends"
 
 /**
@@ -109,14 +110,16 @@ function sumScalarField(text: string, key: string): number {
 
 /** Fetch + aggregate one protocol week from its R2 snapshot, or null when
  *  the week isn't published yet (404) or carries no farms. */
-async function fetchWeek(week: number): Promise<WeekTotals | null> {
-  if (week < 0) return null
+async function fetchWeek(week: number, signal: AbortSignal): Promise<WeekTotals | null> {
+  if (week < 0 || signal.aborted) return null
   try {
     const res = await fetch(`${GLOW_R2_BASE}/week-${week}/filtered-data.json`, {
-      next: { revalidate: REVALIDATE, tags: ["glow"] },
+      cache: "no-store",
+      signal,
     })
     if (!res.ok) return null
     const text = await res.text()
+    signal.throwIfAborted()
     const activeFarms = (text.match(/"hexlifiedPublicKey"/g) ?? []).length
     if (activeFarms === 0) return null
     return {
@@ -130,20 +133,21 @@ async function fetchWeek(week: number): Promise<WeekTotals | null> {
   }
 }
 
-export async function fetchGlowStats(): Promise<GlowStats> {
+async function loadGlowStats(signal = AbortSignal.timeout(20_000)): Promise<GlowStats> {
+  // One budget covers all concurrent weeks, including response bodies.
   const nominal = currentWeek()
   const weeks = Array.from({ length: WEEK_LOOKBACK + 1 }, (_, i) => nominal - i)
 
   let results: WeekTotals[] = []
   try {
-    results = (await Promise.all(weeks.map(fetchWeek)))
+    results = (await Promise.all(weeks.map((week) => fetchWeek(week, signal))))
       .filter((w): w is WeekTotals => w !== null)
       .sort((a, b) => a.week - b.week)
   } catch (err) {
     console.warn("[glow] R2 weekly stats fetch failed:", err)
   }
 
-  if (results.length === 0) {
+  if (signal.aborted || results.length === 0) {
     return {
       week: nominal,
       powerOutput: 0,
@@ -175,3 +179,5 @@ export async function fetchGlowStats(): Promise<GlowStats> {
     degraded: false,
   }
 }
+
+export const fetchGlowStats = cacheProviderStats("glow", REVALIDATE, loadGlowStats)
