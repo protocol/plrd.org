@@ -1,0 +1,466 @@
+[
+  {
+    "phase": "before",
+    "area": "digital-human-rights",
+    "metric": "idea_vintage",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-digital-human-rights-idea_vintage-full.png",
+    "crop": "before-digital-human-rights-idea_vintage.png",
+    "box": [
+      323,
+      265,
+      1117,
+      726
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 267.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 267.046875,
+        "right": 1115,
+        "bottom": 723.9375,
+        "left": 325
+      },
+      "text": "Digital Human Rights \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n9.5y\n4y\n2005\n2026\n\n6.0 years (2023)\n\nmeasured 2023-12-31\n\n~\nUnclear\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "digital-human-rights",
+    "metric": "latency_compression",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-digital-human-rights-latency_compression-full.png",
+    "crop": "before-digital-human-rights-latency_compression.png",
+    "box": [
+      323,
+      334,
+      1117,
+      798
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 336.671875,
+        "width": 790,
+        "height": 458.65625,
+        "top": 336.671875,
+        "right": 1115,
+        "bottom": 795.328125,
+        "left": 325
+      },
+      "text": "Days from a cryptographic standard's publication (IETF RFC or NIST FIPS) to its first stable release in OpenSSL.\n\nLinear scale\n\n6.3\n0.1\n2008\n2024\n\nMedian ~1.7 years, standard to first open implementation (11 primitives)\n\nmeasured 2025-04-08\n\n\u25cb\nstale",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "economies-governance",
+    "metric": "idea_vintage",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-economies-governance-idea_vintage-full.png",
+    "crop": "before-economies-governance-idea_vintage.png",
+    "box": [
+      323,
+      265,
+      1117,
+      726
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 267.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 267.046875,
+        "right": 1115,
+        "bottom": 723.9375,
+        "left": 325
+      },
+      "text": "Economies & Governance \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n8y\n5y\n2005\n2026\n\n7.0 years (2023)\n\nmeasured 2023-12-31\n\n~\nUnclear\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "economies-governance",
+    "metric": "latency_compression",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-economies-governance-latency_compression-full.png",
+    "crop": "before-economies-governance-latency_compression.png",
+    "box": [
+      302,
+      323,
+      1138,
+      677
+    ],
+    "state": {
+      "rect": {
+        "x": 304,
+        "y": 325.375,
+        "width": 832,
+        "height": 349.25,
+        "top": 325.375,
+        "right": 1136,
+        "bottom": 674.625,
+        "left": 304
+      },
+      "text": "Economies & Governance \u00b7 Field velocity \u00b7 0 charts\n\nLatency compression\n\nThe lag between pipeline stages, and whether it is shrinking.\n\n\u00d7\nShare\n\nComing soon\n\nIntended metric: Pilot-to-production lag for digital public infrastructure\n\nBlocked by: Too few completed pilot-to-production transitions exist yet to time a lag.\n\nNo chart is wired for this instrument. Evidence and status are shown without inventing a time series.",
+      "chart": false,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "ai-robotics",
+    "metric": "idea_vintage",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-ai-robotics-idea_vintage-full.png",
+    "crop": "before-ai-robotics-idea_vintage.png",
+    "box": [
+      323,
+      255,
+      1117,
+      716
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 257.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 257.046875,
+        "right": 1115,
+        "bottom": 713.9375,
+        "left": 325
+      },
+      "text": "AI & Robotics \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n9y\n2y\n2005\n2026\n\n3.0 years (2023)\n\nmeasured 2023-12-31\n\n\u2197\nAccelerating\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "ai-robotics",
+    "metric": "latency_compression",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-ai-robotics-latency_compression-full.png",
+    "crop": "before-ai-robotics-latency_compression.png",
+    "box": [
+      302,
+      285,
+      1138,
+      715
+    ],
+    "state": {
+      "rect": {
+        "x": 304,
+        "y": 287.25,
+        "width": 832,
+        "height": 425.5,
+        "top": 287.25,
+        "right": 1136,
+        "bottom": 712.75,
+        "left": 304
+      },
+      "text": "AI & Robotics \u00b7 Field velocity \u00b7 0 charts\n\nLatency compression\n\nThe lag between pipeline stages, and whether it is shrinking.\n\n\u00d7\nShare\n\nComing soon\n\nIntended metric: Median days from a paper's arXiv publication to the first commit of a linked open-source implementation, per year (a falling lag = faster paper-to-code)\n\nBlocked by: Generator is built (scripts/velocity/latency_pwc.py, over the CC-BY-SA Papers With Code link archive + arXiv + GitHub first-commit dates); awaiting a run against the archived links file to emit src/data/velocity/latency/ai-robotics.csv.\n\nOwner: Lukas\n\nNo chart is wired for this instrument. Evidence and status are shown without inventing a time series.",
+      "chart": false,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "neurotech",
+    "metric": "idea_vintage",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-neurotech-idea_vintage-full.png",
+    "crop": "before-neurotech-idea_vintage.png",
+    "box": [
+      323,
+      245,
+      1117,
+      706
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 247.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 247.046875,
+        "right": 1115,
+        "bottom": 703.9375,
+        "left": 325
+      },
+      "text": "Neurotech \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n10y\n4y\n2000\n2026\n\n9.0 years (2023)\n\nmeasured 2023-12-31\n\n\u2198\nDecelerating\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "before",
+    "area": "neurotech",
+    "metric": "latency_compression",
+    "source_sha": "90c5e44463bbdaf3cac2e03227e0ed1cc013d2bb",
+    "full_capture": "before-neurotech-latency_compression-full.png",
+    "crop": "before-neurotech-latency_compression.png",
+    "box": [
+      323,
+      334,
+      1117,
+      798
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 336.671875,
+        "width": 790,
+        "height": 458.65625,
+        "top": 336.671875,
+        "right": 1115,
+        "bottom": 795.328125,
+        "left": 325
+      },
+      "text": "Years from a BCI modality's first pivotal preclinical animal demonstration to its first-in-human implant.\n\nLinear scale\n\n6\n2.3\n1992\n2021\n\nMedian ~3.3 years, preclinical demonstration to first-in-human (4 modalities)\n\nmeasured 2024-01-29\n\n\u25cb\nstale",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "digital-human-rights",
+    "metric": "idea_vintage",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-digital-human-rights-idea_vintage-full.png",
+    "crop": "after-digital-human-rights-idea_vintage.png",
+    "box": [
+      323,
+      265,
+      1117,
+      726
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 267.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 267.046875,
+        "right": 1115,
+        "bottom": 723.9375,
+        "left": 325
+      },
+      "text": "Digital Human Rights \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n9y\n4y\n2005\n2026\n\n7.0 years (2023)\n\nmeasured 2023-12-31\n\n\u2192\nFlat\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "digital-human-rights",
+    "metric": "latency_compression",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-digital-human-rights-latency_compression-full.png",
+    "crop": "after-digital-human-rights-latency_compression.png",
+    "box": [
+      323,
+      325,
+      1117,
+      775
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 327.40625,
+        "width": 790,
+        "height": 445.1875,
+        "top": 327.40625,
+        "right": 1115,
+        "bottom": 772.59375,
+        "left": 325
+      },
+      "text": "Final specification \u2192 stable OpenSSL\n\nLinear scale \u00b7 years\n\n10.3y\n0.1y\n2008\n2026\n\nMedian ~1.8 years, specification to first stable OpenSSL release (22 transitions)\n\nMedian lag by final-specification publication year; selected completed OpenSSL transitions, not a field-wide trend. Recent cohorts exclude unfinished transitions; RFC dates are month-normalized.\n\nmeasured 2026-10-23",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "economies-governance",
+    "metric": "idea_vintage",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-economies-governance-idea_vintage-full.png",
+    "crop": "after-economies-governance-idea_vintage.png",
+    "box": [
+      323,
+      265,
+      1117,
+      726
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 267.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 267.046875,
+        "right": 1115,
+        "bottom": 723.9375,
+        "left": 325
+      },
+      "text": "Economies & Governance \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n9y\n4y\n2005\n2026\n\n7.0 years (2023)\n\nmeasured 2023-12-31\n\n~\nUnclear\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "economies-governance",
+    "metric": "latency_compression",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-economies-governance-latency_compression-full.png",
+    "crop": "after-economies-governance-latency_compression.png",
+    "box": [
+      302,
+      275,
+      1138,
+      725
+    ],
+    "state": {
+      "rect": {
+        "x": 304,
+        "y": 277.6875,
+        "width": 832,
+        "height": 444.625,
+        "top": 277.6875,
+        "right": 1136,
+        "bottom": 722.3125,
+        "left": 304
+      },
+      "text": "Economies & Governance \u00b7 Field velocity \u00b7 0 charts\n\nLatency compression\n\nThe lag between pipeline stages, and whether it is shrinking.\n\n\u00d7\nShare\n\nEvidence gap\n\nIntended metric: Pilot-to-production lag for digital public infrastructure\n\nBlocked by: Completed DPI transitions are documented, but a reviewed cohort with comparable pilot and production boundaries is not yet curated. Restricted-live rollouts, regional pilots and infrastructure types cannot be pooled into a comparable trend.\n\nEvidence reviewed 2026-10-28\n\nUPI \u2014 official pilot and operation dates\nSand Dollar \u2014 pilot-to-production history\n\nNo chart is wired for this instrument. Evidence and status are shown without inventing a time series.",
+      "chart": false,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "ai-robotics",
+    "metric": "idea_vintage",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-ai-robotics-idea_vintage-full.png",
+    "crop": "after-ai-robotics-idea_vintage.png",
+    "box": [
+      323,
+      255,
+      1117,
+      716
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 257.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 257.046875,
+        "right": 1115,
+        "bottom": 713.9375,
+        "left": 325
+      },
+      "text": "AI & Robotics \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n8y\n2y\n2005\n2026\n\n3.0 years (2023)\n\nmeasured 2023-12-31\n\n~\nUnclear\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "ai-robotics",
+    "metric": "latency_compression",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-ai-robotics-latency_compression-full.png",
+    "crop": "after-ai-robotics-latency_compression.png",
+    "box": [
+      302,
+      248,
+      1138,
+      752
+    ],
+    "state": {
+      "rect": {
+        "x": 304,
+        "y": 250.9375,
+        "width": 832,
+        "height": 498.125,
+        "top": 250.9375,
+        "right": 1136,
+        "bottom": 749.0625,
+        "left": 304
+      },
+      "text": "AI & Robotics \u00b7 Field velocity \u00b7 0 charts\n\nLatency compression\n\nThe lag between pipeline stages, and whether it is shrinking.\n\n\u00d7\nShare\n\nEvidence gap\n\nIntended metric: Median days from a paper's arXiv publication to the first commit of a linked open-source implementation, per year (a falling lag = faster paper-to-code)\n\nBlocked by: The Papers With Code archive is frozen in July 2025. A repository first commit does not establish a working implementation or public release. Cohort filtering, paper-level aggregation and signed-lag handling need correction before a reviewed series and loader can be wired.\n\nOwner: Lukas\n\nEvidence reviewed 2026-10-28\n\nPapers With Code \u2014 frozen link archive\n\nNo chart is wired for this instrument. Evidence and status are shown without inventing a time series.",
+      "chart": false,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "neurotech",
+    "metric": "idea_vintage",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-neurotech-idea_vintage-full.png",
+    "crop": "after-neurotech-idea_vintage.png",
+    "box": [
+      323,
+      245,
+      1117,
+      706
+    ],
+    "state": {
+      "rect": {
+        "x": 325,
+        "y": 247.046875,
+        "width": 790,
+        "height": 456.890625,
+        "top": 247.046875,
+        "right": 1115,
+        "bottom": 703.9375,
+        "left": 325
+      },
+      "text": "Neurotech \u00b7 paper vintage\n\nLinear scale \u00b7 years\n\n11y\n5y\n2000\n2026\n\n8.0 years (2023)\n\nmeasured 2023-12-31\n\n~\nUnclear\n\nShading: 95% interval. Dashed tail: recent, under-indexed years.",
+      "chart": true,
+      "dpr": 1
+    }
+  },
+  {
+    "phase": "after",
+    "area": "neurotech",
+    "metric": "latency_compression",
+    "source_sha": "942facff52da6602f54d2aa006023a0cde97357f",
+    "full_capture": "after-neurotech-latency_compression-full.png",
+    "crop": "after-neurotech-latency_compression.png",
+    "box": [
+      302,
+      287,
+      1138,
+      713
+    ],
+    "state": {
+      "rect": {
+        "x": 304,
+        "y": 289.0625,
+        "width": 832,
+        "height": 421.875,
+        "top": 289.0625,
+        "right": 1136,
+        "bottom": 710.9375,
+        "left": 304
+      },
+      "text": "Neurotech \u00b7 Field velocity \u00b7 0 charts\n\nLatency compression\n\nThe lag between pipeline stages, and whether it is shrinking.\n\n\u00d7\nShare\n\nEvidence gap\n\nIntended metric: Years from a BCI modality's first pivotal preclinical animal demonstration to its first-in-human implant\n\nBlocked by: The prior four-point series mixed publication dates with implant events. Corrected evidence is retained, but comparable animal-event dates and modality boundaries are not established; the latency trend is withheld.\n\nEvidence reviewed 2026-10-28\n\nBCI latency evidence review\nKennedy et al. \u2014 implant chronology (Table I)\n\nNo chart is wired for this instrument. Evidence and status are shown without inventing a time series.",
+      "chart": false,
+      "dpr": 1
+    }
+  }
+]
