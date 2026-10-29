@@ -40,7 +40,7 @@ export const CURRENT_RADAR_FEATURES: FieldSignal[] = [
     key: 'signal-amodei-brain-computer-interfaces',
     title: 'Dario and Daniela Amodei on brain–computer interfaces',
     description:
-      'On The Builders, Dario and Daniela Amodei discuss linking brains to computers—and explain why they are not interested in doing it themselves.',
+      'On The Builders, Dario and Daniela Amodei discuss linking brains to computers—and explain why they are not interested in integrating AI into their own minds.',
     href: 'https://www.youtube.com/watch?v=1OdoSzfUkec',
     source: 'The Builders / Walter Isaacson',
     areaSlug: 'neurotech',
@@ -53,7 +53,7 @@ export const CURRENT_RADAR_FEATURES: FieldSignal[] = [
     key: 'signal-neuralink-speaking-with-the-mind',
     title: 'Neuralink’s brain-to-voice story reaches 10M+ views',
     description:
-      'Neuralink’s “Speaking With The Mind” follows Terry, a participant with ALS in its investigational VOICE trial, using a brain-to-voice interface to communicate. The devices are not FDA approved; individual experiences are not representative of outcomes.',
+      'Neuralink’s “Speaking With The Mind” follows Terry, a participant with ALS in its investigational VOICE trial, using a brain-to-voice interface to communicate. The devices are not FDA approved; individual experiences may not reflect all participants or future outcomes.',
     href: 'https://www.youtube.com/watch?v=_j806JHhCRo',
     source: 'Neuralink',
     areaSlug: 'neurotech',

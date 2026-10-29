@@ -116,10 +116,10 @@ test('curated source links, attribution, images and CTAs survive the actual page
       ctaLabel: 'Explore the comparison',
     },
   ])
-  assert.match(features[0].description, /not interested in doing it themselves/)
+  assert.match(features[0].description, /not interested in integrating AI into their own minds/)
   assert.match(features[1].description, /ALS.*investigational VOICE trial/)
   assert.match(features[1].description, /not FDA approved/)
-  assert.match(features[1].description, /not representative of outcomes/)
+  assert.match(features[1].description, /may not reflect all participants or future outcomes/)
   assert.match(features[1].title, /10M\+ views/) // Source snapshot: 10,788,135 on Oct. 29.
   assert.equal(features[3].plainImage, true, 'chart labels must not be covered by a scrim or attribution')
   assert.match(features[2].description, /Saturnin Pugnet’s manifesto argues/)
