@@ -30,6 +30,10 @@ export type RadarItem = {
   date: string
   /** Optional cover image (e.g. a YouTube thumbnail). Falls back to a gradient. */
   image?: string
+  imageAlt?: string
+  plainImage?: boolean
+  /** Source-specific action, e.g. "Watch the conversation". */
+  ctaLabel?: string
 }
 
 const STORAGE_KEY = 'plrd-radar-collapsed'
@@ -70,7 +74,7 @@ function CoverImage({ src, alt }: { src: string; alt: string }) {
     <img
       src={hqSrc}
       alt={alt}
-      className="relative z-0 w-full h-full object-contain"
+      className="absolute inset-0 z-0 w-full h-full object-contain"
       loading="lazy"
       onError={() => {
         // YouTube maxres often 404s → retry hqdefault, then give up to gradient.
@@ -87,6 +91,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
   const [i, setI] = useState(0)
   const [progress, setProgress] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [focusWithin, setFocusWithin] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const touchX = useRef<number | null>(null)
 
@@ -103,7 +108,11 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
   }
 
   const N = items.length + 1 // + "all caught up" slide
-  const go = useCallback((n: number) => setI((prev) => Math.max(0, Math.min(N - 1, n))), [N])
+  const go = useCallback((n: number) => {
+    // Arrow navigation from a CTA must not leave focus in the now-inert card.
+    if (document.activeElement?.closest('[data-radar-slide]')) sectionRef.current?.focus()
+    setI(Math.max(0, Math.min(N - 1, n)))
+  }, [N])
 
   const atEnd = i === items.length
 
@@ -112,7 +121,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
   // tab is hidden, and halts on the final "all caught up" slide.
   useEffect(() => {
     setProgress(0)
-    if (!open || paused || atEnd) return
+    if (!open || paused || focusWithin || atEnd) return
     let raf = 0
     let start: number | null = null
     const tick = (now: number) => {
@@ -124,7 +133,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [i, open, paused, atEnd, go])
+  }, [i, open, paused, focusWithin, atEnd, go])
 
   // Pause auto-advance when the tab loses focus (browsers throttle rAF anyway).
   useEffect(() => {
@@ -170,6 +179,10 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
       ref={sectionRef}
       tabIndex={-1}
       onKeyDown={open ? onKeyDown : undefined}
+      onFocusCapture={() => setFocusWithin(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocusWithin(false)
+      }}
       aria-label="PL R&D Radar"
       className="mb-10 outline-none"
     >
@@ -228,7 +241,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
           </div>
 
           <div
-            className="relative min-h-[300px] sm:min-h-[360px]"
+            className="relative grid min-h-[300px] sm:min-h-[360px]"
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
             onMouseEnter={() => setPaused(true)}
@@ -237,7 +250,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
             {/* content slides */}
             {items.map((item, idx) => {
               const g = grad(item.areaSlug)
-              const cta = TYPE_CTA[item.type] || 'Open'
+              const cta = item.ctaLabel || TYPE_CTA[item.type] || 'Open'
               const badge = TYPE_BADGE
               return (
                 <div
@@ -246,12 +259,25 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                   // active slide fall through to the tap zones below, while the
                   // CTA (which re-enables pointer events) stays clickable. The
                   // active slide sits above the tap zones (z-20) so its CTA wins.
-                  className={`absolute inset-0 grid grid-cols-1 md:grid-cols-2 transition-all duration-300 pointer-events-none ${
+                  className={`relative col-start-1 row-start-1 min-w-0 grid grid-cols-1 grid-rows-[190px_auto] sm:grid-rows-[220px_auto] md:grid-cols-2 md:grid-rows-1 transition-all duration-300 pointer-events-none ${
                     idx === i ? 'opacity-100 translate-x-0 z-20' : 'opacity-0 translate-x-4'
                   }`}
+                  data-radar-slide
                   aria-hidden={idx !== i}
+                  inert={idx !== i}
                 >
-                  {/* visual */}
+                  {/* Charts keep their labels and legend clear of overlays. */}
+                  {item.plainImage && item.image ? (
+                    <div className="flex min-w-0 flex-col bg-white">
+                      <div className="relative flex-1 min-h-0">
+                        <CoverImage src={item.image} alt={item.imageAlt || item.title} />
+                      </div>
+                      <div className="shrink-0 px-5 py-2 bg-[#141a52] text-white">
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.12em]">{item.areaLabel}</div>
+                        <div className="text-[13px]">{item.date}</div>
+                      </div>
+                    </div>
+                  ) : (
                   <div
                     className="relative min-h-[170px] md:min-h-full overflow-hidden"
                     style={{ background: `linear-gradient(135deg, ${g.from}, ${g.via} 55%, ${g.to})` }}
@@ -264,7 +290,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                         backgroundSize: '26px 26px, 34px 34px',
                       }}
                     />
-                    {item.image && <CoverImage src={item.image} alt={item.title} />}
+                    {item.image && <CoverImage src={item.image} alt={item.imageAlt || item.title} />}
                     {/* legibility scrim */}
                     <div
                       className="absolute inset-0 z-10"
@@ -281,6 +307,8 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                     </div>
                   </div>
 
+                  )}
+
                   {/* body */}
                   <div className="flex flex-col justify-center px-7 sm:px-10 py-8">
                     <span
@@ -292,13 +320,14 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                       {item.title}
                     </h3>
                     {item.description && (
-                      <p className="text-[15px] text-gray-600 leading-relaxed line-clamp-3 max-w-md">
+                      <p className={`text-[15px] text-gray-600 leading-relaxed max-w-md ${item.type === 'Signal' ? '' : 'line-clamp-3'}`}>
                         {item.description}
                       </p>
                     )}
                     {item.external ? (
                       <a
                         href={item.href}
+                        tabIndex={idx === i ? 0 : -1}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-6 self-start inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-gray-800 transition-colors pointer-events-auto"
@@ -308,6 +337,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                     ) : (
                       <Link
                         href={item.href}
+                        tabIndex={idx === i ? 0 : -1}
                         className="mt-6 self-start inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-gray-800 transition-colors pointer-events-auto"
                       >
                         {cta} →
@@ -320,10 +350,12 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
 
             {/* end slide */}
             <div
-              className={`absolute inset-0 flex items-center justify-center text-center px-6 transition-all duration-300 pointer-events-none ${
+              className={`col-start-1 row-start-1 min-w-0 flex items-center justify-center text-center px-6 py-8 transition-all duration-300 pointer-events-none ${
                 atEnd ? 'opacity-100 translate-x-0 z-20' : 'opacity-0 translate-x-4'
               }`}
+              data-radar-slide
               aria-hidden={!atEnd}
+              inert={!atEnd}
             >
               <div className="max-w-md">
                 <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-[#e7f7ef] text-[#18b26b] flex items-center justify-center text-3xl">
@@ -336,6 +368,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                 <div className="mt-6 flex items-center justify-center gap-3 pointer-events-auto">
                   <button
                     onClick={shareOnX}
+                    tabIndex={atEnd ? 0 : -1}
                     className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-gray-800 transition-colors"
                   >
                     <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
@@ -345,6 +378,7 @@ export default function PLRadar({ edition, items }: { edition: string; items: Ra
                   </button>
                   <button
                     onClick={() => setOpenPersist(false)}
+                    tabIndex={atEnd ? 0 : -1}
                     className="text-sm font-medium text-gray-600 hover:text-black transition-colors"
                   >
                     Collapse Radar

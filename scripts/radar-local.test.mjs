@@ -1,18 +1,22 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import React, { act } from 'react'
+import { JSDOM } from 'jsdom'
 import { source } from './velocity/test-source-loader.mjs'
 
 // Keep every request inside the test, including the unrelated editable-page CMS.
 // A configured, healthy Curator must not be able to replace the local Radar.
 const indexerUrl = 'https://indexer.example.test/graphql'
 process.env.TZ = 'UTC'
+// Match next.config.ts; Next normally injects this into the client bundle.
+process.env.__NEXT_MANUAL_TRAILING_SLASH = 'true'
 process.env.INDEXER_URL = indexerUrl
 process.env.NEXT_PUBLIC_RADAR_CURATOR_URL = 'https://curator.example.test'
 const { default: InsightsPage } = source('app/insights/page.tsx')
 const { default: PLRadar } = source('components/PLRadar.tsx')
 const { default: InsightsExplorer } = source('components/InsightsExplorer.tsx')
 const { publications, talks, listedBlogPosts, areas } = source('lib/content.ts')
-const { FIELD_SIGNALS } = source('lib/radar-signals.ts')
+const { FIELD_SIGNALS, CURRENT_RADAR_FEATURES } = source('lib/radar-signals.ts')
 
 function elementsOfType(node, type) {
   if (Array.isArray(node)) return node.flatMap((child) => elementsOfType(child, type))
@@ -51,7 +55,7 @@ test('Insights never fetches external Radar even with a healthy configured Curat
   assert.equal(elementsOfType(tree, InsightsExplorer)[0].props.initialArea, 'neurotech')
 })
 
-test('the current Radar selects the newest listed local content and one hand-picked field signal', async (t) => {
+test('the October 2026 Radar selects all four curated features exactly once after two recent local cards', async (t) => {
   const { radar } = await renderInsights(t)
   const newestFirst = (a, b) => (b.date || '').localeCompare(a.date || '')
   const content = [
@@ -59,21 +63,83 @@ test('the current Radar selects the newest listed local content and one hand-pic
     ...publications.map((item) => ({ ...item, key: `pub-${item.slug}` })),
     ...listedBlogPosts.map((item) => ({ ...item, key: `blog-${item.slug}` })),
   ].sort(newestFirst)
-  const signals = [...FIELD_SIGNALS].sort(newestFirst).slice(0, 1)
-  const selected = [...content.slice(0, 6 - signals.length), ...signals]
-  assert.deepEqual(radar.items.map((item) => item.key), selected.map((item) => item.key))
-  const newest = [...selected].sort(newestFirst)[0]
-  assert.equal(radar.edition, `${new Date(newest.date).toLocaleDateString('en-US', { month: 'long' })} Radar`)
-  assert.equal(radar.items.at(-1).type, 'Signal')
-  assert.equal(radar.items.at(-1).href, signals[0].href)
-  assert.equal(radar.items.at(-1).external, true)
+  const featureKeys = [
+    'signal-amodei-brain-computer-interfaces',
+    'signal-neuralink-speaking-with-the-mind',
+    'signal-phase-lock',
+    'signal-neurotech-search-interest',
+  ]
+  assert.deepEqual(radar.items.map((item) => item.key), [
+    ...content.slice(0, 2).map((item) => item.key), ...featureKeys,
+  ])
+  assert.equal(radar.items.length, 6)
+  assert.equal(new Set(radar.items.map((item) => item.key)).size, 6)
+  assert.equal(radar.edition, 'October 2026 Radar')
+  for (const key of featureKeys) {
+    const [item] = radar.items.filter((item) => item.key === key)
+    assert.equal(item.type, 'Signal')
+    assert.equal(item.external, true)
+    assert.equal(item.areaSlug, 'neurotech')
+    assert.equal(item.date, 'Added Oct 29, 2026', 'curation is not a publication date')
+  }
+  assert.deepEqual(FIELD_SIGNALS.map((item) => item.key), [
+    'signal-chatrie-scotus', 'signal-robinson-moores-law-neurotech',
+  ], 'older field signals stay in repository data')
 })
 
-function localContent(t, { talkItems = [], publicationItems = [], posts = [], signals = [] } = {}) {
+test('curated source links, attribution, images and CTAs survive the actual page mapping', async (t) => {
+  const { radar, tree } = await renderInsights(t)
+  const features = radar.items.filter((item) => item.type === 'Signal')
+  assert.deepEqual(features.map(({ href, areaLabel, image, ctaLabel }) => ({ href, areaLabel, image, ctaLabel })), [
+    {
+      href: 'https://www.youtube.com/watch?v=1OdoSzfUkec',
+      areaLabel: 'Field signal · The Builders / Walter Isaacson',
+      image: 'https://i.ytimg.com/vi/1OdoSzfUkec/maxresdefault.jpg',
+      ctaLabel: 'Watch the conversation',
+    },
+    {
+      href: 'https://www.youtube.com/watch?v=_j806JHhCRo',
+      areaLabel: 'Field signal · Neuralink',
+      image: 'https://i.ytimg.com/vi/_j806JHhCRo/maxresdefault.jpg',
+      ctaLabel: 'Watch the video',
+    },
+    {
+      href: 'https://phaselock.satpugnet.com/',
+      areaLabel: 'Field signal · Saturnin Pugnet',
+      image: '/images/radar/phase-lock.webp',
+      ctaLabel: 'Read the manifesto',
+    },
+    {
+      href: 'https://trends.google.com/trends/explore?date=2023-10-15%202026-10-15&q=neurotechnology,brain-computer%20interface',
+      areaLabel: 'Field signal · Google Trends',
+      image: '/images/radar/neurotech-search-interest-20261015.webp',
+      ctaLabel: 'Explore the comparison',
+    },
+  ])
+  assert.match(features[0].description, /not interested in doing it themselves/)
+  assert.match(features[1].description, /ALS.*investigational VOICE trial/)
+  assert.match(features[1].description, /not FDA approved/)
+  assert.match(features[1].description, /not representative of outcomes/)
+  assert.match(features[1].title, /10M\+ views/) // Source snapshot: 10,788,135 on Oct. 29.
+  assert.equal(features[3].plainImage, true, 'chart labels must not be covered by a scrim or attribution')
+  assert.match(features[2].description, /Saturnin Pugnet’s manifesto argues/)
+  assert.match(features[3].description, /Oct 15, 2023 to Oct 15, 2026/)
+  assert.match(features[3].description, /Worldwide Google Trends.*before falling back/ )
+  assert.match(features[3].description, /relative index 0–100/)
+  assert.match(features[3].description, /not a measure of technical progress or absolute search volume/)
+  assert.ok(CURRENT_RADAR_FEATURES.every((item) => !item.date), 'no invented publication dates')
+
+  const sections = elementsOfType(tree, InsightsExplorer)[0].props.sections
+  for (const [key, sourceItems] of [['blog', listedBlogPosts], ['publications', publications], ['talks', talks]]) {
+    assert.deepEqual(sections.find((section) => section.key === key).items.map((item) => item.key), sourceItems.map((item) => item.slug), 'the full Insights catalog is unchanged')
+  }
+})
+
+function localContent(t, { talkItems = [], publicationItems = [], posts = [], signals = [], features = [] } = {}) {
   // Replace in-memory inputs only; use the actual page's selection and mapping.
   for (const [target, fixture] of [
     [talks, talkItems], [publications, publicationItems],
-    [listedBlogPosts, posts], [FIELD_SIGNALS, signals],
+    [listedBlogPosts, posts], [FIELD_SIGNALS, signals], [CURRENT_RADAR_FEATURES, features],
   ]) {
     const original = [...target]
     target.splice(0, target.length, ...fixture)
@@ -132,6 +198,123 @@ test('without field signals all six Radar slots remain available for local conte
   assert.deepEqual(radar.items.map((item) => item.key), [
     'blog-post-6', 'blog-post-5', 'blog-post-4', 'blog-post-3', 'blog-post-2', 'blog-post-1',
   ])
+})
+
+async function mountRadar(t, props, { raf = () => 1, cancelRaf = () => {} } = {}) {
+  const dom = new JSDOM('<!doctype html><html><body><main id="app"></main></body></html>', { url: 'http://localhost/insights/' })
+  const globals = {
+    window: dom.window, self: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement,
+    IS_REACT_ACT_ENVIRONMENT: true,
+    requestAnimationFrame: raf, cancelAnimationFrame: cancelRaf,
+  }
+  const descriptors = Object.fromEntries(Object.keys(globals).map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]))
+  for (const [key, value] of Object.entries(globals)) Object.defineProperty(globalThis, key, { configurable: true, writable: true, value })
+  const { createRoot } = await import('react-dom/client')
+  const root = createRoot(document.getElementById('app'))
+  t.after(async () => {
+    await act(() => root.unmount())
+    dom.window.close()
+    for (const [key, descriptor] of Object.entries(descriptors)) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor)
+      else delete globalThis[key]
+    }
+  })
+  await act(() => root.render(React.createElement(PLRadar, props)))
+  return dom.window.document
+}
+
+const nextCard = async (document) => {
+  const buttons = document.querySelectorAll('button[aria-label="Next"]')
+  await act(() => buttons[buttons.length - 1].click())
+}
+
+test('each source card renders its specific CTA, complete copy and optional image', async (t) => {
+  const { radar } = await renderInsights(t)
+  const document = await mountRadar(t, radar)
+  for (const item of radar.items) {
+    const link = document.querySelector(`a[href="${item.href}"]`)
+    assert.ok(link, JSON.stringify({ expected: item.href, actual: [...document.querySelectorAll("a")].map((a) => a.getAttribute("href")) }))
+    assert.equal(link.closest('[aria-hidden]').getAttribute('aria-hidden'), 'false')
+    if (item.ctaLabel) assert.equal(link.textContent, `${item.ctaLabel} →`)
+    assert.equal(link.getAttribute('target'), item.external ? '_blank' : null)
+    if (item.external) assert.equal(link.getAttribute('rel'), 'noopener noreferrer')
+    const slide = link.closest('[aria-hidden]')
+    if (item.description) assert.equal(slide.querySelector('p').textContent, item.description)
+    if (item.image) assert.equal(slide.querySelector('img').getAttribute('src'), item.image)
+    await nextCard(document)
+  }
+  assert.match(document.querySelector('[aria-hidden="false"]').textContent, /all caught up/)
+})
+
+test('Radar cards share an auto-height grid and never clamp source qualifiers', async (t) => {
+  const { radar } = await renderInsights(t)
+  const document = await mountRadar(t, radar)
+  const slides = [...document.querySelectorAll('div[aria-hidden]')]
+  assert.equal(slides.length, radar.items.length + 1)
+  for (const slide of slides) {
+    assert.ok(!slide.classList.contains('absolute'), 'cards must contribute their full height, not overflow a 300px absolute box')
+    assert.ok(slide.classList.contains('col-start-1') && slide.classList.contains('row-start-1'), 'cards overlap in a single auto-sized grid cell')
+    assert.ok(slide.parentElement.classList.contains('grid'))
+  }
+  for (const item of radar.items.filter((item) => item.type === 'Signal')) {
+    const paragraph = document.querySelector(`a[href="${item.href}"]`).closest('[aria-hidden]').querySelector('p')
+    assert.doesNotMatch(paragraph.className, /line-clamp|truncate|max-h|overflow-hidden/)
+    assert.equal(paragraph.textContent, item.description)
+  }
+})
+
+test('inactive cards and the end slide are inert and excluded from tab order', async (t) => {
+  const { radar } = await renderInsights(t)
+  const document = await mountRadar(t, radar)
+  for (let index = 0; index <= radar.items.length; index++) {
+    const slides = [...document.querySelectorAll('div[aria-hidden]')]
+    for (const [slideIndex, slide] of slides.entries()) {
+      const active = slideIndex === index
+      assert.equal(slide.getAttribute('aria-hidden'), String(!active))
+      assert.equal(slide.hasAttribute('inert'), !active)
+      for (const link of slide.querySelectorAll('a, button')) assert.equal(link.tabIndex, active ? 0 : -1)
+    }
+    if (index < radar.items.length) await nextCard(document)
+  }
+})
+
+test('optional source-chart images retain descriptive alt text and explicit internal-link semantics', async (t) => {
+  localContent(t, { features: [{
+    key: 'chart-fixture', title: 'Search attention', description: 'Relative search attention, not progress.',
+    href: '/insights/', external: false, source: 'Google Trends', areaSlug: 'neurotech',
+    addedDate: '2026-10-29', image: '/images/chart-fixture.png',
+    imageAlt: 'Weekly search interest for neurotechnology and brain-computer interface, index 0–100.',
+    ctaLabel: 'Explore the comparison',
+  }] })
+  const { radar } = await renderInsights(t)
+  const document = await mountRadar(t, radar)
+  const image = document.querySelector('img')
+  assert.equal(image.getAttribute('src'), '/images/chart-fixture.png')
+  assert.equal(image.getAttribute('alt'), CURRENT_RADAR_FEATURES[0].imageAlt)
+  const link = document.querySelector('a')
+  assert.equal(link.getAttribute('href'), '/insights/')
+  assert.equal(link.getAttribute('target'), null)
+  assert.equal(link.textContent, 'Explore the comparison →')
+})
+
+test('keyboard focus pauses auto-advance and arrow navigation never strands focus in a hidden card', async (t) => {
+  const { radar } = await renderInsights(t)
+  const frames = new Map()
+  let nextId = 0
+  const document = await mountRadar(t, radar, {
+    raf: (callback) => { frames.set(++nextId, callback); return nextId },
+    cancelRaf: (id) => frames.delete(id),
+  })
+  assert.equal(frames.size, 1, 'auto-advance is initially scheduled')
+  const link = document.querySelector('[aria-hidden="false"] a')
+  await act(() => link.focus())
+  assert.equal(frames.size, 0, 'no timer may hide a keyboard-focused CTA')
+  await act(() => link.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true })))
+  assert.equal(document.querySelector('[aria-hidden="false"] h3').textContent, radar.items[1].title)
+  assert.ok(!document.activeElement.closest('[inert], [aria-hidden="true"]'))
+  assert.equal(document.activeElement, document.querySelector('section[aria-label="PL R&D Radar"]'))
+  await act(() => document.activeElement.blur())
+  assert.equal(frames.size, 1, 'advance resumes when keyboard focus leaves the Radar')
 })
 
 test('an empty local pool hides Radar without removing the Insights explorer', async (t) => {
