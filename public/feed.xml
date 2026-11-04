@@ -7,6 +7,12 @@
     <atom:link href="https://www.plrd.org/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[AUA Focus Series S2 E21: Focus on Ethical and Informed Use of AI]]></title>
+      <link>https://www.plrd.org/talks/aua-ethical-informed-ai/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 GMT</pubDate>
+      <description><![CDATA[David Dao and Maria Baghramian on ethical AI · YouTube · 46 min.]]></description>
+    </item>
+    <item>
       <title><![CDATA[Neurotech as a Frontier for Human Flourishing]]></title>
       <link>https://www.plrd.org/blog/neurotech-frontier-human-flourishing/</link>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
@@ -149,12 +155,6 @@
       <link>https://protocol.ai/blog/threads-from-the-2025-cypherpunk-retreat/</link>
       <pubDate>Fri, 03 Oct 2025 00:00:00 GMT</pubDate>
       <description><![CDATA[Key takeaways from the Cypherpunk Retreat, where 100 leading builders advanced privacy-tech coordination. Themes included TEEs, MPC, and the next generation of private computation.]]></description>
-    </item>
-    <item>
-      <title><![CDATA[AI Safety and Governance: Hard Rules, Real Evaluations, and Risk]]></title>
-      <link>https://www.plrd.org/talks/voc-evan-miyazono/</link>
-      <pubDate>Wed, 01 Oct 2025 00:00:00 GMT</pubDate>
-      <description><![CDATA[Evan Miyazono, founder and CEO of Atlas Computing, discusses how US and Chinese approaches to AI regulation are diverging and what that means for global AI safety. While the US moves toward a largely unregulated model, China requires mandatory evaluations for large-scale AI training runs. The conver]]></description>
     </item>
     <item>
       <title><![CDATA[BitRobot and the Future of Embodied AI]]></title>

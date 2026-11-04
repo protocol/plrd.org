@@ -55,7 +55,26 @@ test('Insights never fetches external Radar even with a healthy configured Curat
   assert.equal(elementsOfType(tree, InsightsExplorer)[0].props.initialArea, 'neurotech')
 })
 
-test('the October 2026 Radar selects all four curated features exactly once after two recent local cards', async (t) => {
+test('AUA ethical-AI podcast leads the November Radar with verified source metadata', async (t) => {
+  const { radar } = await renderInsights(t)
+  const [podcast] = radar.items
+  assert.equal(radar.edition, 'November 2026 Radar')
+  assert.equal(podcast.key, 'talk-aua-ethical-informed-ai')
+  assert.equal(podcast.title, 'AUA Focus Series S2 E21: Focus on Ethical and Informed Use of AI')
+  assert.equal(podcast.type, 'Podcast')
+  assert.equal(podcast.areaSlug, 'economies-governance')
+  assert.equal(podcast.date, 'Nov 3, 2026')
+  assert.equal(podcast.href, '/talks/aua-ethical-informed-ai/')
+  assert.equal(podcast.image, 'https://i.ytimg.com/vi/8a6uw3OUhtc/maxresdefault.jpg')
+  assert.match(podcast.description, /David Dao.*Maria Baghramian.*46 min/)
+  const records = talks.filter((talk) => talk.slug === 'aua-ethical-informed-ai')
+  assert.equal(records.length, 1)
+  assert.equal(records[0].venue_url, 'https://www.youtube.com/watch?v=8a6uw3OUhtc')
+  assert.deepEqual(records[0].authors, ['david-dao', 'Maria Baghramian'])
+  assert.match(records[0].html, /youtube 8a6uw3OUhtc/)
+})
+
+test('the November 2026 Radar retains all four curated features exactly once after two recent local cards', async (t) => {
   const { radar } = await renderInsights(t)
   const newestFirst = (a, b) => (b.date || '').localeCompare(a.date || '')
   const content = [
@@ -74,7 +93,7 @@ test('the October 2026 Radar selects all four curated features exactly once afte
   ])
   assert.equal(radar.items.length, 6)
   assert.equal(new Set(radar.items.map((item) => item.key)).size, 6)
-  assert.equal(radar.edition, 'October 2026 Radar')
+  assert.equal(radar.edition, 'November 2026 Radar')
   for (const key of featureKeys) {
     const [item] = radar.items.filter((item) => item.key === key)
     assert.equal(item.type, 'Signal')

@@ -31,10 +31,10 @@ export type FieldSignal = {
   ctaLabel?: string
 }
 
-export const CURRENT_RADAR_EDITION = 'October 2026 Radar'
+export const CURRENT_RADAR_EDITION = 'November 2026 Radar'
 
-// NeuroAI in public debate: four source-slide features, plus two recent PL cards.
-// Keep all four together; the historical one-signal cap does not apply here.
+// November carries forward the four neurotech features alongside the newest
+// PL content, including David Dao's AUA podcast. Keep all four features together.
 export const CURRENT_RADAR_FEATURES: FieldSignal[] = [
   {
     key: 'signal-amodei-brain-computer-interfaces',
