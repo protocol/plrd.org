@@ -441,6 +441,7 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
   const fanId = useId()
   const inst = INSTRUMENT_BY_ID[record.instrument]
   const previewMeasure = items.find(item => item.kind === 'measurement')
+  const previewSeries: SeriesPoint[] | undefined = record.series && record.series.length > 1 ? record.series : record.series2
   const multi = items.length > 1
   const expand = () => { if (multi) onExpand() }
   const revealCover = () => {
@@ -508,8 +509,8 @@ function ChartDeck({ record, items, chartCount, areaLabel, area, onOpen, expande
         <span className="text-sm font-semibold leading-snug text-black">{inst.label}</span>
         <span className="instrument-chart-badge">{items.length > chartCount ? `${items.length} views` : `${chartCount} ${chartCount === 1 ? 'chart' : 'charts'}`} <span aria-hidden="true">↗</span></span>
         {record.state === 'reading' ? <>
-          {record.series && record.series.length > 1 && <span className="instrument-preview-plot" aria-hidden="true"><Sparkline series={record.series} scale={record.seriesScale} band={record.series.some(p => p.lo != null)} /></span>}
-          {!(record.series && record.series.length > 1) && previewMeasure?.kind === 'measurement' && <MeasurementChart measure={previewMeasure.measure} face="preview" />}
+          {previewSeries && previewSeries.length > 1 && <span className="instrument-preview-plot" aria-hidden="true"><Sparkline series={previewSeries} scale={record.seriesScale} band={previewSeries.some(p => p.lo != null)} /></span>}
+          {!(previewSeries && previewSeries.length > 1) && previewMeasure?.kind === 'measurement' && <MeasurementChart measure={previewMeasure.measure} face="preview" />}
           <span className="line-clamp-3 text-xs font-medium leading-relaxed text-black">{record.value}</span>
           {record.instrument === 'latency_compression' && area === 'digital-human-rights' && <span className="text-[10px] text-gray-500">Selected completions · not a field-wide trend</span>}
           <span className="mt-auto flex flex-wrap items-center gap-1.5">
