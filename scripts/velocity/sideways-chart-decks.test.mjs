@@ -130,7 +130,9 @@ test('keyboard focus enters a visible preview, recovers on peer takeover, and re
 })
 
 test('right-edge touch spreads reveal only the local viewport on expansion and resize, not modal/history updates', async () => {
-  const unmount = await mount({ fixedArea: 'ai-robotics' })
+  const point = source('lib/field-velocity.ts').INFLECTION_POINTS.find(p => p.area === 'ai-robotics')
+  const marketSignals = { [point.title]: { prob: 0.4, platform: 'polymarket', question: 'Synthetic fleet forecast?', resolutionDate: '2030-12-31', url: 'https://polymarket.com/synthetic-fleet' } }
+  const unmount = await mount({ fixedArea: 'ai-robotics', marketSignals })
   try {
     const frame = document.querySelector('[data-chart-viewport]')
     assert.ok(frame, 'gallery owns a local horizontal scroll viewport')
