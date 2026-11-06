@@ -115,14 +115,23 @@ works → blank CI). It rejects an entirely missing reliable series. Legitimate
 zero field populations produce a blank observation, never a zero median. Before
 install, any new gap in an already populated historical median requires review.
 
-Installation validates everything before live mutation, locks the target, stores
-hash-checked rollback backups and a durable journal under
-`.openalex-transaction/`, and replaces each changed CSV atomically beside its
-target. Unchanged numeric data and matching provenance retain the **original
-bytes, generated timestamp, and mtime**; cosmetic numeric formatting alone is not
-a change. Failures roll back the whole set, including original mtimes/modes.
-A later install recovers an interrupted transaction first; unknown concurrent
-target edits or corrupt backups fail closed for manual recovery.
+Installation validates everything before live mutation and locks the target.
+Backups and a journal are prepared under `.openalex-preparation/`, then exposed
+atomically as `.openalex-transaction/` before changing a target. Abandoned
+preparation is safe to discard because it has never changed a live CSV. Each
+changed CSV is replaced atomically beside its target. Unchanged numeric data
+and matching provenance retain the **original bytes, generated timestamp, and
+mtime**; cosmetic numeric formatting alone is not a change.
+
+Replacement failures restore the whole original set, including mtimes/modes.
+After either successful replacement or completed rollback passes full target
+hash readback, an atomic directory rename to `.openalex-completed/` records a
+durable completed state **before** deleting any backup. Interrupted cleanup of
+that completed directory is restartable even if its journal or some backups
+are already gone; it never triggers rollback or touches live targets. A later
+install cleans completed/preparation residue and recovers any still-active
+transaction first. Unknown concurrent target edits or corrupt active-transaction
+backups fail closed for manual recovery.
 
 This is a journaled four-file rollback transaction, **not a simultaneous rename
 of four paths**: noncooperating readers could observe the short replacement

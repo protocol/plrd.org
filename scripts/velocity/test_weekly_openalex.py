@@ -428,5 +428,70 @@ class WeeklyTests(unittest.TestCase):
         self.assertEqual(rows[0]["n_works_sampled"], "0")
 
 
+    def _crash_fixture(self):
+        self.stage()
+        live = self.root / "live"
+        live.mkdir()
+        weekly.install(self.root / "stage", live)
+        self.stage("changed")
+        changed = self.root / "changed"
+        manifest = json.loads((changed / "manifest.json").read_text())
+        for path in (changed / "csv").glob("*.csv"):
+            path.write_text(path.read_text().replace(",8,1000,800.0,", ",8,2000,400.0,"))
+        manifest["files"] = weekly.validate_set(changed / "csv", 2026)
+        (changed / "manifest.json").write_bytes(weekly.encoded(manifest))
+        return live, changed
+
+    def test_process_death_before_journal_publication_recovers_without_live_changes(self):
+        import os
+        live, changed = self._crash_fixture()
+        before = {p.name: p.read_bytes() for p in live.glob("*.csv")}
+        original = weekly.atomic_write
+        pid = os.fork()
+        if pid == 0:
+            def die_before_journal(path, data):
+                if Path(path).name == "journal.json":
+                    os._exit(73)
+                return original(path, data)
+            with patch.object(weekly, "atomic_write", side_effect=die_before_journal):
+                weekly.install(changed, live)
+            os._exit(0)
+        _, status = os.waitpid(pid, 0)
+        self.assertEqual(os.waitstatus_to_exitcode(status), 73)
+        self.assertEqual(before, {p.name: p.read_bytes() for p in live.glob("*.csv")})
+        receipt = weekly.install(changed, live)
+        self.assertEqual(len(receipt["changed"]), 4)
+        self.assertFalse((live / ".openalex-transaction").exists())
+        self.assertFalse((live / ".openalex-preparation").exists())
+        for path in live.glob("*.csv"):
+            self.assertEqual(path.read_bytes(), (changed / "csv" / path.name).read_bytes())
+
+
+    def test_process_death_during_committed_cleanup_keeps_new_set_and_recovers(self):
+        import os
+        live, changed = self._crash_fixture()
+        original = weekly.shutil.rmtree
+        pid = os.fork()
+        if pid == 0:
+            def die_during_cleanup(path, *args, **kwargs):
+                folder = Path(path)
+                backups = list(folder.glob("*.csv"))
+                if folder.name.startswith(".openalex-") and backups:
+                    backups[0].unlink()
+                    os._exit(74)
+                return original(path, *args, **kwargs)
+            with patch.object(weekly.shutil, "rmtree", side_effect=die_during_cleanup):
+                weekly.install(changed, live)
+            os._exit(0)
+        _, status = os.waitpid(pid, 0)
+        self.assertEqual(os.waitstatus_to_exitcode(status), 74)
+        for path in live.glob("*.csv"):
+            self.assertEqual(path.read_bytes(), (changed / "csv" / path.name).read_bytes())
+        receipt = weekly.install(changed, live)
+        self.assertEqual(receipt["changed"], [])
+        self.assertFalse((live / ".openalex-transaction").exists())
+        self.assertFalse((live / ".openalex-completed").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

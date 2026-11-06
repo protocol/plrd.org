@@ -503,6 +503,24 @@ def semantic_csv(path):
     return meta, columns, [[None if row[k] == "" else Decimal(row[k]) for k in columns] for row in rows]
 
 
+def finish_transaction(live, transaction):
+    """Publish a durable completed state before any destructive backup cleanup.
+
+    The directory rename is the commit marker. A partially deleted completed
+    directory never needs rollback backups and can be removed on the next run.
+    This applies to both successful installation and completed rollback.
+    """
+    completed = live / ".openalex-completed"
+    if completed.exists() or completed.is_symlink():
+        raise ValueError("Completed transaction cleanup is already pending")
+    os.rename(transaction, completed)
+    with open_directory(live) as directory:
+        os.fsync(directory)
+    shutil.rmtree(completed)
+    with open_directory(live) as directory:
+        os.fsync(directory)
+
+
 def restore_transaction(live, transaction):
     journal = json.loads((transaction / "journal.json").read_bytes())
     if set(journal) != {s + ".csv" for s in FIELDS}:
@@ -526,7 +544,10 @@ def restore_transaction(live, transaction):
             atomic_write(target, data)
             os.chmod(target, entry["mode"])
             os.utime(target, ns=(entry["atime_ns"], entry["mtime_ns"]))
-    shutil.rmtree(transaction)
+    if any((digest((live / name).read_bytes()) if (live / name).exists() else None) != entry["sha256"]
+           for name, entry in journal.items()):
+        raise ValueError("Rollback target readback mismatch")
+    finish_transaction(live, transaction)
 
 
 def install(stage_dir, live_dir):
@@ -544,8 +565,23 @@ def install(stage_dir, live_dir):
         except BlockingIOError:
             raise RuntimeError("OpenAlex install lock is busy") from None
         transaction = live / ".openalex-transaction"
+        completed = live / ".openalex-completed"
+        if transaction.is_symlink() or completed.is_symlink():
+            raise ValueError("Refusing symlinked transaction state")
+        if completed.exists():
+            # An atomic rename marks validated new OR restored old data complete.
+            # Cleanup may be interrupted at any unlink, including the journal.
+            # Never require already-deleted backups or mutate live data here.
+            shutil.rmtree(completed)
         if transaction.exists():
             restore_transaction(live, transaction)
+        preparation = live / ".openalex-preparation"
+        if preparation.is_symlink():
+            raise ValueError("Refusing symlinked transaction preparation")
+        if preparation.exists():
+            # Preparation is never exposed until its journal/backups are complete.
+            # No live target can have been changed by an abandoned preparation.
+            shutil.rmtree(preparation)
         changed, unchanged = [], []
         before = {}
         for name in manifest["files"]:
@@ -563,7 +599,7 @@ def install(stage_dir, live_dir):
              else changed).append(name)
         receipt = {"changed": sorted(changed), "unchanged": sorted(unchanged), "before": before}
         if changed:
-            transaction.mkdir(mode=0o700, exist_ok=False)
+            preparation.mkdir(mode=0o700, exist_ok=False)
             journal = {}
             try:
                 for name in manifest["files"]:
@@ -572,12 +608,16 @@ def install(stage_dir, live_dir):
                     if target.exists():
                         stat = target.stat()
                         entry.update(mode=stat.st_mode & 0o777, mtime_ns=stat.st_mtime_ns, atime_ns=stat.st_atime_ns)
-                        atomic_write(transaction / name, target.read_bytes())
+                        atomic_write(preparation / name, target.read_bytes())
                     journal[name] = entry
-                atomic_write(transaction / "journal.json", encoded(journal))
+                atomic_write(preparation / "journal.json", encoded(journal))
             except BaseException:
-                shutil.rmtree(transaction)
+                shutil.rmtree(preparation)
                 raise
+            # Atomic exposure: recovery never sees a half-prepared journal.
+            os.rename(preparation, transaction)
+            with open_directory(live) as directory:
+                os.fsync(directory)
             try:
                 for name in changed:
                     target = live / name
@@ -590,7 +630,7 @@ def install(stage_dir, live_dir):
             except BaseException:
                 restore_transaction(live, transaction)
                 raise
-            shutil.rmtree(transaction)
+            finish_transaction(live, transaction)
         receipt["after"] = {name: digest((live / name).read_bytes()) for name in manifest["files"]}
         atomic_write(stage / "install.json", encoded(receipt))
         return receipt
