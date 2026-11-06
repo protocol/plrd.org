@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "sourceTree": "identical 439e43ca89c87cd0d3e1f8dcf89b8afab678939e / 75d013a5a701c694440cae710313a15e563db640",
+  "provenance": "actual local production build with real Bayes Market snapshot; no source values synthesized",
+  "results": [
+    {
+      "width": 1440,
+      "item": "primary",
+      "key": "ftm_agi",
+      "marks": 11,
+      "sourceDate": "2026-11-06T09:52:39.919Z",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "item": "secondary",
+      "key": "ftm_full_auto",
+      "marks": 14,
+      "sourceDate": "2026-11-06T09:52:39.919Z",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "item": "primary",
+      "key": "ftm_agi",
+      "marks": 11,
+      "sourceDate": "2026-11-06T09:52:39.919Z",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "item": "secondary",
+      "key": "ftm_full_auto",
+      "marks": 14,
+      "sourceDate": "2026-11-06T09:52:39.919Z",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "item": "primary",
+      "key": "ftm_agi",
+      "marks": 11,
+      "sourceDate": "2026-11-06T09:52:39.919Z",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "item": "secondary",
+      "key": "ftm_full_auto",
+      "marks": 14,
+      "sourceDate": "2026-11-06T09:52:39.919Z",
+      "passed": true
+    }
+  ]
+}
