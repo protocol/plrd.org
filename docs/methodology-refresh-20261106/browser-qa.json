@@ -1,0 +1,187 @@
+{
+  "passed": true,
+  "sourceRevision": "local candidate; source CSVs read at replay time",
+  "provenance": "Local production builds. Canonical domain browser blocked by organization policy; public HTML read separately.",
+  "results": [
+    {
+      "width": 1440,
+      "area": "digital-human-rights",
+      "title": "Digital Human Rights \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n6.0 years (2023)\n~\nUnclear\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n1 chart\n\u2197\nMedian ~1.8 years, specification to first stable OpenSSL release (22 transitions)\nSelected completions \u00b7 not a field-wide trend\nmeasured 2026-10-23\nOpen chart \u2197",
+        "width": 1440,
+        "client": 1425,
+        "scroll": 1425
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 1440,
+      "area": "economies-governance",
+      "title": "Economies & Governance \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n7.0 years (2023)\n~\nUnclear\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 1440,
+        "client": 1425,
+        "scroll": 1425
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 1440,
+      "area": "ai-robotics",
+      "title": "AI & Robotics \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n3.0 years (2023)\n\u2197\nAccelerating\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 1440,
+        "client": 1425,
+        "scroll": 1425
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 1440,
+      "area": "neurotech",
+      "title": "Neurotech \u00b7 citation latency",
+      "sourceRows": 27,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n9.0 years (2023)\n\u2198\nDecelerating\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 1440,
+        "client": 1425,
+        "scroll": 1425
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 390,
+      "area": "digital-human-rights",
+      "title": "Digital Human Rights \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n6.0 years (2023)\n~\nUnclear\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n1 chart\n\u2197\nMedian ~1.8 years, specification to first stable OpenSSL release (22 transitions)\nSelected completions \u00b7 not a field-wide trend\nmeasured 2026-10-23\nOpen chart \u2197",
+        "width": 390,
+        "client": 390,
+        "scroll": 390
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 390,
+      "area": "economies-governance",
+      "title": "Economies & Governance \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n7.0 years (2023)\n~\nUnclear\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 390,
+        "client": 390,
+        "scroll": 390
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 390,
+      "area": "ai-robotics",
+      "title": "AI & Robotics \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n3.0 years (2023)\n\u2197\nAccelerating\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 390,
+        "client": 390,
+        "scroll": 390
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 390,
+      "area": "neurotech",
+      "title": "Neurotech \u00b7 citation latency",
+      "sourceRows": 27,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n9.0 years (2023)\n\u2198\nDecelerating\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 390,
+        "client": 390,
+        "scroll": 390
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 320,
+      "area": "digital-human-rights",
+      "title": "Digital Human Rights \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n6.0 years (2023)\n~\nUnclear\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n1 chart\n\u2197\nMedian ~1.8 years, specification to first stable OpenSSL release (22 transitions)\nSelected completions \u00b7 not a field-wide trend\nmeasured 2026-10-23\nOpen chart \u2197",
+        "width": 320,
+        "client": 320,
+        "scroll": 320
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 320,
+      "area": "economies-governance",
+      "title": "Economies & Governance \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n7.0 years (2023)\n~\nUnclear\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 320,
+        "client": 320,
+        "scroll": 320
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 320,
+      "area": "ai-robotics",
+      "title": "AI & Robotics \u00b7 citation latency",
+      "sourceRows": 22,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n3.0 years (2023)\n\u2197\nAccelerating\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 320,
+        "client": 320,
+        "scroll": 320
+      },
+      "legacyLink": true,
+      "escape": true
+    },
+    {
+      "width": 320,
+      "area": "neurotech",
+      "title": "Neurotech \u00b7 citation latency",
+      "sourceRows": 27,
+      "labels": {
+        "label": "Citation latency\n1 chart\n\u2197\n9.0 years (2023)\n\u2198\nDecelerating\nmeasured 2023-12-31\nOpen chart \u2197",
+        "translation": "Latency compression\n0 charts\n\u2197\nEvidence gap\nView evidence & status",
+        "width": 320,
+        "client": 320,
+        "scroll": 320
+      },
+      "legacyLink": true,
+      "escape": true
+    }
+  ]
+}

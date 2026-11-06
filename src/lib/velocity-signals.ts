@@ -35,7 +35,7 @@ export const VELOCITY_SIGNALS: VelocitySignal[] = [
     core: 'Is the path from possibility to real-world use getting shorter?',
     instruments: [
       { id: 'latency_compression', title: 'Latency compression', description: 'Whether meaningful stages of progress are happening faster.' },
-      { id: 'idea_vintage', title: 'Idea vintage', description: 'How quickly the intellectual frontier is turning over.' },
+      { id: 'idea_vintage', title: 'Citation latency', description: 'How quickly the intellectual frontier is turning over.' },
     ],
   },
   {
