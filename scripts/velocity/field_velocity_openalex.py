@@ -129,16 +129,16 @@ def fetch(params, email, api_key, tries=6):
     raise RuntimeError(f"OpenAlex request failed after {tries} attempts") from None
 
 
-def count(filt, email, api_key):
-    d = fetch({"filter": filt, "per-page": 1}, email, api_key)
+def count(filt, email, api_key, *, fetcher=None):
+    d = (fetcher or fetch)({"filter": filt, "per-page": 1}, email, api_key)
     return d["meta"]["count"]
 
 
-def resolve_ref_years(ref_ids, email, api_key, batch=50):
+def resolve_ref_years(ref_ids, email, api_key, batch=50, *, fetcher=None):
     years = {}
     for i in range(0, len(ref_ids), batch):
         chunk = ref_ids[i : i + batch]
-        d = fetch(
+        d = (fetcher or fetch)(
             {"filter": "openalex_id:" + "|".join(chunk), "select": "id,publication_year", "per-page": batch},
             email,
             api_key,
@@ -176,13 +176,13 @@ def cluster_bootstrap_ci(ages_by_work, iters=500):
     return (round(lo, 2), round(hi, 2))
 
 
-def year_row(year, search, all_works, works_per_year, max_refs, email, api_key):
+def year_row(year, search, all_works, works_per_year, max_refs, email, api_key, *, fetcher=None):
     field_filt = f"title_and_abstract.search:{search},publication_year:{year}"
-    field_works = count(field_filt, email, api_key)
+    field_works = count(field_filt, email, api_key, fetcher=fetcher)
     corpus_share = round(field_works / all_works * 1e5, 3) if all_works else 0.0
 
     # Random sample of works this year, with their references + authors.
-    d = fetch(
+    d = (fetcher or fetch)(
         {
             "filter": field_filt,
             "sample": min(works_per_year, max(field_works, 1)),
@@ -209,7 +209,7 @@ def year_row(year, search, all_works, works_per_year, max_refs, email, api_key):
             all_ids += refs
     all_ids = list(dict.fromkeys(all_ids))  # union, for resolution batching only
 
-    ref_years = resolve_ref_years(all_ids, email, api_key) if all_ids else {}
+    ref_years = resolve_ref_years(all_ids, email, api_key, fetcher=fetcher) if all_ids else {}
 
     ages_by_work = []
     for refs in refs_by_work:

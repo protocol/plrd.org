@@ -86,7 +86,7 @@ export function IdeaVintageExamples({ examples, showCharts = true }: { examples:
           refers to; past that we keep the number but flag it stale and drop the trend arrow, because a
           metric we have not re-measured is unmeasured, not flat. (We also never draw a direction from
           fewer than three points, and we separate when a figure was last measured from when the pipeline
-          last ran.) Idea vintage is the one exception: its reliable reading is always about two years old
+          last ran.) Citation latency is the one exception: its reliable reading is always about two years old
           by construction, so that lag is built in rather than neglect and we do not mark it stale. It
           still shows a direction only when the recent-segment trend is statistically clear, and stays
           &ldquo;unclear&rdquo; otherwise.

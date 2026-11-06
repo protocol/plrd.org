@@ -410,13 +410,13 @@ function chartTitle(item: GalleryItem, record: InstrumentRecord, areaLabel: stri
   if (item.kind === 'market') return item.market.question ?? 'Forecast'
   if (item.kind === 'reading') return 'Historical reading'
   if (item.kind === 'patent') return 'Patent vintage · invention side'
-  if (item.kind === 'example') return `${item.example.label} · paper vintage`
+  if (item.kind === 'example') return `${item.example.label} · citation latency`
   if (item.kind === 'secondary') return record.series2Label ?? 'Secondary series / normalizer'
   if (record.instrument === 'latency_compression' && areaLabel === 'Digital Human Rights') return 'Final specification → stable OpenSSL'
   // Keep the animal-model qualifier in the complete RecordEvidence data face,
   // not in a repeated preview/modal/plot heading. The source feed is unchanged.
   const metricTitle = record.instrument === 'latency_compression' ? record.metric?.split(' Most entries are ')[0] : record.metric
-  return record.instrument === 'idea_vintage' ? `${areaLabel} · paper vintage` : metricTitle ?? INSTRUMENT_BY_ID[record.instrument].label
+  return record.instrument === 'idea_vintage' ? `${areaLabel} · citation latency` : metricTitle ?? INSTRUMENT_BY_ID[record.instrument].label
 }
 
 function ChartPreview({ item, record }: { item: GalleryItem; record: InstrumentRecord }) {
@@ -666,12 +666,12 @@ function GalleryChart({ item, record, areaLabel, face }: { item: GalleryItem; re
     {dataOnly && <p className="mt-3 text-sm text-gray-600">{item.market.prob != null ? `Probability: ${item.market.prob} (0–1 scale).` : `Readout: ${item.market.readout}.`} Question, venue and resolution date are retained above; the source link opens the original forecast.</p>}
   </>
   if (item.kind === 'example') return <>
-    <p className="text-xs text-gray-500">OpenAlex paper vintage</p>
+    <p className="text-xs text-gray-500">OpenAlex citation latency</p>
     <h3 className="mt-1 text-xl font-semibold text-black">{item.example.label}</h3>
     <RecordPlot series={item.example.series} scale={item.example.scale} unit="y" dataOnly={dataOnly} />
     <p className="mt-3 text-xs text-gray-500">Median reference age in years. Shading: 95% interval. Dashed tail: recent, under-indexed years.</p>
     {dataOnly && <>
-      <p className="mt-3 text-sm text-gray-600">Compare the recent-segment slope, not the absolute age. See definition & methodology for sampling, frozen keyword cohorts and catalog-growth caveats. This is the paper-vintage reading for {areaLabel}.</p>
+      <p className="mt-3 text-sm text-gray-600">Compare the recent-segment slope, not the absolute age. See definition & methodology for sampling, frozen keyword cohorts and catalog-growth caveats. This is the citation-latency reading for {areaLabel}.</p>
       <SourceLinks sources={[{ label: 'OpenAlex (CC0)', url: 'https://openalex.org' }, { label: 'Source method', url: 'https://github.com/protocol/plrd.org/blob/main/scripts/velocity/field_velocity_openalex.py' }]} />
     </>}
   </>

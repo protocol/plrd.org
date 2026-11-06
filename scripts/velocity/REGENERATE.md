@@ -42,6 +42,15 @@ grep -n "cluster_bootstrap_ci\|n_works_sampled\|OPENALEX_API_KEY" \
   scripts/velocity/field_velocity_openalex.py   # all three should hit
 ```
 
+## Preferred full-set runner
+
+For weekly full-history recalculation, use [`WEEKLY_OPENALEX.md`](./WEEKLY_OPENALEX.md).
+It preserves the frozen method below, stages all four acquisitions before any live
+write, and supports managed native curl auth, free-only quota caps, resume, exact
+replay, validation, and rollback-safe set installation. The legacy individual
+commands below remain useful for manual reproduction; they are not a four-file
+transaction. Generated data still lands separately from code changes.
+
 ## Run — one per focus area (slow; many API calls; let each finish)
 
 Queries and `--from-year` are the **frozen field definitions** — keep them

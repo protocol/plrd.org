@@ -41,7 +41,10 @@ Idea vintage is the one exemption (its data is structurally ~2 years lagged).
   queries + checks) is in [`REGENERATE.md`](./REGENERATE.md).** Needs
   `OPENALEX_EMAIL` (+ optional `OPENALEX_API_KEY`) in the env. Land the four CSVs
   in their own data PR.
-- **Cadence:** yearly (the reliable window advances one year at a time).
+- **Cadence:** weekly full recalculation for the four reproducible OpenAlex CSVs.
+  Use the staged, free-only runner in [`WEEKLY_OPENALEX.md`](./WEEKLY_OPENALEX.md),
+  with complete validation, deterministic replay and rollback-safe installation.
+  It does not schedule, publish, or refresh any manually curated chart.
 
 ## 2. Latency compression — reviewed corpora
 
