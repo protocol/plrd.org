@@ -33,14 +33,14 @@ test('DHR presents Open-Source Security Acceleration as its flagship before oppo
   assert.match(text(section), /POSSUM \(Prosperous Open Source Software Universe Maintenance\)/)
   assert.match(text(section), /utilities, governments/)
   const links = contents.filter(node => node.type === 'a')
-  assert.equal(links.length, 3)
+  assert.equal(links.length, 2)
   assert.deepEqual(links.map(link => link.props.href), [
     'https://www.publicgoods.foundation/',
-    'https://www.papermark.com/view/cmun40jb4002wl904fozsoy98',
-    'https://www.publicgoods.foundation/',
+    'https://www.prosperous.software/en/possum',
   ])
+  assert.equal(text(links[0]), 'Public Goods Foundation')
   assert.equal(text(links[1]), 'Explore POSSUM ↗')
-  assert.equal(text(links[2]), 'Visit Public Goods Foundation ↗')
+  assert.doesNotMatch(text(section), /Visit Public Goods Foundation/)
   for (const link of links) {
     assert.equal(link.props.target, '_blank')
     assert.equal(link.props.rel, 'noopener noreferrer')
