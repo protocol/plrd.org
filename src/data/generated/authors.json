@@ -2019,7 +2019,7 @@
   {
     "slug": "lukas-bresser",
     "name": "Lukas Bresser",
-    "role": "Operations Lead",
+    "role": "Research Strategy & Programs Lead",
     "groups": [
       "Protocol Labs"
     ],
@@ -2054,7 +2054,7 @@
       ]
     },
     "avatarPath": "/images/authors/lukas-bresser/avatar.jpg",
-    "html": "<p>Lukas is the <strong>Operations Lead</strong> at PL R&#x26;D, owning the operating model, cross-focus-area coordination, and the public-output pipeline that surfaces PL R&#x26;D's work.</p>\n<p>Lukas previously led operations at a decentralized cloud infrastructure company. Earlier, as a startup operator at Protocol Labs, he built and led the Builders Program. He began his career at the Boston Consulting Group in New York, and holds master's degrees from Columbia University and Sciences Po, Paris in political science and economics.</p>\n"
+    "html": "<p>Lukas develops strategies, tools, and programs to accelerate scientific progress and bring frontier technologies into use. He studies what helps or hinders progress in emerging fields and develops PL R&#x26;D's methodology for choosing, deploying, and evaluating interventions. His work includes field-progress measurement, AI-native research and coordination tools, and program development with researchers, funders, and partners across PL R&#x26;D's focus areas.</p>\n<p>Lukas previously led operations at a decentralized cloud infrastructure company. Earlier, as a startup operator at Protocol Labs, he built and led the Builders Program. He began his career at the Boston Consulting Group in New York where he worked as a Project Leader, and holds master's degrees from Columbia University and Sciences Po, Paris in political science and economics.</p>\n"
   },
   {
     "slug": "marko-vukolic",
