@@ -255,20 +255,12 @@ export default async function AreaPage({ params }: Props) {
               </p>
               <div className="flex flex-col items-start gap-3">
                 <a
-                  href="https://www.papermark.com/view/cmun40jb4002wl904fozsoy98"
+                  href="https://www.prosperous.software/en/possum"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
                 >
                   Explore POSSUM <span aria-hidden="true">↗</span>
-                </a>
-                <a
-                  href="https://www.publicgoods.foundation/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
-                >
-                  Visit Public Goods Foundation <span aria-hidden="true">↗</span>
                 </a>
               </div>
             </div>
