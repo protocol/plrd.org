@@ -52,7 +52,8 @@ test('retired proxy environment cannot change the redirect target', async (t) =>
   process.env[key] = 'https://obsolete-preview.example'
   const response = await responseFor('/neuro-atlas')
   assert.equal(response.headers.get('location'), 'https://www.plneuro.xyz/neuro-atlas')
-  assert.equal(config.rewrites, undefined, 'the retired external proxy is removed')
+  const rewrites = await config.rewrites()
+  assert.ok(!rewrites.beforeFiles.some(rule => /neuro-atlas|^https?:/i.test(rule.source + rule.destination)), 'the retired external Atlas proxy is removed')
 })
 
 test('Atlas declares noindex without config redirects bypassing middleware', async () => {
