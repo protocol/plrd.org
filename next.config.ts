@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    // Preserve the standalone program's document, styles and native interactions.
+    // Both entry spellings use explicitly prefixed assets, with no external host.
+    return {
+      beforeFiles: [
+        { source: '/sov-ai', destination: '/sov-ai/index.html' },
+        { source: '/sov-ai/', destination: '/sov-ai/index.html' },
+      ],
+    }
+  },
   async headers() {
     // Defense in depth; Atlas redirects set noindex in middleware because
     // Next's config redirects discard these headers in the production server.
@@ -18,6 +28,16 @@ const nextConfig: NextConfig = {
     }, {
       source: '/neuro-atlas/:path*',
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    }, {
+      source: '/sov-ai/:path*',
+      headers: [
+        { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'no-referrer' },
+        { key: 'X-Frame-Options', value: 'DENY' },
+        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+        { key: 'Content-Security-Policy', value: "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests" },
+      ],
     }]
   },
   async redirects() {
