@@ -86,7 +86,7 @@ export default function AboutPage() {
               </svg>
             </Link>
             <Link 
-              href="/authors/"
+              href="/team/"
               className="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 text-gray-700 rounded-full hover:border-blue hover:text-blue transition-colors font-medium"
             >
               Meet the team

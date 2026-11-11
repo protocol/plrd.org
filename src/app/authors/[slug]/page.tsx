@@ -59,7 +59,7 @@ export default async function AuthorPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Breadcrumb items={[{ label: 'Team', href: '/authors/' }, { label: author.name }]} />
+      <Breadcrumb items={[{ label: 'Team', href: '/team/' }, { label: author.name }]} />
       {/* Hero */}
       <div className="relative pt-6 pb-10 mb-10 overflow-hidden">
         <PageGeo />

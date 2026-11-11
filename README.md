@@ -97,7 +97,7 @@ Run `node --test scripts/radar-local.test.mjs` for the Radar regression tests; t
 | `/talks/` | All talks, sorted by date |
 | `/talks/[slug]/` | Talk detail with YouTube embed |
 | `/tutorials/` | Tutorial series listing |
-| `/authors/` | Team grid |
+| `/team/` | Team grid (`/authors` and `/authors/` permanently redirect here) |
 | `/authors/[slug]/` | Author profile with bio, publications, talks |
 | `/blog/` | Blog posts |
 | `/blog/[slug]/` | Blog post detail |
