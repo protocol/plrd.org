@@ -4,6 +4,18 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { JSDOM } from 'jsdom'
 import { source } from './velocity/test-source-loader.mjs'
 
+const { default: nextConfig } = source('../next.config.ts')
+
+test('both shared Team URL spellings permanently redirect to the canonical Team page', async () => {
+  const redirects = await nextConfig.redirects()
+  for (const path of ['/team', '/team/']) {
+    const rule = redirects.find(rule => rule.source === path)
+    assert.ok(rule, `${path} must not return 404`)
+    assert.equal(rule.destination, '/authors/')
+    assert.equal(rule.permanent, true)
+  }
+})
+
 const { default: AuthorsPage } = source('app/authors/page.tsx')
 function elements(node) {
   if (Array.isArray(node)) return node.flatMap(elements)

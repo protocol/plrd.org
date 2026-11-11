@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     const methodology = '/methodology/'
     return [
+      // Keep shared Team links working; the canonical Team route is /authors/.
+      { source: '/team', destination: '/authors/', permanent: true },
+      { source: '/team/', destination: '/authors/', permanent: true },
       // The methodology page is public. Old cryptic and catalogue URLs redirect
       // there so shared links do not 404. The retired catalogue prefix stays
       // noindex above.
