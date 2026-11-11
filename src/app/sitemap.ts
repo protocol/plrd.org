@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('methodology'), changeFrequency: 'monthly', priority: 0.7 },
     { url: url('areas'), changeFrequency: 'monthly', priority: 0.8 },
     { url: url('insights'), changeFrequency: 'weekly', priority: 0.8 },
-    { url: url('authors'), changeFrequency: 'weekly', priority: 0.7 },
+    { url: url('team'), changeFrequency: 'weekly', priority: 0.7 },
     { url: url('publications'), changeFrequency: 'weekly', priority: 0.8 },
     { url: url('talks'), changeFrequency: 'weekly', priority: 0.7 },
     { url: url('tutorials'), changeFrequency: 'monthly', priority: 0.6 },

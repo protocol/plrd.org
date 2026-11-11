@@ -285,7 +285,7 @@ export default async function HomePage() {
           className="text-lg text-gray-700 leading-relaxed max-w-2xl mb-6"
         />
         <Link
-          href="/authors"
+          href="/team/"
           className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-semibold text-sm"
         >
           Meet the team

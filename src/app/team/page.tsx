@@ -3,8 +3,21 @@ import EditPageButton from '@/components/EditPageButton'
 import { fetchPage, getSection } from '@/lib/indexer'
 import AuthorsTabs from './AuthorsTabs'
 import TeamOpenings from '@/components/TeamOpenings'
+import { siteConfig } from '@/lib/site-config'
 
-export const metadata: Metadata = { title: 'Team' }
+export const metadata: Metadata = {
+  title: 'Team',
+  alternates: { canonical: '/team/' },
+  openGraph: {
+    type: 'website',
+    url: '/team/',
+    locale: siteConfig.locale,
+    siteName: siteConfig.title,
+    title: `Team | ${siteConfig.title}`,
+    description: siteConfig.description,
+    images: [{ url: siteConfig.avatar, width: 1200, height: 630 }],
+  },
+}
 
 const FALLBACK_HERO_TITLE = 'Our team'
 const FALLBACK_HERO_SUBTITLE =
