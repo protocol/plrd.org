@@ -33,8 +33,6 @@ social:
       link: https://github.com/jbenet
     - icon: linkedin
       link: https://www.linkedin.com/in/jbenetcs/
-    - icon: link
-      link: http://juan.benet.ai/
 
 email:
 
