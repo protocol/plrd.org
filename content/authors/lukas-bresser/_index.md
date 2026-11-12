@@ -7,7 +7,7 @@ authors:
   - lukas-bresser
 
 # Role/position
-role: Research Strategy & Programs Lead
+role: Research Operations Lead
 
 groups:
   - 'Protocol Labs'
