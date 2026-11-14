@@ -141,7 +141,7 @@ export default function ImpactReport2025Page() {
           {projectsData.teams.map((team) => (
             <a
               key={team.uid}
-              href={`https://directory.plnetwork.io/teams/${team.uid}`}
+              href={`https://os.pl.xyz/teams/${team.uid}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 opacity-50 hover:opacity-100 transition-opacity"
