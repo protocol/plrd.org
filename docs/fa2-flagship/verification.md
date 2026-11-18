@@ -42,30 +42,27 @@ Full page height, footer included (the footer is 520 px on desktop and 965 px on
 | | Before | After | DHR today |
 |---|---|---|---|
 | 1440 px | 5,194 | 4,962 | 3,661 |
-| 390 px | 8,857 | 8,887 | 5,905 |
+| 390 px | 8,857 | 9,041 | 5,905 |
 
-The page reads in FA1's order now, but it is **not much shorter**, and on a phone it is the same length. The four Opportunity Spaces take 1,050 px on desktop and 2,340 px on a phone and are not to be touched. What E&G still has beyond DHR is Featured Work, Explore and How to Engage, about 1,900 px on desktop together. Making the page as short as DHR means taking one of those off this page, which this change does not do.
+The page reads in FA1's order now, but it is **not much shorter**, and on a phone it is slightly longer (8,887 px before the picture went into the box). The four Opportunity Spaces take 1,050 px on desktop and 2,340 px on a phone and are not to be touched. What E&G still has beyond DHR is Featured Work, Explore and How to Engage, about 1,900 px on desktop together. Making the page as short as DHR means taking one of those off this page, which this change does not do.
 
 ## Checks — 18 November 2026
 
 - Fresh `pnpm@10 install --frozen-lockfile`: passed, no dependency or lockfile changes.
-- `node --test scripts/fa2-flagship.test.mjs`: 7 passed. Against the untouched page, 6 of the 7 fail (the seventh checks the other focus areas).
+- `node --test scripts/fa2-flagship.test.mjs`: 8 passed. Against the untouched page, all but one fail (that one checks the other focus areas).
 - `scripts/fa2-sovereign-ai.test.mjs`: 6 passed. Its shelf test is rewritten: it now checks that the flagship box links every sheet, above Opportunity Spaces.
 - `npx tsc --noEmit`: passed. Production `npm run build`: passed. The repository has no linter.
-- Full `npm test`: **253 passed, 1 failed**. The failure, `scripts/velocity/impact-methodology-tabs.test.mjs:44`, expects old methodology wording and fails the same way on the untouched base `872fc12`.
+- Full `npm test`: **254 passed, 1 failed**. The failure, `scripts/velocity/impact-methodology-tabs.test.mjs:44`, expects old methodology wording and fails the same way on the untouched base `872fc12`.
 - Headless Chromium against the local production build at 1440, 768, 390 and 320 px: no broken image, no console error, flagship title not clipped, four opportunity cards, all six links of the box answer 200. At 320 px the document is 9 px wider than the screen; the live site is too, from the closed navigation drawer, and nothing in this change adds to it.
 - Link contrast in the box, from computed styles: **6.48:1 light**, **11.48:1 dark** (the same colours as the DHR box).
 - `/areas/economies-governance/#sovereign-ai`, the address the sheets, the PDFs and the redirects use, lands on the box.
 
 ## Evidence
 
-- `before-1440.png`, `before-390.png`: the **live site** on 18 November 2026, before this change.
-- `after-1440.png`, `after-390.png`, `after-dark.png`: **local production-build screenshots** of this change, not the live site.
+Screenshots were taken of the live site before this change (1440 and 390 px) and of the local build after it (1440 and 390 px, light and dark, and the box with its picture). **They are not in the repository:** the route used to push this branch carries text files only. The Vercel preview of the pull request shows the same page.
 
 ## For the reviewers to decide
 
 - `/sov-ai` still answers `X-Robots-Tag: noindex, nofollow, noarchive`, and `docs/sov-ai/README.md` describes it as unlisted with no entry from the main site. This change links to it from a main page, as asked, and leaves the header as it is. If the program is launched, the noindex policy and that README want a decision.
 - "Explore Sovereign AI" opens in a new tab, like the DHR box's link, although it stays on plrd.org: `/sov-ai` is a standalone document with its own navigation and no way back.
 - Not checked: a real phone, Safari, a screen reader.
-
-This PR is for review. No merge or production publication is included.
