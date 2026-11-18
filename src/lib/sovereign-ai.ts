@@ -9,8 +9,9 @@ import sovereignAiForFunders from '@/data/fa2/sovereign-ai/sovereign-ai-for-fund
  * evidence, published twice from one JSON file in src/data/fa2/sovereign-ai/.
  * The web edition renders it at /areas/economies-governance/sovereign-ai/<slug>/,
  * and `npm run build-sheets` prints the same file to
- * public/sovereign-ai/<slug>.pdf with a cover plate beside it for the shelf
- * on the FA2 page.
+ * public/sovereign-ai/<slug>.pdf with a cover plate beside it for the sheet
+ * shelf (components/sovereign-ai/SheetShelf.tsx). The FA2 page lists the
+ * sheets in its flagship box.
  *
  * Each sheet names its layout (three-propositions, explainer, partnership or
  * summary), and the layout fixes its shape. Prose fields may carry
@@ -129,6 +130,27 @@ export const sheets: Sheet[] = [
 
 /** The program's section on the FA2 page, where its shelf stands. */
 export const programHref = '/areas/economies-governance/#sovereign-ai'
+
+/** The program's own site, a standalone document served from public/sov-ai/ (docs/sov-ai/README.md). */
+export const sovAiHref = '/sov-ai'
+
+/**
+ * The picture in the flagship box: a paper-cut collage drawn for it by an image
+ * model on 18 November 2026, with the program site's hero collage as its style
+ * reference (docs/fa2-flagship/verification.md). White ground, so it blends into the box.
+ * The file is an SVG that only wraps the WebP, so it could be committed as text.
+ */
+export const sovAiArt = '/images/fa2/sovereign-ai/flagship-collage.svg'
+
+/**
+ * What the flagship box on the FA2 page says about the program: the first two
+ * paragraphs of the program overview on /sov-ai, word for word. A test holds
+ * them to that page, so change the wording there first.
+ */
+export const flagshipCopy = [
+  'Sovereign AI is a Protocol Labs R&D program helping countries build the technological and institutional capacity to shape their own AI futures.',
+  'Bringing together frontier research, open technologies, interdisciplinary expertise, and catalytic capital, the program develops and tests new approaches to AI-enabled governance — from collective intelligence and public decision-making to institutional accountability and public-sector innovation.',
+]
 export const sheetHref = (slug: string) => `/areas/economies-governance/sovereign-ai/${slug}/`
 export const sheetPdf = (slug: string) => `/sovereign-ai/${slug}.pdf`
 export const sheetCover = (slug: string) => `/sovereign-ai/${slug}.webp`

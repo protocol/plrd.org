@@ -90,7 +90,7 @@ Run `node --test scripts/radar-local.test.mjs` for the Radar regression tests; t
 | `/areas/` | Focus areas listing |
 | `/areas/[slug]/` | Individual focus area (Markdown-driven; leads defined in frontmatter) |
 | `/areas/economies-governance/` | FA2 focus area with sub-pages (impact, projects, opportunity spaces) — hardcoded, not Markdown |
-| `/areas/economies-governance/sovereign-ai/[slug]/` | The Sovereign AI program's one-page sheets, each with a printed A4 PDF at `/sovereign-ai/<slug>.pdf`; the FA2 page shows them on a shelf at `#sovereign-ai`, and `/sovereign-ai/` links there. Old `/briefs/` and `/programs/` links redirect here |
+| `/areas/economies-governance/sovereign-ai/[slug]/` | The Sovereign AI program's one-page sheets, each with a printed A4 PDF at `/sovereign-ai/<slug>.pdf`; the FA2 page lists them in its Sovereign AI flagship box (`#flagship-program`, also reached by `#sovereign-ai`), and `/sovereign-ai/` links there. Old `/briefs/` and `/programs/` links redirect here |
 | `/research/` | Research hub |
 | `/publications/` | All publications, sorted by date |
 | `/publications/[slug]/` | Publication detail |
