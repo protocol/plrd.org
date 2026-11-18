@@ -134,8 +134,13 @@ export const programHref = '/areas/economies-governance/#sovereign-ai'
 /** The program's own site, a standalone document served from public/sov-ai/ (docs/sov-ai/README.md). */
 export const sovAiHref = '/sov-ai'
 
-/** The program site's hero collage. The flagship box shows it too, so the box and /sov-ai read as one program. */
-export const sovAiArt = '/sov-ai/assets/sovai-hero.webp'
+/**
+ * The picture in the flagship box: a paper-cut collage drawn for it by an image
+ * model on 18 November 2026, with the program site's hero collage as its style
+ * reference (docs/fa2-flagship/verification.md). White ground, so it blends into the box.
+ * The file is an SVG that only wraps the WebP, so it could be committed as text.
+ */
+export const sovAiArt = '/images/fa2/sovereign-ai/flagship-collage.svg'
 
 /**
  * What the flagship box on the FA2 page says about the program: the first two

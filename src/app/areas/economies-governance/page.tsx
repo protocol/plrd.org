@@ -135,18 +135,18 @@ export default async function FA2MainPage() {
         <p className="text-xs text-gray-500 uppercase tracking-widest mb-5">Flagship program</p>
         <div className="grid md:grid-cols-2 gap-6 md:gap-12">
           <div className="relative">
-            {/* The program site's own hero collage (public/sov-ai/assets/). On a phone it sits
-                above the title, cropped to 3:2; from tablet width up it fills the empty half
-                beside the title. It is photographed on off-white paper: brightness takes the
-                paper to white and multiply lets the box show through, so it has no frame of its
-                own. On the dark theme it is inverted (hue kept) and screened for the same effect. */}
+            {/* A paper-cut collage in the program site's style, drawn for this box by an image
+                model (docs/fa2-flagship/verification.md). On a phone it sits above the title;
+                from tablet width up it fills the empty half beside and under the title. Its
+                ground is white, so multiply lets the box show through and it has no frame of
+                its own; on the dark theme it is inverted (hue kept) and screened. */}
             <img
               src={sovAiArt}
-              alt="Paper-cut illustration: an arch, a computer and two people on a path"
-              width={1600}
-              height={1200}
+              alt="Paper-cut illustration: four people around a table with a computer, beside a civic building"
+              width={900}
+              height={425}
               loading="lazy"
-              className="pointer-events-none mb-4 block aspect-[3/2] w-full select-none object-cover mix-blend-multiply brightness-[1.08] md:absolute md:bottom-0 md:right-0 md:mb-0 md:aspect-auto md:h-full md:w-auto md:max-w-[64%] md:object-contain md:object-right-bottom dark:opacity-90 dark:mix-blend-screen dark:hue-rotate-180 dark:invert"
+              className="pointer-events-none mb-4 block h-auto w-full select-none mix-blend-multiply md:absolute md:bottom-0 md:right-0 md:mb-0 md:max-h-full md:object-contain md:object-right-bottom dark:opacity-90 dark:mix-blend-screen dark:hue-rotate-180 dark:invert"
             />
             <h2 id="flagship-program-title" className="text-[28px] lg:text-[32px] font-semibold leading-tight tracking-tight mb-4">
               Sovereign AI

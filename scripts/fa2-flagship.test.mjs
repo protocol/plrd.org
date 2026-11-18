@@ -76,21 +76,20 @@ test('the flagship box says what the program site says, word for word', async (t
   assert.doesNotMatch(text(section), /\d{2,}|\$/)
 })
 
-test('the flagship box carries the program site\'s own picture', async (t) => {
+test('the flagship box carries one picture', async (t) => {
   const section = (await page(t)).find((node) => node.props?.id === 'flagship-program')
   const contents = elements(section)
   const pictures = contents.filter((node) => node.type === 'img')
   assert.equal(pictures.length, 1)
   const [art] = pictures
   assert.equal(art.props.src, sovAiArt)
-  // The same file /sov-ai opens with, so the box and the program site read as one.
-  const site = new JSDOM(readFileSync('public/sov-ai/index.html', 'utf8')).window.document
-  assert.equal(site.querySelector('.hero-art img').getAttribute('src'), sovAiArt)
   assert.ok(readFileSync(`public${sovAiArt}`).length > 0, 'the picture is in the repository')
-  assert.equal(art.props.alt, 'Paper-cut illustration: an arch, a computer and two people on a path')
+  assert.equal(art.props.alt, 'Paper-cut illustration: four people around a table with a computer, beside a civic building')
   // Above the title on a phone; beside it, out of the flow, from tablet width up.
   assert.ok(contents.indexOf(art) < contents.findIndex((node) => node.type === 'h2'), 'the picture comes before the title')
   assert.match(art.props.className, /(^| )md:absolute( |$)/)
+  // The picture is drawn by an image model, and the record says so.
+  assert.match(readFileSync('docs/fa2-flagship/verification.md', 'utf8'), /image model/)
 })
 
 test('the five one-pagers stand in the flagship box, each linked to its web edition', async (t) => {

@@ -8,12 +8,14 @@ The box's two paragraphs are the first two paragraphs of the program overview on
 
 ## Picture
 
-The left half of the box was empty under the title, so it now carries the program site's own hero collage (`public/sov-ai/assets/sovai-hero.webp`, the picture `/sov-ai` opens with). No new file: `sovAiArt` in `src/lib/sovereign-ai.ts` names it, and a test holds it to the picture on `/sov-ai`.
+The left half of the box was empty under the title, so it now carries a picture: a paper-cut collage of four people around a table with a computer, beside a civic building with three arches and a coral sun (`public/images/fa2/sovereign-ai/flagship-collage.svg`, 900 × 425, 14 KB; `sovAiArt` in `src/lib/sovereign-ai.ts`).
 
-- **From tablet width up** it fills the empty space beside and under the title; the box keeps its height (526 px at 1440). **On a phone** it sits above the title, cropped to 3:2 (16:9 would cut into the arch and the path), which makes the box 211 px taller at 390 px (page 8,887 to 9,098 px).
-- Alt text: "Paper-cut illustration: an arch, a computer and two people on a path".
-- The collage is photographed on off-white paper. `brightness(1.08)` with `mix-blend-mode: multiply` lets the box's ground show through, so the picture has no frame, corner or colour of its own; on the dark theme it is inverted with the hue kept and screened.
-- Checked against the local build at 1440 and 390 px, light and dark, by eye; at 1024, 768 and 320 px by measurement (the picture's content stays clear of the title and the label, and adds no sideways overflow).
+- **It was drawn by an image model** (GPT Image 2.6 Sunburst, through David Dao's account, 18 November 2026), with the program site's hero collage (`public/sov-ai/assets/sovai-hero.webp`) as the style reference, so the box and `/sov-ai` read as one program. It is an illustration, not a photograph of anything real. Cropped to its content and levelled to a pure white ground; nothing else was retouched.
+- **The file is an SVG that only wraps a WebP** (the picture as base64 in one `<image>`). The route used to push this branch carries text files only. A plain `.webp` can replace it at any time; only `sovAiArt` changes.
+- **From tablet width up** it fills the empty space beside and under the title; the box keeps its height (526 px at 1440). **On a phone** it sits above the title, which makes the box 154 px taller at 390 px (page 8,887 to 9,041 px).
+- Alt text: "Paper-cut illustration: four people around a table with a computer, beside a civic building".
+- `mix-blend-mode: multiply` lets the box's ground show through the white, so the picture has no frame, corner or colour of its own; on the dark theme it is inverted with the hue kept and screened. There its small yellow cloud turns dark brown.
+- Checked against the local build at 1440 and 390 px, light and dark, by eye; at 1024, 768 and 320 px by measurement (no sideways overflow added).
 
 ## What moved where
 
