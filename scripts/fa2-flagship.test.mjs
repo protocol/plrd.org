@@ -11,7 +11,7 @@ import { source } from './velocity/test-source-loader.mjs'
 // (scripts/dhr-content.test.mjs). These checks hold the box, its wording and
 // the order of the page around it.
 
-const { flagshipCopy, sheets, sheetHref, sovAiHref, programHref } = source('lib/sovereign-ai.ts')
+const { flagshipCopy, sheets, sheetHref, sovAiArt, sovAiHref, programHref } = source('lib/sovereign-ai.ts')
 // The same next/link the page is compiled against.
 const Link = createRequire(import.meta.url)('next/link').default
 
@@ -74,6 +74,23 @@ test('the flagship box says what the program site says, word for word', async (t
   }
   // Nothing the program site does not claim: no figures or sums of money.
   assert.doesNotMatch(text(section), /\d{2,}|\$/)
+})
+
+test('the flagship box carries the program site\'s own picture', async (t) => {
+  const section = (await page(t)).find((node) => node.props?.id === 'flagship-program')
+  const contents = elements(section)
+  const pictures = contents.filter((node) => node.type === 'img')
+  assert.equal(pictures.length, 1)
+  const [art] = pictures
+  assert.equal(art.props.src, sovAiArt)
+  // The same file /sov-ai opens with, so the box and the program site read as one.
+  const site = new JSDOM(readFileSync('public/sov-ai/index.html', 'utf8')).window.document
+  assert.equal(site.querySelector('.hero-art img').getAttribute('src'), sovAiArt)
+  assert.ok(readFileSync(`public${sovAiArt}`).length > 0, 'the picture is in the repository')
+  assert.equal(art.props.alt, 'Paper-cut illustration: an arch, a computer and two people on a path')
+  // Above the title on a phone; beside it, out of the flow, from tablet width up.
+  assert.ok(contents.indexOf(art) < contents.findIndex((node) => node.type === 'h2'), 'the picture comes before the title')
+  assert.match(art.props.className, /(^| )md:absolute( |$)/)
 })
 
 test('the five one-pagers stand in the flagship box, each linked to its web edition', async (t) => {

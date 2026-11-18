@@ -11,7 +11,7 @@ import MarkdownContent from '@/components/MarkdownContent'
 import FA2LiveStatsBand from '@/components/FA2LiveStatsBand'
 import FocusAreaInterventions from '@/components/FocusAreaInterventions'
 import opportunityData from '@/data/fa2/opportunityspaces.json'
-import { flagshipCopy, plain, sheetHref, sheets, sovAiHref } from '@/lib/sovereign-ai'
+import { flagshipCopy, plain, sheetHref, sheets, sovAiArt, sovAiHref } from '@/lib/sovereign-ai'
 import { FOCUS_AREA_DESCRIPTIONS } from '@/lib/focus-area-descriptions'
 import { fetchPage, getSection, fetchOpportunitySpaces } from '@/lib/indexer'
 import { fetchSimocracyStats } from '@/lib/simocracy'
@@ -134,7 +134,20 @@ export default async function FA2MainPage() {
       >
         <p className="text-xs text-gray-500 uppercase tracking-widest mb-5">Flagship program</p>
         <div className="grid md:grid-cols-2 gap-6 md:gap-12">
-          <div>
+          <div className="relative">
+            {/* The program site's own hero collage (public/sov-ai/assets/). On a phone it sits
+                above the title, cropped to 3:2; from tablet width up it fills the empty half
+                beside the title. It is photographed on off-white paper: brightness takes the
+                paper to white and multiply lets the box show through, so it has no frame of its
+                own. On the dark theme it is inverted (hue kept) and screened for the same effect. */}
+            <img
+              src={sovAiArt}
+              alt="Paper-cut illustration: an arch, a computer and two people on a path"
+              width={1600}
+              height={1200}
+              loading="lazy"
+              className="pointer-events-none mb-4 block aspect-[3/2] w-full select-none object-cover mix-blend-multiply brightness-[1.08] md:absolute md:bottom-0 md:right-0 md:mb-0 md:aspect-auto md:h-full md:w-auto md:max-w-[64%] md:object-contain md:object-right-bottom dark:opacity-90 dark:mix-blend-screen dark:hue-rotate-180 dark:invert"
+            />
             <h2 id="flagship-program-title" className="text-[28px] lg:text-[32px] font-semibold leading-tight tracking-tight mb-4">
               Sovereign AI
             </h2>

@@ -6,6 +6,15 @@ Presents **Sovereign AI** as the flagship program of `/areas/economies-governanc
 
 The box's two paragraphs are the first two paragraphs of the program overview on `/sov-ai` (`public/sov-ai/index.html`, `.overview-copy`), word for word. They live in `flagshipCopy` (`src/lib/sovereign-ai.ts`) and a test fails if they stop matching that page. The line about the one-pagers is the sentence the old "Sovereign AI program" block carried. No figure, cohort or result is stated in the box.
 
+## Picture
+
+The left half of the box was empty under the title, so it now carries the program site's own hero collage (`public/sov-ai/assets/sovai-hero.webp`, the picture `/sov-ai` opens with). No new file: `sovAiArt` in `src/lib/sovereign-ai.ts` names it, and a test holds it to the picture on `/sov-ai`.
+
+- **From tablet width up** it fills the empty space beside and under the title; the box keeps its height (526 px at 1440). **On a phone** it sits above the title, cropped to 3:2 (16:9 would cut into the arch and the path), which makes the box 211 px taller at 390 px (page 8,887 to 9,098 px).
+- Alt text: "Paper-cut illustration: an arch, a computer and two people on a path".
+- The collage is photographed on off-white paper. `brightness(1.08)` with `mix-blend-mode: multiply` lets the box's ground show through, so the picture has no frame, corner or colour of its own; on the dark theme it is inverted with the hue kept and screened.
+- Checked against the local build at 1440 and 390 px, light and dark, by eye; at 1024, 768 and 320 px by measurement (the picture's content stays clear of the title and the label, and adds no sideways overflow).
+
 ## What moved where
 
 | Before (top to bottom) | After |
