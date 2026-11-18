@@ -10,9 +10,8 @@ import { AreaIcon } from '@/components/AreaIcons'
 import MarkdownContent from '@/components/MarkdownContent'
 import FA2LiveStatsBand from '@/components/FA2LiveStatsBand'
 import FocusAreaInterventions from '@/components/FocusAreaInterventions'
-import SheetShelf from '@/components/sovereign-ai/SheetShelf'
 import opportunityData from '@/data/fa2/opportunityspaces.json'
-import { plain, sheetCover, sheetHref, sheetPdf, sheets } from '@/lib/sovereign-ai'
+import { flagshipCopy, plain, sheetHref, sheets, sovAiHref } from '@/lib/sovereign-ai'
 import { FOCUS_AREA_DESCRIPTIONS } from '@/lib/focus-area-descriptions'
 import { fetchPage, getSection, fetchOpportunitySpaces } from '@/lib/indexer'
 import { fetchSimocracyStats } from '@/lib/simocracy'
@@ -120,118 +119,64 @@ export default async function FA2MainPage() {
         </div>
       </div>
 
-      {/* Live ecosystem stats preview */}
-      <FA2LiveStatsBand
-        href="/areas/economies-governance/impact/live-dashboard/"
-        sim={{
-          totalSims: { value: simStats.totals.totalSims, series: simStats.trends.totalSims.values },
-          totalGatherings: { value: simStats.totals.totalGatherings, series: simStats.trends.totalGatherings.values },
-        }}
-        gainforest={{
-          observations: { value: gainforest.observations, series: gainforest.trends.observations.values },
-          bumicerts: { value: gainforest.bumicerts, series: gainforest.trends.bumicerts.values },
-          certifiedOrgs: { value: gainforest.certifiedOrgs, series: gainforest.trends.certifiedOrgs.values },
-        }}
-        glow={{
-          powerOutput: { value: glow.powerOutput, series: glow.trends.powerOutput.values },
-          activeFarms: { value: glow.activeFarms, series: glow.trends.activeFarms.values },
-        }}
-      />
-
       {/* Content */}
       <div className="mb-12 pb-12 border-b border-gray-100">
         <MarkdownContent content={bodyContent} className="page-content text-base text-gray-700 leading-relaxed max-w-3xl" />
       </div>
 
-      {/* Featured Work */}
-      <section className="mb-16">
-        <div className="mb-8">
-          <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-2">In Practice</h2>
-          <h3 className="text-2xl lg:text-[32px] font-semibold mb-3">Featured Work</h3>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl">
-            Two initiatives where we put these ideas to work, turning collective input into
-            legitimate decisions and building the research field that stands behind them.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Broad Listening & Simocracy */}
-          <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)]">
-            <div className="aspect-[4/3] overflow-hidden bg-[#F9F2E2]">
-              <img
-                src="/images/featured/simocracy.webp"
-                alt="A classical Greek temple whose columns shelter rows of server racks — Simocracy"
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              />
-            </div>
-            <div className="flex flex-1 flex-col p-8">
-              <span className="text-xs uppercase tracking-widest text-pink mb-2">Deliberation</span>
-              <h4 className="text-lg font-medium text-black mb-3">Broad Listening &amp; Simocracy</h4>
-              <p className="text-base text-gray-600 leading-relaxed mb-6">
-                AI-assisted sensemaking at the scale of a community or a nation. Broad Listening turns
-                thousands of voices on contested questions, such as climate, AI, and public-goods funding,
-                into a clear, shared picture, building on a lineage of civic technology like Pol.is and
-                Talk to the City. Simocracy takes the next step: at our Funding the Commons experiment in
-                San Francisco, structured deliberation surfaced weighted preferences and drove real budget
-                allocation, with sims at the table and humans on the wheel.
-              </p>
-              <div className="mt-auto flex flex-wrap gap-3">
-                <FeaturedLink href="https://www.youtube.com/watch?v=kdwHnRJUtTg">Watch the documentary</FeaturedLink>
-                <FeaturedLink href="https://www.fundingthecommons.io/post/comparative-floor-governance-at-funding-the-commons-sf">Read the FtC research</FeaturedLink>
-                <FeaturedLink href="https://simocracy.org">Explore Simocracy</FeaturedLink>
-              </div>
-            </div>
+      {/* Flagship program: Sovereign AI, as the Digital Human Rights page presents its own.
+          The copy is the program's own, from /sov-ai (public/sov-ai/index.html). */}
+      <span id="sovereign-ai" aria-hidden="true" className="block scroll-mt-24" />
+      <section
+        id="flagship-program"
+        aria-labelledby="flagship-program-title"
+        className="mb-12 scroll-mt-24 border border-blue/20 bg-gray-200 p-6 md:p-8"
+      >
+        <p className="text-xs text-gray-500 uppercase tracking-widest mb-5">Flagship program</p>
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12">
+          <div>
+            <h2 id="flagship-program-title" className="text-[28px] lg:text-[32px] font-semibold leading-tight tracking-tight mb-4">
+              Sovereign AI
+            </h2>
+            <p className="text-base text-gray-600 leading-relaxed">A PL R&amp;D flagship program</p>
           </div>
-          {/* AI4PG */}
-          <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)]">
-            <div className="aspect-[4/3] overflow-hidden bg-[#F9F2E2]">
-              <img
-                src="/images/featured/ai4pg.webp"
-                alt="A classical domed rotunda rendered in pencil — AI for Public Goods"
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              />
-            </div>
-            <div className="flex flex-1 flex-col p-8">
-              <span className="text-xs uppercase tracking-widest text-blue mb-2">Research</span>
-              <h4 className="text-lg font-medium text-black mb-3">AI for Public Goods (AI4PG)</h4>
-              <p className="text-base text-gray-600 leading-relaxed mb-6">
-                The academic engine behind the work. AI4PG grows the field of mechanism design for public
-                goods in the age of AI, co-funded with Gitcoin and co-led by PL Research. It funds
-                grants, convenes workshops with leading universities, and produces open research that gives
-                policymakers and communities trustworthy ground to stand on.
-              </p>
-              <div className="mt-auto flex flex-wrap gap-3">
-                <FeaturedLink href="https://ai4pg.com">Visit AI4PG</FeaturedLink>
-              </div>
+          <div className="text-base text-gray-700 leading-relaxed">
+            {flagshipCopy.map((paragraph, i) => (
+              <p key={i} className={i < flagshipCopy.length - 1 ? 'mb-4' : 'mb-6'}>{paragraph}</p>
+            ))}
+            <div className="flex flex-col items-start gap-3">
+              <a
+                href={sovAiHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-dark-blue dark:text-blue-200 hover:underline underline-offset-4"
+              >
+                Explore Sovereign AI <span aria-hidden="true">↗</span>
+              </a>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* The Sovereign AI program: its one-pagers on a shelf, each with a web edition and a PDF */}
-      <section id="sovereign-ai" className="mb-16 scroll-mt-24">
-        <div className="mb-6">
-          <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-2">For governments and funders</h2>
-          <h3 className="text-2xl lg:text-[32px] font-semibold mb-3">Sovereign AI program</h3>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl">
-            Our program to help countries run AI on their own terms. One page each, for ministries, funders
-            and their advisers, with a source for every figure. Open one to read it on the web or download
-            the A4 PDF.
+        {/* The program's five one-pagers, each with a web edition and an A4 PDF */}
+        <div className="mt-8 border-t border-blue/20 pt-6">
+          <h3 className="text-xs text-gray-500 uppercase tracking-widest mb-2">One-pagers for governments and funders</h3>
+          <p className="text-sm text-gray-600 leading-relaxed mb-4 max-w-3xl">
+            One page each, for ministries, funders and their advisers, with a source for every figure.
+            Read one on the web or download the A4 PDF.
           </p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            {sheets.map((sheet) => (
+              <li key={sheet.slug}>
+                <Link
+                  href={sheetHref(sheet.slug)}
+                  title={plain(sheet.summary)}
+                  className="font-medium text-dark-blue dark:text-blue-200 underline underline-offset-4 hover:decoration-2"
+                >
+                  {sheet.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
-        <SheetShelf
-          sheets={sheets.map((s) => ({
-            slug: s.slug,
-            label: s.label,
-            title: s.title,
-            subtitle: s.subtitle,
-            summary: plain(s.summary),
-            href: sheetHref(s.slug),
-            pdf: sheetPdf(s.slug),
-            cover: sheetCover(s.slug),
-          }))}
-        />
       </section>
 
       {/* Opportunity Spaces (inlined) */}
@@ -287,8 +232,90 @@ export default async function FA2MainPage() {
 
       <FocusAreaInterventions area="economies-governance" />
 
-      {/* Explore */}
+      {/* Featured Work */}
+      <section className="mb-16">
+        <div className="mb-8">
+          <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-2">In Practice</h2>
+          <h3 className="text-2xl lg:text-[32px] font-semibold mb-3">Featured Work</h3>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl">
+            Two initiatives where we put these ideas to work, turning collective input into
+            legitimate decisions and building the research field that stands behind them.
+          </p>
+        </div>
+        <div className="grid gap-6">
+          {/* Broad Listening & Simocracy */}
+          <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)] sm:flex-row">
+            <div className="h-32 shrink-0 overflow-hidden bg-[#F9F2E2] sm:h-auto sm:w-56 lg:w-64">
+              <img
+                src="/images/featured/simocracy.webp"
+                alt="A classical Greek temple whose columns shelter rows of server racks — Simocracy"
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              />
+            </div>
+            <div className="flex flex-1 flex-col p-6 md:p-8">
+              <span className="text-xs uppercase tracking-widest text-pink mb-2">Deliberation</span>
+              <h4 className="text-lg font-medium text-black mb-3">Broad Listening &amp; Simocracy</h4>
+              <p className="text-base text-gray-600 leading-relaxed mb-6">
+                AI-assisted sensemaking at the scale of a community or a nation. Broad Listening turns
+                thousands of voices on contested questions, such as climate, AI, and public-goods funding,
+                into a clear, shared picture, building on a lineage of civic technology like Pol.is and
+                Talk to the City. Simocracy takes the next step: at our Funding the Commons experiment in
+                San Francisco, structured deliberation surfaced weighted preferences and drove real budget
+                allocation, with sims at the table and humans on the wheel.
+              </p>
+              <div className="mt-auto flex flex-wrap gap-3">
+                <FeaturedLink href="https://www.youtube.com/watch?v=kdwHnRJUtTg">Watch the documentary</FeaturedLink>
+                <FeaturedLink href="https://www.fundingthecommons.io/post/comparative-floor-governance-at-funding-the-commons-sf">Read the FtC research</FeaturedLink>
+                <FeaturedLink href="https://simocracy.org">Explore Simocracy</FeaturedLink>
+              </div>
+            </div>
+          </div>
+          {/* AI4PG */}
+          <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)] sm:flex-row">
+            <div className="h-32 shrink-0 overflow-hidden bg-[#F9F2E2] sm:h-auto sm:w-56 lg:w-64">
+              <img
+                src="/images/featured/ai4pg.webp"
+                alt="A classical domed rotunda rendered in pencil — AI for Public Goods"
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              />
+            </div>
+            <div className="flex flex-1 flex-col p-6 md:p-8">
+              <span className="text-xs uppercase tracking-widest text-blue mb-2">Research</span>
+              <h4 className="text-lg font-medium text-black mb-3">AI for Public Goods (AI4PG)</h4>
+              <p className="text-base text-gray-600 leading-relaxed mb-6">
+                The academic engine behind the work. AI4PG grows the field of mechanism design for public
+                goods in the age of AI, co-funded with Gitcoin and co-led by PL Research. It funds
+                grants, convenes workshops with leading universities, and produces open research that gives
+                policymakers and communities trustworthy ground to stand on.
+              </p>
+              <div className="mt-auto flex flex-wrap gap-3">
+                <FeaturedLink href="https://ai4pg.com">Visit AI4PG</FeaturedLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explore: the live ecosystem numbers, then the four tools behind them */}
       <h2 className="text-sm text-gray-500 uppercase tracking-wide mb-6">Explore</h2>
+      <FA2LiveStatsBand
+        href="/areas/economies-governance/impact/live-dashboard/"
+        sim={{
+          totalSims: { value: simStats.totals.totalSims, series: simStats.trends.totalSims.values },
+          totalGatherings: { value: simStats.totals.totalGatherings, series: simStats.trends.totalGatherings.values },
+        }}
+        gainforest={{
+          observations: { value: gainforest.observations, series: gainforest.trends.observations.values },
+          bumicerts: { value: gainforest.bumicerts, series: gainforest.trends.bumicerts.values },
+          certifiedOrgs: { value: gainforest.certifiedOrgs, series: gainforest.trends.certifiedOrgs.values },
+        }}
+        glow={{
+          powerOutput: { value: glow.powerOutput, series: glow.trends.powerOutput.values },
+          activeFarms: { value: glow.activeFarms, series: glow.trends.activeFarms.values },
+        }}
+      />
       <div className="grid md:grid-cols-2 gap-6">
         <ExploreCard
           href="/areas/economies-governance/subareas/"
@@ -319,8 +346,8 @@ export default async function FA2MainPage() {
       {/* How to Engage */}
       <div className="mt-16">
         <h2 className="text-sm text-gray-500 uppercase tracking-wide mb-6">How to Engage</h2>
-        <p className="text-base text-gray-600 mb-6">We are actively seeking:</p>
-        <div className="grid md:grid-cols-2 gap-6">
+        <p className="text-base text-gray-600 mb-4">We are actively seeking:</p>
+        <div className="divide-y divide-gray-100 border-y border-gray-100 lg:grid lg:grid-cols-3 lg:gap-x-8 lg:gap-y-6 lg:divide-y-0 lg:border-y-0">
           <EngageItem
             title={engFeedback?.title || "Feedback on this framing"}
             description={engFeedback?.body || "Does this opportunity space resonate? What's missing? What's wrong?"}
@@ -377,8 +404,8 @@ function FeaturedLink({ href, children }: { href: string; children: React.ReactN
 
 function EngageItem({ title, description }: { title: string; description: string }) {
   return (
-    <div className="border-l-2 border-gray-100 pl-5">
-      <h3 className="text-base font-medium text-black mb-1">{title}</h3>
+    <div className="py-3 sm:grid sm:grid-cols-[14rem_1fr] sm:gap-6 lg:block lg:border-l-2 lg:border-gray-100 lg:py-0 lg:pl-5">
+      <h3 className="text-base font-medium text-black mb-1 sm:mb-0 lg:mb-1">{title}</h3>
       <MarkdownContent content={description} className="text-sm text-gray-500 leading-relaxed [&_p]:mb-0" />
     </div>
   )

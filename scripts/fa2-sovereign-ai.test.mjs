@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { source } from './velocity/test-source-loader.mjs'
 
 // The Sovereign AI program's sheets: one JSON each, rendered as a web
-// edition, printed as a PDF, and stood on the program's shelf on the FA2
+// edition, printed as a PDF, and linked from the flagship box on the FA2
 // page. These checks keep the four in step, and keep the old /briefs/ and
 // /programs/ addresses landing on their sheets.
 
@@ -71,20 +71,18 @@ test('each web edition links every source, the PDF, the program and the other sh
   }
 })
 
-test('the FA2 page stands every sheet on the program shelf, above Opportunity Spaces', async (t) => {
+test('the FA2 page links every sheet from the flagship box, above Opportunity Spaces', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 503 }))
   t.mock.method(console, 'warn', () => {})
   const Page = source('app/areas/economies-governance/page.tsx').default
-  const SheetShelf = source('components/sovereign-ai/SheetShelf.tsx').default
   const nodes = elements(await Page())
-  const shelves = nodes.filter((node) => node.type === SheetShelf)
-  assert.equal(shelves.length, 1, 'one shelf')
-  assert.deepEqual(
-    shelves[0].props.sheets.map((s) => [s.href, s.pdf, s.cover]),
-    sheets.map((s) => [sheetHref(s.slug), sheetPdf(s.slug), sheetCover(s.slug)]),
-  )
+  // The shelf (components/sovereign-ai/SheetShelf.tsx) is off this page since the
+  // sheets fold into the flagship box; scripts/fa2-flagship.test.mjs holds the box.
+  const box = nodes.find((node) => node.props?.id === 'flagship-program')
+  const hrefs = elements(box).map((node) => node.props?.href).filter(Boolean)
+  for (const sheet of sheets) assert.ok(hrefs.includes(sheetHref(sheet.slug)), `the box links ${sheet.slug}`)
   const ids = nodes.map((node) => node.props?.id).filter(Boolean)
-  assert.ok(ids.includes('sovereign-ai'), 'the section is anchored at #sovereign-ai')
+  assert.ok(ids.includes('sovereign-ai'), 'the program is anchored at #sovereign-ai')
   assert.ok(ids.indexOf('sovereign-ai') < ids.indexOf('opportunity-spaces'), 'the program comes before Opportunity Spaces')
   assert.equal(programHref, '/areas/economies-governance/#sovereign-ai')
 })
