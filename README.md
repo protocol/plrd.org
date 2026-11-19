@@ -1,8 +1,8 @@
 # Protocol Labs R&D Website
 
-The research website for Protocol Labs, live at **https://plresearch.org**.
+The research website for Protocol Labs, live at **https://www.plrd.org/**. The canonical repository is **https://github.com/protocol/plrd.org**.
 
-Built with Next.js 15.5, React 19, and Tailwind CSS 4. Content is authored in Markdown with YAML frontmatter, compiled to JSON at build time, and served through the Next.js App Router.
+Built with Next.js 15.5, React 19, and Tailwind CSS 4. Research content is authored in Markdown with YAML frontmatter and compiled to JSON; page sections and opportunity overrides are repository JSON. All website editing goes through GitHub, not a website login or ATProto writer. See [the content-source map](docs/content-migration.md).
 
 ## Quick Start
 
@@ -58,7 +58,7 @@ plrd-v2/
 
 ## Content Pipeline
 
-All content follows the same flow:
+Markdown-backed research content follows this flow; directly authored page/opportunity JSON follows the separate [content-source map](docs/content-migration.md):
 
 ```
 content/*.md  -->  build-content.mjs  -->  src/data/generated/*.json  -->  App Router pages
@@ -110,7 +110,7 @@ The FA2 (Upgrade Economies & Governance) focus area has hand-curated JSON data i
 
 - **`projects.json`** -- 242 ecosystem teams/projects with metadata (name, logo, website, tier, tags, etc.)
 - **`impact.json`** -- Impact dashboard data with headline metrics and initiative details
-- **`opportunityspaces.json`** -- 4 opportunity spaces with descriptions, assumptions, tipping signals
+- **`opportunityspaces.json`** -- local image precedence, route generation, fallback fields, and legacy opportunity-space views. Active EG overview/detail prose is in `src/data/site-content/opportunities.json`, not this older fallback.
 - **`sovereign-ai/<slug>.json`** -- the Sovereign AI program's one-page sheets for governments and funders: every word, figure and source. The web edition renders the JSON; `npm run build-sheets` prints it to `public/sovereign-ai/<slug>.pdf` and a cover plate, both committed. See AGENTS.md §7
 
 These files are edited directly as JSON and consumed by hardcoded FA2 sub-pages under `/areas/economies-governance/`.

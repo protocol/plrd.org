@@ -1,6 +1,10 @@
 # Contributing to the PL Research Website
 
-This guide explains how focus area leads and contributors can add and edit content on the Protocol Labs R&D website (https://plresearch.org).
+This guide explains how focus area leads and contributors can add and edit content on the Protocol Labs R&D website (https://www.plrd.org/), in the canonical [protocol/plrd.org](https://github.com/protocol/plrd.org) repository.
+
+## GitHub-only website editing
+
+Use a branch and pull request for all website changes; approved changes publish after merge and deployment. No website login, session secret, ATProto app password, or PDS publishing command is needed. [The content-source map](docs/content-migration.md) identifies each source: former CMS sections use `src/data/site-content/pages.json`, active EG opportunity prose uses `src/data/site-content/opportunities.json`, About uses `src/data/about.json`, and research articles/profiles keep the Markdown pipeline below. Preserve the immutable migration archive/receipt and existing public URLs; edit the working source, not the old PDS record.
 
 > **Publishing a post?** See [docs/analytics.md](docs/analytics.md) for how to build UTM-tagged links for the social/newsletter push so campaign attribution stays clean.
 
@@ -93,7 +97,7 @@ The `leads` field references author slugs. Each slug must match a folder in `con
 
 ## How Content Works
 
-All website content lives in the `content/` directory as Markdown files with YAML frontmatter. When the site builds, a script converts these files into JSON that the website reads:
+Markdown-backed research content lives in `content/` with YAML frontmatter. Former CMS page sections, active EG opportunities, About, and hand-curated datasets use directly edited repository JSON instead. For Markdown, the build script converts the files into JSON that the website reads:
 
 ```
 You edit:          content/publications/my-paper/index.md
@@ -102,24 +106,24 @@ Build script:      scripts/build-content.mjs  (runs automatically)
                         |
 Generates:         src/data/generated/publications.json
                         |
-Displayed at:      https://plresearch.org/publications/my-paper/
+Displayed at:      https://www.plrd.org/publications/my-paper/
 ```
 
-You only need to create or edit Markdown files in `content/`. Everything else is automatic.
+For Markdown-backed records, edit `content/`, run the builder, and commit the generated outputs alongside the source. For directly authored JSON, use the [content-source map](docs/content-migration.md).
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+)
-- npm (comes with Node.js)
+- [Node.js](https://nodejs.org/) 24 (the deployment major)
+- pnpm 10 for the production frozen install; npm remains supported with its synchronized lockfile
 - Git
 - A text editor (VS Code recommended)
 
 ## Local Setup
 
 ```bash
-git clone https://github.com/daviddao/plrd-v2.git
-cd plrd-v2
-npm install
+git clone https://github.com/protocol/plrd.org.git
+cd plrd.org
+npx --yes pnpm@10 install --frozen-lockfile
 npm run dev
 ```
 
@@ -385,9 +389,9 @@ Array of project objects. To add a project:
 
 Contains headline metrics and initiative details for the impact dashboard. Edit the `highlights` array for top-level stats and the `initiatives` array for individual program metrics.
 
-### Opportunity Spaces (`src/data/fa2/opportunityspaces.json`)
+### Opportunity Spaces
 
-Contains the 4 opportunity spaces (Sovereign DPI, Climate Infrastructure, Public Goods Funding, Governance & Democracy) with descriptions, key assumptions, and tipping signals.
+Edit the four active EG overview/detail records in `src/data/site-content/opportunities.json` (`areaSlug: economies-governance`); preserve their IDs, published titles, and URLs. The separate `src/data/fa2/opportunityspaces.json` retains local image precedence, static route generation, fallback fields, and legacy opportunity-space views. Editing only its older prose does not replace the active migrated override. See the [content guide](docs/content-migration.md) before changing shared data.
 
 ---
 
@@ -487,7 +491,7 @@ Common prefixes:
 3. Verify locally (`npm run dev`, `npx tsc --noEmit`)
 4. Commit and push
 5. Open a pull request on GitHub
-6. Once merged to `main`, Vercel auto-deploys to https://plresearch.org
+6. Once merged to `main`, Vercel auto-deploys to https://www.plrd.org
 
 ---
 
