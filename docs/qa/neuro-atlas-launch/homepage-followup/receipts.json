@@ -1,0 +1,142 @@
+{
+  "verdict": "PASS",
+  "origin": "https://plrd-bz5zrhpjq-protocol.vercel.app",
+  "kind": "actual hosted preview; mobile is Chrome emulation",
+  "viewports": [
+    {
+      "viewport": 1440,
+      "carousel": {
+        "title": "Introducing Neuro Atlas",
+        "href": "https://www.plneuro.xyz/insights/introducing-neuro-atlas/",
+        "first": true,
+        "count": 8,
+        "image": "url(\"https://www.plneuro.xyz/images/insights/introducing-neuro-atlas.png\")",
+        "date": "BlogIntroducing Neuro AtlasNov 19, 2026",
+        "rect": {
+          "left": 160.5,
+          "right": 500.5,
+          "top": 170.234375,
+          "bottom": 545.359375
+        },
+        "inner": 1440,
+        "client": 1425,
+        "scroll": 1425
+      },
+      "image": {
+        "loaded": true,
+        "w": 2400,
+        "h": 1350
+      },
+      "nextScroll": 360,
+      "previousScroll": 0,
+      "nativeCardEnterOpensPublishedPost": true,
+      "neuroArea": {
+        "captionAbsent": true,
+        "title": "Neuro Atlas",
+        "href": "https://www.plneuro.xyz/neuro-atlas",
+        "cta": true,
+        "image": true,
+        "rect": {
+          "left": 160.5,
+          "right": 1264.5,
+          "top": 130.15625,
+          "bottom": 436.78125
+        },
+        "inner": 1440,
+        "client": 1425,
+        "scroll": 1425
+      },
+      "articleSourceLabel": "Introducing Neuro AtlasBlog \u00b7 plneuro.xyz \u00b7 Nov 19, 2026"
+    },
+    {
+      "viewport": 390,
+      "carousel": {
+        "title": "Introducing Neuro Atlas",
+        "href": "https://www.plneuro.xyz/insights/introducing-neuro-atlas/",
+        "first": true,
+        "count": 8,
+        "image": "url(\"https://www.plneuro.xyz/images/insights/introducing-neuro-atlas.png\")",
+        "date": "BlogIntroducing Neuro AtlasNov 19, 2026",
+        "rect": {
+          "left": 24,
+          "right": 304,
+          "top": 169.90625,
+          "bottom": 545.03125
+        },
+        "inner": 390,
+        "client": 390,
+        "scroll": 390
+      },
+      "image": {
+        "loaded": true,
+        "w": 2400,
+        "h": 1350
+      },
+      "nextScroll": 300,
+      "previousScroll": 0,
+      "nativeCardEnterOpensPublishedPost": true,
+      "neuroArea": {
+        "captionAbsent": true,
+        "title": "Neuro Atlas",
+        "href": "https://www.plneuro.xyz/neuro-atlas",
+        "cta": true,
+        "image": true,
+        "rect": {
+          "left": 24,
+          "right": 366,
+          "top": 129.75,
+          "bottom": 557.75
+        },
+        "inner": 390,
+        "client": 390,
+        "scroll": 390
+      },
+      "articleSourceLabel": "Introducing Neuro AtlasBlog \u00b7 plneuro.xyz \u00b7 Nov 19, 2026"
+    },
+    {
+      "viewport": 320,
+      "carousel": {
+        "title": "Introducing Neuro Atlas",
+        "href": "https://www.plneuro.xyz/insights/introducing-neuro-atlas/",
+        "first": true,
+        "count": 8,
+        "image": "url(\"https://www.plneuro.xyz/images/insights/introducing-neuro-atlas.png\")",
+        "date": "BlogIntroducing Neuro AtlasNov 19, 2026",
+        "rect": {
+          "left": 24,
+          "right": 304,
+          "top": 169.609375,
+          "bottom": 544.734375
+        },
+        "inner": 320,
+        "client": 320,
+        "scroll": 320
+      },
+      "image": {
+        "loaded": true,
+        "w": 2400,
+        "h": 1350
+      },
+      "nextScroll": 300,
+      "previousScroll": 0,
+      "nativeCardEnterOpensPublishedPost": true,
+      "neuroArea": {
+        "captionAbsent": true,
+        "title": "Neuro Atlas",
+        "href": "https://www.plneuro.xyz/neuro-atlas",
+        "cta": true,
+        "image": true,
+        "rect": {
+          "left": 24,
+          "right": 296,
+          "top": 130,
+          "bottom": 537
+        },
+        "inner": 320,
+        "client": 320,
+        "scroll": 320
+      },
+      "articleSourceLabel": "Introducing Neuro AtlasBlog \u00b7 plneuro.xyz \u00b7 Nov 19, 2026"
+    }
+  ]
+}
