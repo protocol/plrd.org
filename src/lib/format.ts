@@ -4,6 +4,16 @@ export function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
+export function externalSourceLabel(url: string): string {
+  try {
+    const hostname = new URL(url).hostname.replace(/^www\./, '')
+    // Preserve historical publisher labels while identifying PL Neuro cross-posts.
+    return hostname === 'plneuro.xyz' ? hostname : 'protocol.ai'
+  } catch {
+    return ''
+  }
+}
+
 export function stripFaPrefix(title: string): string {
   return title.replace(/^FA\d+:\s*/, '')
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { listedBlogPosts as blogPosts, focusAreaDefs } from '@/lib/content'
-import { formatDate } from '@/lib/format'
+import { formatDate, externalSourceLabel } from '@/lib/format'
 import Breadcrumb from '@/components/Breadcrumb'
 import BackToInsights from '@/components/BackToInsights'
 import EditPageButton from '@/components/EditPageButton'
@@ -42,7 +42,7 @@ export default async function BlogPage() {
         key: post.slug,
         href: post.external_url || `/blog/${post.slug}/`,
         external: isExternal,
-        eyebrow: [isExternal ? 'protocol.ai' : 'PL R&D', formatDate(post.date)].filter(Boolean).join(' · '),
+        eyebrow: [isExternal ? externalSourceLabel(post.external_url) : 'PL R&D', formatDate(post.date)].filter(Boolean).join(' · '),
         title: post.title,
         description: post.summary,
         areas: post.areas ?? [],
