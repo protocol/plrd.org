@@ -5,6 +5,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import ts from 'typescript'
 const require = createRequire(import.meta.url)
+// Node-only source tests use synthetic session encryption, never deployment credentials.
+process.env.COOKIE_SECRET = 'synthetic-local-session-fixture-not-a-real-secret'
 const Module = require('node:module')
 const originalResolve = Module._resolveFilename
 Module._resolveFilename = function (id, ...args) {
