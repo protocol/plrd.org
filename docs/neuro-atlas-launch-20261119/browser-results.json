@@ -1,0 +1,166 @@
+{
+  "source_revision": "acf267f29e448509347f5f87dae479ae96806f93",
+  "origin": "http://127.0.0.1:38469",
+  "route": "/areas/neurotech/",
+  "viewports": [
+    {
+      "title": "Neurotech",
+      "width": 1440,
+      "client": 1425,
+      "scroll": 1425,
+      "links": [
+        {
+          "text": "Neuro Atlas\n\u2192",
+          "href": "https://www.plneuro.xyz/neuro-atlas",
+          "tag": "A",
+          "target": ""
+        },
+        {
+          "text": "INTERACTIVE ATLAS\nNeuro Atlas\n\nFollow neurotechnology milestones, explore BCI funding, and track the field\u2019s progress.\n\nOpen Neuro Atlas\n\u2192\nStatic interface preview",
+          "href": "https://www.plneuro.xyz/neuro-atlas",
+          "tag": "A",
+          "target": ""
+        }
+      ],
+      "heading": {
+        "left": 244.5,
+        "right": 430.1875
+      },
+      "website": true,
+      "strategy": true,
+      "navAtlas": false,
+      "preview": {
+        "section": {
+          "top": 100.15625,
+          "bottom": 433.984375,
+          "left": 160.5,
+          "right": 1264.5
+        },
+        "card": {
+          "top": 144.15625,
+          "bottom": 433.984375,
+          "left": 160.5,
+          "right": 928.5
+        },
+        "image": {
+          "complete": true,
+          "width": 1200,
+          "height": 900
+        },
+        "caption": "Static interface preview",
+        "iframes": 0
+      }
+    },
+    {
+      "title": "Neurotech",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "links": [
+        {
+          "text": "Neuro Atlas\n\u2192",
+          "href": "https://www.plneuro.xyz/neuro-atlas",
+          "tag": "A",
+          "target": ""
+        },
+        {
+          "text": "INTERACTIVE ATLAS\nNeuro Atlas\n\nFollow neurotechnology milestones, explore BCI funding, and track the field\u2019s progress.\n\nOpen Neuro Atlas\n\u2192\nStatic interface preview",
+          "href": "https://www.plneuro.xyz/neuro-atlas",
+          "tag": "A",
+          "target": ""
+        }
+      ],
+      "heading": {
+        "left": 96,
+        "right": 197.28125
+      },
+      "website": true,
+      "strategy": true,
+      "navAtlas": false,
+      "preview": {
+        "section": {
+          "top": 99.75,
+          "bottom": 554.953125,
+          "left": 24,
+          "right": 366
+        },
+        "card": {
+          "top": 143.75,
+          "bottom": 554.953125,
+          "left": 24,
+          "right": 366
+        },
+        "image": {
+          "complete": true,
+          "width": 1200,
+          "height": 900
+        },
+        "caption": "Static interface preview",
+        "iframes": 0
+      }
+    },
+    {
+      "title": "Neurotech",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "links": [
+        {
+          "text": "Neuro Atlas\n\u2192",
+          "href": "https://www.plneuro.xyz/neuro-atlas",
+          "tag": "A",
+          "target": ""
+        },
+        {
+          "text": "INTERACTIVE ATLAS\nNeuro Atlas\n\nFollow neurotechnology milestones, explore BCI funding, and track the field\u2019s progress.\n\nOpen Neuro Atlas\n\u2192\nStatic interface preview",
+          "href": "https://www.plneuro.xyz/neuro-atlas",
+          "tag": "A",
+          "target": ""
+        }
+      ],
+      "heading": {
+        "left": 96,
+        "right": 197.28125
+      },
+      "website": true,
+      "strategy": true,
+      "navAtlas": false,
+      "preview": {
+        "section": {
+          "top": 100,
+          "bottom": 534.203125,
+          "left": 24,
+          "right": 296
+        },
+        "card": {
+          "top": 144,
+          "bottom": 534.203125,
+          "left": 24,
+          "right": 296
+        },
+        "image": {
+          "complete": true,
+          "width": 1200,
+          "height": 900
+        },
+        "caption": "Static interface preview",
+        "iframes": 0
+      }
+    }
+  ],
+  "preview_focus": {
+    "active": true,
+    "visible": true,
+    "outline": "solid"
+  },
+  "preview_click": {
+    "requested_url": "https://www.plneuro.xyz/neuro-atlas",
+    "canonical": true,
+    "title": "\ud83d\udc34 Neuro Atlas"
+  },
+  "hero_keyboard": {
+    "requested_url": "https://www.plneuro.xyz/neuro-atlas",
+    "canonical": true,
+    "title": "Neuro Atlas"
+  }
+}
