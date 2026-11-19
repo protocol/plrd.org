@@ -15,12 +15,11 @@ import type {
   RoiAttribution,
 } from "@/data/hypercerts"
 import FundingCheckout, { FundEffortButton, type MorphFrom } from "@/components/FundingFlow"
-import { useAuth } from "@/lib/atproto"
 import {
   Avatar,
   CommentsSection,
+  SourceRecordLink,
   authorLabel,
-  deleteOwnRecord,
   profileLinkActor,
   useActorProfiles,
   useLiveActivity,
@@ -151,13 +150,10 @@ function InfluenceChip({
 function LiveEvidenceRow({
   entry,
   influence,
-  onDelete,
 }: {
   entry: LiveEvidence
   /** Estimated Shapley influence matched from the cert's liveInfluence. */
   influence?: { share: number; amountUsd: number }
-  /** Present only when the signed-in user authored this entry. */
-  onDelete?: () => void
 }) {
   const [open, setOpen] = useState(false)
   const date = new Date(entry.createdAt)
@@ -269,15 +265,7 @@ function LiveEvidenceRow({
             >
               View ATProto record ↗
             </a>
-            {onDelete && (
-              <button
-                type="button"
-                onClick={onDelete}
-                className={`${eyebrow} cursor-pointer text-gray-400 transition hover:text-pink`}
-              >
-                Delete my entry
-              </button>
-            )}
+            <SourceRecordLink sourceURL={entry.sourceURL} />
           </div>
         </motion.div>
       </div>
@@ -409,8 +397,7 @@ export function HypercertDetail({
   variant?: "page" | "modal"
 }) {
   const isModal = variant === "modal"
-  const { session } = useAuth()
-  const { data: activity, loading, removeLocal } = useLiveActivity(cert)
+  const { data: activity, loading } = useLiveActivity(cert)
   const [funding, setFunding] = useState(false)
   // Rect of the hero card at click time, so the funding checkout can fly a
   // clone of it down into its contact-sheet card slot.
@@ -761,14 +748,6 @@ export function HypercertDetail({
                   key={item.entry.uri}
                   entry={item.entry}
                   influence={liveInfluenceFor(item.entry.title)}
-                  onDelete={
-                    session?.did === item.entry.did
-                      ? () =>
-                          void deleteOwnRecord(item.entry.uri)
-                            .then(() => removeLocal(item.entry.uri))
-                            .catch(() => {})
-                      : undefined
-                  }
                 />
               ),
             )}
@@ -804,7 +783,6 @@ export function HypercertDetail({
             cert={cert}
             activity={activity}
             loading={loading}
-            onDeleted={removeLocal}
           />
         </motion.div>
       </motion.div>

@@ -1,10 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Breadcrumb from '@/components/Breadcrumb'
-import EditPageButton from '@/components/EditPageButton'
-import EditHistoryByline from '@/components/EditHistoryByline'
 import opportunityData from '@/data/fa2/dhr-opportunityspaces.json'
-import { ADMIN_DID, OPPORTUNITY_COLLECTION, opportunitySpaceRkey } from '@/lib/lexicons'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -38,7 +35,6 @@ export default async function OpportunityDetailPage({ params }: Props) {
   const { slug } = await params
   const opp = await loadOpp(slug)
   if (!opp) notFound()
-  const rkey = opportunitySpaceRkey('digital-human-rights', slug)
 
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
@@ -49,15 +45,6 @@ export default async function OpportunityDetailPage({ params }: Props) {
           { label: opp.title },
         ]}
       />
-      <EditPageButton
-        rkey={rkey}
-        href={`/areas/digital-human-rights/${slug}/edit`}
-      />
-      <div className="mt-4 empty:hidden">
-        <EditHistoryByline
-          targetUri={`at://${ADMIN_DID}/${OPPORTUNITY_COLLECTION}/${rkey}`}
-        />
-      </div>
 
       {/* Hero */}
       <div className="relative pt-12 pb-12 mb-12 overflow-hidden">

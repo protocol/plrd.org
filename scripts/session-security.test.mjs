@@ -1,80 +1,58 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { source } from './velocity/test-source-loader.mjs'
-import { readFileSync } from 'node:fs'
-import { spawnSync } from 'node:child_process'
-import ts from 'typescript'
 
-const { outputText: envModule } = ts.transpileModule(readFileSync('src/lib/env.ts', 'utf8'), {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
+// A retired session must never authorize a visitor, even with a cookie claiming
+// the former publishing identity. These are inert synthetic values, not secrets.
+const cookies = [undefined, 'plrd_session=forged', `plrd_session=${encodeURIComponent(JSON.stringify({ did: 'did:plc:pgwr6hkosgznfl5nz7egajei', oauthSession: 'synthetic-access' }))}`]
+
+test('status is always anonymous without reading cookies, creating a session, or fetching', async (t) => {
+  delete process.env.COOKIE_SECRET
+  const { GET } = source('app/api/status/route.ts')
+  const fetch = t.mock.method(globalThis, 'fetch', () => { throw new Error('No network allowed') })
+  for (const cookie of cookies) {
+    const request = new Request('https://example.invalid/api/status/', { headers: cookie ? { Cookie: cookie } : {} })
+    const response = await GET(request)
+    assert.equal(response.status, 200)
+    assert.deepEqual(await response.json(), { did: null, handle: null, loggedIn: false })
+    assert.equal(response.headers.get('cache-control'), 'private, no-store')
+    assert.equal(response.headers.get('set-cookie'), null)
+  }
+  assert.equal(fetch.mock.callCount(), 0)
 })
-function checkEnvironment(cookieSecret) {
-  const env = { NODE_ENV: 'production' }
-  if (cookieSecret !== undefined) env.COOKIE_SECRET = cookieSecret
-  return spawnSync(process.execPath, ['--input-type=commonjs', '-e', envModule], {
-    cwd: process.cwd(), env, encoding: 'utf8', timeout: 10_000,
-  })
+
+const retiredRoutes = {
+  'login': ['POST'], 'logout': ['POST'],
+  'oauth/callback': ['GET'], 'oauth/client-metadata.json': ['GET'],
+  'oauth/jwks.json': ['GET'], 'pages': ['GET'],
+  'pages/[rkey]': ['GET', 'PUT'], 'pages/about': ['GET', 'PUT'],
+  'opportunity-spaces/[rkey]': ['GET', 'PUT'], 'posts': ['POST'],
+  'hypercerts/delete-record': ['POST'], 'edit-history': ['GET'],
 }
 
-for (const [name, value] of [
-  ['missing', undefined],
-  ['empty', ''],
-  ['short', 'too-short'],
-  ['whitespace-only', ' '.repeat(40)],
-  ['legacy public default', 'development-secret-at-least-32-chars!!'],
-  ['example placeholder', 'your-32-character-secret-here-change-me'],
-]) {
-  test(`environment fails closed for a ${name} cookie secret`, () => {
-    const result = checkEnvironment(value)
-    assert.equal(result.error, undefined)
-    assert.equal(result.signal, null)
-    assert.notEqual(result.status, 0, 'unsafe configuration must not initialize')
-    assert.match(result.stderr + result.stdout, /COOKIE_SECRET/)
-  })
-}
-
-test('environment initializes with an explicit sufficiently long synthetic secret', () => {
-  const result = checkEnvironment('synthetic-local-session-fixture-not-a-real-secret')
-  assert.equal(result.error, undefined)
-  assert.equal(result.status, 0, result.stderr)
-})
-
-// Synthetic local fixture only; no deployment credentials are needed by these tests.
-process.env.COOKIE_SECRET = 'synthetic-local-session-fixture-not-a-real-secret'
-const session = source('lib/session.ts')
-const { GET } = source('app/api/status/route.ts')
-
-test('status exposes only the public identity and login flag, never session internals', async (t) => {
-  t.mock.method(session, 'getSession', async () => ({
-    did: 'did:example:editor',
-    handle: 'editor.example',
-    displayName: 'Example Editor',
-    avatar: 'https://example.invalid/avatar.png',
-    oauthSession: JSON.stringify({ accessToken: 'synthetic-access', refreshToken: 'synthetic-refresh' }),
-    futurePrivateField: 'synthetic-private-value',
-  }))
-  const response = await GET()
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), {
-    did: 'did:example:editor', handle: 'editor.example', loggedIn: true,
-  })
-  assert.equal(response.headers.get('cache-control'), 'private, no-store')
-})
-
-test('anonymous status uses the same minimal noncacheable response shape', async (t) => {
-  t.mock.method(session, 'getSession', async () => ({}))
-  const response = await GET()
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { did: null, handle: null, loggedIn: false })
-  assert.equal(response.headers.get('cache-control'), 'private, no-store')
-})
-
-test('status failures do not serialize or log raw session errors', async (t) => {
-  t.mock.method(session, 'getSession', async () => { throw new Error('synthetic-private-error') })
-  const errorLog = t.mock.method(console, 'error', () => {})
-  const response = await GET()
-  assert.equal(response.status, 500)
-  assert.deepEqual(await response.json(), {})
-  assert.equal(response.headers.get('cache-control'), 'private, no-store')
-  assert.doesNotMatch(JSON.stringify(errorLog.mock.calls.map(call => call.arguments)), /synthetic-private-error/)
+test('all retired APIs return 410 without secrets, cookie access, body parsing, redirects, or network writes', async (t) => {
+  for (const key of ['COOKIE_SECRET', 'ATPROTO_HANDLE', 'ATPROTO_PASSWORD', 'ATPROTO_JWK_PRIVATE']) delete process.env[key]
+  const fetch = t.mock.method(globalThis, 'fetch', () => { throw new Error('Retired routes must never contact a PDS or OAuth provider') })
+  for (const [path, methods] of Object.entries(retiredRoutes)) {
+    const route = source(`app/api/${path}/route.ts`)
+    for (const method of methods) {
+      for (const cookie of cookies) {
+        const request = new Request(`https://example.invalid/api/${path}/?code=synthetic-code&state=synthetic-state`, {
+          method, headers: cookie ? { Cookie: cookie } : {},
+          ...(method === 'GET' ? {} : { body: 'malformed-json-that-must-not-be-parsed' }),
+        })
+        Object.defineProperty(request, 'cookies', { get() { throw new Error('Do not read request cookies') } })
+        const response = await route[method](request, { params: Promise.resolve({ rkey: 'landing' }) })
+        assert.equal(response.status, 410, `${method} ${path}`)
+        assert.equal(response.headers.get('cache-control'), 'no-store', path)
+        assert.equal(response.headers.get('set-cookie'), null, path)
+        assert.equal(response.headers.get('location'), null, path)
+        const body = await response.json()
+        assert.equal(body.readOnly, true, path)
+        assert.match(body.contentUrl, /^https:\/\/github\.com\/protocol\/plrd\.org\//)
+        assert.doesNotMatch(JSON.stringify(body), /synthetic-access|synthetic-code|synthetic-state/)
+      }
+    }
+  }
+  assert.equal(fetch.mock.callCount(), 0)
 })

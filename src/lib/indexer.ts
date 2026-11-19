@@ -1,7 +1,11 @@
 import "server-only"
+import pagesData from "@/data/site-content/pages.json"
+import opportunitiesData from "@/data/site-content/opportunities.json"
+import editEventsData from "@/data/site-content/edit-events.json"
+import publicationData from "@/data/site-content/publication.json"
 
-const HYPERINDEX_URL = process.env.INDEXER_URL || process.env.NEXT_PUBLIC_INDEXER_URL || "https://plresearch-indexer-production.up.railway.app/graphql"
-const PLRESEARCH_DID = "did:plc:pgwr6hkosgznfl5nz7egajei"
+/** The existing published discovery identity, now owned by GitHub rather than env config. */
+export const REPO_PUBLICATION_URI: string = publicationData.uri
 
 // ---- Types ----
 
@@ -62,158 +66,53 @@ export type IndexerEditEvent = {
   editedAt: string
 }
 
-// ---- GraphQL helper ----
+// ---- GitHub-owned page reads (legacy function names retained) ----
 
-async function query<T>(gql: string, variables?: Record<string, unknown>): Promise<T | null> {
-  try {
-    const res = await fetch(HYPERINDEX_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: gql, variables }),
-      next: { revalidate: 60, tags: ["indexer"] },
-    })
-    if (!res.ok) return null
-    const json = await res.json()
-    if (json.errors) {
-      console.error("[indexer] GraphQL errors:", json.errors)
-      return null
-    }
-    return json.data as T
-  } catch (err) {
-    console.error("[indexer] fetch failed:", err)
-    return null
-  }
-}
+const pages: IndexerPage[] = pagesData
 
-// ---- Page queries ----
-
-const PAGE_FIELDS = `
-  uri pageId iconType leads advisors updatedAt
-  sections { sectionId label title subtitle body }
-`
-
+/** GitHub-owned content; no deployment environment or CMS fallback participates. */
 export async function fetchPage(rkey: string): Promise<IndexerPage | null> {
-  const data = await query<{
-    orgPlresearchPage: { edges: { node: IndexerPage }[] }
-  }>(`{
-    orgPlresearchPage(
-      where: { did: { eq: "${PLRESEARCH_DID}" }, pageId: { eq: "${rkey}" } }
-      first: 1
-    ) {
-      edges { node { ${PAGE_FIELDS} } }
-    }
-  }`)
-  const node = data?.orgPlresearchPage?.edges?.[0]?.node ?? null
-  if (node && node.uri && !node.rkey) {
-    // Extract rkey from AT URI: at://did/collection/rkey
-    const parts = node.uri.split('/')
-    node.rkey = parts[parts.length - 1]
+  // Compatibility for the existing Collaboration consumer, not the retired About page.
+  // Its only section is owned by collaborate in pages.json; historical About stays archived.
+  if (rkey === "about") {
+    const collaboration = pages.find(page => page.pageId === "collaborate")!
+    return structuredClone({
+      pageId: "about", rkey: "about", updatedAt: collaboration.updatedAt,
+      sections: collaboration.sections.filter(section => section.sectionId === "collaborations"),
+    })
   }
-  return node
+  const page = pages.find(page => page.pageId === rkey)
+  return page ? structuredClone(page) : null
 }
 
 export async function fetchAllPages(): Promise<IndexerPage[]> {
-  const data = await query<{
-    orgPlresearchPage: { edges: { node: IndexerPage }[] }
-  }>(`{
-    orgPlresearchPage(
-      where: { did: { eq: "${PLRESEARCH_DID}" } }
-      first: 100
-    ) {
-      edges { node { ${PAGE_FIELDS} } }
-    }
-  }`)
-  return data?.orgPlresearchPage?.edges?.map(e => {
-    const node = e.node
-    if (node.uri && !node.rkey) {
-      const parts = node.uri.split('/')
-      node.rkey = parts[parts.length - 1]
-    }
-    return node
-  }) ?? []
+  return structuredClone(pages)
 }
 
 // ---- Opportunity Space queries ----
 
-const OS_FIELDS = `
-  uri areaSlug id title tagline image description
-  inflectionPoint shift theOpportunity
-  subfields tippingSignals keyAssumptions observations
-  fieldSignals { kpi measurement }
-  updatedAt
-`
+const opportunities: IndexerOpportunitySpace[] = opportunitiesData
 
 export async function fetchOpportunitySpaces(areaSlug: string): Promise<IndexerOpportunitySpace[]> {
-  const data = await query<{
-    orgPlresearchOpportunitySpace: { edges: { node: IndexerOpportunitySpace }[] }
-  }>(`{
-    orgPlresearchOpportunitySpace(
-      where: { did: { eq: "${PLRESEARCH_DID}" }, areaSlug: { eq: "${areaSlug}" } }
-      first: 50
-    ) {
-      edges { node { ${OS_FIELDS} } }
-    }
-  }`)
-  return data?.orgPlresearchOpportunitySpace?.edges?.map(e => {
-    const node = e.node
-    if (node.uri && !node.rkey) {
-      const parts = node.uri.split('/')
-      node.rkey = parts[parts.length - 1]
-    }
-    return node
-  }) ?? []
+  return structuredClone(opportunities.filter(opportunity => opportunity.areaSlug === areaSlug))
 }
 
 export async function fetchOpportunitySpace(rkey: string): Promise<IndexerOpportunitySpace | null> {
-  // Query by URI since lex-gql uses uri not rkey
-  const uri = `at://${PLRESEARCH_DID}/org.plresearch.opportunitySpace/${rkey}`
-  const data = await query<{
-    orgPlresearchOpportunitySpace: { edges: { node: IndexerOpportunitySpace }[] }
-  }>(`{
-    orgPlresearchOpportunitySpace(
-      where: { uri: { eq: "${uri}" } }
-      first: 1
-    ) {
-      edges { node { ${OS_FIELDS} } }
-    }
-  }`)
-  const node = data?.orgPlresearchOpportunitySpace?.edges?.[0]?.node ?? null
-  if (node && node.uri && !node.rkey) {
-    const parts = node.uri.split('/')
-    node.rkey = parts[parts.length - 1]
-  }
-  return node
+  const opportunity = opportunities.find(opportunity => opportunity.rkey === rkey)
+  return opportunity ? structuredClone(opportunity) : null
 }
 
 // ---- Edit event queries ----
 
-const EDIT_EVENT_FIELDS = `
-  uri did target targetCid collection
-  editor editorHandle changedFields note editedAt
-`
+const editEvents: IndexerEditEvent[] = editEventsData
 
-/**
- * Fetch all audit-log entries that target a given AT-URI, newest first.
- * Queries ALL admin DIDs (not scoped to plresearch.org) because edit events
- * are written to each editor's own repo.
- */
+/** Frozen public audit history; new content changes are reviewed in Git. */
 export async function fetchEditEvents(targetUri: string): Promise<IndexerEditEvent[]> {
-  const data = await query<{
-    orgPlresearchEditEvent: { edges: { node: IndexerEditEvent }[] }
-  }>(`{
-    orgPlresearchEditEvent(
-      where: { target: { eq: "${targetUri}" } }
-      first: 100
-    ) {
-      edges { node { ${EDIT_EVENT_FIELDS} } }
-    }
-  }`)
-  const events = data?.orgPlresearchEditEvent?.edges?.map(e => e.node) ?? []
-  // Sort by editedAt descending — the indexer doesn't guarantee order.
-  return events.sort((a, b) => (b.editedAt ?? '').localeCompare(a.editedAt ?? ''))
+  return structuredClone(editEvents.filter(event => event.target === targetUri))
+    .sort((a, b) => (b.editedAt ?? '').localeCompare(a.editedAt ?? ''))
 }
 
-// ---- ATProto post queries (site.standard.document via generic records) ----
+// ---- Legacy post read contract ----
 
 export type IndexerPost = {
   rkey: string
@@ -230,57 +129,14 @@ export type IndexerPost = {
   } | null
 }
 
+/**
+ * All public standard.site documents resolve to existing repo blog posts.
+ * The blog listing already renders those (including its unlisted policy).
+ * Do not append archival copies, overwrite approved bodies, or surface new posts.
+ * See site-content provenance and docs/content-migration.md.
+ */
 export async function fetchAtproPosts(): Promise<IndexerPost[]> {
-  const data = await query<{
-    records: {
-      edges: {
-        node: {
-          rkey: string
-          uri: string
-          value: {
-            title?: string
-            description?: string
-            publishedAt?: string
-            path?: string
-            tags?: string[]
-            content?: {
-              $type: string
-              markdown?: string
-              postType?: string
-            }
-          }
-        }
-      }[]
-    }
-  }>(`{
-    records(
-      collection: "site.standard.document"
-      first: 50
-    ) {
-      edges {
-        node {
-          rkey
-          uri
-          value
-        }
-      }
-    }
-  }`)
-
-  return (
-    data?.records?.edges
-      ?.map((e) => ({
-        rkey: e.node.rkey,
-        uri: e.node.uri,
-        title: e.node.value?.title || "",
-        description: e.node.value?.description,
-        publishedAt: e.node.value?.publishedAt || "",
-        path: e.node.value?.path,
-        tags: e.node.value?.tags,
-        content: e.node.value?.content,
-      }))
-      .filter((p) => p.title && p.publishedAt) ?? []
-  )
+  return []
 }
 
 // ---- Helpers ----

@@ -1,0 +1,507 @@
+[
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/landing",
+    "pageId": "landing",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-06-04T14:30:43.911Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Driving R&D breakthroughs to push humanity forward",
+        "subtitle": null,
+        "body": null
+      },
+      {
+        "sectionId": "approach",
+        "label": null,
+        "title": "We accelerate frontier fields to drive computing breakthroughs",
+        "subtitle": null,
+        "body": "PL R&D drives breakthroughs in frontier fields to expand the Overton window of what is possible. Our work is concentrated in four focus areas where computing systems will shape human freedom, institutional coordination, machine intelligence, and the future of cognition itself."
+      },
+      {
+        "sectionId": "approach-dhr",
+        "label": null,
+        "title": "Digital Human Rights",
+        "subtitle": "Building open, verifiable, censorship-resistant infrastructure for human freedom & agency in the digital age.",
+        "body": null
+      },
+      {
+        "sectionId": "approach-eg",
+        "label": null,
+        "title": "Economies & Governance",
+        "subtitle": "Building programmable infrastructure for more efficient, equitable coordination at global scale.",
+        "body": null
+      },
+      {
+        "sectionId": "approach-ai",
+        "label": null,
+        "title": "AI & Robotics",
+        "subtitle": "Building open compute, coordination, data, and economic rails for autonomous agents and embodied AI.",
+        "body": null
+      },
+      {
+        "sectionId": "approach-neuro",
+        "label": null,
+        "title": "Neurotechnology",
+        "subtitle": "Accelerating brain-computer interfaces (BCI), whole-brain emulation (WBE), & NeuroAI to expand human cognition.",
+        "body": null
+      },
+      {
+        "sectionId": "team",
+        "label": null,
+        "title": null,
+        "subtitle": null,
+        "body": "Our global team of Focus Area Leads and Scientific Advisors builds the coordination layer for emerging fields: identifying bottlenecks, funding early work, convening expert networks, creating shared roadmaps, and helping the best ideas become open infrastructure, institutions, companies, and public goods."
+      }
+    ],
+    "rkey": "landing"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-neurotech",
+    "pageId": "area-neurotech",
+    "iconType": "brain",
+    "leads": [
+      "sean-escola"
+    ],
+    "advisors": [
+      "adam-marblestone",
+      "david-markowitz",
+      "doris-tsao",
+      "edward-chang",
+      "greg-wayne",
+      "ilan-gur",
+      "matthew-botvinick",
+      "max-hodak"
+    ],
+    "updatedAt": "2026-05-13T19:26:49.402Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Neurotech",
+        "subtitle": "Accelerating brain-computer interfaces (BCI), whole-brain emulation (WBE), & NeuroAI to expand human cognition.",
+        "body": "Neurotechnology and AI will qualitatively change the human experience of life. Within five years, the treatment of brain disorders will be completely restructured by brain–computer interfaces (BCIs) that restore sensory or motor, and by the closed-loop control of brain states like mood via neuromodulation. Within a decade, neural augmentation will become feasible, with read/write interfaces that enable humans and machines to co-process information—expanding cognitive capabilities rather than merely compensating for deficits. Looking further ahead, we will build biologically inspired AI that spans the full range of human cognition, improving on the jagged intelligence of today’s models while requiring far less energy than conventional data-center approaches. Ultimately, high-fidelity simulations of individual brains—potentially down to cellular or molecular detail—will enable our successor species: human minds in digital form.\n\nThis technological future is within reach, but the certainty and timeline of its realization are subject to the choices taken by the individuals and institutions in the neurotechnology and NeuroAI ecosystem. Through venture funding, grantmaking, and field building Protocol Labs Neuro aims to influence those choices and accelerate progress to benefit millions of people."
+      }
+    ],
+    "rkey": "area-neurotech"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-economies-governance",
+    "pageId": "area-economies-governance",
+    "iconType": "hexagon",
+    "leads": [
+      "david-dao",
+      "james-tunningley"
+    ],
+    "advisors": null,
+    "updatedAt": "2026-05-13T19:26:49.064Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Economies & Governance",
+        "subtitle": "Building programmable infrastructure for more efficient, equitable coordination at global scale.",
+        "body": null
+      },
+      {
+        "sectionId": "body",
+        "label": null,
+        "title": null,
+        "subtitle": null,
+        "body": "This focus area rectifies the inadequacies of current macro systems, which often struggle to coordinate and solve monumental challenges like climate change. By leveraging decentralized and improved governance tools, we are rethinking how capital is formed and deployed.\n\nThis movement harnesses mechanism design to align millions of people worldwide toward shared goals, creating structures that can allocate resources at the scale of nation-states for the benefit of all humanity."
+      },
+      {
+        "sectionId": "explore-subareas",
+        "label": null,
+        "title": "Subareas",
+        "subtitle": "9 interconnected subfields driving systemic change.",
+        "body": null
+      },
+      {
+        "sectionId": "explore-opportunities",
+        "label": null,
+        "title": "Opportunity Spaces",
+        "subtitle": "4 convergence zones for systemic change.",
+        "body": null
+      },
+      {
+        "sectionId": "explore-impact",
+        "label": null,
+        "title": "Impact Dashboard",
+        "subtitle": "Ecosystem impact across villages and funding.",
+        "body": null
+      },
+      {
+        "sectionId": "explore-projects",
+        "label": null,
+        "title": "Project Explorer",
+        "subtitle": "242+ teams building public goods infrastructure.",
+        "body": null
+      },
+      {
+        "sectionId": "explore-depgraph",
+        "label": null,
+        "title": "Dependency Graph",
+        "subtitle": "Strategic dependency trees across 4 inflection points.",
+        "body": null
+      },
+      {
+        "sectionId": "engage-feedback",
+        "label": null,
+        "title": "Feedback on this framing",
+        "subtitle": null,
+        "body": "Does this opportunity space resonate? What's missing? What's wrong?"
+      },
+      {
+        "sectionId": "engage-cases",
+        "label": null,
+        "title": "Case studies and examples",
+        "subtitle": null,
+        "body": "What sovereign DPI deployments, DeSci infrastructure, DePIN projects, or PGF mechanisms should we be learning from?"
+      },
+      {
+        "sectionId": "engage-partners",
+        "label": null,
+        "title": "Partner identification",
+        "subtitle": null,
+        "body": "Who else should be at the table? What institutions, teams, or individuals are essential to this work?"
+      },
+      {
+        "sectionId": "engage-technical",
+        "label": null,
+        "title": "Technical input",
+        "subtitle": null,
+        "body": "What reference architectures, standards, or specifications would be most valuable?"
+      },
+      {
+        "sectionId": "engage-strategic",
+        "label": null,
+        "title": "Strategic counsel",
+        "subtitle": null,
+        "body": "What have we gotten wrong about the field, the opportunity, or the approach?"
+      }
+    ],
+    "rkey": "area-economies-governance"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-digital-human-rights",
+    "pageId": "area-digital-human-rights",
+    "iconType": "shield",
+    "leads": [
+      "will-scott"
+    ],
+    "advisors": [],
+    "updatedAt": "2026-05-13T19:26:48.709Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Digital Human Rights",
+        "subtitle": "Building open, verifiable, censorship-resistant infrastructure for human freedom & agency in the digital age.",
+        "body": "Digital Human Rights is centered on building a foundation of freedom and safety in the digital age. Our mission is to improve the internet by developing web3 networks, infrastructure, and new primitives that promote human agency.\n\nBy making the internet more decentralized, verifiable, and secure, we aim to protect against digital totalitarianism and create better infrastructure that enshrines human rights through mathematics, incentives, and robust global governance. This involves constructing an underlying infrastructure layer with public internet digital utilities that ensure universal access and consistent connectivity for all humans worldwide."
+      }
+    ],
+    "rkey": "area-digital-human-rights"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-ai-robotics",
+    "pageId": "area-ai-robotics",
+    "iconType": "neural",
+    "leads": [
+      "molly-mackinlay"
+    ],
+    "advisors": [],
+    "updatedAt": "2026-05-13T19:26:48.357Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "AI & Robotics",
+        "subtitle": "Building open compute, coordination, data, and economic rails for autonomous agents and embodied AI.",
+        "body": "This focus area encompasses AI, Robotics, and other nascent technological breakthroughs. We are exploring diverse areas of computing that promise radical transformations in how we interact with the world, including Artificial General Intelligence (AGI), Augmented Reality (AR), and Virtual Reality (VR).\n\nOur goal is to ensure responsible advancement in these fields by fostering effective resource allocation and a robust R&D pipeline. By accelerating the innovation network, we aim to overcome challenges faster than conventional systems and shape a future where these transformative technologies empower humanity."
+      }
+    ],
+    "rkey": "area-ai-robotics"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/collaborate",
+    "pageId": "collaborate",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-11T18:21:01.712Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Collaborate With Us",
+        "subtitle": "We believe in open collaboration. Whether you're a researcher, developer, institution, or visionary builder, there are many ways to work together on problems that matter.",
+        "body": "We believe in open collaboration. Whether you're a researcher, developer, institution, or visionary builder, there are many ways to work together on problems that matter."
+      },
+      {
+        "sectionId": "body",
+        "label": null,
+        "title": null,
+        "subtitle": null,
+        "body": "PL R&D works at the intersection of fundamental research and real-world impact. We're building the infrastructure for a better internet and exploring how technology can help humanity flourish.\n\nOur collaborative approach brings together researchers, engineers, and institutions worldwide. We're always looking for partners who share our vision of open, decentralized, and human-centric technology."
+      },
+      {
+        "sectionId": "collaborations",
+        "label": "COLLABORATIONS AND SUPPORT",
+        "title": "PL R&D collaborates with researchers, builders, funders, institutions, policymakers, founders, and domain experts.",
+        "subtitle": null,
+        "body": "**Co-fund a program:** We partner with foundations, philanthropists, public agencies, companies, and research funders on grant calls, prizes, fellowships, convenings, field maps, standards efforts, and pilot programs.\n\n\n**Build with us:** We support builders and technical teams on open-source tools, protocols, datasets, reference architectures, prototypes, and infrastructure projects aligned with one of our focus areas.\n\n\n**Pioneer research:** We help researchers define open questions, produce field maps, develop technical roadmaps, evaluate emerging systems, and turn frontier ideas into shared knowledge.\n\n\n**Join a convening or working group:** We host experts, policymakers, funders, and operators for focused discussions on bottlenecks, opportunity spaces, and deployment pathways.\n\n\n**Advise a focus area:** Our field-level Science Advisory Boards bring together domain experts to shape strategy, review opportunity spaces, identify promising teams, and connect PL R&D with important work happening across the field.\n\n\n**Explore deployment partnerships:** We work closely with institutions, governments, nonprofits, and companies to explore pilots, standards, public-good infrastructure, and real-world applications for emerging technologies to accelerate field understanding & progress."
+      }
+    ],
+    "rkey": "collaborate"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/authors",
+    "pageId": "authors",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:39.145Z",
+    "sections": [
+      {
+        "sectionId": "advisors-blurb",
+        "label": null,
+        "title": null,
+        "subtitle": null,
+        "body": "Leading scientists, engineers, and entrepreneurs advising Protocol Labs on neurotechnology, NeuroAI, and brain-computer interfaces."
+      }
+    ],
+    "rkey": "authors"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/blog",
+    "pageId": "blog",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:38.602Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": null,
+        "subtitle": "Updates, insights, and reflections from the PL R&D team.",
+        "body": null
+      }
+    ],
+    "rkey": "blog"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/tutorials",
+    "pageId": "tutorials",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:38.060Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": null,
+        "subtitle": "In-depth guides and educational materials on core research topics.",
+        "body": null
+      }
+    ],
+    "rkey": "tutorials"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/talks",
+    "pageId": "talks",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:37.513Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": null,
+        "subtitle": "Presentations and lectures from conferences and events around the world.",
+        "body": null
+      }
+    ],
+    "rkey": "talks"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/publications",
+    "pageId": "publications",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:36.935Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": null,
+        "subtitle": "Papers and articles advancing the frontiers of decentralized systems, cryptography, and distributed computing.",
+        "body": null
+      }
+    ],
+    "rkey": "publications"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/insights",
+    "pageId": "insights",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:36.391Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": null,
+        "subtitle": "Exploring the frontiers of computing, networking, and knowledge systems to build infrastructure that empowers humanity.",
+        "body": null
+      }
+    ],
+    "rkey": "insights"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-eg-impact",
+    "pageId": "area-eg-impact",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:35.843Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Impact",
+        "subtitle": "Track ecosystem growth, measure outcomes, and explore the real-world impact of decentralized economies and governance.",
+        "body": null
+      },
+      {
+        "sectionId": "report-2025",
+        "label": null,
+        "title": "Impact Report 2025",
+        "subtitle": null,
+        "body": "Annual report on ecosystem growth, key initiatives, and measurable outcomes."
+      },
+      {
+        "sectionId": "live-dashboard",
+        "label": null,
+        "title": "Live Dashboard",
+        "subtitle": null,
+        "body": "Real-time metrics and data visualizations tracking ecosystem activity."
+      },
+      {
+        "sectionId": "card-report-2025",
+        "label": null,
+        "title": null,
+        "subtitle": null,
+        "body": "Annual report on ecosystem growth, key initiatives, and measurable outcomes."
+      }
+    ],
+    "rkey": "area-eg-impact"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-eg-subareas",
+    "pageId": "area-eg-subareas",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-05-04T19:52:34.760Z",
+    "sections": [
+      {
+        "sectionId": "dpi",
+        "label": null,
+        "title": "(Sovereign) DPI",
+        "subtitle": "Digital Public Infrastructure",
+        "body": "Nation-states run open, verifiable, privacy-preserving rails (identity, payments, registries, RWA, data + compute corridors)."
+      },
+      {
+        "sectionId": "desci",
+        "label": null,
+        "title": "DeSci",
+        "subtitle": "Decentralized Science",
+        "body": "Shifting from experiments to a full scientific stack (open data, reproducible research, verifiable pipelines, new funding instruments)."
+      },
+      {
+        "sectionId": "depin",
+        "label": null,
+        "title": "DePIN",
+        "subtitle": "Decentralized Physical Infrastructure Networks",
+        "body": "DePIN becomes a mainstream infra category (sovereign compute, energy, sensing, mapping, telecom, and resilience networks)."
+      },
+      {
+        "sectionId": "pgf",
+        "label": null,
+        "title": "Public Goods Funding",
+        "subtitle": "Sustainable Public Goods Markets",
+        "body": "PGF evolves into public markets for public goods (sustainable co-funding, repeatable granting, clear measurement, institutional legitimacy)."
+      },
+      {
+        "sectionId": "defi",
+        "label": null,
+        "title": "DeFi",
+        "subtitle": "Decentralized Finance",
+        "body": "DeFi achieves global democratized access to payments and savings in valuable asset categories (major currencies, stocks, bonds)."
+      },
+      {
+        "sectionId": "degov",
+        "label": null,
+        "title": "DeGov",
+        "subtitle": "Decentralized Governance",
+        "body": "Technology enables resilience towards misinformation and lifts the governance abilities of states and institutions."
+      },
+      {
+        "sectionId": "network-states",
+        "label": null,
+        "title": "Network States",
+        "subtitle": "Digital-First Societies",
+        "body": "Network states develop permanent hubs and provide radical new ideas of how society can flourish."
+      },
+      {
+        "sectionId": "nations",
+        "label": null,
+        "title": "Improving Nations",
+        "subtitle": "Computing-Enabled National Development",
+        "body": "Computing leapfrogs national economies and creates wealth and security for developing nations."
+      },
+      {
+        "sectionId": "refi",
+        "label": null,
+        "title": "Climate / ReFi",
+        "subtitle": "Regenerative Finance",
+        "body": "New mechanisms enable sustainable climate finance. DePIN and MRV technology tackle the climate and biodiversity crisis."
+      },
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": null,
+        "subtitle": "Nine interconnected subfields, each representing a critical domain for economies and governance.",
+        "body": null
+      }
+    ],
+    "rkey": "area-eg-subareas"
+  },
+  {
+    "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/areas",
+    "pageId": "areas",
+    "iconType": null,
+    "leads": null,
+    "advisors": null,
+    "updatedAt": "2026-03-25T00:00:00.000Z",
+    "sections": [
+      {
+        "sectionId": "hero",
+        "label": null,
+        "title": "Focus Areas",
+        "subtitle": "Four research directions driving breakthroughs in computing, coordination, and human capability.",
+        "body": null
+      }
+    ],
+    "rkey": "areas"
+  }
+]

@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Breadcrumb from '@/components/Breadcrumb'
 import MarkdownContent from '@/components/MarkdownContent'
 import { fetchPage, getSection } from '@/lib/indexer'
@@ -76,9 +74,6 @@ export default async function CollaborationPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Collaborate' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="collaborate" />
-      </div>
 
       {/* Hero */}
       <div className="relative pt-6 pb-10 mb-14 overflow-hidden">
@@ -132,8 +127,6 @@ export default async function CollaborationPage() {
           </a>
         </div>
       </div>
-
-      <EditPageButton rkey="collaborate" />
     </div>
   )
 }

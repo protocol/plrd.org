@@ -217,7 +217,7 @@ test('main section headings expose real named anchors, with unique scroll target
 test('existing cert links yield to other fragment families without a lingering overlay or scroll lock', async () => {
   const { mock } = await import('node:test')
   globalThis.ResizeObserver = class { observe() {} disconnect() {} }
-  const auth = mock.method(source('lib/atproto.tsx'), 'useAuth', () => ({ session: null }))
+
   const network = mock.method(source('lib/hypercerts-live.ts'), 'fetchLiveActivity', async () => ({ evidence: [], comments: [] }))
   const cert = source('data/hypercerts.ts').HYPERCERTS[0]
   window.history.replaceState({ __NA: true }, '', `${base}#${cert.rkey}`)
@@ -255,7 +255,7 @@ test('existing cert links yield to other fragment families without a lingering o
     assert.equal(document.body.style.overflow, 'auto')
     assert.equal(document.body.style.paddingRight, '7px')
   } finally {
-    await unmount(); network.mock.restore(); auth.mock.restore()
+    await unmount(); network.mock.restore()
     document.body.style.overflow = ''; document.body.style.paddingRight = ''
   }
 })

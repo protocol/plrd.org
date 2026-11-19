@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { authors } from '@/lib/content'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import MarkdownContent from '@/components/MarkdownContent'
 
 const LEADS = ['juan-benet', 'molly-mackinlay', 'will-scott', 'sean-escola', 'david-dao', 'james-tunningley', 'lukas-bresser']
@@ -33,7 +32,6 @@ export default function AuthorsTabs({ heroTitle, heroSubtitle, leadershipBlurb, 
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-8">
       <div className="empty:hidden mb-4">
-        <PageEditHistoryByline rkey="authors" />
       </div>
       {/* Header */}
       <div className="pt-6 pb-12 border-b border-gray-200 mb-0">

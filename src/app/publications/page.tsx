@@ -3,8 +3,6 @@ import { publications, authors, focusAreaDefs } from '@/lib/content'
 import { slugToName } from '@/lib/format'
 import Breadcrumb from '@/components/Breadcrumb'
 import BackToInsights from '@/components/BackToInsights'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import MarkdownContent from '@/components/MarkdownContent'
 import AreaFilteredListing, { type FilterableTile } from '@/components/AreaFilteredListing'
 import { fetchPage, getSection } from '@/lib/indexer'
@@ -37,9 +35,6 @@ export default async function PublicationsPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Research', href: '/research/' }, { label: 'Publications' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="publications" />
-      </div>
       <BackToInsights />
       {/* Hero */}
       <div className="relative pt-6 pb-10 mb-10 overflow-hidden">
@@ -52,7 +47,6 @@ export default async function PublicationsPage() {
 
       {/* Tiles */}
       <AreaFilteredListing areas={focusAreaDefs} tiles={tiles} noun="publications" />
-      <EditPageButton rkey="publications" />
     </div>
   )
 }

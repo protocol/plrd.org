@@ -1,5 +1,5 @@
 import { AtpAgent } from '@atproto/api'
-import { ADMIN_DID, PAGE_COLLECTION } from './lexicons'
+import { PUBLIC_CONTENT_DID, PAGE_COLLECTION } from './lexicons'
 import type { PageRecord } from './lexicons'
 
 /**
@@ -72,15 +72,15 @@ export async function getPublicProfile(actor: string) {
 }
 
 /**
- * Fetch a single page record from the admin PDS.
+ * Fetch a single page record from the public content PDS.
  */
 export async function getPageRecord(rkey: string): Promise<PageRecord | null> {
   try {
-    const pdsUrl = await resolvePds(ADMIN_DID)
+    const pdsUrl = await resolvePds(PUBLIC_CONTENT_DID)
     if (!pdsUrl) return null
     const pdsAgent = getPdsAgent(pdsUrl)
     const response = await pdsAgent.com.atproto.repo.getRecord({
-      repo: ADMIN_DID,
+      repo: PUBLIC_CONTENT_DID,
       collection: PAGE_COLLECTION,
       rkey,
     })
@@ -91,15 +91,15 @@ export async function getPageRecord(rkey: string): Promise<PageRecord | null> {
 }
 
 /**
- * Fetch all page records from the admin PDS.
+ * Fetch all page records from the public content PDS.
  */
 export async function getAllPageRecords(): Promise<{ rkey: string; record: PageRecord }[]> {
   try {
-    const pdsUrl = await resolvePds(ADMIN_DID)
+    const pdsUrl = await resolvePds(PUBLIC_CONTENT_DID)
     if (!pdsUrl) return []
     const pdsAgent = getPdsAgent(pdsUrl)
     const response = await pdsAgent.com.atproto.repo.listRecords({
-      repo: ADMIN_DID,
+      repo: PUBLIC_CONTENT_DID,
       collection: PAGE_COLLECTION,
       limit: 100,
     })

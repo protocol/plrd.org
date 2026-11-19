@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { areas, publications, talks, listedBlogPosts as blogPosts } from '@/lib/content'
@@ -176,9 +174,6 @@ export default async function AreaPage({ params }: Props) {
   return (
     <div className="area-overview pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Focus Areas', href: '/areas/' }, { label: stripFaPrefix(area.title) }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey={`area-${slug}`} />
-      </div>
       {/* Hero */}
       <div className="relative pt-8 pb-12 mb-12 overflow-hidden">
         {slug in HERO_WIDTH ? (
@@ -398,7 +393,6 @@ export default async function AreaPage({ params }: Props) {
           </Link>
         </div>
       )}
-      <EditPageButton rkey={`area-${slug}`} />
     </div>
   )
 }

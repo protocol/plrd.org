@@ -4,7 +4,7 @@ import React, { act } from 'react'
 import { JSDOM } from 'jsdom'
 import { source } from './velocity/test-source-loader.mjs'
 
-// Keep every request inside the test, including the unrelated editable-page CMS.
+// Keep every request inside the test; former CMS page copy is now repository-owned.
 // A configured, healthy Curator must not be able to replace the local Radar.
 const indexerUrl = 'https://indexer.example.test/graphql'
 process.env.TZ = 'UTC'
@@ -46,9 +46,7 @@ async function renderInsights(t) {
 
 test('Insights never fetches external Radar even with a healthy configured Curator', async (t) => {
   const { requests, radar, tree } = await renderInsights(t)
-  assert.deepEqual(requests.map(({ url }) => url), [indexerUrl], 'only the existing page CMS may be fetched')
-  assert.equal(requests[0].options.method, 'POST')
-  assert.match(requests[0].options.body, /insights/)
+  assert.deepEqual(requests, [], 'neither the retired page CMS nor remote Radar may be fetched')
   assert.ok(radar, 'the local Radar remains on Insights')
   assert.equal(radar.items.length, 6)
   assert.ok(radar.items.every((item) => item.key !== 'remote-only'))
@@ -344,5 +342,5 @@ test('an empty local pool hides Radar without removing the Insights explorer', a
   const { radar, tree, requests } = await renderInsights(t)
   assert.equal(radar, undefined)
   assert.equal(elementsOfType(tree, InsightsExplorer).length, 1)
-  assert.deepEqual(requests.map(({ url }) => url), [indexerUrl])
+  assert.deepEqual(requests, [], 'an empty Radar does not restore remote CMS reads')
 })

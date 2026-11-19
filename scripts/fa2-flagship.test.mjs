@@ -133,7 +133,7 @@ test('the page keeps everything it had, in the leaner order', async (t) => {
 
 test('the four opportunity spaces are the cards they were', async (t) => {
   const nodes = await page(t)
-  const data = JSON.parse(readFileSync('src/data/fa2/opportunityspaces.json', 'utf8'))
+  const data = { opportunities: JSON.parse(readFileSync('src/data/site-content/opportunities.json', 'utf8')).filter(o => o.areaSlug === 'economies-governance') }
   const section = nodes.find((node) => node.props?.id === 'opportunity-spaces')
   const cards = elements(section).filter((node) => node.type === Link)
   assert.equal(cards.length, 4)

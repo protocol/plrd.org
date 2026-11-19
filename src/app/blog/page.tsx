@@ -3,8 +3,6 @@ import { listedBlogPosts as blogPosts, focusAreaDefs } from '@/lib/content'
 import { formatDate, externalSourceLabel } from '@/lib/format'
 import Breadcrumb from '@/components/Breadcrumb'
 import BackToInsights from '@/components/BackToInsights'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import MarkdownContent from '@/components/MarkdownContent'
 import AreaFilteredListing, { type FilterableTile } from '@/components/AreaFilteredListing'
 import { fetchAtproPosts, fetchPage, getSection } from '@/lib/indexer'
@@ -68,9 +66,6 @@ export default async function BlogPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Blog' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="blog" />
-      </div>
       <BackToInsights />
       {/* Hero */}
       <div className="relative pt-6 pb-10 mb-10 overflow-hidden">
@@ -83,7 +78,6 @@ export default async function BlogPage() {
 
       {/* Blog posts */}
       {tiles.length > 0 && <AreaFilteredListing areas={focusAreaDefs} tiles={tiles} noun="posts" />}
-      <EditPageButton rkey="blog" />
     </div>
   )
 }

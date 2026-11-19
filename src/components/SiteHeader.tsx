@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { mainNav } from '@/lib/site-config'
-import { useAuth } from '@/lib/atproto'
 import SearchBar from '@/components/SearchBar'
 import NavItem from '@/components/NavItem'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -15,7 +14,6 @@ type Props = {
 
 export default function SiteHeader({ onMenuClick }: Props) {
   const pathname = usePathname()
-  const { isAuthenticated, session } = useAuth()
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -77,31 +75,12 @@ export default function SiteHeader({ onMenuClick }: Props) {
 
               <ThemeToggle />
 
-              {isAuthenticated && session ? (
-                <Link
-                  href="/admin"
-                  className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors"
-                >
-                  {session.avatar ? (
-                    <img
-                      src={session.avatar}
-                      alt={session.handle}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-violet text-white flex items-center justify-center text-xs font-medium">
-                      {(session.displayName || session.handle).charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </Link>
-              ) : (
-                <Link
-                  href="/outreach/collaboration/"
-                  className="bg-black text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-gray-800 transition-colors"
-                >
-                  Collaborate
-                </Link>
-              )}
+              <Link
+                href="/outreach/collaboration/"
+                className="bg-black text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-gray-800 transition-colors"
+              >
+                Collaborate
+              </Link>
             </div>
           </div>
 

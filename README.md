@@ -1,8 +1,8 @@
 # Protocol Labs R&D Website
 
-The research website for Protocol Labs, live at **https://plresearch.org**.
+The research website for Protocol Labs, live at **https://www.plrd.org/**. The canonical repository is **https://github.com/protocol/plrd.org**.
 
-Built with Next.js 15.5, React 19, and Tailwind CSS 4. Content is authored in Markdown with YAML frontmatter, compiled to JSON at build time, and served through the Next.js App Router.
+Built with Next.js 15.5, React 19, and Tailwind CSS 4. Research content is authored in Markdown with YAML frontmatter and compiled to JSON; page sections and opportunity overrides are repository JSON. All website editing goes through GitHub, not a website login or ATProto writer. See [the content-source map](docs/content-migration.md).
 
 ## Quick Start
 
@@ -23,7 +23,7 @@ Open http://localhost:3000.
 | `npx tsc --noEmit` | Type-check without emitting files |
 | `npm run build-sheets` | Print the Sovereign AI sheets in `src/data/fa2/sovereign-ai/` to `public/sovereign-ai/*.pdf`, with a cover plate each (needs local Chrome, poppler and ImageMagick) |
 
-No ESLint or test runner is configured. Use `npx tsc --noEmit` to verify types before pushing.
+Run `npm test`, `npx tsc --noEmit`, and `npm run build` before submitting a PR. Node `node:test` is the standard test runner. Production installs use pnpm 10 with `pnpm install --frozen-lockfile`; keep `package-lock.json` synchronized for npm users.
 
 ## Project Structure
 
@@ -58,7 +58,7 @@ plrd-v2/
 
 ## Content Pipeline
 
-All content follows the same flow:
+Markdown-backed research content follows this flow; directly authored page/opportunity JSON follows the separate [content-source map](docs/content-migration.md):
 
 ```
 content/*.md  -->  build-content.mjs  -->  src/data/generated/*.json  -->  App Router pages
@@ -77,7 +77,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add and edit content.
 
 The Radar on `/insights/` uses repository content only: the newest talks, publications, and listed blog posts from `src/lib/content.ts`, plus one hand-picked field signal from `src/lib/radar-signals.ts`. It selects up to six items by recency, displays PL R&D content before the field signal, and labels the edition with the newest selected item's month. The existing collapsible/swipeable UI is unchanged.
 
-There is no external Radar feed fetch or Curator configuration. External story links in the local content remain links, not ingestion. The page's separate editable-copy CMS integration is unchanged.
+There is no external Radar feed fetch or Curator configuration. External story links in the local content remain links, not ingestion. Former CMS copy is repository-owned as part of the GitHub content migration; there is no website editor.
 
 Run `node --test scripts/radar-local.test.mjs` for the Radar regression tests; they also run with `npm test` or `pnpm test`.
 
@@ -110,23 +110,30 @@ The FA2 (Upgrade Economies & Governance) focus area has hand-curated JSON data i
 
 - **`projects.json`** -- 242 ecosystem teams/projects with metadata (name, logo, website, tier, tags, etc.)
 - **`impact.json`** -- Impact dashboard data with headline metrics and initiative details
-- **`opportunityspaces.json`** -- 4 opportunity spaces with descriptions, assumptions, tipping signals
+- **`opportunityspaces.json`** -- local image precedence, route generation, fallback fields, and legacy opportunity-space views. Active EG overview/detail prose is in `src/data/site-content/opportunities.json`, not this older fallback.
 - **`sovereign-ai/<slug>.json`** -- the Sovereign AI program's one-page sheets for governments and funders: every word, figure and source. The web edition renders the JSON; `npm run build-sheets` prints it to `public/sovereign-ai/<slug>.pdf` and a cover plate, both committed. See AGENTS.md §7
 
 These files are edited directly as JSON and consumed by hardcoded FA2 sub-pages under `/areas/economies-governance/`.
 
+## GitHub-only editing
+
+Website login, CMS editing, browser publishing, and local community deletion are retired. Use GitHub pull requests for Markdown/JSON content changes. Legacy editor links explain the workflow; old auth/write APIs return `410` with `Cache-Control: no-store`, and status is always anonymous. Public Hypercert, community, profile, DID, and metric reads remain.
+
+See [the exact legacy route and canonical-source map](docs/github-editing-retirement.md). This retirement must be integrated with the companion repository snapshot migration; it does not delete public records or source accounts.
+
 ## Environment Variables
+
+No cookie secret, OAuth/JWK, or ATProto app-password configuration is needed to build or run the website. Analytics and optional read-only metric configuration are separate.
+
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `COOKIE_SECRET` | Yes | 32+ character secret for encrypting session cookies |
-| `PUBLIC_URL` | No | Production URL (empty defaults to localhost) |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (empty disables analytics) |
 | `NEXT_PUBLIC_COOKIE_CONSENT` | No | `off` hides the analytics consent banner + footer link and loads analytics directly; anything else (default) shows the consent banner |
 
 ## Deployment
 
-Deployed to **Vercel** from the GitHub repo `daviddao/plrd-v2`. Pushes to `main` trigger auto-deployment.
+Deployed to **Vercel** from the GitHub repo `protocol/plrd.org`. Pushes to `main` trigger auto-deployment.
 
 The `vercel.json` config is minimal:
 
@@ -158,4 +165,4 @@ The `vercel.json` config is minimal:
 
 ## Future Directions
 
-Decentralized content publishing via ATProto (Bluesky) is being explored as a future alternative to the Markdown/git workflow for blog posts and other content.
+Website editing and publishing are GitHub-only. Public read-only ATProto integrations remain separate from content ownership; do not reintroduce OAuth or credential-based website publishing.

@@ -6,16 +6,14 @@
 // (org.simocracy.feed.post / org.impactindexer.review.comment) written
 // by ATProto users to their own PDSs are discovered client-side via
 // the Constellation backlink index (src/lib/hypercerts-live.ts).
-// Contributions happen on researchretreat.org — this page aggregates
-// the same records — but signed-in authors can retract their own
-// entries from here (server-side delete through their restored OAuth
-// session, see /api/hypercerts/delete-record).
+// Contributions and record management happen at their originating service.
+// This page only aggregates public records; it cannot authenticate or delete.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { useAuth } from "@/lib/atproto"
 import type { Hypercert } from "@/data/hypercerts"
 import {
   fetchLiveActivity,
+  publicSourceURL,
   type LiveActivity,
   type LiveAuthor,
 } from "@/lib/hypercerts-live"
@@ -27,7 +25,6 @@ const EMPTY: LiveActivity = { evidence: [], comments: [] }
 /** Network state for a cert via Constellation backlink discovery. */
 export function useLiveActivity(cert: Hypercert) {
   const [network, setNetwork] = useState<LiveActivity>(EMPTY)
-  const [removed, setRemoved] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const certRef = useRef(cert)
   certRef.current = cert
@@ -47,42 +44,16 @@ export function useLiveActivity(cert: Hypercert) {
     void refresh()
   }, [refresh])
 
-  /** Optimistically hide a just-deleted record (Constellation lags). */
-  const removeLocal = useCallback((uri: string) => {
-    setRemoved((s) => new Set(s).add(uri))
-  }, [])
-
-  const data = useMemo<LiveActivity>(
-    () => ({
-      evidence: network.evidence.filter((e) => !removed.has(e.uri)),
-      comments: network.comments.filter((c) => !removed.has(c.uri)),
-    }),
-    [network, removed],
-  )
-
-  return useMemo(
-    () => ({ data, loading, removeLocal }),
-    [data, loading, removeLocal],
-  )
-}
-
-/**
- * Delete one of the signed-in user's own community records through
- * the server (which holds their OAuth session). Throws on failure.
- */
-export async function deleteOwnRecord(uri: string): Promise<void> {
-  const res = await fetch("/api/hypercerts/delete-record", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ uri }),
-  })
-  if (!res.ok) {
-    const body = (await res.json().catch(() => null)) as { error?: string } | null
-    throw new Error(body?.error ?? "Delete failed")
-  }
+  return useMemo(() => ({ data: network, loading }), [network, loading])
 }
 
 // ── Shared bits ─────────────────────────────────────────────────────
+
+export function SourceRecordLink({ sourceURL }: { sourceURL?: string }) {
+  const url = publicSourceURL(sourceURL)
+  if (!url) return null
+  return <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue hover:underline">Manage at source ↗</a>
+}
 
 export function authorLabel(author: LiveAuthor): string {
   return (
@@ -220,24 +191,11 @@ export function CommentsSection({
   cert,
   activity,
   loading,
-  onDeleted,
 }: {
   cert: Hypercert
   activity: LiveActivity
   loading: boolean
-  onDeleted: (uri: string) => void
 }) {
-  const { session } = useAuth()
-
-  const remove = async (uri: string) => {
-    try {
-      await deleteOwnRecord(uri)
-      onDeleted(uri)
-    } catch {
-      // keep the comment visible if the delete failed
-    }
-  }
-
   return (
     <div>
       <div className="mb-6 flex items-baseline justify-between gap-3">
@@ -275,24 +233,18 @@ export function CommentsSection({
                   day: "numeric",
                 })}
               </span>
-              {session?.did === c.did && (
-                <button
-                  type="button"
-                  onClick={() => void remove(c.uri)}
-                  className="ml-auto cursor-pointer text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 transition hover:text-pink"
-                >
-                  Delete
-                </button>
-              )}
             </div>
             <p className="mt-2 whitespace-pre-wrap text-[14px] leading-relaxed text-gray-600">
               {c.text}
             </p>
+            <p className="mt-2 text-[12px]"><SourceRecordLink sourceURL={c.sourceURL} /></p>
           </article>
         ))}
       </div>
 
       <p className="mt-6 text-[13px] leading-relaxed text-gray-500">
+        This website is read-only. Manage existing comments and evidence at the service where you created them.
+        {" "}
         Want to join the conversation? Sign in with ATProto on{" "}
         <a
           href={`https://www.researchretreat.org/impact/#${cert.rkey}`}
