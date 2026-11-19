@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import EditPageButton from '@/components/EditPageButton'
 import { fetchPage, getSection } from '@/lib/indexer'
 import AuthorsTabs from './AuthorsTabs'
 import TeamOpenings from '@/components/TeamOpenings'
@@ -46,7 +45,6 @@ export default async function AuthorsPage() {
         advisorsBlurb={advisorsBlurb}
       />
       <TeamOpenings />
-      <EditPageButton rkey="authors" />
     </>
   )
 }

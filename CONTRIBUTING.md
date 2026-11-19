@@ -8,7 +8,7 @@ This guide explains how focus area leads and contributors can add and edit conte
 
 The About page is maintained through pull requests, not ATProto. Edit `src/data/about.json` for the hero, history, collaborations, future and quotes. Body values support Markdown; use `\n\n` for a paragraph break. The existing focus-area cards still use `src/lib/focus-area-descriptions.ts`, and author cards use the normal author content pipeline.
 
-Preview with `npm run dev` at `/about/`. Run `node --test scripts/about-page.test.mjs`, `npm test`, `npx tsc --noEmit` and `npm run build` before submitting a PR. Approved changes publish through the normal merge/deployment process. `/about/` no longer reads the historical About CMS record, and its website CMS editor/API is retired. The separate `/outreach/collaboration/` page still reads that record’s collaborations section directly from the indexer; this dependency is unchanged, so About PRs do not update that page. Keep the historical record intact; do not sync it as part of an About edit.
+Preview with `npm run dev` at `/about/`. Run `node --test scripts/about-page.test.mjs`, `npm test`, `npx tsc --noEmit` and `npm run build` before submitting a PR. Approved changes publish through the normal merge/deployment process. `/about/` no longer reads the historical About CMS record, and its website CMS editor/API is retired. The separate `/outreach/collaboration/` page uses its repository-owned migrated copy/legacy alias, not the new About JSON. See [GitHub editing retirement](docs/github-editing-retirement.md) and the companion content migration documentation for canonical sources. Keep historical source records intact; do not sync them as part of website edits.
 
 ## Focus Area Pages
 
@@ -532,3 +532,7 @@ The generated JSON is then imported by `src/lib/content.ts`, which exports typed
 ### Avatar Resolution
 
 Author avatars are resolved at build time by checking `public/images/authors/<slug>/` for any file starting with `avatar`. The first match is used. If no file is found, `avatarPath` is `null` and a placeholder is shown.
+
+## Website login and CMS retirement
+
+Website editing and publishing are GitHub-only. Former CMS copy is maintained in `src/data/site-content/pages.json`; migrated E&G opportunity fields are in `src/data/site-content/opportunities.json`. Existing article/profile Markdown and AI/DHR/Neuro detail JSON retain their source paths. See the [exact route/source map](docs/github-editing-retirement.md). Legacy `/admin/`, `/write/`, and `/edit/` routes explain PR editing without authentication, forms, or saves. Do not use old PDS writer commands: those scripts have been removed, while public read-only integrations and historical records remain intact.

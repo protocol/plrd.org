@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Link from 'next/link'
 import { areas, authors } from '@/lib/content'
 import { stripFaPrefix, slugToName } from '@/lib/format'
@@ -73,9 +71,6 @@ export default async function AreasPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Focus Areas' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="areas" />
-      </div>
       {/* Hero */}
       <div className="relative pt-8 pb-12 mb-12 overflow-hidden">
         <AreasGeo />
@@ -170,7 +165,6 @@ export default async function AreasPage() {
           )
         })}
       </div>
-      <EditPageButton rkey="areas" />
     </div>
   )
 }

@@ -12,12 +12,12 @@ For content authoring (adding a paper, author, talk, blog post) read
 
 - **Canonical repo:** `github.com/protocol/plrd.org`. The project moved here from `daviddao/plrd.org` (earlier `plresearch.org`). All work — branches, PRs, pushes — targets `protocol/plrd.org`.
 
-- **Stack:** Next.js 15 App Router + React 19 + Tailwind **v4 CSS-first** + TypeScript. No ESLint, no test runner. Verify with `npx tsc --noEmit` and `npm run build`.
+- **Stack:** Next.js 15 App Router + React 19 + Tailwind **v4 CSS-first** + TypeScript. Node `node:test` suite via `npm test`. Verify with `npm test`, `npx tsc --noEmit`, and `npm run build`.
 - **Content pipeline:** Markdown in `content/` → `scripts/build-content.mjs` (prebuild) → JSON in `src/data/generated/` → typed arrays in `src/lib/content.ts` → pages. JSON is **checked into git**.
 - **Trailing slashes are mandatory** on every internal `href`. `skipTrailingSlashRedirect: true` means missing slashes 404 silently.
 - **Path alias:** `@/*` → `./src/*`. Never use relative imports across `src/`.
 - **Dynamic route params are Promises** in Next 15: `const { slug } = await params`.
-- **Editable pages** are stored as ATProto records on `plresearch.org`'s PDS and read through a GraphQL indexer. Static markdown + ATProto + hand-curated JSON coexist.
+- **GitHub-only editing:** website login, CMS, browser publishing, deletion, and credential-based maintenance writers are retired. Repository Markdown/JSON own website content; preserve public read-only ATProto/Hypercert/profile/DID/metric integrations. See [route migration](docs/github-editing-retirement.md).
 - **FA2** (`/areas/economies-governance/`) is hardcoded and special-cased. Don't try to unify it with the generic `areas/[slug]/` template.
 
 ---
@@ -29,11 +29,9 @@ For content authoring (adding a paper, author, talk, blog post) read
 | `npm run dev` | Runs `build-content.mjs`, then `next dev`. |
 | `npm run build` | Runs `build-content.mjs`, then `next build`. |
 | `npm start` | Production server. |
-| `npx tsc --noEmit` | **The only lint/test available.** Run before committing. |
+| `npm test` | Standard Node tests, including auth retirement and `scripts/site-content-*.test.mjs`. |
+| `npx tsc --noEmit` | Type-check before committing. |
 | `node scripts/build-content.mjs` | Regenerate `src/data/generated/*.json` without starting Next. |
-| `node scripts/generate-jwk.js` | Emit a new ES256 JWK for `ATPROTO_JWK_PRIVATE`. |
-| `node scripts/create-publication.mjs` | One-shot: create the `site.standard.publication` record and print its AT-URI for `NEXT_PUBLIC_PUBLICATION_URI`. |
-| `node scripts/sync-pages.mjs [--dry-run]` | Patch specific section fields of live `org.plresearch.page` records from `data/atproto/pages/*.json`. **Read §6 before editing page copy.** |
 
 The dev server does **not** watch `content/` — edits to markdown require restarting `npm run dev`.
 After branch switches or content-script changes, `rm -rf .next` if pages show stale data.
@@ -46,15 +44,12 @@ After branch switches or content-script changes, `rm -rf .next` if pages show st
 content/                        Markdown sources (publications, authors, talks, blog, areas, tutorials, outreach, sections)
 scripts/
   build-content.mjs             Prebuild: Markdown → JSON + RSS + search index
-  generate-jwk.js               ATProto confidential-client JWK generator
-  create-publication.mjs        Creates the site.standard.publication record
-  sync-pages.mjs                Surgically patches live PDS page records from data/atproto/pages/*.json (see §6)
 src/
   app/                          Next.js App Router (see §4)
-    api/                        Route handlers (ATProto OAuth, page CRUD, posts)
+    api/                        Public readers + 410 tombstones for legacy write/auth routes
     .well-known/                AT-URI discovery
     areas/economies-governance/ HARDCODED FA2 tree (see §7)
-    admin/ edit/ write/         Client-only admin UI (requires ATProto auth)
+    admin/ edit/ write/         Read-only GitHub contribution guidance (no login or editors)
   components/                   UI primitives (see §5)
   data/
     generated/                  ⚠ auto-generated JSON, checked into git
@@ -63,15 +58,9 @@ src/
     content.ts                  Typed re-exports of generated JSON
     site-config.ts              Nav + site metadata
     format.ts                   formatDate, stripFaPrefix, slugToName
-    env.ts                      envalid-validated env (COOKIE_SECRET, ATPROTO_*, PUBLIC_URL)
-    lexicons.ts                 ATProto collection IDs + ADMIN_DIDS whitelist
-    tid.ts                      ATProto record-key generator (TID.nextStr())
-    indexer.ts                  GraphQL client for the Railway-hosted indexer
-    agent.ts                    Server-side OAuth agent restoration
-    atproto.tsx                 Client AuthProvider + useAuth (isAdmin)
+    lexicons.ts                 Public ATProto collection IDs, record types, and read identity
+    indexer.ts                  Content-read compatibility contract; companion migration uses repo snapshots
     atproto-client.ts           Unauthenticated Bluesky helpers
-    session.ts                  iron-session cookie config
-    auth/                       NodeOAuthClient singleton, state/session stores, JWKS
 public/
   icons/<name>.svg              Raw SVGs, referenced as /icons/<name>.svg
   images/authors/<slug>/        Author avatars (avatar.*, first match wins)
@@ -146,7 +135,7 @@ export default async function Page({ params }: Props) {
 
 - Dynamic segments are statically rendered only for items returned by `generateStaticParams`. Adding a record requires content files — you can't hand-edit `src/lib/content.ts`, it's regenerated.
 - Use `notFound()` inside the default export; return `{ title: 'Not Found' }` from `generateMetadata` (don't throw).
-- Some pages also fetch editable CMS content via `fetchPage(rkey)` from `@/lib/indexer` and fall back to hardcoded defaults when the indexer is unreachable. See `src/app/page.tsx`, `areas/[slug]/page.tsx`.
+- Former CMS consumers retain the `fetchPage`/opportunity read contracts; the companion migration backs these with `src/data/site-content/` snapshots. Do not reconnect live CMS overrides or replace approved copy with older fallback seeds.
 
 ### Routing rules
 
@@ -161,7 +150,7 @@ export default async function Page({ params }: Props) {
 
 - `src/app/api/*/route.ts` — all marked `export const dynamic = "force-dynamic"`.
 - `src/app/.well-known/site.standard.publication/route.ts` — AT-URI discovery (requires `NEXT_PUBLIC_PUBLICATION_URI`).
-- `/admin`, `/edit`, `/write`, `/about/edit`, `/areas/[slug]/edit`, `/areas/economies-governance/edit` — client components requiring ATProto auth. Not statically exportable.
+- `/admin`, `/edit`, `/write`, and all former editor routes show GitHub PR guidance, with noindex metadata and canonical repository source links. They do not authenticate, load CMS records, or save.
 
 ### Adding a new page — checklist
 
@@ -171,7 +160,7 @@ export default async function Page({ params }: Props) {
 4. Add a `<Breadcrumb items={...}/>` above the page body.
 5. Wire nav via `src/lib/site-config.ts` (`mainNav` / `footerNav`) — pages are not auto-indexed.
 6. If it should be searchable, append it to `buildSearchIndex` in `scripts/build-content.mjs`.
-7. If CMS-editable, add an `rkey` to `EDIT_ROUTES` in `src/components/EditPageButton.tsx`, render `<EditPageButton rkey=".../>`, and add a matching `/edit` route using `useRequireAdmin` + `usePageEdit(rkey)`.
+7. Keep content repository-owned. Do not add a CMS editor, site login, or runtime write endpoint; update the relevant Markdown/JSON and its tests through a PR.
 8. Link it as `/your-route/` (trailing slash).
 
 ---
@@ -196,10 +185,6 @@ Nav structure: `src/lib/site-config.ts` (`mainNav`, `footerNav`, `siteConfig`). 
 | `AreaIcons` | Animated inline SVGs for focus areas (`shield`/`hexagon`/`neural`/`brain`) |
 | `GeoIllustration` | Seeded deterministic animated SVG placeholder |
 | `FundingPipeline` | Interactive 4-stage grant pipeline card (FA2) |
-| `EditPageButton` | Floating "Edit page" FAB, admin-only |
-| `InlineEdit` | Exports `useRequireAdmin`, `usePageEdit`, `EditableField`, `EditBar`, `EditBarSpacer` |
-| `MarkdownEditor` | Simple textarea + homemade-regex preview |
-| `PageEditor` | Full list→section editor backing `/admin` |
 
 Server components in this layer: `SiteFooter`, `AuthorCard`, `Breadcrumb`, `AreaIcons`, `GeoIllustration`. Everything else is `'use client'`.
 
@@ -226,116 +211,35 @@ Server components in this layer: `SiteFooter`, `AuthorCard`, `Breadcrumb`, `Area
 
 ---
 
-## 6. ATProto, auth, and the editable CMS layer
+## 6. GitHub-only editing and public read integrations
 
-Editable pages (landing, focus areas, etc.) are stored as **ATProto records on plresearch.org's PDS**, served through a Railway-hosted GraphQL indexer, and rendered server-side with static fallbacks.
+Website content is reviewed in GitHub pull requests, then merged and deployed.
+The companion content migration supplies `src/data/site-content/pages.json` and
+`opportunities.json` behind the existing `src/lib/indexer.ts` read contracts.
+About remains `src/data/about.json`; research articles and profiles remain
+Markdown; AI/DHR/Neuro opportunities retain their existing authoritative JSON.
+See [the exact route/source migration](docs/github-editing-retirement.md).
 
-**About is the explicit exception:** `/about/` reads `src/data/about.json` through `src/lib/about.ts`. Edit that JSON through a PR; do not sync the historical `about` PDS record. Its old editor explains the PR workflow, and `/api/pages/about/` returns 410 for reads/writes. The four-layer CMS rules below apply only to pages that still use the CMS.
+There is no runtime OAuth client, JWK, session encryption, admin DID allowlist,
+authenticated agent, edit audit writer, website CMS, or local community deletion.
+Legacy APIs return noncacheable 410 JSON; `/api/status/` is always anonymous.
+Retired credentials are neither read nor needed. Do not restore the old writer
+scripts or mutate preserved external accounts/records as a website edit.
 
-### Client modes
+Keep `@atproto/api`: `/api/users/[handle]/` uses the public profile reader.
+Hypercert claims, Constellation community records, public DID/PDS/profile reads,
+GainForest blob URLs, and the separate Simocracy/GainForest/FtC/other impact
+metric clients remain read-only integrations. Their source services are not
+retired by removal of website authentication. GraphQL POST queries used by
+public readers are not repository mutations.
 
-`src/lib/auth/client.ts` flips between two modes based on env:
+Community entries can link to their record's explicit safe HTTPS `sourceURL`
+for management. If absent, explain that records are managed where created;
+never fabricate a source-service editor URL or offer local deletion.
 
-| Mode | Trigger | Use case |
-|---|---|---|
-| Confidential client | `PUBLIC_URL` **and** `ATPROTO_JWK_PRIVATE` set | Production. `private_key_jwt` (ES256) + JWKS endpoint. |
-| Public client | Either missing | Local dev. `client_id` uses `127.0.0.1`, no client auth. |
-
-OAuth callback **must use `127.0.0.1`**, not `localhost`, per RFC 8252.
-
-### Auth flow
-
-1. `POST /api/login` with handle → `client.authorize()` returns a PDS redirect.
-2. PDS redirects to `GET /api/oauth/callback` → fetches profile via public Bluesky API → stores `{did, handle, displayName, avatar}` in an iron-session cookie (`plrd_session`, 30d).
-3. `GET /api/status` hydrates `AuthProvider` on mount.
-4. `POST /api/logout` clears the cookie.
-
-Admin gating is enforced in **two** places — both must pass:
-- Client: `useAuth().isAdmin` checks `ADMIN_DIDS` (from `NEXT_PUBLIC_ADMIN_DIDS`, comma-separated, else the built-in list in `src/lib/lexicons.ts`).
-- Server: `PUT /api/pages/[rkey]` re-checks `ADMIN_DIDS.includes(session.did)`.
-
-### The write-as-plresearch trick
-
-Page records always live in **plresearch.org's repo**, but an authorized editor might be a different DID. `PUT /api/pages/[rkey]` calls `getPlresearchAgent()` which logs in as plresearch.org via **app password** (`ATPROTO_HANDLE` + `ATPROTO_PASSWORD`) and performs the `putRecord`. Missing either env var → page edits throw 500.
-
-### Lexicons (`src/lib/lexicons.ts`)
-
-| Collection | Purpose |
-|---|---|
-| `org.plresearch.page` | Section-based page content. Fields: `pageId`, `iconType`, `leads[]`, `advisors[]`, `sections[]`, `updatedAt`. Known `rkey`s: `landing`, `about`, `areas`, `collaborate`, `area-ai-robotics`, `area-digital-human-rights`, `area-neurotech`, `area-economies-governance`, `area-eg-subareas`, `area-eg-impact`, `insights`, `publications`, `talks`, `tutorials`, `blog`, `authors`. |
-| `org.plresearch.opportunitySpace` | Opportunity-space records for generic areas. |
-| `org.plresearch.post` | Legacy author posts. |
-| `site.standard.document` / `site.standard.publication` | standard.site long-form content; body embedded under `org.plresearch.markdownContent`. |
-
-`src/lib/tid.ts` uses `@atproto/common-web`'s `TID.nextStr()` for sortable timestamp-based record keys.
-
-### Indexer (`src/lib/indexer.ts`)
-
-Talks to `INDEXER_URL` / `NEXT_PUBLIC_INDEXER_URL`, default `https://plresearch-indexer-production.up.railway.app/graphql`. Exports `fetchPage`, `fetchAllPages`, `fetchOpportunitySpaces`, `fetchOpportunitySpace`, `fetchAtproPosts`, and helpers `getSection` / `getSectionsWithPrefix`.
-
-- Queries use `uri` (AT-URI), not `rkey` — parse `rkey` out of the URI when needed.
-- Fetches tag `indexer`, revalidate 60s.
-- `PUT /api/pages/[rkey]` calls `revalidateTag("indexer")` to invalidate reads after writes.
-- **Lexicon changes require redeploying the indexer** — writes succeed but new fields won't appear in reads until then.
-
-### Updating page text — the four-layer model (read this before changing any page copy)
-
-Editable pages have copy spread across **four layers**. Confusing them is the single most common mistake — see PR #4 (`Sync focus area descriptions`) for the canonical worked example, where four of the four layers were updated *except* the live one and the change was invisible on every page.
-
-| # | Layer | Purpose | Visible on live site? |
-|---|---|---|---|
-| 1 | `src/lib/focus-area-descriptions.ts` (TS constant) | Hardcoded canonical strings. | Only as fallback when the indexer record is empty. |
-| 2 | `content/areas/<slug>/_index.md` frontmatter + `src/data/generated/*.json` + `public/search-index.json` | Markdown source + build outputs from `build-content.mjs`. | As fallback (`area.summary`) when both indexer + canonical are empty; also drives RSS + search. |
-| 3 | `data/atproto/pages/*.json` seed files | Static disk fixtures meant as the canonical *source* for layer 4. | **Never directly.** They are not auto-synced anywhere — purely a documentation + bootstrap source. |
-| 4 | Live `org.plresearch.page` records on **plresearch.org's PDS** (read via Railway indexer) | What every editable page actually renders. | **Yes — this is the only one users see for non-empty records.** |
-
-The correct fallback order in render code is **always** `indexer → canonical → frontmatter`:
-
-```ts
-// ✓ correct — admin edits via /admin/.../edit/ take effect
-const summary = heroSection?.subtitle
-             || FOCUS_AREA_DESCRIPTIONS[slug]
-             || area.summary
-
-// ✗ WRONG — canonical short-circuits everything, indexer is dead code
-const summary = FOCUS_AREA_DESCRIPTIONS[slug]
-             || heroSection?.subtitle
-             || area.summary
-```
-
-**To actually change what a page displays**, pick one of three mechanisms:
-
-1. **Through the admin UI (recommended for one-off edits).** Sign in at `/admin`, navigate to the page's edit route (e.g. `/areas/digital-human-rights/edit/`), update the field, save. The handler `PUT /api/pages/[rkey]` writes to the PDS, calls `revalidateTag("indexer")`, and the change is live within ~60s. Requires admin auth + `ADMIN_DIDS` membership + server-side `ATPROTO_HANDLE`/`ATPROTO_PASSWORD`.
-
-2. **Edit a seed JSON + run the sync script (recommended for bulk / scriptable changes).** This is the path PR #4 *should* have taken:
-   1. Edit the relevant `data/atproto/pages/<rkey>.json`.
-   2. If you want the same string to appear as the empty-indexer fallback too, also update `src/lib/focus-area-descriptions.ts` and the matching `content/areas/<slug>/_index.md` (then `node scripts/build-content.mjs` to regen the build outputs).
-   3. Add the `(rkey, sectionId, field)` tuples you changed to the `MANIFEST` array at the top of `scripts/sync-pages.mjs`.
-   4. `node scripts/sync-pages.mjs --dry-run` to preview the diff against the live PDS.
-   5. `node scripts/sync-pages.mjs` to apply.
-
-   The script is **field-scoped**, not whole-record-replace: it reads the live record, patches only the fields you named, leaves everything else (advisors, body copy, icons) untouched. So out-of-band live edits are never clobbered. It bumps `updatedAt` and is idempotent (`skip` when already in sync).
-
-3. **Direct PDS write via `@atproto/api`.** Last resort, e.g. for new lexicons. Mirror the `getPlresearchAgent()` pattern: log in via `ATPROTO_HANDLE`/`ATPROTO_PASSWORD`, call `agent.com.atproto.repo.putRecord({ repo: did, collection: "org.plresearch.page", rkey, record })`. Don't forget to fetch the existing record first if you only want to patch a field — a bare `putRecord` replaces the whole record.
-
-**Never** assume editing layer 1, 2, or 3 alone changes the live site. They are dormant until layer 4 catches up. The `sync-pages.mjs` manifest is the explicit bridge from layer 3 → layer 4 and the only documented mechanism for batch updates.
-
-### API routes
-
-| Method + Path | Purpose | Auth |
-|---|---|---|
-| `POST /api/login` | OAuth authorize | none |
-| `GET /api/oauth/callback` | OAuth callback → session | OAuth code |
-| `POST /api/logout` | Clear session | none |
-| `GET /api/status` | Return session (or `{}`) | none |
-| `GET /api/oauth/client-metadata.json` | OAuth client metadata | none |
-| `GET /api/oauth/jwks.json` | JWKS (empty `{keys:[]}` in public mode) | none |
-| `GET /api/users/[handle]` | Resolve handle → profile | none |
-| `GET /api/pages` | List all `org.plresearch.page` records | none |
-| `GET /api/pages/[rkey]` | Fetch one page | none |
-| `PUT /api/pages/[rkey]` | Update a page record | session + `ADMIN_DIDS` |
-| `POST /api/posts` | Create `site.standard.document` on user's PDS | OAuth session |
-| `GET /.well-known/site.standard.publication` | Publication AT-URI | requires `NEXT_PUBLIC_PUBLICATION_URI` |
+Historical `data/atproto/` snapshots stay immutable reference material, not a
+supported publishing or synchronization input. No source account, published
+record, discovery identity, or unrelated integration is deleted.
 
 ---
 
@@ -370,28 +274,21 @@ The sheets lived under `/briefs/` until 22 October 2026 and under `/programs/` f
 
 The *other* areas (`ai-robotics`, `digital-human-rights`, `neurotech`) each have their own `opportunity-spaces/` + `[slug]` pair powered by `src/data/fa2/{ai,dhr,neuro}-opportunityspaces.json` (yes, named under `fa2/` for historical reasons).
 
-Edits to the JSON files require a redeploy; edits via `/admin` go through ATProto → indexer and invalidate via `revalidateTag("indexer")`.
+Edits to authoritative JSON/Markdown are reviewed in GitHub and require merge/deployment. Former CMS-backed E&G opportunity fields use `src/data/site-content/opportunities.json`, not older FA2 fallback fields.
 
 ---
 
 ## 8. Environment variables
 
-| Var | Required | Default | Consumer / what breaks if missing |
-|---|---|---|---|
-| `COOKIE_SECRET` | prod | dev fallback (`'development-secret-at-least-32-chars!!'`) | `src/lib/session.ts`; must be ≥32 chars (envalid enforced) |
-| `PUBLIC_URL` | prod | empty → `http://127.0.0.1:$PORT` | OAuth client ID; empty disables confidential-client mode |
-| `ATPROTO_JWK_PRIVATE` | prod | empty | Confidential OAuth client. Missing → public-client fallback. Generate with `node scripts/generate-jwk.js`. |
-| `ATPROTO_HANDLE` | for page edits | empty | `PUT /api/pages/[rkey]` throws — no page writes without it |
-| `ATPROTO_PASSWORD` | for page edits | empty | Same as above (Bluesky app password for plresearch.org) |
-| `NEXT_PUBLIC_ADMIN_DID` | no | `did:plc:pgwr6hkosgznfl5nz7egajei` | The repo page records are written *to*. |
-| `NEXT_PUBLIC_ADMIN_DIDS` | no | built-in 3-DID list in `lexicons.ts` | Admin allowlist — missing DIDs can't see or use admin UI, and are blocked server-side. |
-| `NEXT_PUBLIC_PUBLICATION_URI` | no | unset | `/.well-known/site.standard.publication` 404s; `/api/posts` falls back to `https://www.plresearch.org` |
-| `INDEXER_URL` / `NEXT_PUBLIC_INDEXER_URL` | no | `https://plresearch-indexer-production.up.railway.app/graphql` | `fetchPage` et al. return null; pages fall back to hardcoded copy |
-| `PORT` | no | 3000 | Affects localhost OAuth `client_id` |
+No website login, session, app-password, or JWK configuration is needed for a
+build or runtime. Remove retired auth values from deployment configuration
+through the normal authorized secret-management process; this code does not
+read them. See `.env.example` for retained public analytics/optional metrics.
 
-Only `COOKIE_SECRET`, `PUBLIC_URL`, `ATPROTO_JWK_PRIVATE`, `ATPROTO_HANDLE`, `ATPROTO_PASSWORD` flow through `envalid` in `src/lib/env.ts`. Everything else is read straight from `process.env`.
-
-> ⚠ `.env.example` is stale — it omits `ATPROTO_HANDLE`, `ATPROTO_PASSWORD`, `NEXT_PUBLIC_ADMIN_DIDS`, `NEXT_PUBLIC_PUBLICATION_URI`, and its `INDEXER_URL` hint points at the old `api.hi.gainforest.app` URL. If you touch env handling, refresh `.env.example` in the same PR.
+`NEXT_PUBLIC_PUBLICATION_URI` currently remains an optional read-only discovery
+value for `/.well-known/site.standard.publication`; the companion content lane
+supplies the recorded publication URI for parent integration. Do not create a
+new publication/account or reintroduce a credential-based bootstrap script.
 
 ---
 
@@ -419,20 +316,16 @@ Only `COOKIE_SECRET`, `PUBLIC_URL`, `ATPROTO_JWK_PRIVATE`, `ATPROTO_HANDLE`, `AT
 - This is Tailwind v4. No `tailwind.config.js`. Tokens live in `@theme` inside `globals.css`.
 - Custom `text-xl`/`text-lg` override defaults; use `text-sm`/`text-base` for body copy.
 - `text-blue` / `bg-blue` resolve to the brand `--color-blue`, **not** Tailwind's default blue.
-- Components using hooks, `usePathname`, or `useAuth` need `'use client'` at the top.
+- Components using hooks or `usePathname` need `'use client'` at the top.
 - Raw `<img>` throughout; `next/image` optimization is off project-wide.
 - Icon typos fail silently — confirm the file exists in `public/icons/`.
 - Adding a fullscreen route? Append a regex to `FULLSCREEN_PATTERNS` in `SiteShell.tsx`.
 
-**Auth / ATProto**
-- Dev without `ATPROTO_JWK_PRIVATE` drops to public-client mode; `client-metadata.json` + `jwks.json` change shape.
-- Callback URL must be `127.0.0.1`, not `localhost`.
-- Page writes need both the logged-in admin's OAuth session **and** server-side `ATPROTO_HANDLE`/`ATPROTO_PASSWORD` to impersonate plresearch.org.
-- Lexicon field changes only show up in reads after the Railway indexer is redeployed.
-- `/admin`, `/edit`, `/write`, all inline editors are **client-only** — don't convert them to SSG.
-- OAuth session lives in both an in-memory Map **and** the cookie (serverless cold-start safety). Don't remove the cookie sync when refactoring `auth/client.ts`.
-- **Editing `data/atproto/pages/*.json` does NOT update the live site.** Those are seed fixtures, not a sync source. Run `node scripts/sync-pages.mjs` after editing — read §6 "Updating page text — the four-layer model". This is how PR #4 silently shipped invisible changes.
-- **Hardcoded canonical strings must come second in fallback chains** (`indexer || canonical || frontmatter`). Putting them first short-circuits the indexer and breaks every `/admin` edit on that field. PR #4 broke `/areas/[slug]/page.tsx` exactly this way; fixed in `fd4730e`.
+**Retired CMS / public ATProto**
+- Website editing happens only in GitHub. Never advise `/admin` login or a PDS sync command.
+- Source records and historical data remain intact; retirement is not deletion authorization.
+- Retain public profile/DID/Hypercert/community/metric readers when changing shared imports.
+- `@atproto/common-web` and `@atproto/syntax` remain transitive public-reader dependencies; they are not direct OAuth/runtime-write requirements.
 
 ---
 
@@ -442,6 +335,8 @@ The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`
 
 ---
 
-## 11. Future direction
+## 11. Content ownership
 
-Decentralized publishing via ATProto is already partially in place for CMS-editable pages. The longer-term plan is to move blog posts (and eventually more content) onto ATProto records rather than the markdown/git workflow. New editable content should prefer the `org.plresearch.page` / `site.standard.document` lexicons over adding new markdown collections.
+GitHub is the editing/publishing workflow for this website. External public
+ATProto data is read-only context, not a website CMS. Do not add login, author
+publishing, credential-based maintenance writers, or shared-source mutations.

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Newsreader } from 'next/font/google'
 import { siteConfig } from '@/lib/site-config'
-import { AuthProvider } from '@/lib/atproto'
 import SiteShell from '@/components/SiteShell'
 import GoatCounter from '@/components/GoatCounter'
 import CookieConsent from '@/components/CookieConsent'
@@ -112,9 +111,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
-        <AuthProvider>
           <SiteShell>{children}</SiteShell>
-        </AuthProvider>
         <GoatCounter />
         {process.env.NEXT_PUBLIC_GA_ID &&
           (COOKIE_CONSENT_ENABLED ? (

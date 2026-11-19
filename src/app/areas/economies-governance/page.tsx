@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import AuthorCard from '@/components/AuthorCard'
 import Breadcrumb from '@/components/Breadcrumb'
 import AreaHeroGraphic from '@/components/AreaHeroGraphic'
@@ -84,9 +82,6 @@ export default async function FA2MainPage() {
   return (
     <div className="area-overview pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Focus Areas', href: '/areas/' }, { label: 'Economies & Governance' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="area-economies-governance" />
-      </div>
       {/* Hero */}
       <div className="relative pt-8 pb-12 mb-12 overflow-hidden">
         {/* Hero render with hover hexagon-pixelation lens */}
@@ -394,7 +389,6 @@ export default async function FA2MainPage() {
           </svg>
         </a>
       </div>
-      <EditPageButton rkey="area-economies-governance" />
     </div>
   )
 }

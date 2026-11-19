@@ -32,6 +32,7 @@ export type LiveAuthor = {
 export type LiveComment = {
   uri: string;
   did: string;
+  sourceURL?: string;
   text: string;
   createdAt: string;
   author: LiveAuthor;
@@ -40,6 +41,7 @@ export type LiveComment = {
 export type LiveEvidence = {
   uri: string;
   did: string;
+  sourceURL?: string;
   title: string;
   kind: string;
   description: string;
@@ -162,6 +164,17 @@ async function getProfiles(dids: string[]): Promise<Map<string, LiveAuthor>> {
 
 // ── Record parsing ──────────────────────────────────────────────────
 
+/** Only expose an explicit current record URL, never an inferred editor URL. */
+export function publicSourceURL(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && !url.username && !url.password ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function parseDescription(value: unknown): string {
   if (!value || typeof value !== "object") return "";
   const v = value as Record<string, unknown>;
@@ -200,6 +213,7 @@ function parseEvidence(
     kind: typeof value.contentType === "string" ? value.contentType : "evidence",
     description: parseDescription(value.description),
     links,
+    sourceURL: publicSourceURL(value.sourceURL),
     createdAt,
   };
 }
@@ -223,6 +237,7 @@ function parseComment(
     uri: `at://${ref.did}/${ref.collection}/${ref.rkey}`,
     did: ref.did,
     text,
+    sourceURL: publicSourceURL(value.sourceURL),
     createdAt,
   };
 }

@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Breadcrumb from '@/components/Breadcrumb'
 import MarkdownContent from '@/components/MarkdownContent'
 import { fetchPage, getSection } from '@/lib/indexer'
@@ -25,9 +23,6 @@ export default async function ImpactOverviewPage() {
         { label: 'Economies & Governance', href: '/areas/economies-governance/' },
         { label: 'Impact' }
       ]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="area-eg-impact" />
-      </div>
 
       {/* Hero */}
       <div className="pt-8 pb-12 mb-12">
@@ -111,7 +106,6 @@ export default async function ImpactOverviewPage() {
           </svg>
         </Link>
       </div>
-      <EditPageButton rkey="area-eg-impact" />
     </div>
   )
 }

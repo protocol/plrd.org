@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { sections, publications, talks, listedBlogPosts as blogPosts, areas, focusAreaDefs } from '@/lib/content'
 import Breadcrumb from '@/components/Breadcrumb'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import MarkdownContent from '@/components/MarkdownContent'
 import InsightsExplorer, { type InsightSection, type AreaDef } from '@/components/InsightsExplorer'
 import PLRadar, { type RadarItem } from '@/components/PLRadar'
@@ -189,9 +187,6 @@ export default async function InsightsPage({
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Insights' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="insights" />
-      </div>
 
       {radarPool.length > 0 && (
         <div className="mt-6">
@@ -215,8 +210,6 @@ export default async function InsightsPage({
       )}
 
       <InsightsExplorer sections={insightSections} areas={areaDefs} initialArea={initialArea} />
-
-      <EditPageButton rkey="insights" />
     </div>
   )
 }

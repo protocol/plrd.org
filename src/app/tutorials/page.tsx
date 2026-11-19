@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { tutorials } from '@/lib/content'
 import Breadcrumb from '@/components/Breadcrumb'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import MarkdownContent from '@/components/MarkdownContent'
 import { ContentTile, ContentTileGrid } from '@/components/ContentTile'
 import { fetchPage, getSection } from '@/lib/indexer'
@@ -22,9 +20,6 @@ export default async function TutorialsPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Research', href: '/research/' }, { label: 'Tutorials' }]} />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="tutorials" />
-      </div>
       {/* Hero */}
       <div className="relative pt-6 pb-10 mb-10 overflow-hidden">
         <PageGeo />
@@ -46,7 +41,6 @@ export default async function TutorialsPage() {
           />
         ))}
       </ContentTileGrid>
-      <EditPageButton rkey="tutorials" />
     </div>
   )
 }

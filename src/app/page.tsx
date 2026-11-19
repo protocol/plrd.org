@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import { publications, talks, listedBlogPosts as blogPosts } from '@/lib/content'
 import MarkdownContent from '@/components/MarkdownContent'
 import { fetchPage, getSection } from "@/lib/indexer"
@@ -119,7 +117,6 @@ export default async function HomePage() {
     <>
     <div className="max-w-6xl mx-auto px-6">
       <div className="pt-6 empty:hidden">
-        <PageEditHistoryByline rkey="landing" />
       </div>
 
       {/* ── Hero ── */}
@@ -292,7 +289,6 @@ export default async function HomePage() {
           <span>→</span>
         </Link>
       </div>
-      <EditPageButton rkey="landing" />
     </div>
     </>
   )

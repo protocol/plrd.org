@@ -1,17 +1,11 @@
-'use client'
+import type { Metadata } from 'next'
+import GitHubEditingNotice from '@/components/GitHubEditingNotice'
 
-import { use } from 'react'
-import OpportunitySpaceEditor from '@/components/OpportunitySpaceEditor'
+export const metadata: Metadata = {
+  title: 'Edit through GitHub',
+  robots: { index: false, follow: false },
+}
 
-type Props = { params: Promise<{ slug: string }> }
-
-export default function EditOpportunitySpacePage({ params }: Props) {
-  const { slug } = use(params)
-  return (
-    <OpportunitySpaceEditor
-      areaSlug="digital-human-rights"
-      areaLabel="Digital Human Rights"
-      slug={slug}
-    />
-  )
+export default function RetiredEditorPage() {
+  return <GitHubEditingNotice sources={['src/data/fa2/dhr-opportunityspaces.json']} publicPath="/areas/digital-human-rights/" />
 }

@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import EditPageButton from '@/components/EditPageButton'
-import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import Breadcrumb from '@/components/Breadcrumb'
 import MarkdownContent from '@/components/MarkdownContent'
 import { fetchPage, getSection } from '@/lib/indexer'
@@ -92,9 +90,6 @@ export default async function SubareasPage() {
           { label: 'Subareas' },
         ]}
       />
-      <div className="mt-4 empty:hidden">
-        <PageEditHistoryByline rkey="area-eg-subareas" />
-      </div>
 
       {/* Header */}
       <div className="mb-12">
@@ -121,7 +116,6 @@ export default async function SubareasPage() {
       <p className="text-sm text-gray-400 leading-relaxed italic mt-10 max-w-xl">
         More subareas may emerge as the field grows. These subfields overlap and create new opportunity spaces at their convergence points.
       </p>
-      <EditPageButton rkey="area-eg-subareas" />
     </div>
   )
 }
