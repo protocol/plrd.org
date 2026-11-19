@@ -10,7 +10,6 @@ advisors:
   - doris-tsao
   - edward-chang
   - greg-wayne
-  - ilan-gur
   - matthew-botvinick
   - max-hodak
 ---

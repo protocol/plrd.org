@@ -23,6 +23,7 @@ export const mainNav: NavItem[] = [
     url: '#',
     children: [
       { name: 'About us', url: '/about/' },
+      { name: 'Methodology', url: '/methodology/' },
       { name: 'Protocol Labs', url: 'https://protocol.ai' },
     ],
   },
@@ -37,11 +38,11 @@ export const mainNav: NavItem[] = [
     ],
   },
   { name: 'Insights', url: '/insights/' },
-  { name: 'Team', url: '/authors/' },
+  { name: 'Team', url: '/team/' },
 ]
 
 export const footerNav: NavItem[] = [
   { name: 'About', url: '/about/' },
-  { name: 'Team', url: '/authors/' },
+  { name: 'Team', url: '/team/' },
   { name: 'Insights', url: '/insights/' },
 ]

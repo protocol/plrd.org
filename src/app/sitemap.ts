@@ -8,6 +8,7 @@ import {
   blogPosts,
   areas,
 } from '@/lib/content'
+import { sheetHref, sheets } from '@/lib/sovereign-ai'
 
 const BASE = siteConfig.baseUrl
 
@@ -28,9 +29,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: url(''), changeFrequency: 'weekly', priority: 1 },
     { url: url('about'), changeFrequency: 'monthly', priority: 0.7 },
+    { url: url('methodology'), changeFrequency: 'monthly', priority: 0.7 },
     { url: url('areas'), changeFrequency: 'monthly', priority: 0.8 },
     { url: url('insights'), changeFrequency: 'weekly', priority: 0.8 },
-    { url: url('authors'), changeFrequency: 'weekly', priority: 0.7 },
+    { url: url('team'), changeFrequency: 'weekly', priority: 0.7 },
     { url: url('publications'), changeFrequency: 'weekly', priority: 0.8 },
     { url: url('talks'), changeFrequency: 'weekly', priority: 0.7 },
     { url: url('tutorials'), changeFrequency: 'monthly', priority: 0.6 },
@@ -82,9 +84,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }))
 
+  const sheetRoutes: MetadataRoute.Sitemap = sheets.map((s) => ({
+    url: url(sheetHref(s.slug)),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }))
+
   return [
     ...staticRoutes,
     ...areaRoutes,
+    ...sheetRoutes,
     ...publicationRoutes,
     ...talkRoutes,
     ...authorRoutes,

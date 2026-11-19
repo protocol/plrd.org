@@ -1445,13 +1445,11 @@
   {
     "slug": "ilan-gur",
     "name": "Ilan Gur",
-    "role": "Neuro Advisor",
+    "role": "Former Neuro Advisor",
     "groups": [
       "ARIA"
     ],
-    "user_groups": [
-      "Neuro Advisors"
-    ],
+    "user_groups": [],
     "interests": [],
     "quote": "",
     "social": [],
@@ -1565,17 +1563,15 @@
   {
     "slug": "james-tunningley",
     "name": "James Tunningley",
-    "role": "Economies & Governance Co-Lead",
+    "role": "Economies & Governance Co-Lead · Strategic Philanthropy Lead",
     "groups": [
-      "Protocol Labs",
-      "Architect Systems Capital Management",
-      "Architect Global Institute"
+      "Protocol Labs"
     ],
     "user_groups": [
       "Leads"
     ],
     "interests": [],
-    "quote": "Bridging capital, technology, and policy to tackle critical economic and systemic challenges.",
+    "quote": "Building institutions, partnerships and capital around frontier technologies.",
     "social": [
       {
         "icon": "linkedin",
@@ -1588,7 +1584,7 @@
     ],
     "education": null,
     "avatarPath": "/images/authors/james-tunningley/avatar.jpg",
-    "html": "<p>James Tunningley is the <strong>Economies &#x26; Governance Co-Lead</strong> at PL R&#x26;D. James is Senior Advisor at <strong>Architect Systems Capital Management</strong> and Executive Director of <strong>Architect Global Institute</strong>.</p>\n<p>A Semafor Global Economy Principal and Fellow of the Royal Asiatic Society, James formerly served as a Team Lead at Protocol Labs, overseeing multiple teams across the venture and builder portfolios.</p>\n<p>He previously served as a UK Diplomat, Private Secretary to the current Cabinet Secretary, Dame Antonia Romeo DCB, and on the Future Leaders Council of the World Wide Web Foundation.</p>\n<p>James attended Oxford University.</p>\n"
+    "html": "<p>James Tunningley is <strong>Economies &#x26; Governance Co-Lead</strong> at PL R&#x26;D, where he also leads <strong>Philanthropy</strong>.</p>\n<p>Previously, James was a Senior Advisor at <strong>Architect Systems Capital Management</strong> and the <strong>Architect Institute</strong>. Before that, he was a Team Lead at Protocol Labs, where he helped build and oversee its global startup and accelerator portfolio.</p>\n<p>A <strong>Semafor World Economy Principal</strong> and <strong>Fellow of the Royal Asiatic Society</strong>, James previously served as a UK diplomat and as Private Secretary to current UK Cabinet Secretary, Dame Antonia Romeo DCB.</p>\n<p>James read Chinese at <strong>University of Oxford</strong>.</p>\n"
   },
   {
     "slug": "jeromy-johnson",
@@ -1846,10 +1842,6 @@
       {
         "icon": "linkedin",
         "link": "https://www.linkedin.com/in/jbenetcs/"
-      },
-      {
-        "icon": "link",
-        "link": "http://juan.benet.ai/"
       }
     ],
     "education": {
@@ -1867,7 +1859,7 @@
       ]
     },
     "avatarPath": "/images/authors/juan-benet/avatar.jpg",
-    "html": "<p>Juan Benet is the inventor of the InterPlanetary File System (IPFS), a new protocol to make the web faster, safer, and more open, and Filecoin, a cryptocurrency incentivized storage network. The IPFS Project has grown into a large open source movement to re-decentralize the web, safeguard our data, and improve our applications. Juan is the founder of Protocol Labs, the internet tech R&#x26;D lab that develops IPFS and Filecoin. He studied Computer Science at Stanford University, and is obsessed with knowledge, science, and technology.</p>\n"
+    "html": "<p>Juan Benet is the founder of <a href=\"https://protocol.ai/\">Protocol Labs</a> and GP of <a href=\"https://plcapital.xyz/neurotech\">PLC Neurotech</a>. He is a frontier technology investor across neurotech, AI, biotech, and crypto. Some of his high-conviction, contrarian bets include: Bitcoin (2013), Ethereum (2014), Starkware (2018), Science (2021), Lambda (2021), Gordian Bio (2021), Until Labs (2021), Orchid (2022), Zama (2022), BitRobot (2025), Aleph (2026). He previously built IPFS, Filecoin, the SAFT, CoinList. He studied Computer Science at Stanford University, and is obsessed with knowledge, science, and technology.</p>\n"
   },
   {
     "slug": "karola-kirsanow",
@@ -2023,7 +2015,7 @@
   {
     "slug": "lukas-bresser",
     "name": "Lukas Bresser",
-    "role": "Operations Lead",
+    "role": "Research Operations Lead",
     "groups": [
       "Protocol Labs"
     ],
@@ -2058,7 +2050,7 @@
       ]
     },
     "avatarPath": "/images/authors/lukas-bresser/avatar.jpg",
-    "html": "<p>Lukas is the <strong>Operations Lead</strong> at PL R&#x26;D, owning the operating model, cross-focus-area coordination, and the public-output pipeline that surfaces PL R&#x26;D's work.</p>\n<p>Lukas previously led operations at a decentralized cloud infrastructure company. Earlier, as a startup operator at Protocol Labs, he built and led the Builders Program. He began his career at the Boston Consulting Group in New York, and holds master's degrees from Columbia University and Sciences Po, Paris in political science and economics.</p>\n"
+    "html": "<p>Lukas develops strategies, tools, and programs to accelerate scientific progress and bring frontier technologies into use. He studies what helps or hinders progress in emerging fields and develops PL R&#x26;D's methodology for choosing, deploying, and evaluating interventions. His work includes field-progress measurement, AI-native research and coordination tools, and program development with researchers, funders, and partners across PL R&#x26;D's focus areas.</p>\n<p>Lukas previously led operations at a decentralized cloud infrastructure company. Earlier, as a startup operator at Protocol Labs, he built and led the Builders Program. He began his career at the Boston Consulting Group in New York where he worked as a Project Leader, and holds master's degrees from Columbia University and Sciences Po, Paris in political science and economics.</p>\n"
   },
   {
     "slug": "marko-vukolic",

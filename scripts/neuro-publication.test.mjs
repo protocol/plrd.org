@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import ts from 'typescript'
+import { source } from './velocity/test-source-loader.mjs'
 
 const root = new URL('../', import.meta.url)
 const read = (file) => readFileSync(new URL(file, root), 'utf8')
@@ -35,10 +35,7 @@ test('Neuro interface wording uses directly rather than invasively', () => {
 })
 
 test('both shared Neuro preview URLs permanently redirect to the published article', async () => {
-  const { outputText } = ts.transpileModule(read('next.config.ts'), {
-    compilerOptions: { module: ts.ModuleKind.ESNext },
-  })
-  const { default: config } = await import(`data:text/javascript,${encodeURIComponent(outputText)}`)
+  const { default: config } = source('../next.config.ts')
   const redirects = await config.redirects()
   for (const preview of ['preview-neurotech-ea88a298', 'preview-neurotech-4972678300d0a37a2a1e0b9d1b40e852']) {
     assert.ok(redirects.some((rule) => rule.source === `/blog/${preview}/` && rule.destination === path && rule.permanent === true), `${preview} must redirect permanently`)

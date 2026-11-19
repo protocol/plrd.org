@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries, cumulativeOnAxis, dayAxis, ms } from "./trends"
 
 export type { MetricSeries }
@@ -101,10 +102,12 @@ async function fetchRoot<T extends Record<string, unknown>>(
   rootField: string,
   selection: string,
   limit: number,
+  signal: AbortSignal,
 ): Promise<T[]> {
   const out: T[] = []
   let cursor: string | undefined = undefined
   while (out.length < limit) {
+    signal.throwIfAborted()
     const first = Math.min(100, limit - out.length)
     const after = cursor ? `, after: "${cursor}"` : ""
     const query = `{
@@ -116,11 +119,13 @@ async function fetchRoot<T extends Record<string, unknown>>(
     const res = await fetch(SIMOCRACY_INDEXER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 60, tags: ["simocracy"] },
+      cache: "no-store",
+      signal,
       body: JSON.stringify({ query }),
     })
     if (!res.ok) break
     const json = (await res.json()) as GqlResponse
+    signal.throwIfAborted()
     if (json.errors?.length) {
       console.warn(`[simocracy] GraphQL errors for ${rootField}:`, json.errors)
       break
@@ -284,7 +289,8 @@ function buildTrends(args: {
  * Fetch + aggregate Simocracy data for the live dashboard. Falls back to a
  * `degraded: true` empty result if the indexer is unreachable.
  */
-export async function fetchSimocracyStats(): Promise<SimocracyStats> {
+async function loadSimocracyStats(signal = AbortSignal.timeout(20_000)): Promise<SimocracyStats> {
+  // A per-request timeout would restart on each page; share one whole-read budget.
   type HistoryNode = RawHistoryRecord
   type SimNode = RawSimRecord & { did?: string; uri?: string }
   type GatheringNode = RawGatheringRecord & { did?: string }
@@ -302,17 +308,19 @@ export async function fetchSimocracyStats(): Promise<SimocracyStats> {
     ;[historyNodes, simNodes, gatheringNodes, proposalNodes, commentNodes] = await Promise.all([
       fetchRoot<HistoryNode>(
         "orgSimocracyHistory",
-        "type actorDid simNames simUris proposalTitle round hearingId createdAt content userMessage",
+        "type actorDid simNames simUris proposalTitle round hearingId createdAt",
         5_000,
+        signal,
       ),
-      fetchRoot<SimNode>("orgSimocracySim", "did uri name createdAt", 1_000),
+      fetchRoot<SimNode>("orgSimocracySim", "did uri name createdAt", 1_000, signal),
       fetchRoot<GatheringNode>(
         "orgSimocracyGathering",
         "did name treasuryUsd status createdAt",
         500,
+        signal,
       ),
-      fetchRoot<TimedNode>("orgHypercertsClaimActivity", "createdAt", 2_000),
-      fetchRoot<TimedNode>("orgImpactindexerReviewComment", "createdAt", 2_000),
+      fetchRoot<TimedNode>("orgHypercertsClaimActivity", "createdAt", 2_000, signal),
+      fetchRoot<TimedNode>("orgImpactindexerReviewComment", "createdAt", 2_000, signal),
     ])
   } catch (err) {
     console.warn("[simocracy] fetch failed:", err)
@@ -471,3 +479,5 @@ export async function resolveBlueskyProfiles(
   }
   return out
 }
+
+export const fetchSimocracyStats = cacheProviderStats("simocracy", 60, loadSimocracyStats)

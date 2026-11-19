@@ -12,6 +12,10 @@ Module._resolveFilename = function (id, ...args) {
   if (id === 'server-only') id = 'next/dist/compiled/server-only/empty.js'
   return originalResolve.call(this, id.startsWith('@/') ? path.resolve('src', id.slice(2)) : id, ...args)
 }
+// Node does not compile CSS Modules; native browser QA owns computed styles.
+require.extensions['.css'] = (module) => {
+  module.exports = { __esModule: true, default: new Proxy({}, { get: (_, key) => key }) }
+}
 for (const extension of ['.ts', '.tsx']) {
   require.extensions[extension] = (module, filename) => {
     const { outputText } = ts.transpileModule(fs.readFileSync(filename, 'utf8'), {

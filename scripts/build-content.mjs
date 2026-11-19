@@ -11,6 +11,7 @@ const PUBLIC_DIR = path.join(ROOT, 'public')
 
 const processor = remark().use(remarkHtml, { sanitize: false })
 
+
 function renderMd(md) {
   if (!md || !md.trim()) return ''
   return processor.processSync(md).toString()
@@ -439,7 +440,8 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     })),
     // Static site pages
     { title: 'About', summary: 'About Protocol Labs Research & Development', date: '', type: 'page', relpermalink: '/about/' },
-    { title: 'Team', summary: 'Meet the Protocol Labs R&D team', date: '', type: 'page', relpermalink: '/authors/' },
+    { title: 'Methodology', summary: 'How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.', date: '', type: 'page', relpermalink: '/methodology/' },
+    { title: 'Team', summary: 'Meet the Protocol Labs R&D team', date: '', type: 'page', relpermalink: '/team/' },
     { title: 'Publications', summary: 'Research papers and academic publications', date: '', type: 'page', relpermalink: '/publications/' },
     { title: 'Talks', summary: 'Conference talks and presentations', date: '', type: 'page', relpermalink: '/talks/' },
     { title: 'Tutorials', summary: 'Learning resources and technical tutorials', date: '', type: 'page', relpermalink: '/tutorials/' },
@@ -453,8 +455,29 @@ function buildSearchIndex(publications, talks, authors, blog, tutorials, areas) 
     { title: 'Impact Dashboard', summary: 'Ecosystem impact metrics across villages and funding', date: '', type: 'page', relpermalink: '/areas/economies-governance/impact/' },
     { title: 'Project Explorer', summary: '242+ teams building decentralized coordination and public goods', date: '', type: 'page', relpermalink: '/areas/economies-governance/projects/' },
     { title: 'Dependency Graph', summary: 'Strategic dependency trees across 4 inflection points', date: '', type: 'page', relpermalink: '/areas/economies-governance/dependency-graph/' },
+    { title: 'Sovereign AI program', summary: 'One-page sheets on the Sovereign AI program for governments and funders, each with a web edition and an A4 PDF', date: '', type: 'page', relpermalink: '/areas/economies-governance/#sovereign-ai' },
+    ...buildSovereignAiSearchItems(),
   ]
   return items
+}
+
+// Sovereign AI sheets: one entry per JSON in src/data/fa2/sovereign-ai/, titled as printed.
+function buildSovereignAiSearchItems() {
+  const dir = path.join(ROOT, 'src/data/fa2/sovereign-ai')
+  if (!fs.existsSync(dir)) return []
+  const plain = (text) => text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1')
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith('.json'))
+    .sort()
+    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')))
+    .map((b) => ({
+      title: `${b.title}: ${b.subtitle}`,
+      summary: plain(b.summary),
+      date: '',
+      type: 'page',
+      relpermalink: `/areas/economies-governance/sovereign-ai/${b.slug}/`,
+    }))
 }
 
 // Main

@@ -241,6 +241,11 @@ export const INFLECTION_POINTS: InflectionPoint[] = [
         href: 'https://observer.com/2017/05/turkey-wikipedia-ipfs/',
         note: 'A content-addressed (IPFS) mirror kept Wikipedia reachable under Turkey’s state block: early evidence that information can route around a shutdown, not the population-scale-through-a-shutdown threshold (Q2).',
       },
+      {
+        label: 'Bluesky reached 41.41 million users',
+        href: 'https://bsky.social/about/blog/01-29-2026-transparency-report-2025',
+        note: 'Checked October 2026. Bluesky’s own 2025 transparency report says the network grew from 25.94 million to 41.41 million users, including federated accounts. A large open social network is not a metadata-resistant messenger, and it is not a population staying connected through a deliberate shutdown. The threshold is unmet.',
+      },
     ],
   },
   {
@@ -261,6 +266,13 @@ export const INFLECTION_POINTS: InflectionPoint[] = [
       { role: 'connection', label: 'Tools for Humanity, SpruceID, Privy (convened + seeded)', href: 'https://spruceid.com/' },
       { role: 'capital', label: 'Seed funding for portable-credential work', href: 'https://privy.io/' },
       { role: 'legibility', label: 'Latest Digital Human Rights insights', href: '/insights/?area=digital-human-rights' },
+    ],
+    liveEvidence: [
+      {
+        label: 'World reports nearly 18 million verified humans',
+        href: 'https://world.org/blog/announcements/the-new-world-id-and-the-partners-bringing-proof-of-human-to-the-internet',
+        note: 'Checked October 2026. World’s own April 2026 figure is nearly 18 million verified humans, with everyday use at Tinder, Zoom, and others. That is well short of a service at more than 100 million people. The threshold is unmet.',
+      },
     ],
   },
   {
@@ -288,6 +300,11 @@ export const INFLECTION_POINTS: InflectionPoint[] = [
         href: 'https://dispatch.starlinglab.org/p/verify-authenticity-displays',
         note: 'Reuters, AP, Rolling Stone and others ship C2PA content credentials backed by content-addressed archives (IPFS / Filecoin): early real-world provenance, not the default-everywhere threshold (Q2).',
       },
+      {
+        label: 'OpenAI and Google ship provenance checks, not a default',
+        href: 'https://openai.com/index/advancing-content-provenance/',
+        note: 'Checked October 2026. OpenAI’s May 2026 update adds C2PA and SynthID to supported generated images. Google is rolling Content Credentials checks into Gemini, Search, and Chrome. Neither is two consecutive frontier-model generations shipping attested provenance by default. The threshold is unmet.',
+      },
     ],
   },
   {
@@ -309,6 +326,13 @@ export const INFLECTION_POINTS: InflectionPoint[] = [
       { role: 'capital', label: 'Fluence, Spheron, Expanso, Fleek', href: 'https://fluence.network/' },
       { role: 'capital', label: 'Prime Intellect', href: 'https://primeintellect.ai/' },
       { role: 'legibility', label: 'Latest Digital Human Rights insights', href: '/insights/?area=digital-human-rights' },
+    ],
+    liveEvidence: [
+      {
+        label: 'INTELLECT-2: a 32B model trained across independent compute',
+        href: 'https://arxiv.org/abs/2505.07291',
+        note: 'Checked October 2026. Prime Intellect trained a 32-billion-parameter reasoning model by reinforcement learning across a permissionless swarm. That is a real decentralized training run. It is not a frontier-scale model trained end to end off a hyperscaler. The threshold is unmet.',
+      },
     ],
   },
 
@@ -500,6 +524,13 @@ export const INFLECTION_POINTS: InflectionPoint[] = [
       { role: 'connection', label: 'Connectomics Workshop', href: 'https://www.plneuro.xyz/events/connectomics-workshop/' },
       { role: 'legibility', label: 'WBE benchmark & PL Neuro roadmap', href: '/insights/?area=neurotech' },
     ],
+    liveEvidence: [
+      {
+        label: 'MICrONS: a cubic millimeter of mouse visual cortex',
+        href: 'https://www.microns-explorer.org/',
+        note: 'Checked October 2026. The public MICrONS reconstruction is a cubic millimeter of mouse visual cortex, with function and connectivity. It is not a whole-mouse connectome, and it has not reproduced a behavior the mouse learned before harvest. The threshold is unmet.',
+      },
+    ],
   },
 
   // ── FA3 · AI & Robotics ─────────────────────────────────────────
@@ -521,6 +552,13 @@ export const INFLECTION_POINTS: InflectionPoint[] = [
       { role: 'infrastructure', label: 'Filecoin + the open-compute portfolio', href: 'https://filecoin.io/' },
       { role: 'capital', label: 'Fluence, Spheron, Expanso (compute teams)', href: 'https://fluence.network/' },
       { role: 'legibility', label: 'Latest AI & Robotics insights', href: '/insights/?area=ai-robotics' },
+    ],
+    liveEvidence: [
+      {
+        label: 'INTELLECT-2: a 32B model trained across independent compute',
+        href: 'https://arxiv.org/abs/2505.07291',
+        note: 'Checked October 2026. A 32-billion-parameter reasoning model trained across a permissionless compute swarm. Useful evidence that training can leave one cluster. Not yet a frontier-scale model trained end to end off the hyperscalers. The threshold is unmet.',
+      },
     ],
   },
   {

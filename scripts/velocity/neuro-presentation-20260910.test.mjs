@@ -20,17 +20,18 @@ function offlineProviders(t) {
   t.mock.method(console, 'warn', () => {})
 }
 
-test('Neurotech field velocity uses the same theme-aware gray surface as the cross-field overview', async (t) => {
+test('Neurotech retains its gray surface while the methodology overview inherits the page backdrop', async (t) => {
   offlineProviders(t)
   const Overview = source('app/impact-preview-eb61fba1b98e/page.tsx').default
   const Panel = source('components/AreaFieldVelocity.tsx').default
   const overview = await Overview({ searchParams: Promise.resolve({ area: 'neurotech' }) })
   const overviewSection = elements(overview).find(node => node.props.id === 'field-velocity')
   assert.ok(overviewSection)
-  assert.deepEqual(backgroundClasses(overviewSection), ['bg-gray-100'])
+  // September 29: the methodology tabs share one backdrop; area panels are unchanged.
+  assert.deepEqual(backgroundClasses(overviewSection), [])
 
   const neuroSection = await Panel({ area: 'neurotech' })
-  assert.deepEqual(backgroundClasses(neuroSection), backgroundClasses(overviewSection))
+  assert.deepEqual(backgroundClasses(neuroSection), ['bg-gray-100'])
 })
 
 test('Neurotech opportunity grid finishes its odd desktop row with an empty white quadrant', async () => {

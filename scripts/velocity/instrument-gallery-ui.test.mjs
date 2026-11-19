@@ -295,7 +295,9 @@ test('gallery styling uses a physical two-faced 3D rotation with reduced-motion 
 test('large inventories expose every horizontal sibling without pagination, while every modal stays single-chart', async () => {
   const data = await load()
   const areaPoints = source('lib/field-velocity.ts').INFLECTION_POINTS.filter(p => p.area === 'ai-robotics')
-  const marketSignals = Object.fromEntries(areaPoints.slice(0, 2).map((p, i) => [p.title, { prob: 0.4, platform: 'polymarket', question: `Question ${i}?`, resolutionDate: '2027-01-01', url: `https://polymarket.com/${i}` }]))
+  // Three live peers plus the retained automation curve keep the four-view
+  // stress case after the AGI primary forecast was retired.
+  const marketSignals = Object.fromEntries(areaPoints.slice(0, 3).map((p, i) => [p.title, { prob: 0.4, platform: 'polymarket', question: `Question ${i}?`, resolutionDate: '2027-01-01', url: `https://polymarket.com/${i}` }]))
   const unmount = await mount({ ...data, marketSignals, initialArea: 'ai-robotics' })
   try {
     const deck = document.querySelector('[data-chart-deck="markets"]')

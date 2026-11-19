@@ -7,7 +7,8 @@ export async function GET() {
   try {
     const pages = await fetchAllPages()
     return NextResponse.json({
-      pages: pages.map(p => ({ rkey: p.rkey, record: p }))
+      // About is repository-owned; do not offer its historical record in the CMS.
+      pages: pages.filter(p => p.rkey !== "about" && p.pageId !== "about").map(p => ({ rkey: p.rkey, record: p }))
     })
   } catch (error) {
     console.error("Failed to fetch pages:", error)

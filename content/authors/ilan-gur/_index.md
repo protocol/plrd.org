@@ -4,13 +4,12 @@ name: Ilan Gur
 authors:
   - ilan-gur
 
-role: Neuro Advisor
+role: Former Neuro Advisor
 
 groups:
   - ARIA
 
-user_groups:
-  - Neuro Advisors
+user_groups: []
 
 resources:
   - name: avatar

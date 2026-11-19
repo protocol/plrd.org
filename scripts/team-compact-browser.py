@@ -1,7 +1,7 @@
 import json, os
 from pathlib import Path
 out=Path(os.environ['QA_OUT'])
-goto_url(os.environ['QA_ORIGIN'].rstrip('/')+'/authors/');wait_for_load()
+goto_url(os.environ['QA_ORIGIN'].rstrip('/')+'/team/');wait_for_load()
 results=[]
 for width,height in [(1440,1000),(390,844),(320,844)]:
     cdp('Emulation.setDeviceMetricsOverride',width=width,height=height,deviceScaleFactor=1,mobile=False)

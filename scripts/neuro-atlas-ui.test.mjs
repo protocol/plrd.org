@@ -13,7 +13,7 @@ test('Neurotech Explore has one accessible static preview after strategy and bef
   const all = nodes(tree)
   const section = all.find(node => node.type === 'section' && node.props['aria-labelledby'] === 'neuro-atlas-explore')
   assert.ok(section, 'Neurotech needs its contextual Explore preview')
-  const links = nodes(section).filter(node => node.props.href === '/neuro-atlas/')
+  const links = nodes(section).filter(node => node.props.href === 'https://www.plneuro.xyz/neuro-atlas')
   assert.equal(links.length, 1)
   assert.equal(links[0].type, 'a', 'the entire visual card is a hard navigation across zones')
   const { document } = new JSDOM(renderToStaticMarkup(section)).window
@@ -35,7 +35,7 @@ test('Neurotech Explore has one accessible static preview after strategy and bef
   assert.ok(all.some(node => node.props.dangerouslySetInnerHTML?.__html === neuro.html), 'existing page copy remains intact')
   for (const slug of ['ai-robotics', 'digital-human-rights']) {
     const other = await AreaPage({ params: Promise.resolve({ slug }) })
-    assert.equal(nodes(other).filter(node => node.props.href === '/neuro-atlas/').length, 0)
+    assert.equal(nodes(other).filter(node => node.props.href === 'https://www.plneuro.xyz/neuro-atlas').length, 0)
   }
 })
 
@@ -48,15 +48,15 @@ function nodes(node) {
 test('Neurotech adds a normal Atlas anchor without replacing its Website or strategy links', () => {
   const props = { areaSlug: 'neurotech', showOpportunitySpaces: true, opportunityHref: '#opportunity-spaces' }
   const tree = AreaHeroActions(props)
-  const anchor = nodes(tree).find(node => node.props.href === '/neuro-atlas/')
+  const anchor = nodes(tree).find(node => node.props.href === 'https://www.plneuro.xyz/neuro-atlas')
   assert.ok(anchor, 'distinct small Neuro Atlas link must exist')
   assert.equal(anchor.type, 'a', 'cross-zone navigation must not use Next Link')
   assert.equal(anchor.props.target, undefined)
   const { document } = new JSDOM(renderToStaticMarkup(tree)).window
-  assert.equal(document.querySelector('a[href="/neuro-atlas/"]').textContent.trim(), 'Neuro Atlas →')
+  assert.equal(document.querySelector('a[href="https://www.plneuro.xyz/neuro-atlas"]').textContent.trim(), 'Neuro Atlas →')
   assert.match(document.querySelector('a[href="https://www.plneuro.xyz/"]').textContent, /Website/)
   assert.ok(document.querySelector('a[href="#opportunity-spaces"]'))
   for (const areaSlug of ['ai-robotics', 'digital-human-rights', 'economies-governance']) {
-    assert.equal(nodes(AreaHeroActions({ ...props, areaSlug })).filter(node => node.props.href === '/neuro-atlas/').length, 0)
+    assert.equal(nodes(AreaHeroActions({ ...props, areaSlug })).filter(node => node.props.href === 'https://www.plneuro.xyz/neuro-atlas').length, 0)
   }
 })

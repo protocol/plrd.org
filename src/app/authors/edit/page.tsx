@@ -26,7 +26,7 @@ export default function AuthorsEditPage() {
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">
       <Breadcrumb
         items={[
-          { label: 'Team', href: '/authors/' },
+          { label: 'Team', href: '/team/' },
           { label: 'Edit' },
         ]}
       />

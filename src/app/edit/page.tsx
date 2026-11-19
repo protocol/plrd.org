@@ -166,7 +166,7 @@ export default function LandingEditPage() {
           />
         </div>
         <Link
-          href="/authors"
+          href="/team/"
           className="inline-flex items-center gap-2 px-5 py-2.5 border border-blue/30 text-blue rounded-full hover:bg-blue hover:text-white hover:border-blue transition-all font-medium"
         >
           Meet the team

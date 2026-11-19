@@ -6,7 +6,7 @@ import { PageEditHistoryByline } from '@/components/EditHistoryByline'
 import MarkdownContent from '@/components/MarkdownContent'
 import InsightsExplorer, { type InsightSection, type AreaDef } from '@/components/InsightsExplorer'
 import PLRadar, { type RadarItem } from '@/components/PLRadar'
-import { FIELD_SIGNALS } from '@/lib/radar-signals'
+import { CURRENT_RADAR_EDITION, CURRENT_RADAR_FEATURES, FIELD_SIGNALS } from '@/lib/radar-signals'
 import { fetchPage, getSection } from '@/lib/indexer'
 import { formatDate } from '@/lib/format'
 
@@ -152,43 +152,39 @@ export default async function InsightsPage({
     })),
   ].sort(byDateDesc)
 
-  // Curated third-party "field signals" — external reads we're watching, shown
-  // alongside our own output but clearly marked. Newest first.
-  const signalPool = FIELD_SIGNALS.map((s) => ({
+  // A repository-curated edition reserves space for every featured source.
+  // Outside an explicit edition, retain the historical newest-signal fallback.
+  const featuredSignals = CURRENT_RADAR_FEATURES.length
+    ? CURRENT_RADAR_FEATURES
+    : [...FIELD_SIGNALS].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 1)
+  const signalItems: RadarItem[] = featuredSignals.map((s) => ({
     key: s.key,
     title: s.title,
-    description: s.description as string | undefined,
+    description: s.description,
     href: s.href,
-    external: true,
+    external: s.external ?? true,
     type: 'Signal',
     areaLabel: ['Field signal', s.source].filter(Boolean).join(' · '),
     areaSlug: s.areaSlug,
-    date: s.date,
-    image: undefined as string | undefined,
-    _sort: s.date,
-  })).sort(byDateDesc)
+    date: s.addedDate ? `Added ${formatDate(s.addedDate)}` : formatDate(s.date || ''),
+    image: s.image,
+    imageAlt: s.imageAlt,
+    plainImage: s.plainImage,
+    ctaLabel: s.ctaLabel,
+  }))
 
-  // Reserve one slot for the newest field signal so the Radar always carries at
-  // least one external read, then fill the rest with our newest local content.
-  const signalItems = signalPool.slice(0, 1)
-  const rawRadarPool: RadarItem[] = [...contentPool.slice(0, 6 - signalItems.length), ...signalItems]
-    .sort(byDateDesc)
-    .map(({ _sort, ...item }) => ({ ...item, date: formatDate(item.date) }))
-
-  const radarEdition = (() => {
-    const newest = rawRadarPool[0]?.date
+  // PL-first ordering, with newest local content first and the curated sources
+  // in editorial order. Nothing is removed from the Insights catalog or archive.
+  const localItems = contentPool.slice(0, Math.max(0, 6 - signalItems.length))
+  const radarPool: RadarItem[] = [
+    ...localItems.map(({ _sort, ...item }) => ({ ...item, date: formatDate(item.date) })),
+    ...signalItems,
+  ]
+  const radarEdition = CURRENT_RADAR_FEATURES.length ? CURRENT_RADAR_EDITION : (() => {
+    const newest = [localItems[0]?.date, ...featuredSignals.map((s) => s.date || '')].sort().at(-1)
     const d = newest ? new Date(newest) : new Date()
     return `${d.toLocaleDateString('en-US', { month: 'long' })} Radar`
   })()
-
-  // Always surface PL R&D's own output (talks, publications, posts on PL
-  // properties) ahead of third-party "field signals", while preserving each
-  // group's date order. Array.sort is stable, so items keep
-  // their relative order within the PL and signal groups.
-  const isFieldSignal = (it: RadarItem) => it.type === 'Signal'
-  const radarPool: RadarItem[] = [...rawRadarPool].sort(
-    (a, b) => Number(isFieldSignal(a)) - Number(isFieldSignal(b)),
-  )
 
   return (
     <div className="max-w-6xl mx-auto px-6 pt-8 pb-16">

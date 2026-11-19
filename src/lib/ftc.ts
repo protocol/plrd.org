@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 import { type MetricSeries } from "./trends"
 
 /**
@@ -77,10 +78,11 @@ function emptyStats(degraded: boolean): FtcStats {
 }
 
 /** Page through every io.fundingthecommons.impact.metricPoint record. */
-async function fetchAllPoints(): Promise<RawPoint[]> {
+async function fetchAllPoints(signal: AbortSignal): Promise<RawPoint[]> {
   const out: RawPoint[] = []
   let cursor: string | undefined
   for (let guard = 0; guard < 20; guard++) {
+    signal.throwIfAborted()
     const after = cursor ? `, after: "${cursor}"` : ""
     const query = `{
       ioFundingthecommonsImpactMetricPoint(first: 100${after}) {
@@ -91,7 +93,8 @@ async function fetchAllPoints(): Promise<RawPoint[]> {
     const res = await fetch(PLRESEARCH_INDEXER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: REVALIDATE, tags: ["ftc"] },
+      cache: "no-store",
+      signal,
       body: JSON.stringify({ query }),
     })
     if (!res.ok) throw new Error(`status ${res.status}`)
@@ -104,6 +107,7 @@ async function fetchAllPoints(): Promise<RawPoint[]> {
       }
       errors?: { message: string }[]
     }
+    signal.throwIfAborted()
     if (json.errors?.length) throw new Error(json.errors[0].message)
     const conn = json.data?.ioFundingthecommonsImpactMetricPoint
     for (const e of conn?.edges ?? []) if (e.node) out.push(e.node)
@@ -114,10 +118,10 @@ async function fetchAllPoints(): Promise<RawPoint[]> {
   return out
 }
 
-export async function fetchFtcStats(): Promise<FtcStats> {
+async function loadFtcStats(signal = AbortSignal.timeout(20_000)): Promise<FtcStats> {
   let points: RawPoint[] = []
   try {
-    points = await fetchAllPoints()
+    points = await fetchAllPoints(signal)
   } catch (err) {
     console.warn("[ftc] metricPoint fetch failed:", err)
     return emptyStats(true)
@@ -158,3 +162,5 @@ export async function fetchFtcStats(): Promise<FtcStats> {
     degraded: !any,
   }
 }
+
+export const fetchFtcStats = cacheProviderStats("ftc", REVALIDATE, loadFtcStats)

@@ -553,6 +553,13 @@
     "relpermalink": "/publications/benet2014/"
   },
   {
+    "title": "AUA Focus Series S2 E21: Focus on Ethical and Informed Use of AI",
+    "summary": "David Dao and Maria Baghramian on ethical AI · YouTube · 46 min.",
+    "date": "2026-11-03T00:00:00.000Z",
+    "type": "talk",
+    "relpermalink": "/talks/aua-ethical-informed-ai/"
+  },
+  {
     "title": "Adam Marblestone — We Are Massively Underinvesting in the Human Brain",
     "summary": "Juan Benet speaks with Adam Marblestone, CEO and co-founder of Convergent Research, about why neurotech, whole-brain emulation, and nanotech are limited by capital and coordination rather than ideas, why connectomics is the approach most poised to scale, what a full wiring diagram of the brain would unlock for disease and AI, and how far mind uploading really is from the fringe of science.",
     "date": "2026-08-27T00:00:00.000Z",
@@ -1366,7 +1373,7 @@
   },
   {
     "title": "Ilan Gur",
-    "summary": "Neuro Advisor",
+    "summary": "Former Neuro Advisor",
     "date": "",
     "type": "author",
     "relpermalink": "/authors/ilan-gur/"
@@ -1387,7 +1394,7 @@
   },
   {
     "title": "James Tunningley",
-    "summary": "Economies & Governance Co-Lead",
+    "summary": "Economies & Governance Co-Lead · Strategic Philanthropy Lead",
     "date": "",
     "type": "author",
     "relpermalink": "/authors/james-tunningley/"
@@ -1464,7 +1471,7 @@
   },
   {
     "title": "Lukas Bresser",
-    "summary": "Operations Lead",
+    "summary": "Research Operations Lead",
     "date": "",
     "type": "author",
     "relpermalink": "/authors/lukas-bresser/"
@@ -1701,6 +1708,13 @@
     "relpermalink": "/blog/neurotech-frontier-human-flourishing/"
   },
   {
+    "title": "Securing Fundamental Rights in the Digital Realm: The Infrastructure Freedom Now Runs On",
+    "summary": "The digital foundations our fundamental rights now depend on — censorship-resistant communication, portable identity, verifiable public knowledge, and sovereign infrastructure for AI and agents — the four opportunity spaces we are backing and the inflection points we believe are within reach.",
+    "date": "2026-08-30T00:00:00.000Z",
+    "type": "blog",
+    "relpermalink": "/blog/securing-fundamental-rights-in-the-digital-realm/"
+  },
+  {
     "title": "We Gave a Village Personal AI Agents. Here's What Happened",
     "summary": "Edge City and Cosmos Institute gave 239 residents of Edge Esmeralda personal AI agents. Through Simocracy (led by Protocol Labs), residents created 82 Sims with constitutions and values that allocated over $10k in community treasury funding across 35 proposals — an early glimpse of agent-mediated governance.",
     "date": "2026-07-31T00:00:00.000Z",
@@ -1834,11 +1848,18 @@
     "relpermalink": "/about/"
   },
   {
+    "title": "Methodology",
+    "summary": "How PL R&D builds frontier fields: diagnose the bottleneck, intervene, and learn by reading field velocity.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/methodology/"
+  },
+  {
     "title": "Team",
     "summary": "Meet the Protocol Labs R&D team",
     "date": "",
     "type": "page",
-    "relpermalink": "/authors/"
+    "relpermalink": "/team/"
   },
   {
     "title": "Publications",
@@ -1923,5 +1944,47 @@
     "date": "",
     "type": "page",
     "relpermalink": "/areas/economies-governance/dependency-graph/"
+  },
+  {
+    "title": "Sovereign AI program",
+    "summary": "One-page sheets on the Sovereign AI program for governments and funders, each with a web edition and an A4 PDF",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/#sovereign-ai"
+  },
+  {
+    "title": "Broad Listening & Simocracy: Hear everyone, then decide in the open",
+    "summary": "What the two tools do, where they have run, and how a government can use them.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/sovereign-ai/broad-listening-simocracy/"
+  },
+  {
+    "title": "Sovereign AI: Government pilot partnership",
+    "summary": "How PL R&D works with a government to take one public problem to a working AI pilot, and what we ask in return.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/sovereign-ai/government-pilot-partnership/"
+  },
+  {
+    "title": "Hypercerts: Fund the work on a record anyone can check",
+    "summary": "What a hypercert records, how funders use it, where it runs today, and where a government can use it.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/sovereign-ai/hypercerts/"
+  },
+  {
+    "title": "Sovereign AI: A summary for funders",
+    "summary": "Why the Sovereign AI program is worth funding, what the money pays for, how each pilot runs and how funders can take part.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/sovereign-ai/sovereign-ai-for-funders/"
+  },
+  {
+    "title": "Why sovereign AI: Better public institutions, on your own terms",
+    "summary": "Three reasons a country should run its own AI, with the evidence behind each, and where to start.",
+    "date": "",
+    "type": "page",
+    "relpermalink": "/areas/economies-governance/sovereign-ai/why-sovereign-ai/"
   }
 ]

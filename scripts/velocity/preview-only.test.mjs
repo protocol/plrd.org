@@ -7,6 +7,7 @@ import { source } from './test-source-loader.mjs'
 const Panel = source('components/AreaFieldVelocity.tsx').default
 const Dashboard = source('components/ImpactDashboardV2.tsx').default
 const Methodology = source('components/MeasuringQuestionsV2.tsx').default
+const Tabs = source('components/ImpactMethodologyTabs.tsx').default
 const { FOCUS_AREAS, FIELD_VELOCITY_OVERVIEW } = source('lib/field-velocity.ts')
 
 function elements(node) {
@@ -25,7 +26,7 @@ for (const { key } of FOCUS_AREAS) {
     const route = key === 'economies-governance' ? 'app/areas/economies-governance/page.tsx' : 'app/areas/[slug]/page.tsx'
     const Page = source(route).default
     const nodes = elements(await Page({ params: Promise.resolve({ slug: key }) }))
-    assert.ok(!nodes.some(node => node.type === Panel || node.type === Dashboard || node.type === Methodology), 'unreleased field velocity must not mount on public pages')
+    assert.ok(!nodes.some(node => node.type === Panel || node.type === Dashboard || node.type === Methodology || node.type === Tabs), 'unreleased field velocity must not mount on public pages')
     assert.ok(!nodes.some(node => node.props.id === 'field-velocity'))
     assert.ok(!nodes.some(node => /impact-preview|#fv\/|#field-velocity|#methodology|#toolkit/.test(node.props.href ?? '')), 'no discovery links to the unlisted preview')
     assert.ok(nodes.some(node => node.props.id === 'opportunity-spaces'), 'original strategy remains')
@@ -35,11 +36,12 @@ for (const { key } of FOCUS_AREAS) {
   })
 }
 
-test('the exact unlisted overview retains all fields, charts, methodology and noindex metadata', async (t) => {
+test('the exact unlisted overview retains all fields, charts, methodology and public metadata', async (t) => {
   offlineProviders(t)
   assert.equal(FIELD_VELOCITY_OVERVIEW, '/impact-preview-eb61fba1b98e/')
   const { default: Overview, metadata } = source(`app${FIELD_VELOCITY_OVERVIEW}page.tsx`)
-  assert.deepEqual(metadata.robots, { index: false, follow: false, googleBot: { index: false, follow: false } })
+  assert.equal(metadata.alternates.canonical, '/methodology/')
+  assert.equal(metadata.robots, undefined, 'the page is public; the old preview path redirects to /methodology/')
   for (const { key } of FOCUS_AREAS) {
     const nodes = elements(await Overview({ searchParams: Promise.resolve({ area: key }) }))
     const dashboard = nodes.find(node => node.type === Dashboard)
@@ -47,8 +49,11 @@ test('the exact unlisted overview retains all fields, charts, methodology and no
     assert.equal(dashboard.props.initialArea, key)
     assert.equal(dashboard.props.fixedArea, undefined)
     assert.deepEqual(Object.keys(dashboard.props.recordsByArea).sort(), FOCUS_AREAS.map(area => area.key).sort())
-    assert.ok(nodes.some(node => node.type === Methodology))
+    assert.ok(nodes.some(node => node.type === Tabs))
     assert.ok(nodes.some(node => node.props.id === 'methodology'))
+    assert.ok(nodes.some(node => node.props.id === 'diagnose'))
+    assert.ok(nodes.some(node => node.props.id === 'intervene'))
+    assert.ok(nodes.some(node => node.props.id === 'learn'))
   }
 })
 

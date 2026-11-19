@@ -1,15 +1,13 @@
 // ── Market term-structure ingestion (build-time, server only) ─────────────────
 //
-// Reads the committed Full Takeoff Model snapshot (src/data/velocity/ftm-takeoff.json,
-// written by scripts/velocity/ftm_takeoff_snapshot.mjs from Bayes Market's
-// public /v1/net API) and turns the AGI-by-year family into the AI & Robotics
-// `markets` reading: a term structure — the same milestone (AGI arrives) priced
-// across many horizons — read as an implied arrival date, which is exactly the
-// aggregation the markets instrument describes.
+// The committed Full Takeoff Model snapshot retains its source history. The
+// public projection includes economic automation only: the AGI forecast and its
+// implied-date headline were retired at the owner's request on November 6, 2026.
+// Keep the automation chart's existing `secondary` identity so old links retain
+// their meaning and the retired `primary` link cannot open a different forecast.
 //
 // Play-money, model-derived priors: an external forecast instrument, not a
-// settled outcome or a deep real-money market. Parsing happens here at build
-// time, never in the browser. No snapshot -> null -> the record stays `unwired`.
+// settled outcome or a deep real-money market. Parsing happens at build time.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -17,11 +15,7 @@ import type { FocusAreaKey } from '@/lib/inflection-points'
 import type { InstrumentRecord } from '@/lib/velocity-instruments'
 
 const SNAPSHOT = path.join(process.cwd(), 'src', 'data', 'velocity', 'ftm-takeoff.json')
-
-// Which snapshot family is the headline term structure, and which is the muted
-// secondary line, for a field's markets instrument.
-const PRIMARY_KEY = 'ftm_agi'
-const SECONDARY_KEY = 'ftm_full_auto'
+const AUTOMATION_KEY = 'ftm_full_auto'
 
 type SnapshotPoint = { year: number; prob: number }
 type SnapshotSeries = { key: string; label: string; points: SnapshotPoint[] }
@@ -31,13 +25,9 @@ type Snapshot = {
 }
 
 export type MarketCurvePayload = {
-  /** Term-structure CDF, y in percent, for the sparkline. */
-  series: { x: number; y: number }[]
-  /** Optional muted secondary CDF (e.g. full economic automation). */
-  series2?: { x: number; y: number }[]
-  series2Label?: string
-  /** Interpolated year the primary milestone crosses 50%, or null if it never does. */
-  impliedFiftyYear: number | null
+  /** Economic-automation CDF, y in percent; retains the existing secondary ID. */
+  series2: { x: number; y: number }[]
+  series2Label: string
   firstYear: number
   lastYear: number
   firstProb: number
@@ -45,22 +35,6 @@ export type MarketCurvePayload = {
   nHorizons: number
   generatedAt: string
   source: string
-}
-
-/** Linear-interpolate the year at which a rising CDF first crosses 0.5. */
-function crossingYear(points: SnapshotPoint[]): number | null {
-  const sorted = [...points].sort((a, b) => a.year - b.year)
-  for (let i = 0; i < sorted.length; i++) {
-    if (sorted[i].prob >= 0.5) {
-      if (i === 0) return sorted[0].year
-      const lo = sorted[i - 1]
-      const hi = sorted[i]
-      const span = hi.prob - lo.prob
-      if (span <= 0) return hi.year
-      return Math.round(lo.year + ((0.5 - lo.prob) / span) * (hi.year - lo.year))
-    }
-  }
-  return null // never reaches a coin flip within the horizon
 }
 
 function toCdf(points: SnapshotPoint[]): { x: number; y: number }[] {
@@ -76,56 +50,44 @@ export function loadMarketCurve(): Partial<Record<FocusAreaKey, MarketCurvePaylo
   } catch {
     return {}
   }
-  const series = snap.series ?? []
-  const primary = series.find((s) => s.key === PRIMARY_KEY)
-  if (!primary || primary.points.length < 3) return {}
-  const secondary = series.find((s) => s.key === SECONDARY_KEY)
-
-  const pts = [...primary.points].sort((a, b) => a.year - b.year)
-  const payload: MarketCurvePayload = {
-    series: toCdf(pts),
-    series2: secondary && secondary.points.length > 1 ? toCdf(secondary.points) : undefined,
-    series2Label: secondary && secondary.points.length > 1 ? secondary.label : undefined,
-    impliedFiftyYear: crossingYear(pts),
-    firstYear: pts[0].year,
-    lastYear: pts[pts.length - 1].year,
-    firstProb: pts[0].prob,
-    lastProb: pts[pts.length - 1].prob,
-    nHorizons: pts.length,
-    generatedAt: snap._provenance?.generatedAt ?? new Date().toISOString(),
-    source: snap._provenance?.source ?? 'Bayes Market (futarchy.ai)',
+  const automation = snap.series?.find((s) => s.key === AUTOMATION_KEY)
+  if (!automation || automation.points.length < 3) return {}
+  const pts = [...automation.points].sort((a, b) => a.year - b.year)
+  return {
+    'ai-robotics': {
+      series2: toCdf(pts),
+      series2Label: automation.label,
+      firstYear: pts[0].year,
+      lastYear: pts[pts.length - 1].year,
+      firstProb: pts[0].prob,
+      lastProb: pts[pts.length - 1].prob,
+      nHorizons: pts.length,
+      generatedAt: snap._provenance?.generatedAt ?? new Date().toISOString(),
+      source: snap._provenance?.source ?? 'Bayes Market (futarchy.ai)',
+    },
   }
-  // Only AI & Robotics carries this today; other fields have no FTM term structure.
-  return { 'ai-robotics': payload }
 }
 
-/** Merge a term-structure payload into a field's `markets` record, converting it
- *  to a reading. Absent payload is a no-op (the record stays `unwired`). */
+/** Absent source data is a no-op; the record retains its existing state. */
 export function withMarketCurve(records: InstrumentRecord[], data?: MarketCurvePayload | null): InstrumentRecord[] {
   if (!data) return records
   const pct = (p: number) => `${Math.round(p * 100)}%`
-  const implied = data.impliedFiftyYear
   const measuredAt = data.generatedAt.slice(0, 10)
   return records.map((r) => {
     if (r.instrument !== 'markets') return r
     return {
       instrument: 'markets',
       state: 'reading',
-      metric: `AGI arrival priced across ${data.nHorizons} horizons (Bayes Market term structure)`,
-      value: implied ? `Implied 50/50 by ~${implied}` : `Below 50% through ${data.lastYear}`,
-      trend: `${pct(data.firstProb)} by ${data.firstYear} rising to ${pct(data.lastProb)} by ${data.lastYear}. Play-money, model-calibrated priors — a second snapshot shows whether the implied date is pulling in.`,
-      // No direction: a single snapshot has no time trend to read (the chart is a
-      // CDF over horizons, not a reading over time). Honest until we snapshot twice.
+      metric: `Full automation of the economy across ${data.nHorizons} horizons (Bayes Market forecast)`,
+      value: data.series2Label,
+      trend: `${pct(data.firstProb)} by ${data.firstYear} rising to ${pct(data.lastProb)} by ${data.lastYear}. Play-money, model-calibrated priors.`,
+      // A CDF over future deadlines is not a historical trend.
       window: `${data.firstYear} \u2192 ${data.lastYear}`,
       measuredAt,
       checkedAt: measuredAt,
-      series: data.series,
       seriesScale: 'linear',
       series2: data.series2,
       series2Label: data.series2Label,
-      // Only `generated` here: the shared provenance renderer prefixes `query`
-      // with idea-vintage's "keyword cohort" copy, which does not fit a market
-      // term structure. The cohort is named in `metric` instead.
       provenance: { generated: measuredAt },
       sources: [
         { label: 'Bayes Market — AI-futures belief network', url: 'https://futarchy.ai/' },

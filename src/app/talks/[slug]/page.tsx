@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { talks } from '@/lib/content'
+import { siteConfig } from '@/lib/site-config'
 import AuthorCard from '@/components/AuthorCard'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -16,6 +17,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!talk) return { title: 'Not Found' }
   const description = (talk.abstract || '').slice(0, 160)
   const canonical = `/talks/${talk.slug}/`
+  const youtubeId = extractYoutubeId(talk.html || '')
+  // hqdefault is available even for videos without a max-resolution upload.
+  // Social crawlers cannot run an image's client-side error fallback.
+  const image = youtubeId
+    ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`
+    : siteConfig.avatar
   return {
     title: talk.title,
     description,
@@ -27,6 +34,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       publishedTime: talk.date || undefined,
       authors: talk.authors,
+      images: [image],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: siteConfig.twitterUser,
+      title: talk.title,
+      description,
+      images: [image],
     },
   }
 }

@@ -228,7 +228,9 @@ Server components in this layer: `SiteFooter`, `AuthorCard`, `Breadcrumb`, `Area
 
 ## 6. ATProto, auth, and the editable CMS layer
 
-Editable pages (landing, about, focus areas, etc.) are stored as **ATProto records on plresearch.org's PDS**, served through a Railway-hosted GraphQL indexer, and rendered server-side with static fallbacks.
+Editable pages (landing, focus areas, etc.) are stored as **ATProto records on plresearch.org's PDS**, served through a Railway-hosted GraphQL indexer, and rendered server-side with static fallbacks.
+
+**About is the explicit exception:** `/about/` reads `src/data/about.json` through `src/lib/about.ts`. Edit that JSON through a PR; do not sync the historical `about` PDS record. Its old editor explains the PR workflow, and `/api/pages/about/` returns 410 for reads/writes. The four-layer CMS rules below apply only to pages that still use the CMS.
 
 ### Client modes
 
@@ -354,6 +356,17 @@ FA2 is special-cased: **hardcoded routes** under `/areas/economies-governance/` 
 | `.../dependency-graph/` | `dependency-graph/page.tsx` | `lib/content` dep-graph entries |
 | `.../dependency-graph/[slug]/` | `DependencyGraph.tsx` (d3-force) | `dependency-graph/data/` |
 | `.../edit/` | `edit/page.tsx` | inline editor over `area-economies-governance` |
+| `.../sovereign-ai/[slug]/` | SSG via `generateStaticParams` | `src/data/fa2/sovereign-ai/<slug>.json`; PDF and shelf plate in `public/sovereign-ai/` |
+
+**Sovereign AI program.** FA2 runs one program, Sovereign AI, and the FA2 page presents it as its flagship: a `#flagship-program` box after the introduction and before Opportunity Spaces, in the shape of the Digital Human Rights one, with "Explore Sovereign AI" to the program site at `/sov-ai` (`docs/sov-ai/README.md`). The box's two paragraphs are `flagshipCopy` in `src/lib/sovereign-ai.ts`, the program site's own overview word for word; `scripts/fa2-flagship.test.mjs` holds them to `public/sov-ai/index.html`, so change the wording there first. The old `#sovereign-ai` anchor sits just above the box, since the sheets and redirects point at it. The box lists the program's one-page sheets: *Why sovereign AI*, *Broad Listening & Simocracy*, *Hypercerts*, the *government pilot partnership* and the summary *for funders*. Each sheet is one JSON file in `src/data/fa2/sovereign-ai/` that names its layout (`three-propositions`, `explainer`, `partnership` or `summary`) and is registered in `src/lib/sovereign-ai.ts`, whose order is the order of the list; `scripts/fa2-sovereign-ai.test.mjs` fails if a JSON is not registered. Every sheet prints the kicker "Economies & Governance · Sovereign AI program". The JSON is published three ways:
+
+- the web edition at `.../sovereign-ai/<slug>/` (`src/components/sovereign-ai/`, one component per layout, built from the shared blocks in `parts.tsx`), with a "Sovereign AI" crumb back to the flagship box;
+- `npm run build-sheets [slug]` prints it to `public/sovereign-ai/<slug>.pdf` with headless Chrome (`scripts/build-sheets.mjs` holds the print layouts and the blocks they share, `scripts/sheets/sheet.css` the shared look) and renders page one to `public/sovereign-ai/<slug>.webp`. It needs local Chrome, Python 3, `pdftoppm` and `magick`, reports the shrink-to-fit factor, and fails if a page still overflows A4. The PDFs are the one exception to the `*.pdf` ignore rule; rebuild and commit PDF and plate whenever the JSON changes. Slugs double as PDF file names, so keep them descriptive;
+- a link by its label in the flagship box on the FA2 page. Until 18 November 2026 the page stood the sheets on a shelf (`SheetShelf.tsx`, a client component after ai4cop.org's field sheets: a plain click takes a sheet down into a card offering the web edition and the PDF). The component and the shelf plates are kept, unused, so the shelf can come back: five sheets fit on one board from tablet width up; a sixth needs narrower gaps or sheets in `globals.css` and the row's gap classes.
+
+Prose fields may carry `[label](/site/path/)` links; the web edition keeps them on the site and the PDF prints them as full plrd.org links (unstyled on paper, so a link never changes the printed layout). To print a sheet that should not be public yet, such as a country edition of the partnership sheet, keep its JSON outside the repo and pass the path: `npm run build-sheets ~/somewhere/edition.json` prints the PDF beside it and touches nothing in the site.
+
+The sheets lived under `/briefs/` until 22 October 2026 and under `/programs/` for a day after, and PDFs went out with `/briefs/` links. `next.config.ts` redirects every old address: `.../briefs/<slug>/` and `.../programs/<slug>/` to `.../sovereign-ai/<slug>/`, `/briefs/<file>` and `/programs/<file>` to `/sovereign-ai/<file>`, the drawings under `/images/fa2/briefs/` and `/images/fa2/programs/`, and the bare index paths to the shelf. `plrd.org/sovereign-ai/` is the program's short link. Keep those redirects.
 
 The *other* areas (`ai-robotics`, `digital-human-rights`, `neurotech`) each have their own `opportunity-spaces/` + `[slug]` pair powered by `src/data/fa2/{ai,dhr,neuro}-opportunityspaces.json` (yes, named under `fa2/` for historical reasons).
 
@@ -425,7 +438,7 @@ Only `COOKIE_SECRET`, `PUBLIC_URL`, `ATPROTO_JWK_PRIVATE`, `ATPROTO_HANDLE`, `AT
 
 ## 10. Deployment
 
-The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`; `daviddao/plrd-v2` was an earlier name). `main` auto-deploys to Vercel. `vercel.json` sets only `framework: nextjs` + `buildCommand: npm run build`. `*.pdf` is gitignored.
+The repo lives at `github.com/protocol/plrd.org` (moved from `daviddao/plrd.org`; `daviddao/plrd-v2` was an earlier name). `main` auto-deploys to Vercel. `vercel.json` sets only `framework: nextjs` + `buildCommand: npm run build`. `*.pdf` is gitignored, except the Sovereign AI sheets in `public/sovereign-ai/`.
 
 ---
 

@@ -1,4 +1,5 @@
 import "server-only"
+import { cacheProviderStats } from "./provider-stats-cache"
 
 /**
  * Read-only Ma Earth crowdfunding stats for the FA2 Live Dashboard: total live
@@ -89,11 +90,13 @@ type MatchingPool = {
 /** POST one oRPC procedure. oRPC wraps I/O in a `{ json }` envelope and can
  *  answer non-2xx with a valid body; parse regardless and only fail when the
  *  `json` payload is truly absent. */
-async function rpc<T>(procedure: string, input: unknown): Promise<T> {
+async function rpc<T>(procedure: string, input: unknown, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted()
   const res = await fetch(`${MAEARTH_RPC_BASE}/${procedure}`, {
     method: "POST",
     headers: { "content-type": "application/json", "user-agent": UA },
-    next: { revalidate: REVALIDATE, tags: ["maearth"] },
+    cache: "no-store",
+    signal,
     body: JSON.stringify({ json: input }),
   })
   const body = (await res.json().catch(() => null)) as { json?: T } | null
@@ -103,18 +106,20 @@ async function rpc<T>(procedure: string, input: unknown): Promise<T> {
   return body.json
 }
 
-export async function fetchMaEarthStats(): Promise<MaEarthStats> {
+async function loadMaEarthStats(signal = AbortSignal.timeout(20_000)): Promise<MaEarthStats> {
+  // Includes current-round discovery and both dependent RPCs, not 20s each.
   try {
-    const round = await rpc<Round>("rounds/getCurrent", {})
+    const round = await rpc<Round>("rounds/getCurrent", {}, signal)
     if (!round?.id) throw new Error("no current round")
 
     const [estimates, pool] = await Promise.all([
-      rpc<MatchingEstimates>("rounds/getMatchingEstimates", { id: round.id }),
+      rpc<MatchingEstimates>("rounds/getMatchingEstimates", { id: round.id }, signal),
       rpc<MatchingPool | null>("rounds/getMatchingPoolOrNull", {
         id: round.id,
-      }).catch(() => null),
+      }, signal).catch(() => null),
     ])
 
+    signal.throwIfAborted()
     const projects = estimates.projects ?? []
     const donationCents = projects.reduce((s, p) => s + (p.directDonations ?? 0), 0)
     const donors = projects.reduce((s, p) => s + (p.donorCount ?? 0), 0)
@@ -141,3 +146,5 @@ export async function fetchMaEarthStats(): Promise<MaEarthStats> {
     }
   }
 }
+
+export const fetchMaEarthStats = cacheProviderStats("maearth", REVALIDATE, loadMaEarthStats)

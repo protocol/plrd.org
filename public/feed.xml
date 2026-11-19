@@ -7,10 +7,22 @@
     <atom:link href="https://www.plrd.org/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[AUA Focus Series S2 E21: Focus on Ethical and Informed Use of AI]]></title>
+      <link>https://www.plrd.org/talks/aua-ethical-informed-ai/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 GMT</pubDate>
+      <description><![CDATA[David Dao and Maria Baghramian on ethical AI · YouTube · 46 min.]]></description>
+    </item>
+    <item>
       <title><![CDATA[Neurotech as a Frontier for Human Flourishing]]></title>
       <link>https://www.plrd.org/blog/neurotech-frontier-human-flourishing/</link>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
       <description><![CDATA[PL Neuro exists to break bottlenecks: to define the milestones neurotech and NeuroAI need, drive the research that shifts what's believed possible, and route talent and capital to some of humanity's hardest and most important problems.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Securing Fundamental Rights in the Digital Realm: The Infrastructure Freedom Now Runs On]]></title>
+      <link>https://www.plrd.org/blog/securing-fundamental-rights-in-the-digital-realm/</link>
+      <pubDate>Sun, 30 Aug 2026 00:00:00 GMT</pubDate>
+      <description><![CDATA[The digital foundations our fundamental rights now depend on — censorship-resistant communication, portable identity, verifiable public knowledge, and sovereign infrastructure for AI and agents — the four opportunity spaces we are backing and the inflection points we believe are within reach.]]></description>
     </item>
     <item>
       <title><![CDATA[Adam Marblestone — We Are Massively Underinvesting in the Human Brain]]></title>
@@ -143,12 +155,6 @@
       <link>https://protocol.ai/blog/threads-from-the-2025-cypherpunk-retreat/</link>
       <pubDate>Fri, 03 Oct 2025 00:00:00 GMT</pubDate>
       <description><![CDATA[Key takeaways from the Cypherpunk Retreat, where 100 leading builders advanced privacy-tech coordination. Themes included TEEs, MPC, and the next generation of private computation.]]></description>
-    </item>
-    <item>
-      <title><![CDATA[AI Safety and Governance: Hard Rules, Real Evaluations, and Risk]]></title>
-      <link>https://www.plrd.org/talks/voc-evan-miyazono/</link>
-      <pubDate>Wed, 01 Oct 2025 00:00:00 GMT</pubDate>
-      <description><![CDATA[Evan Miyazono, founder and CEO of Atlas Computing, discusses how US and Chinese approaches to AI regulation are diverging and what that means for global AI safety. While the US moves toward a largely unregulated model, China requires mandatory evaluations for large-scale AI training runs. The conver]]></description>
     </item>
     <item>
       <title><![CDATA[BitRobot and the Future of Embodied AI]]></title>

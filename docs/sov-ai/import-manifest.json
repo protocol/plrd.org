@@ -1,0 +1,103 @@
+{
+  "upstreamRepository": "lksbrssr/sovai-program",
+  "upstreamRevision": "04661489ec9358132c01f6e302a58b92bce78b02",
+  "mount": "/sov-ai",
+  "files": [
+    {
+      "path": "index.html",
+      "upstreamSha256": "8c6afb062868f4bfd182650fc7709398c446316bff475e7b9af7112c9438e6c2",
+      "mountedSha256": "cd1ff59c9e291977f8687c1b4f114132f2582ae79a8d8f6b230cc9a2681029a8"
+    },
+    {
+      "path": "styles.css",
+      "upstreamSha256": "bc214c6aac0207420c2519fe0444ee6ef0b1f7ea1ab32bcab00feff3570daf8a",
+      "mountedSha256": "bc214c6aac0207420c2519fe0444ee6ef0b1f7ea1ab32bcab00feff3570daf8a"
+    },
+    {
+      "path": "app.js",
+      "upstreamSha256": "0c174b3156196247dc71c4ed0726345b310ce8a2375107168b47e20ab6dffbe2",
+      "mountedSha256": "0c174b3156196247dc71c4ed0726345b310ce8a2375107168b47e20ab6dffbe2"
+    },
+    {
+      "path": "assets/pl-rd-logo.svg",
+      "upstreamSha256": "f5b09873608cc6acd9ee14c0b23588a9c8ee821c6da62e9404b0fb8cada6e2e5",
+      "mountedSha256": "f5b09873608cc6acd9ee14c0b23588a9c8ee821c6da62e9404b0fb8cada6e2e5"
+    },
+    {
+      "path": "assets/pl-mark.svg",
+      "upstreamSha256": "c73900e59afc26d76b58a8078c7f9eb4c6076da274bbc33e20173ae370426853",
+      "mountedSha256": "c73900e59afc26d76b58a8078c7f9eb4c6076da274bbc33e20173ae370426853"
+    },
+    {
+      "path": "assets/sovai-hero.webp",
+      "upstreamSha256": "9ff3684d0d7a59eb37041f3053df461b37fe2a0ca0f8208c89ae0100ffd215c8",
+      "mountedSha256": "9ff3684d0d7a59eb37041f3053df461b37fe2a0ca0f8208c89ae0100ffd215c8"
+    },
+    {
+      "path": "assets/listening-collage.webp",
+      "upstreamSha256": "f51a052d4b14641e54ee4b07de87ab826e56974162f1e0eea55774ecbd068f04",
+      "mountedSha256": "f51a052d4b14641e54ee4b07de87ab826e56974162f1e0eea55774ecbd068f04"
+    },
+    {
+      "path": "assets/hypercerts-collage.webp",
+      "upstreamSha256": "e7665cdc636659f55efd967552c1731ae52a4fbf93d217b2a346cb16029e1d68",
+      "mountedSha256": "e7665cdc636659f55efd967552c1731ae52a4fbf93d217b2a346cb16029e1d68"
+    },
+    {
+      "path": "assets/brief-previews/why-sovereign-ai.webp",
+      "upstreamSha256": "9d5f37b97c8f131f333782429dddaea1a825ed5919609a0bf2e04e50198f2b76",
+      "mountedSha256": "9d5f37b97c8f131f333782429dddaea1a825ed5919609a0bf2e04e50198f2b76"
+    },
+    {
+      "path": "assets/brief-previews/broad-listening-simocracy.webp",
+      "upstreamSha256": "9bd3b4655851c5fbfe4cb0c7bf2fb4c000b2772f19cadc19cc9eae54791e132a",
+      "mountedSha256": "9bd3b4655851c5fbfe4cb0c7bf2fb4c000b2772f19cadc19cc9eae54791e132a"
+    },
+    {
+      "path": "assets/brief-previews/hypercerts.webp",
+      "upstreamSha256": "18a055c7fb11660f2fd107c44585613221fdda8be8ab92f943fd8ab0c09d8a85",
+      "mountedSha256": "18a055c7fb11660f2fd107c44585613221fdda8be8ab92f943fd8ab0c09d8a85"
+    },
+    {
+      "path": "assets/brief-previews/government-pilot-partnership.webp",
+      "upstreamSha256": "7a47a90cfaf772ee9c9a54f999d8d1938b8a5fc5bea36ee2145cfd3a38b25a55",
+      "mountedSha256": "7a47a90cfaf772ee9c9a54f999d8d1938b8a5fc5bea36ee2145cfd3a38b25a55"
+    },
+    {
+      "path": "assets/brief-previews/sovereign-ai-for-funders.webp",
+      "upstreamSha256": "cf550e895c4bc0372a9d569b4d8f6529c68c2cb059ee3740150cb30a3d2e6edf",
+      "mountedSha256": "cf550e895c4bc0372a9d569b4d8f6529c68c2cb059ee3740150cb30a3d2e6edf"
+    },
+    {
+      "path": "briefs/why-sovereign-ai.pdf",
+      "upstreamSha256": "132e4ab341f0a2a822ad3c95e5f28c24f0e05b8f34e9c343d4d6ea690f81ae4c",
+      "mountedSha256": "132e4ab341f0a2a822ad3c95e5f28c24f0e05b8f34e9c343d4d6ea690f81ae4c"
+    },
+    {
+      "path": "briefs/broad-listening-simocracy.pdf",
+      "upstreamSha256": "7defde66147a31303fb6c3fa273b90e6661db434ef0938494448652e86210a07",
+      "mountedSha256": "7defde66147a31303fb6c3fa273b90e6661db434ef0938494448652e86210a07"
+    },
+    {
+      "path": "briefs/hypercerts.pdf",
+      "upstreamSha256": "219eebc969c8129fffb681ee88fd1a79d1021dad2a5c6e7bd2aa4aeb1e86ec9a",
+      "mountedSha256": "219eebc969c8129fffb681ee88fd1a79d1021dad2a5c6e7bd2aa4aeb1e86ec9a"
+    },
+    {
+      "path": "briefs/government-pilot-partnership.pdf",
+      "upstreamSha256": "69e10d18dbf3d2eb0d32d6724097fe652c8f199c409732f4a7554bbfb34d88dd",
+      "mountedSha256": "69e10d18dbf3d2eb0d32d6724097fe652c8f199c409732f4a7554bbfb34d88dd"
+    },
+    {
+      "path": "briefs/sovereign-ai-for-funders.pdf",
+      "upstreamSha256": "1a0de81dba025943090e89438ca781f98a4fe6a6a063f27691e32a64a6560e4b",
+      "mountedSha256": "1a0de81dba025943090e89438ca781f98a4fe6a6a063f27691e32a64a6560e4b"
+    }
+  ],
+  "changes": [
+    "Prefix local asset and PDF paths for both entry spellings.",
+    "Use the supplied title and description; add canonical/Open Graph metadata.",
+    "Remove website-preview labeling for the authorized release.",
+    "Preserve all CSS, JavaScript, artwork and original PDFs byte-for-byte."
+  ]
+}
