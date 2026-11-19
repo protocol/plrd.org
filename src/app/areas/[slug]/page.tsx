@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { areas, publications, talks, listedBlogPosts as blogPosts } from '@/lib/content'
 import { FOCUS_AREA_DESCRIPTIONS, type FocusAreaSlug } from '@/lib/focus-area-descriptions'
-import { stripFaPrefix, formatDate } from '@/lib/format'
+import { stripFaPrefix, formatDate, externalSourceLabel } from '@/lib/format'
 import { AreaIcon, type AreaIconType } from '@/components/AreaIcons'
 import AreaHeroGraphic from '@/components/AreaHeroGraphic'
 import AreaHeroActions from '@/components/AreaHeroActions'
@@ -139,7 +139,7 @@ export default async function AreaPage({ params }: Props) {
         external: !!b.external_url,
         title: b.title,
         type: 'Blog',
-        meta: [b.external_url ? 'protocol.ai' : null, formatDate(b.date)].filter(Boolean).join(' · '),
+        meta: [b.external_url ? externalSourceLabel(b.external_url) : null, formatDate(b.date)].filter(Boolean).join(' · '),
         date: b.date || '',
       })),
     ...publications
@@ -361,7 +361,6 @@ export default async function AreaPage({ params }: Props) {
                   className="w-full h-full object-cover object-top"
                 />
               </div>
-              <figcaption className="text-xs text-gray-500 mt-2">Static interface preview</figcaption>
             </figure>
           </a>
         </section>

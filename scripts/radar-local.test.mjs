@@ -55,9 +55,12 @@ test('Insights never fetches external Radar even with a healthy configured Curat
   assert.equal(elementsOfType(tree, InsightsExplorer)[0].props.initialArea, 'neurotech')
 })
 
-test('AUA ethical-AI podcast leads the November Radar with verified source metadata', async (t) => {
+test('AUA ethical-AI podcast remains beside the newer Neuro Atlas article with verified source metadata', async (t) => {
   const { radar } = await renderInsights(t)
-  const [podcast] = radar.items
+  const [article, podcast] = radar.items
+  assert.equal(article.key, 'blog-introducing-neuro-atlas')
+  assert.equal(article.date, 'Nov 19, 2026')
+  assert.equal(article.href, 'https://www.plneuro.xyz/insights/introducing-neuro-atlas/')
   assert.equal(radar.edition, 'November 2026 Radar')
   assert.equal(podcast.key, 'talk-aua-ethical-informed-ai')
   assert.equal(podcast.title, 'AUA Focus Series S2 E21: Focus on Ethical and Informed Use of AI')
