@@ -13,7 +13,7 @@ import { type MetricSeries } from "./trends"
  * never matches FtC's repo) and exposes them over the same GraphQL surface as
  * org.plresearch.* — one endpoint, server-side paging, real-time-ish.
  *
- * Biodiversity stays on api.hi.gainforest.app (see gainforest.ts); this module is
+ * Biodiversity stays on api-hi.gainforest.app (see gainforest.ts); this module is
  * FtC-only. A flaky/empty upstream yields 0 + `degraded: true` rather than
  * failing the page (same contract as fetchGlowStats / fetchGainforestStats).
  *

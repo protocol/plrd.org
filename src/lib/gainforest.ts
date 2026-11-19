@@ -9,7 +9,7 @@ import { type MetricSeries, cumulativeOnAxis, dayAxis, ms } from "./trends"
  *   · certified organizations  → `appCertifiedActorOrganization`
  *   · Bumicerts (hypercerts)   → `orgHypercertsClaimActivity`
  *
- * from the Hyperindex GraphQL API (api.hi.gainforest.app, CORS-open), cached via
+ * from the Hyperindex GraphQL API (api-hi.gainforest.app, CORS-open), cached via
  * Next ISR. A flaky upstream yields 0 + `degraded: true` rather than failing
  * the page. The dashboard *map* is a build-time snapshot of certified-org
  * locations (see `scripts/generate-gainforest-sites.mjs` →
@@ -17,7 +17,7 @@ import { type MetricSeries, cumulativeOnAxis, dayAxis, ms } from "./trends"
  */
 
 const GAINFOREST_INDEXER_URL =
-  process.env.GAINFOREST_INDEXER_URL ?? "https://api.hi.gainforest.app/graphql"
+  process.env.GAINFOREST_INDEXER_URL ?? "https://api-hi.gainforest.app/graphql"
 
 // 15-minute ISR — matches gainforest-app / Bumiscan's own cadence.
 const REVALIDATE = 60 * 15

@@ -17,7 +17,7 @@
  */
 
 /** Hyperindex GraphQL endpoint. CORS `*`, queryable from the browser. */
-export const GAINFOREST_INDEXER_URL = 'https://api.hi.gainforest.app/graphql'
+export const GAINFOREST_INDEXER_URL = 'https://api-hi.gainforest.app/graphql'
 
 /** Hyperscan record-view base (provenance link-out for each card). */
 const HYPERSCAN_URL = 'https://www.hyperscan.dev'
