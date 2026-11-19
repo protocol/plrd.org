@@ -2,7 +2,7 @@
 
 Website login, CMS editing, browser publishing, local community deletion, and credential-based maintenance writers are retired. Content changes go through a pull request to [protocol/plrd.org](https://github.com/protocol/plrd.org), review, merge, and deployment. A successful GitHub edit is not an immediate production update.
 
-**Integration boundary:** this auth/write retirement requires the companion content migration. It supplies `src/data/site-content/pages.json`, `opportunities.json`, and repository-backed implementations of the existing `src/lib/indexer.ts` read contracts. The auth lane deliberately does not modify that module or those data/scripts. Its guide-link tests verify the exact destination strings; parent integration must verify the two source files exist and retained rendered-copy parity. The parent also reconciles public publication discovery with the companion recorded URI. Do not ship auth retirement alone as a claim that remote content overrides have been fully migrated.
+Website copy is repository-owned: `src/data/site-content/pages.json` and `opportunities.json` back the existing `src/lib/indexer.ts` read contracts. See [content authoring and migration evidence](content-migration.md) for source ownership, preservation decisions, and the immutable public-record capture. Publication discovery reads the recorded identity from repository JSON rather than deployment configuration.
 
 ## Legacy HTML routes (trailing-slash URLs)
 
@@ -62,7 +62,7 @@ Formerly supported methods below return JSON **410 Gone**, `Cache-Control: no-st
 - `/api/users/[handle]/`: public Bluesky profile/handle reads, retaining `@atproto/api`.
 - Public DID/PDS resolution, Hypercert claim/creator reads, Constellation community evidence/comments, public profile/avatar links, and GainForest public blob URLs.
 - Separate Simocracy, GainForest, FtC and other public impact/metric clients. Some public readers send GraphQL POST **queries**, not repository mutations. Do not shut down a shared external indexer/account because the website CMS was retired.
-- `/.well-known/site.standard.publication`: read-only published-record discovery; the parent integrates the companion recorded publication URI. No publication/account creation is authorized or needed.
+- `/.well-known/site.standard.publication`: read-only published-record discovery using the preserved repository publication URI. No publication/account creation is needed.
 - Community content stays visible. A management link uses only an explicit safe HTTPS `sourceURL` carried by the current record, with no URL credentials. If missing, the UI directs users to the service where they created the record, without inventing a management URL. Existing contribution links remain external links, not local login/write flows.
 
 ## Removed implementation and operational commands

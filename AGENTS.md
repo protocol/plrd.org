@@ -59,7 +59,7 @@ src/
     site-config.ts              Nav + site metadata
     format.ts                   formatDate, stripFaPrefix, slugToName
     lexicons.ts                 Public ATProto collection IDs, record types, and read identity
-    indexer.ts                  Content-read compatibility contract; companion migration uses repo snapshots
+    indexer.ts                  Content-read compatibility contract backed by repository JSON
     atproto-client.ts           Unauthenticated Bluesky helpers
 public/
   icons/<name>.svg              Raw SVGs, referenced as /icons/<name>.svg
@@ -107,7 +107,7 @@ Pages **must** `import { publications, authors, ... } from '@/lib/content'`. Nev
 
 ### Layout & conventions
 
-`src/app/layout.tsx` is the only root layout: loads Inter + Newsreader fonts, sets default metadata from `siteConfig`, wraps children in `<AuthProvider>` then `<SiteShell>`.
+`src/app/layout.tsx` is the only root layout: loads Inter + Newsreader fonts, sets default metadata from `siteConfig`, and wraps children in `<SiteShell>`. Website authentication is retired.
 
 **Detail-page template** (follow exactly — `params` is a Promise in Next 15):
 
@@ -135,7 +135,7 @@ export default async function Page({ params }: Props) {
 
 - Dynamic segments are statically rendered only for items returned by `generateStaticParams`. Adding a record requires content files — you can't hand-edit `src/lib/content.ts`, it's regenerated.
 - Use `notFound()` inside the default export; return `{ title: 'Not Found' }` from `generateMetadata` (don't throw).
-- Former CMS consumers retain the `fetchPage`/opportunity read contracts; the companion migration backs these with `src/data/site-content/` snapshots. Do not reconnect live CMS overrides or replace approved copy with older fallback seeds.
+- Former CMS consumers retain the `fetchPage`/opportunity read contracts backed by editable `src/data/site-content/` JSON. Do not reconnect live CMS overrides or replace approved copy with older fallback seeds.
 
 ### Routing rules
 
@@ -149,7 +149,7 @@ export default async function Page({ params }: Props) {
 ### Special / dynamic routes
 
 - `src/app/api/*/route.ts` — all marked `export const dynamic = "force-dynamic"`.
-- `src/app/.well-known/site.standard.publication/route.ts` — AT-URI discovery (requires `NEXT_PUBLIC_PUBLICATION_URI`).
+- `src/app/.well-known/site.standard.publication/route.ts` — AT-URI discovery from `src/data/site-content/publication.json`; no environment override.
 - `/admin`, `/edit`, `/write`, and all former editor routes show GitHub PR guidance, with noindex metadata and canonical repository source links. They do not authenticate, load CMS records, or save.
 
 ### Adding a new page — checklist
@@ -214,7 +214,7 @@ Server components in this layer: `SiteFooter`, `AuthorCard`, `Breadcrumb`, `Area
 ## 6. GitHub-only editing and public read integrations
 
 Website content is reviewed in GitHub pull requests, then merged and deployed.
-The companion content migration supplies `src/data/site-content/pages.json` and
+Repository content is held in `src/data/site-content/pages.json` and
 `opportunities.json` behind the existing `src/lib/indexer.ts` read contracts.
 About remains `src/data/about.json`; research articles and profiles remain
 Markdown; AI/DHR/Neuro opportunities retain their existing authoritative JSON.
@@ -249,17 +249,17 @@ FA2 is special-cased: **hardcoded routes** under `/areas/economies-governance/` 
 
 | Route | Component | Data source |
 |---|---|---|
-| `/areas/economies-governance/` | `page.tsx` | indexer page `area-economies-governance` (fallback: hardcoded copy) |
-| `.../subareas/` | `subareas/page.tsx` | indexer page `area-eg-subareas` + hardcoded 9-subarea list |
+| `/areas/economies-governance/` | `page.tsx` | repository page `area-economies-governance` (fallback: hardcoded copy) |
+| `.../subareas/` | `subareas/page.tsx` | repository page `area-eg-subareas` + hardcoded 9-subarea list |
 | `.../opportunity-spaces/` | `opportunity-spaces/page.tsx` | `src/data/fa2/opportunityspaces.json` |
 | `.../opportunity-spaces/[slug]/` | SSG via `generateStaticParams` | `opportunityspaces.json` |
-| `.../impact/` | `impact/page.tsx` | indexer page `area-eg-impact` |
+| `.../impact/` | `impact/page.tsx` | repository page `area-eg-impact` |
 | `.../impact/report-2025/` | `report-2025/page.tsx` | `src/data/fa2/impact.json` + `projects.json` |
 | `.../impact/live-dashboard/` | `live-dashboard/page.tsx` | placeholder |
 | `.../projects/` | `projects/page.tsx` → `ProjectsExplorer.tsx` (client) | `src/data/fa2/projects.json` |
 | `.../dependency-graph/` | `dependency-graph/page.tsx` | `lib/content` dep-graph entries |
 | `.../dependency-graph/[slug]/` | `DependencyGraph.tsx` (d3-force) | `dependency-graph/data/` |
-| `.../edit/` | `edit/page.tsx` | inline editor over `area-economies-governance` |
+| `.../edit/` | `edit/page.tsx` | noindex GitHub contribution guidance |
 | `.../sovereign-ai/[slug]/` | SSG via `generateStaticParams` | `src/data/fa2/sovereign-ai/<slug>.json`; PDF and shelf plate in `public/sovereign-ai/` |
 
 **Sovereign AI program.** FA2 runs one program, Sovereign AI, and the FA2 page presents it as its flagship: a `#flagship-program` box after the introduction and before Opportunity Spaces, in the shape of the Digital Human Rights one, with "Explore Sovereign AI" to the program site at `/sov-ai` (`docs/sov-ai/README.md`). The box's two paragraphs are `flagshipCopy` in `src/lib/sovereign-ai.ts`, the program site's own overview word for word; `scripts/fa2-flagship.test.mjs` holds them to `public/sov-ai/index.html`, so change the wording there first. The old `#sovereign-ai` anchor sits just above the box, since the sheets and redirects point at it. The box lists the program's one-page sheets: *Why sovereign AI*, *Broad Listening & Simocracy*, *Hypercerts*, the *government pilot partnership* and the summary *for funders*. Each sheet is one JSON file in `src/data/fa2/sovereign-ai/` that names its layout (`three-propositions`, `explainer`, `partnership` or `summary`) and is registered in `src/lib/sovereign-ai.ts`, whose order is the order of the list; `scripts/fa2-sovereign-ai.test.mjs` fails if a JSON is not registered. Every sheet prints the kicker "Economies & Governance · Sovereign AI program". The JSON is published three ways:
@@ -285,9 +285,9 @@ build or runtime. Remove retired auth values from deployment configuration
 through the normal authorized secret-management process; this code does not
 read them. See `.env.example` for retained public analytics/optional metrics.
 
-`NEXT_PUBLIC_PUBLICATION_URI` currently remains an optional read-only discovery
-value for `/.well-known/site.standard.publication`; the companion content lane
-supplies the recorded publication URI for parent integration. Do not create a
+`src/data/site-content/publication.json` supplies the recorded public discovery
+identity for `/.well-known/site.standard.publication`. No environment value is
+required and deployment settings cannot override it. Do not create a
 new publication/account or reintroduce a credential-based bootstrap script.
 
 ---
