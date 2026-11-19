@@ -47,6 +47,10 @@ const nextConfig: NextConfig = {
       // Exact index aliases only: individual /authors/<slug>/ profiles stay put.
       { source: '/authors', destination: '/team/', permanent: true },
       { source: '/authors/', destination: '/team/', permanent: true },
+      // This external Blog record is discoverable through the native search
+      // index. Keep both local spellings on its published PL Neuro article.
+      { source: '/blog/introducing-neuro-atlas', destination: 'https://www.plneuro.xyz/insights/introducing-neuro-atlas/', permanent: true },
+      { source: '/blog/introducing-neuro-atlas/', destination: 'https://www.plneuro.xyz/insights/introducing-neuro-atlas/', permanent: true },
       // The methodology page is public. Old cryptic and catalogue URLs redirect
       // there so shared links do not 404. The retired catalogue prefix stays
       // noindex above.

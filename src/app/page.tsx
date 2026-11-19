@@ -244,7 +244,7 @@ export default async function HomePage() {
 
     <div className="max-w-6xl mx-auto px-6">
       {/* ── Latest Insights ── */}
-      <div className="pb-12 lg:pb-14 pt-14 lg:pt-16">
+      <div id="latest-insights" className="scroll-mt-24 pb-12 lg:pb-14 pt-14 lg:pt-16">
         <div className="flex items-baseline justify-between mb-7">
           <div>
             <p className="text-sm text-blue font-medium mb-1">News &amp; Insights</p>

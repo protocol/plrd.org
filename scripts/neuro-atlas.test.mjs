@@ -57,7 +57,7 @@ test('retired proxy environment cannot change the redirect target', async (t) =>
 })
 
 test('Atlas declares noindex without config redirects bypassing middleware', async () => {
-  assert.deepEqual((await config.redirects()).filter(rule => /neuro-atlas/i.test(rule.source)), [])
+  assert.deepEqual((await config.redirects()).filter(rule => /^\/neuro-atlas(?:\/|$)/i.test(rule.source)), [])
   assert.deepEqual((await config.headers()).filter(rule => rule.source === '/neuro-atlas/:path*'), [{
     source: '/neuro-atlas/:path*',
     headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],

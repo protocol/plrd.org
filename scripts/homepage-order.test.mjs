@@ -6,6 +6,8 @@ import matter from 'gray-matter'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { JSDOM } from 'jsdom'
+import 'next/dist/server/node-environment.js'
+import { unstable_getResponseFromNextConfig } from 'next/experimental/testing/server.js'
 
 const { default: HomePage } = source('app/page.tsx')
 const { default: InsightCarousel } = source('components/InsightCarousel.tsx')
@@ -51,6 +53,21 @@ test('homepage carousel links the published Introducing Neuro Atlas Blog item di
   assert.ok([...card.querySelectorAll('[style]')].some((node) => node.style.backgroundImage.includes(hero)), 'render the exact published hero')
 })
 
+test('the Neuro Atlas search destination redirects to the public article without changing other Blog routes', async () => {
+  const { default: nextConfig } = source('../next.config.ts')
+  const publicArticle = 'https://www.plneuro.xyz/insights/introducing-neuro-atlas/'
+  for (const path of ['/blog/introducing-neuro-atlas', '/blog/introducing-neuro-atlas/']) {
+    const response = await unstable_getResponseFromNextConfig({ url: `https://www.plrd.org${path}?ref=search`, nextConfig })
+    assert.equal(response.status, 308, path)
+    assert.equal(response.headers.get('location'), `${publicArticle}?ref=search`, path)
+  }
+  for (const path of ['/blog/introducing-neuro-atlas-other/', '/blog/introducing-neuro-atlas/deep/', '/blog/neurotech-frontier-human-flourishing/', '/blog/transformative-power-neurotech/']) {
+    const response = await unstable_getResponseFromNextConfig({ url: `https://www.plrd.org${path}`, nextConfig })
+    assert.equal(response.status, 200, path)
+    assert.equal(response.headers.get('location'), null, path)
+  }
+})
+
 function elements(node) {
   if (Array.isArray(node)) return node.flatMap(elements)
   if (!node || typeof node !== 'object') return []
@@ -72,6 +89,10 @@ test('homepage places the existing latest carousel between focus areas and the i
   const carousel = nodes.filter((node) => node.type === InsightCarousel)
   const pipeline = nodes.filter((node) => node.type === RDPipeline)
   assert.equal(carousel.length, 1, 'keep exactly one carousel')
+  const insightSection = nodes.find((node) => node.props?.id === 'latest-insights')
+  assert.ok(insightSection, 'provide a stable deep-link to the existing carousel section')
+  assert.ok(elements(insightSection).includes(carousel[0]), 'the anchor owns the actual carousel')
+  assert.match(insightSection.props.className, /(?:^|\s)scroll-mt-24(?:\s|$)/, 'clear the sticky site header when following the deep-link')
   assert.equal(pipeline.length, 1, 'keep exactly one pipeline graphic')
   assert.equal(carousel[0].props.items.length, 8, 'preserve the latest-eight feed')
   const focusIndex = nodes.findIndex((node) => node.props?.id === 'focus-areas')
