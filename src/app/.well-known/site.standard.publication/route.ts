@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server"
+import { REPO_PUBLICATION_URI } from "@/lib/indexer"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const uri = process.env.NEXT_PUBLIC_PUBLICATION_URI
-  if (!uri) {
-    return new NextResponse("Publication record not configured", { status: 404 })
-  }
-  // standard.site expects plain text AT-URI
-  return new NextResponse(uri, {
+  // Preserve the published identity; configuration no longer changes website content.
+  return new NextResponse(REPO_PUBLICATION_URI, {
     headers: { "Content-Type": "text/plain" },
   })
 }
