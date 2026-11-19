@@ -1,10 +1,55 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { source } from './velocity/test-source-loader.mjs'
+import fs from 'node:fs'
+import matter from 'gray-matter'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { JSDOM } from 'jsdom'
 
 const { default: HomePage } = source('app/page.tsx')
 const { default: InsightCarousel } = source('components/InsightCarousel.tsx')
 const { default: RDPipeline } = source('components/RDPipeline.tsx')
+const { listedBlogPosts } = source('lib/content.ts')
+
+test('homepage carousel links the published Introducing Neuro Atlas Blog item directly to PL Neuro', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({
+    data: { orgPlresearchPage: { edges: [] } },
+  }))
+  const slug = 'introducing-neuro-atlas'
+  const url = 'https://www.plneuro.xyz/insights/introducing-neuro-atlas/'
+  const hero = 'https://www.plneuro.xyz/images/insights/introducing-neuro-atlas.png'
+  const post = listedBlogPosts.find((post) => post.slug === slug)
+  assert.ok(post, 'the published article needs a listed native Blog record')
+  assert.equal(post.title, 'Introducing Neuro Atlas')
+  assert.equal(new Date(post.date).toISOString().slice(0, 10), '2026-11-19')
+  assert.equal(post.summary, 'An interactive resource from PL Neuro to follow technical progress, company milestones, and funding across neurotechnology.')
+  assert.equal(post.external_url, url)
+  assert.equal(post.coverImage, hero)
+  assert.deepEqual(post.areas, ['neurotech'])
+  assert.deepEqual(post.authors, [], 'do not invent a byline absent from the published article')
+  assert.equal(post.html, '', 'use an external Blog stub, not a duplicate article')
+  const record = matter(fs.readFileSync(`content/blog/${slug}/index.md`, 'utf8'))
+  assert.equal(record.data.external_url, url)
+  assert.equal(record.data.cover_image, hero)
+  assert.equal(record.content.trim(), '')
+
+  const carousel = elements(await HomePage()).find((node) => node.type === InsightCarousel)
+  assert.ok(carousel)
+  assert.equal(carousel.props.items.length, 8, 'retain the existing latest-eight carousel')
+  assert.equal(carousel.props.items.filter((item) => item.slug === slug).length, 1)
+  assert.deepEqual(carousel.props.items[0], {
+    title: post.title, date: post.date, type: 'Blog', permalink: url,
+    slug, areas: [], coverImage: hero,
+  })
+  const { document } = new JSDOM(renderToStaticMarkup(createElement(InsightCarousel, carousel.props))).window
+  const card = document.querySelector(`a[href="${url}"]`)
+  assert.ok(card, 'the rendered card goes to the canonical public article, not a local duplicate')
+  assert.equal(card.querySelector('h4').textContent, post.title)
+  assert.match(card.textContent, /Blog/)
+  assert.match(card.textContent, /Nov 19, 2026/)
+  assert.ok([...card.querySelectorAll('[style]')].some((node) => node.style.backgroundImage.includes(hero)), 'render the exact published hero')
+})
 
 function elements(node) {
   if (Array.isArray(node)) return node.flatMap(elements)

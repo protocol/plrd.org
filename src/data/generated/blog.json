@@ -1,5 +1,20 @@
 [
   {
+    "slug": "introducing-neuro-atlas",
+    "title": "Introducing Neuro Atlas",
+    "date": "2026-11-19T00:00:00.000Z",
+    "summary": "An interactive resource from PL Neuro to follow technical progress, company milestones, and funding across neurotechnology.",
+    "description": "",
+    "authors": [],
+    "areas": [
+      "neurotech"
+    ],
+    "external_url": "https://www.plneuro.xyz/insights/introducing-neuro-atlas/",
+    "coverImage": "https://www.plneuro.xyz/images/insights/introducing-neuro-atlas.png",
+    "html": "",
+    "unlisted": false
+  },
+  {
     "slug": "neurotech-frontier-human-flourishing",
     "title": "Neurotech as a Frontier for Human Flourishing",
     "date": "2026-09-09T00:00:00.000Z",

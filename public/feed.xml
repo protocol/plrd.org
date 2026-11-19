@@ -7,6 +7,12 @@
     <atom:link href="https://www.plrd.org/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[Introducing Neuro Atlas]]></title>
+      <link>https://www.plneuro.xyz/insights/introducing-neuro-atlas/</link>
+      <pubDate>Thu, 19 Nov 2026 00:00:00 GMT</pubDate>
+      <description><![CDATA[An interactive resource from PL Neuro to follow technical progress, company milestones, and funding across neurotechnology.]]></description>
+    </item>
+    <item>
       <title><![CDATA[AUA Focus Series S2 E21: Focus on Ethical and Informed Use of AI]]></title>
       <link>https://www.plrd.org/talks/aua-ethical-informed-ai/</link>
       <pubDate>Tue, 03 Nov 2026 00:00:00 GMT</pubDate>

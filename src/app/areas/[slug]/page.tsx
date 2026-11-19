@@ -361,7 +361,6 @@ export default async function AreaPage({ params }: Props) {
                   className="w-full h-full object-cover object-top"
                 />
               </div>
-              <figcaption className="text-xs text-gray-500 mt-2">Static interface preview</figcaption>
             </figure>
           </a>
         </section>
