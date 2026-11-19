@@ -1,0 +1,98 @@
+[
+  {
+    "uri": "at://did:plc:qc42fmqqlsmdq7jiypiiigww/org.plresearch.editEvent/3mkntqxskzz2q",
+    "did": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "target": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/landing",
+    "targetCid": "bafyreidpkoivdzhovvbqasvrltseyhi2j73qqwrpbiupmh6km6kwkr3oce",
+    "collection": "org.plresearch.editEvent",
+    "editor": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "editorHandle": "daviddao.org",
+    "changedFields": [
+      "sections"
+    ],
+    "note": null,
+    "editedAt": "2026-04-29T19:33:58.421Z"
+  },
+  {
+    "uri": "at://did:plc:qc42fmqqlsmdq7jiypiiigww/org.plresearch.editEvent/3mki4cy7znw2q",
+    "did": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "target": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/eg--governance-democracy",
+    "targetCid": "bafyreiaevkuvynmbhud32xkrc5v2cikjlpwge3in5ymhdqeddqmuwmqn7i",
+    "collection": "org.plresearch.editEvent",
+    "editor": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "editorHandle": "daviddao.org",
+    "changedFields": [
+      "title",
+      "description",
+      "inflectionPoint",
+      "observations",
+      "fieldSignals"
+    ],
+    "note": null,
+    "editedAt": "2026-04-27T12:51:14.343Z"
+  },
+  {
+    "uri": "at://did:plc:qc42fmqqlsmdq7jiypiiigww/org.plresearch.editEvent/3mki474r2222n",
+    "did": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "target": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/eg--public-goods-funding",
+    "targetCid": "bafyreiergs5gaujxpkrtnciwvqmqusf6shwberuh7rmmoejvfrzlb74o3y",
+    "collection": "org.plresearch.editEvent",
+    "editor": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "editorHandle": "daviddao.org",
+    "changedFields": [
+      "title",
+      "tagline",
+      "inflectionPoint",
+      "theOpportunity",
+      "keyAssumptions",
+      "observations",
+      "fieldSignals"
+    ],
+    "note": null,
+    "editedAt": "2026-04-27T12:49:04.883Z"
+  },
+  {
+    "uri": "at://did:plc:qc42fmqqlsmdq7jiypiiigww/org.plresearch.editEvent/3mjxhh7yltv2q",
+    "did": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "target": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-economies-governance",
+    "targetCid": "bafyreihukoqyujcafnsexgpzu7cnmvvrwd3tfmsgvwbznbi5ntn4xum6mi",
+    "collection": "org.plresearch.editEvent",
+    "editor": "did:plc:qc42fmqqlsmdq7jiypiiigww",
+    "editorHandle": "daviddao.org",
+    "changedFields": [
+      "sections"
+    ],
+    "note": null,
+    "editedAt": "2026-04-20T21:55:12.319Z"
+  },
+  {
+    "uri": "at://did:plc:cpoagodpqrgs4t7thi5z37uf/org.plresearch.editEvent/3mjxfse73322e",
+    "did": "did:plc:cpoagodpqrgs4t7thi5z37uf",
+    "target": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/ai--open-compute-networks",
+    "targetCid": "bafyreibs44auzbyictitteg2ge4ihtt6vhl6ahcmnb66uko26fqfdolxxu",
+    "collection": "org.plresearch.editEvent",
+    "editor": "did:plc:cpoagodpqrgs4t7thi5z37uf",
+    "editorHandle": "satyam2.climateai.org",
+    "changedFields": [
+      "tagline"
+    ],
+    "note": null,
+    "editedAt": "2026-04-20T21:25:38.359Z"
+  },
+  {
+    "uri": "at://did:plc:cpoagodpqrgs4t7thi5z37uf/org.plresearch.editEvent/3mjxenxasrk2e",
+    "did": "did:plc:cpoagodpqrgs4t7thi5z37uf",
+    "target": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/ai--open-compute-networks",
+    "targetCid": "bafyreihdrli7bqb2347fpa6addnacqzwtynqsgx537jwsgz4fwprofbwxy",
+    "collection": "org.plresearch.editEvent",
+    "editor": "did:plc:cpoagodpqrgs4t7thi5z37uf",
+    "editorHandle": "satyam2.climateai.org",
+    "changedFields": [
+      "uri",
+      "tagline",
+      "rkey"
+    ],
+    "note": null,
+    "editedAt": "2026-04-20T21:05:16.820Z"
+  }
+]

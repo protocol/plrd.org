@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-11-19T19:07:24.561Z",
+  "did": "did:plc:pgwr6hkosgznfl5nz7egajei",
+  "pds": "https://leccinum.us-west.host.bsky.network",
+  "files": {
+    "public-records.json": {
+      "sha256": "f6a86f9e9e054eef63a4c9a167826faa574e3fe9ea648bfbeec3b20c14250b8c",
+      "bytes": 1520905
+    }
+  },
+  "collections": {
+    "org.plresearch.page": {
+      "count": 16,
+      "complete": true,
+      "forwardPages": 5,
+      "reversePages": 5,
+      "records": [
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/tutorials",
+          "cid": "bafyreih7k5ekelgsdhiljnqqybdczp475n5opk5u57lcw3ikr7a7sytvha",
+          "updatedAt": "2026-05-04T19:52:38.060Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "02bc5ae96303cf6c8ab1ffbf7b4a246b2817b1a8473703aa7ca77900a0c5641a"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/talks",
+          "cid": "bafyreicz7r3gkjlmws2kicmvi5srgxyolrgp53uknqmuc56wo7fr7knfnq",
+          "updatedAt": "2026-05-04T19:52:37.513Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "e7fca25b43444adfc1541290eff9ce8d7632d7f442870fc7c82af9c3019a4603"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/publications",
+          "cid": "bafyreifc2ipngglz4jjectqry4zrjldvbdhhq7l2e37irvd52bvjwdfdxq",
+          "updatedAt": "2026-05-04T19:52:36.935Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "40a8fc5878bf3c4049b6947864e8a1f53451943a1617f2643d509c1c804362b1"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/landing",
+          "cid": "bafyreihdjmakfb3mj6juehb5a7bnsk2p6ndhkoqhbqlchnqzknc56rk2m4",
+          "updatedAt": "2026-06-04T14:30:43.911Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "be441ec0b7ff19f0c61a07cc7a003b785703b1eecc2b19f1da67acdd5955b03e"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/insights",
+          "cid": "bafyreigdu24uuqy3exybe4jwqwkj3fvunpdmghg4aap5uasqyceygv6nuq",
+          "updatedAt": "2026-05-04T19:52:36.391Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "f9869535c56f48054001e58036fc304f24028d14cdf2691511a36706e87acd01"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/collaborate",
+          "cid": "bafyreigcysqnmlewbahpfdzgxfrurib2udotfdusrpvohewo4wkgplpe2e",
+          "updatedAt": "2026-05-11T18:21:01.712Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "730dc45eb7d334d6a0ed300b01e90e9b650536caa99ecc0f3e3996204d495517"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/blog",
+          "cid": "bafyreicvnewc7y36efppncjxfc3vananiebl5qmmy5knrqjkst64uww4ci",
+          "updatedAt": "2026-05-04T19:52:38.602Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "6d6b28edfac1f325dfe3f7b9cde82c00f0a11e467c0b7fb0d5c7547043f278a4"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/authors",
+          "cid": "bafyreiejebpaqheeergadho7cy4qe5cppixqxhbszbhr33fhwg6dueezpy",
+          "updatedAt": "2026-05-04T19:52:39.145Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "44007e2edcb6e0a59b54662381509377c29da014ff6b29c703897d13f1400a4d"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/areas",
+          "cid": "bafyreidk2stswcpkz4af5heglqwexcsm36dh5bvpuroe5q3lzhdeur4ixm",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "4b0b9df031540b5182f9afebb0de1dfddc7b432d2adbae5f890f83b3575fb00d"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-neurotech",
+          "cid": "bafyreibc6typv4vz4qktt4h7ykylhgqxxp6gnhugul2fu22kyytofmtpi4",
+          "updatedAt": "2026-05-13T19:26:49.402Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "d264e39b9ce7ff70ba87a5fe0e854fd80e64643b084ae465e737eda292100ad7"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-eg-subareas",
+          "cid": "bafyreibpxlhanwjjdy6nrqbj5pudoa7l7s542qmypt7vknuw5xh4bkyv7i",
+          "updatedAt": "2026-05-04T19:52:34.760Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "585727510655adcad1a8dba144e5797f0697dd18aabd9752013d962c9fe97233"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-eg-impact",
+          "cid": "bafyreighac5i3xhy6cfr4xkhkbe2sklalpkgrg4tdtajbj65ecz3nvjjj4",
+          "updatedAt": "2026-05-04T19:52:35.843Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "35dcd8211897a69800a0ba101deee63ba23748c4e81b431a738a4708c9d7ec76"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-economies-governance",
+          "cid": "bafyreiabfncpvfohqe5jma3votorbxy6uzrvliupu7iftaofspov6pqwt4",
+          "updatedAt": "2026-05-13T19:26:49.064Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "ee48ce59988da9d826e44f33d6fbfdb82dc4c420247802c50429b8ccd405190f"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-digital-human-rights",
+          "cid": "bafyreicp77cpdg2ihfwqdnml5vshb6fdli6zv6v4vbissn6axlbs7kk2pa",
+          "updatedAt": "2026-05-13T19:26:48.709Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "b850c6dcf6f7331caf1a4eb1edbf4e8e15cdf55622df8bda1ab6847dd7e471e6"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/area-ai-robotics",
+          "cid": "bafyreie72c7rky37oufsh6bvyrkk6xgivahaf2hk6z4fwsjbiq6fj65yi4",
+          "updatedAt": "2026-05-13T19:26:48.357Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "c044959c1e41f1d5865953bcbb426af18b43e76d155341037e7d50eb87bec4f0"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.page/about",
+          "cid": "bafyreie7qgdsh2tqb5cjdq264biypvaf7lpcrvbldahqv67osc6cm3tpxy",
+          "updatedAt": "2026-06-03T13:36:30.882Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "619f40bae656a611368548d95a98245d9aa6b4956942fd06f26c34dabd063ac2"
+        }
+      ]
+    },
+    "org.plresearch.opportunitySpace": {
+      "count": 15,
+      "complete": true,
+      "forwardPages": 4,
+      "reversePages": 4,
+      "records": [
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/neuro--whole-organism-emulation",
+          "cid": "bafyreifh677tdev4jysckpohiynobeafyrvp7y2cgrstaxmivdr66l4q3u",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "6145f082b71a26254ea8a8ef986e1006d4b034e6f0148fee4a3a7b8724f22d14"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/neuro--neural-augmentation",
+          "cid": "bafyreie7kquvgpuilx65a7snwg4675yfkmybb2xu24zoyhfn4iqgk3ajsi",
+          "updatedAt": "2026-04-20T20:14:09.603Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "a81545956ee3f4f9f722e148f2aa56e9d4267097ff59bd1b1e4b461611a5d943"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/neuro--biologically-inspired-intelligence",
+          "cid": "bafyreib3f36qfdgirzgvtiby3gioovrqbcttnghyc5vhxvrkcgimijioym",
+          "updatedAt": "2026-06-10T10:37:39.813Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "b493c48aa51950a011930e7ad894e3af76a96c817ca5e111c35bb09e44b51e3e"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/eg--sovereign-dpi",
+          "cid": "bafyreia5iacaubwd4k3rmfru7dtvyvw3l77zrzr4dbedhra5uxnhcnekty",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "25facc99d364825341e2efef2bc3fdd261913abf486591635c2f29430a90a3dc"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/eg--public-goods-funding",
+          "cid": "bafyreiergs5gaujxpkrtnciwvqmqusf6shwberuh7rmmoejvfrzlb74o3y",
+          "updatedAt": "2026-04-27T12:49:04.195Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "e766ae105b040a72895a5f89ce12ed147ff8916fc13e17e4515aa09f61a81472"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/eg--governance-democracy",
+          "cid": "bafyreiaevkuvynmbhud32xkrc5v2cikjlpwge3in5ymhdqeddqmuwmqn7i",
+          "updatedAt": "2026-04-27T12:51:13.700Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "ce92360264321b08141eb4b8e6cbf02509c6fa6b29c6aa432de8ef488bbb8a19"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/eg--climate-infrastructure",
+          "cid": "bafyreihecux7klcvtsienqka7365uiv6qe6r5wklydh3gkmyp43mqwsywe",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "d740a1332785b733d7b0f59d251805682d11788e5f425820a116c5112e107c56"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/dhr--verifiable-public-knowledge",
+          "cid": "bafyreigrtsbybjf7emeycaabnblzzfpzhzrcs2ed6for2hbdd3z6su56ee",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "d1b12f241490e2f20dc48a77553beca6452b10058a96b67692973ce902a2cc63"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/dhr--sovereign-infrastructure-ai-agents",
+          "cid": "bafyreid7d4ui3dv4b4sbnncu576hlbbqfc75gtoprxtpwg7jgf73zg3q2e",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "81f57acdd917395f4e8ab6ce831844d86e8351adf0636cf74730c27a9a1d03a2"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/dhr--portable-identity-credentials",
+          "cid": "bafyreiafrukimj2szd2bsjjupaa7h4f4pwddess2gkgq2t672umjqwwlmm",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "3ad5a1bb460c37f464adca8722acb4350c7c4d2b27d16fa966cbd187a37fd2a2"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/dhr--censorship-resistant-communications",
+          "cid": "bafyreifhxyzusdtmlswjghzxgkyaamxl47tgdc6zpm4kamvnimwjl3w6na",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "c5db6a9978dbb66bede475d8cbbdba6993725e98a8e4e56204b1ae3b9a619ec5"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/ai--open-compute-networks",
+          "cid": "bafyreibs44auzbyictitteg2ge4ihtt6vhl6ahcmnb66uko26fqfdolxxu",
+          "updatedAt": "2026-04-20T21:25:37.664Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "b841b655e59def0e7f1fbc02c6c96faa305369876fd9f77a4b807c3ff748df89"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/ai--embodied-ai-robotics-data",
+          "cid": "bafyreife3noegrfadyxamhhwhwfwbvirf4pbijqknmd54u7udvvxxcdpzu",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "e00cb0ee9b600954c36b3ff02e0cfa175b3fd1f1cdd5530daacbf94106bc21e1"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/ai--agent-native-economic-infrastructure",
+          "cid": "bafyreidgdvuqqwj6htwtumb75is5hxt3uqlgq7wkzyndsd3xkughfbyc6a",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "787fed636914a72b94a708fa0a876561bc368506272a3da2c185e7a542ba002b"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.plresearch.opportunitySpace/ai--agent-coordination-infrastructure",
+          "cid": "bafyreigivhnjybatvixajnivwzlxlocrsshlz7xzy2tx4j4k2ldhjxxtmi",
+          "updatedAt": "2026-03-25T00:00:00.000Z",
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "32a8ca0fc7396eb3fb6053276747ccf8acd930530cb4707c5f1c8ad0ef236bd0"
+        }
+      ]
+    },
+    "site.standard.document": {
+      "count": 3,
+      "complete": true,
+      "forwardPages": 2,
+      "reversePages": 2,
+      "records": [
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.document/3mvpnrdmcqi2s",
+          "cid": "bafyreic2oua7vsow2muhlj3755jo5t677pugxsqhzp3vnlgpl566ykfsbu",
+          "updatedAt": null,
+          "createdAt": null,
+          "publishedAt": "2026-09-09T00:00:00.000Z",
+          "valueSha256": "ea6de9e64de9793e9f7e873c6c03770e7b5bbd32f2e1f0a3e5e2da856000451a"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.document/3mvpnbj3e3g2b",
+          "cid": "bafyreib33ixii4qniqic6fvxlnkiqqico2txfl7rdkciv654m3vze2nbmm",
+          "updatedAt": null,
+          "createdAt": null,
+          "publishedAt": "2026-07-23T00:00:00.000Z",
+          "valueSha256": "0057d153c71effd207f9fd205616d5ca15098b287953a4a45979df86ccc4e05b"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.document/3mvpjxrgssq2m",
+          "cid": "bafyreidfppxfrut34zs4zz2ikinjx3lkc57cd2txo3lil4bgvjldnkc6nm",
+          "updatedAt": null,
+          "createdAt": null,
+          "publishedAt": "2026-07-14T00:00:00.000Z",
+          "valueSha256": "f0d15c6ba8ee23a4fea94fa0b45d539fe1a93afd5c70e4fcbe64f49fc3ff8927"
+        }
+      ]
+    },
+    "site.standard.publication": {
+      "count": 1,
+      "complete": true,
+      "forwardPages": 2,
+      "reversePages": 2,
+      "records": [
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.publication/3mi3mlkepmk2q",
+          "cid": "bafyreif7idnsps2kxr4a6bv6sfzj2xu62pvfspefgeww6x5doi7z4uhrya",
+          "updatedAt": null,
+          "createdAt": null,
+          "publishedAt": null,
+          "valueSha256": "c960789642e61410326bcc24b0804eca50b20f49d0c4449e495339100c96c5a7"
+        }
+      ]
+    },
+    "org.hypercerts.claim.activity": {
+      "count": 3,
+      "complete": true,
+      "forwardPages": 2,
+      "reversePages": 2,
+      "records": [
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.hypercerts.claim.activity/rr-2026",
+          "cid": "bafyreiadvrwfuptavjurzrauqawbxnj3r4szoy7yz6q6c6idf43ws2ndjm",
+          "updatedAt": null,
+          "createdAt": "2026-08-05T17:47:16.317Z",
+          "publishedAt": null,
+          "valueSha256": "6a9667e8ca0b1c865f2bdc25a1af683b26f84fadaeafdfeb9c6547ef04ccb932"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.hypercerts.claim.activity/ierr-2025",
+          "cid": "bafyreieiwf3qal3lqmlntbfvztqsegmicu6m6fzbyi6msjar5fn4oksnxy",
+          "updatedAt": null,
+          "createdAt": "2026-08-05T17:47:16.316Z",
+          "publishedAt": null,
+          "valueSha256": "5499cf7ab60b0e7e4e495efde641aee111892e9b8c4ee0da29850b21b400a6b8"
+        },
+        {
+          "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/org.hypercerts.claim.activity/dacc-2025",
+          "cid": "bafyreibp66d4r7o4vz76nlxsz3fuz3cjxslw6pj2wvdfhfkdcrguajhcva",
+          "updatedAt": null,
+          "createdAt": "2026-08-05T17:47:16.317Z",
+          "publishedAt": null,
+          "valueSha256": "ec9604160da7a760f4809f8d7ea7d2ee0e4626c5414f155c5846a3f9399d354d"
+        }
+      ]
+    },
+    "org.plresearch.post": {
+      "count": 0,
+      "complete": true,
+      "forwardPages": 1,
+      "reversePages": 1,
+      "records": []
+    }
+  },
+  "indexer": {
+    "orgPlresearchPage": {
+      "count": 16,
+      "totalCount": 16,
+      "pages": 4,
+      "complete": true
+    },
+    "orgPlresearchOpportunitySpace": {
+      "count": 15,
+      "totalCount": 15,
+      "pages": 3,
+      "complete": true
+    },
+    "orgPlresearchEditEvent": {
+      "count": 6,
+      "totalCount": 6,
+      "pages": 2,
+      "complete": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.publication/3mi3mlkepmk2q",
+  "cid": "bafyreif7idnsps2kxr4a6bv6sfzj2xu62pvfspefgeww6x5doi7z4uhrya",
+  "value": {
+    "url": "https://www.plrd.org",
+    "name": "PL R&D",
+    "$type": "site.standard.publication",
+    "description": "Protocol Labs R&D — driving research breakthroughs to push humanity forward."
+  }
+}

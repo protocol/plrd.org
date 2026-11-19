@@ -1,0 +1,1092 @@
+{
+  "schemaVersion": 1,
+  "snapshot": "provenance/2026-11-19",
+  "capturedAt": "2026-11-19T19:07:24.561Z",
+  "sourceBase": "7748806b0dfcbe2fb246c45ad06bcb77646f19da",
+  "counts": {
+    "pagesArchived": 16,
+    "pagesOwned": 15,
+    "opportunitiesArchivedAndOwned": 15,
+    "activeEconomiesGovernanceOpportunities": 4,
+    "documentsArchivedAndResolved": 3,
+    "publicationsArchivedAndOwned": 1,
+    "claimsInventoriedNotMigrated": 3,
+    "legacyPosts": 0,
+    "editEventsArchivedAndOwned": 6,
+    "pageFieldReads": 85
+  },
+  "collectionCompleteness": {
+    "org.plresearch.page": {
+      "count": 16,
+      "complete": true,
+      "forwardPages": 5,
+      "reversePages": 5
+    },
+    "org.plresearch.opportunitySpace": {
+      "count": 15,
+      "complete": true,
+      "forwardPages": 4,
+      "reversePages": 4
+    },
+    "site.standard.document": {
+      "count": 3,
+      "complete": true,
+      "forwardPages": 2,
+      "reversePages": 2
+    },
+    "site.standard.publication": {
+      "count": 1,
+      "complete": true,
+      "forwardPages": 2,
+      "reversePages": 2
+    },
+    "org.hypercerts.claim.activity": {
+      "count": 3,
+      "complete": true,
+      "forwardPages": 2,
+      "reversePages": 2
+    },
+    "org.plresearch.post": {
+      "count": 0,
+      "complete": true,
+      "forwardPages": 1,
+      "reversePages": 1
+    }
+  },
+  "indexerCompleteness": {
+    "orgPlresearchPage": {
+      "count": 16,
+      "totalCount": 16,
+      "pages": 4,
+      "complete": true
+    },
+    "orgPlresearchOpportunitySpace": {
+      "count": 15,
+      "totalCount": 15,
+      "pages": 3,
+      "complete": true
+    },
+    "orgPlresearchEditEvent": {
+      "count": 6,
+      "totalCount": 6,
+      "pages": 2,
+      "complete": true
+    }
+  },
+  "pageFieldReads": [
+    {
+      "route": "/",
+      "pageId": "landing",
+      "sectionId": "approach",
+      "field": "title",
+      "valueSha256": "d28e3ba20c186b5eb79a5dac6643e07e8cbe7e93e230bd113a71f8187e83ab59",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "landing"
+    },
+    {
+      "route": "/",
+      "pageId": "landing",
+      "sectionId": "approach-dhr",
+      "field": "title",
+      "valueSha256": "512f92b5eaafd486210dc422d6774e0cb591492c4e52383893c7147bbcefe3bf",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "landing"
+    },
+    {
+      "route": "/",
+      "pageId": "landing",
+      "sectionId": "approach-eg",
+      "field": "title",
+      "valueSha256": "50c2bf9a6d53e900cb060399c0efbe30ed0fe0d69baee8e58412e53d91f4a18a",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "landing"
+    },
+    {
+      "route": "/",
+      "pageId": "landing",
+      "sectionId": "approach-ai",
+      "field": "title",
+      "valueSha256": "323e6bbcc3eeb5e44704c920408f3e13d21520788ba919b7fb36b286d2a4978b",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "landing"
+    },
+    {
+      "route": "/",
+      "pageId": "landing",
+      "sectionId": "approach-neuro",
+      "field": "title",
+      "valueSha256": "143dc73f6c1bffbac44391dab25fee4a9dcfafd3751878baf9ff537c46368868",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "landing"
+    },
+    {
+      "route": "/",
+      "pageId": "landing",
+      "sectionId": "team",
+      "field": "body",
+      "valueSha256": "727678a35f34e45d86dc7b350cde98c03c6944dc55765464a33a8f89872d7367",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "landing"
+    },
+    {
+      "route": "/areas/",
+      "pageId": "areas",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "0ae9a4c27397c89fe21afbf84b3165a688246f5e7ccbdac5408a60e0308fca6e",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "areas"
+    },
+    {
+      "route": "/insights/",
+      "pageId": "insights",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "insights"
+    },
+    {
+      "route": "/insights/",
+      "pageId": "insights",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "c855613d4d072e37e8255875d83b74de78cbc4afb6257b6e515eabf3009f3719",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "insights"
+    },
+    {
+      "route": "/insights/",
+      "pageId": "insights",
+      "sectionId": "card-publications",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "insights"
+    },
+    {
+      "route": "/insights/",
+      "pageId": "insights",
+      "sectionId": "card-talks",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "insights"
+    },
+    {
+      "route": "/insights/",
+      "pageId": "insights",
+      "sectionId": "card-blog",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "insights"
+    },
+    {
+      "route": "/team/",
+      "pageId": "authors",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "authors"
+    },
+    {
+      "route": "/team/",
+      "pageId": "authors",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "authors"
+    },
+    {
+      "route": "/team/",
+      "pageId": "authors",
+      "sectionId": "leadership-blurb",
+      "field": "body",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "authors"
+    },
+    {
+      "route": "/team/",
+      "pageId": "authors",
+      "sectionId": "advisors-blurb",
+      "field": "body",
+      "valueSha256": "b68aa1f0b37c4f4eff6f24f893d8c8196332e558a704522269f01f6fdbfad7ee",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "authors"
+    },
+    {
+      "route": "/blog/",
+      "pageId": "blog",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "blog"
+    },
+    {
+      "route": "/blog/",
+      "pageId": "blog",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "6835d0a69cdf910524804abb6c5a54f1da61feb169df9cd44e240cf60e7f0025",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "blog"
+    },
+    {
+      "route": "/publications/",
+      "pageId": "publications",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "publications"
+    },
+    {
+      "route": "/publications/",
+      "pageId": "publications",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "836e99f94e370f2ec96ce034a80e1e890862b319460b94d45111fbf6cc1555d4",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "publications"
+    },
+    {
+      "route": "/talks/",
+      "pageId": "talks",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "talks"
+    },
+    {
+      "route": "/talks/",
+      "pageId": "talks",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "ba480b83f1647c007056c6f3d57c096ae2698de6bd8c4e779a08ac103b5a9d72",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "talks"
+    },
+    {
+      "route": "/tutorials/",
+      "pageId": "tutorials",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "tutorials"
+    },
+    {
+      "route": "/tutorials/",
+      "pageId": "tutorials",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "3576d1ed69d87f196ac15dc80e03a643ec733fbfa6496ddf0ca0533bb257a54a",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "tutorials"
+    },
+    {
+      "route": "/outreach/collaboration/",
+      "pageId": "collaborate",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "9e374cbfa482a270e118ebc87e8fa4f1c034aa3804f8530e05aff2a93ea6dbb7",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "collaborate"
+    },
+    {
+      "route": "/outreach/collaboration/",
+      "pageId": "collaborate",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "66e6de3ef8be71939894754342ababc94df9be5502b59c677bfb61b2b4cafd2a",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "collaborate"
+    },
+    {
+      "route": "/outreach/collaboration/",
+      "pageId": "collaborate",
+      "sectionId": "collaborations",
+      "field": "title",
+      "valueSha256": "7edd391720b1c38fc3981d87948a4dd70722e323d655c2b14518501f479d1732",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "about"
+    },
+    {
+      "route": "/outreach/collaboration/",
+      "pageId": "collaborate",
+      "sectionId": "collaborations",
+      "field": "body",
+      "valueSha256": "82d3be6e7487582752be1eaefddc5035de99a0f8fed6f7af50eaa9858fcf0330",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "about"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "86f3342e72694e7d5b575307c3d09549d5ee5bd8c4897aee2eeeb6468fde0b4d",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "body",
+      "field": "body",
+      "valueSha256": "cc9fed34f7888ab162f291be7c6932f776cbcc0f39f634505c0cd1dd43c681e5",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-subareas",
+      "field": "title",
+      "valueSha256": "eb8c711a71fe058179f7487fbc4ff9b568fd04b49dd130d98e86c77c1fa1c184",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-subareas",
+      "field": "subtitle",
+      "valueSha256": "47895aca3f19e9a44dfe1830767bf813d9acb03440fdf03622431e02d4ec3af6",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-impact",
+      "field": "title",
+      "valueSha256": "54e0c664be858e6c58b4c66f079ac46f97f3654e29e22817a621e1322392f40c",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-impact",
+      "field": "subtitle",
+      "valueSha256": "9cd3c09ba549db7165a5af4d5e83b8044a28553cdeeed0831e13fdef1af4b348",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-projects",
+      "field": "title",
+      "valueSha256": "30f8cf0ff9d6881493fd2aefa4d3374f8b222a19d9e4cad4e230ef5154b8c925",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-projects",
+      "field": "subtitle",
+      "valueSha256": "5e48d6292ee8bbd7559d13be3c77b1c0989874bd48e8af8c3b1a3a21e3991d9f",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-depgraph",
+      "field": "title",
+      "valueSha256": "341263715dc36a738ff2e429a7f4cfc9603bcdcbe672f10afe420c2a5d232c53",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "explore-depgraph",
+      "field": "subtitle",
+      "valueSha256": "b3eb893ed74221f5c1e9f58a15b64f4d65d8225281aa5f7447917d6b3e7ff8db",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-feedback",
+      "field": "title",
+      "valueSha256": "5569e9cbb6314743ca5ab0f29da4e306be78d3f2f7eeb62a6ce26ee2bc54eaa0",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-feedback",
+      "field": "body",
+      "valueSha256": "ed6d38f14192f444074d9d94fd1ab253b01488590ef8df1237d2d24fa88e1585",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-cases",
+      "field": "title",
+      "valueSha256": "5b854eb9c9014461fc52cc601f0376c51d869990d987cd86e0b92e11c4b7b07b",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-cases",
+      "field": "body",
+      "valueSha256": "116440bec169cebccc479cf188542f598487bed26d5b7d11d2eaa3fbb69c1adf",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-partners",
+      "field": "title",
+      "valueSha256": "ed980f7c949458b0da5f388c4351de4814d7c13fed127d1a1c80ff1f4716bc20",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-partners",
+      "field": "body",
+      "valueSha256": "6e95a4296b322a7a93ee0b094bccfe221fba6761387235c27674f1fca34cafb0",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-technical",
+      "field": "title",
+      "valueSha256": "d393e108fecaaa0469af39b30b96d10ce209cbf93ef574b5a18561630138d08a",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-technical",
+      "field": "body",
+      "valueSha256": "b830a286f668153adb74d5ff3d5d1cbc3f419d5c4c8ba51c8ad1144bc8a6eff0",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-strategic",
+      "field": "title",
+      "valueSha256": "0764f24e7f93fda124371f9e1c400e3a69d8dc316f57945e263000d47353ed9e",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/",
+      "pageId": "area-economies-governance",
+      "sectionId": "engage-strategic",
+      "field": "body",
+      "valueSha256": "09fb777b1839f76dd1bf8f54c9cc172ff8df316869f9b45ffb92296796983ba0",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-economies-governance"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "f5538d9788f90ecada1429341f75b1fcc982cb35ccc7ffad761c037213b1991f",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "dpi",
+      "field": "title",
+      "valueSha256": "f7855ac03568f2ef84fff310b1ae1f56aaf4ea7e4bed2e1a8bd2a6e2e43af083",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "dpi",
+      "field": "subtitle",
+      "valueSha256": "de5f45501e96ecc076340f0aca8424792cca804eaa44241f8c47045ac88dc57b",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "dpi",
+      "field": "body",
+      "valueSha256": "d2fb9b0b1d9d21e4e034e75755192358f3784776f228c2cd67c68251eb4c3530",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "desci",
+      "field": "title",
+      "valueSha256": "fa513e84d21134622f0618e5236831ef2b90db12ba8f3ee4462d4e7564decab5",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "desci",
+      "field": "subtitle",
+      "valueSha256": "d9cf7b3d2b9f825f3626f90355198055677c52558d9f43d6e3a101e97fce96f7",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "desci",
+      "field": "body",
+      "valueSha256": "5237d9486594ad53b82e6965e128bcf336906ce465ab177e6908cf0c5df806f2",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "depin",
+      "field": "title",
+      "valueSha256": "232c839f453ae38e3dfdd2d357cc7206e7d94f5c82a42c14591f5d3b3a81dbfc",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "depin",
+      "field": "subtitle",
+      "valueSha256": "986307f99b2f7146f890d20566caaacb602cadbcd43d1ea157f80d2d75d4ebd9",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "depin",
+      "field": "body",
+      "valueSha256": "123389d030c2a1c611abef37a0c2f9c862613dfdbdfaaa858f1e8e10c77e1a98",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "pgf",
+      "field": "title",
+      "valueSha256": "d9fc14295e8db61e48cc9411a291e393d040f1cde4e47515703e994bf2ca97c6",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "pgf",
+      "field": "subtitle",
+      "valueSha256": "e14188c43815894180f99f9d52ba974316ffc55ef82fbcf28c299f3116ba6eaa",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "pgf",
+      "field": "body",
+      "valueSha256": "3d382d52279999a75b1fa1a3e0886fd4f9302538c7808342f2ccaaf5b538c78d",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "defi",
+      "field": "title",
+      "valueSha256": "881f3a8b56472a376257328dfdfd51017fd361e7505eab7450fb15e198efe904",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "defi",
+      "field": "subtitle",
+      "valueSha256": "23a7ca5212541b7ed6c899fb61a5cd8d123eeab0d8424dfb6a31fd3865efb86b",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "defi",
+      "field": "body",
+      "valueSha256": "e4e35fd85bb00382834ffb7c73cfd8e64179b7f40fb5a22110703be354f7d5df",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "degov",
+      "field": "title",
+      "valueSha256": "40fd7c9e89a6abdc82564bc2885b2f355da4c22fdbf3955a881905c87051169a",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "degov",
+      "field": "subtitle",
+      "valueSha256": "a760a19752feb27b64a99399eb18588247571b10dd9baf950ecd3c7f6d3a6b01",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "degov",
+      "field": "body",
+      "valueSha256": "2c7b72675d292811dbf10c43aaa8ea6ffea8efe1ae5f8f4afa3df3bf7929ff31",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "network-states",
+      "field": "title",
+      "valueSha256": "91a1f2b7b63e233c123cefcdff0b94a80255326f88a86f802b1cf9fb53b0d648",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "network-states",
+      "field": "subtitle",
+      "valueSha256": "4f014de50e4678b4d0c84c85284648baabebcf308f30f7a71d529f5a7661bad9",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "network-states",
+      "field": "body",
+      "valueSha256": "90d576c67fefd780e6b630a5919a20e2ef13247f57c676d450b0dc22a9affae8",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "nations",
+      "field": "title",
+      "valueSha256": "303faefecef7801cbd19cc4281c251dd474c73a9e1966c3f6186987573b36619",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "nations",
+      "field": "subtitle",
+      "valueSha256": "9ae06779de4faf5d56ab781bb1d8983bf2278b1a8775005c3ddc1a3d50855c63",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "nations",
+      "field": "body",
+      "valueSha256": "5437c56f9e517811a02352a99402a0db3a778026efbf3f67ea9181e509a0d82d",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "refi",
+      "field": "title",
+      "valueSha256": "388299c5f8211386b4867865774ead2e36b5b512a7ec5d78d92189189454ae46",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "refi",
+      "field": "subtitle",
+      "valueSha256": "fac0d12f43162d4ee666091098f781079f683580b844a0bcad5dbf221fee67f1",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/subareas/",
+      "pageId": "area-eg-subareas",
+      "sectionId": "refi",
+      "field": "body",
+      "valueSha256": "95505ae114112a25d823b7b49825a9676dd43161b757664b6d07d92953f2a02a",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-subareas"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "hero",
+      "field": "title",
+      "valueSha256": "082052a9810b0e0fc172f95b557b6295d6e66d852594518f5d25963c6a96b395",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "hero",
+      "field": "subtitle",
+      "valueSha256": "5bbc5255d4d21c48e90b976295fcda505c732056664039b990da30a506da45b5",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "card-report-2025",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "card-report-2025",
+      "field": "body",
+      "valueSha256": "3cccc9e8d6ebb87fb535b072c63d6dcd1c5c618966dd838beb9310c23c75a464",
+      "sourceValueUsed": true,
+      "existingRendererFallbackUsed": false,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "card-live-dashboard",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "card-live-dashboard",
+      "field": "body",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "card-hypercerts",
+      "field": "title",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "area-eg-impact"
+    },
+    {
+      "route": "/areas/economies-governance/impact/",
+      "pageId": "area-eg-impact",
+      "sectionId": "card-hypercerts",
+      "field": "body",
+      "valueSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sourceValueUsed": false,
+      "existingRendererFallbackUsed": true,
+      "sourcePageId": "area-eg-impact"
+    }
+  ],
+  "opportunityFieldReads": [
+    "id",
+    "title",
+    "tagline",
+    "description",
+    "inflectionPoint",
+    "shift",
+    "theOpportunity",
+    "subfields",
+    "tippingSignals",
+    "keyAssumptions",
+    "observations",
+    "fieldSignals.kpi",
+    "fieldSignals.measurement"
+  ],
+  "opportunityImageRule": "Existing src/data/fa2/opportunityspaces.json image wins over CMS image on both active EG card/detail renderers. This precedence is unchanged. All 15 indexed image values are retained in opportunities.json.",
+  "blogResolution": [
+    {
+      "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.document/3mvpnrdmcqi2s",
+      "cid": "bafyreic2oua7vsow2muhlj3755jo5t677pugxsqhzp3vnlgpl566ykfsbu",
+      "path": "/blog/neurotech-frontier-human-flourishing/",
+      "repoSource": "content/blog/neurotech-frontier-human-flourishing/index.md",
+      "repoSourceSha256": "40f11fa7e0a9ae9763eef79ccd6fc11a441c3930348fca6d740cb7b3b71acd94",
+      "repoHtmlSha256": "279df0d3c18b5da002068380e6836c40ffcc5e72f31eff04d742cb9efc711c86",
+      "remoteContentType": "pub.leaflet.content",
+      "remoteTextBlocks": 102,
+      "matchedRemoteTextBlocks": 101,
+      "remoteOnlyTextBlocks": [
+        "By Sean Escola and David A. Markowitz. Originally published on September 9, 2026 at plrd.org."
+      ],
+      "repoOnlyTextBlocks": [],
+      "remoteOnlyLinks": [
+        "https://www.plrd.org/blog/neurotech-frontier-human-flourishing/",
+        "http://plneuro.xyz"
+      ],
+      "titleEqual": true,
+      "publishedAtEqual": true,
+      "descriptionEqual": true,
+      "unlisted": false,
+      "decision": "Keep approved repo source, URL, metadata, assets, and visibility; archive complete remote Leaflet body, facets, blob references, and metadata without appending a listing entry."
+    },
+    {
+      "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.document/3mvpnbj3e3g2b",
+      "cid": "bafyreib33ixii4qniqic6fvxlnkiqqico2txfl7rdkciv654m3vze2nbmm",
+      "path": "/blog/better-economies-governance-systems/",
+      "repoSource": "content/blog/better-economies-governance-systems/index.md",
+      "repoSourceSha256": "e0ac2f11c728958d2d355ed9b70259b74d367b1d37cff84db00c7472d060a472",
+      "repoHtmlSha256": "799a3ff9f14a1619905a90a05b6538943a82b5546d31297175c365c7355932e9",
+      "remoteContentType": "pub.leaflet.content",
+      "remoteTextBlocks": 141,
+      "matchedRemoteTextBlocks": 139,
+      "remoteOnlyTextBlocks": [
+        "By David Dao and James Tunningley. Originally published on July 23, 2026 at plrd.org.",
+        "View the live Economies & Governance impact dashboard."
+      ],
+      "repoOnlyTextBlocks": [
+        "1Sovereign Digital Public Infrastructure = the systems that public systems run on",
+        "2Computational Coordination & Governance = how those systems listen, deliberate, and decide",
+        "3Programmable Capital Allocation = how capital follows those decisions",
+        "4Verifiable Real-World Infrastructure & Systems = how outcomes get measured and trusted"
+      ],
+      "remoteOnlyLinks": [
+        "https://www.plrd.org/blog/better-economies-governance-systems/"
+      ],
+      "titleEqual": true,
+      "publishedAtEqual": true,
+      "descriptionEqual": true,
+      "unlisted": false,
+      "decision": "Keep approved repo source, URL, metadata, assets, and visibility; archive complete remote Leaflet body, facets, blob references, and metadata without appending a listing entry."
+    },
+    {
+      "uri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.document/3mvpjxrgssq2m",
+      "cid": "bafyreidfppxfrut34zs4zz2ikinjx3lkc57cd2txo3lil4bgvjldnkc6nm",
+      "path": "/blog/how-pl-rd-accelerates-breakthroughs/",
+      "repoSource": "content/blog/how-pl-rd-accelerates-breakthroughs/index.md",
+      "repoSourceSha256": "084ce938e8c8c79a17d39837fe9d730683820756591e67e83e450622153006a9",
+      "repoHtmlSha256": "7e0404c816bedf643232a3abe588284dc6a37f0217a16af9b33a0e038e432b41",
+      "remoteContentType": "pub.leaflet.content",
+      "remoteTextBlocks": 83,
+      "matchedRemoteTextBlocks": 82,
+      "remoteOnlyTextBlocks": [
+        "By Molly Mackinlay and Lukas Bresser. Originally published on July 14, 2026 at plrd.org."
+      ],
+      "repoOnlyTextBlocks": [],
+      "remoteOnlyLinks": [
+        "https://www.plrd.org/blog/how-pl-rd-accelerates-breakthroughs/",
+        "http://ipfs.tech",
+        "http://filecoin.io",
+        "http://libp2p.io"
+      ],
+      "titleEqual": true,
+      "publishedAtEqual": true,
+      "descriptionEqual": true,
+      "unlisted": false,
+      "decision": "Keep approved repo source, URL, metadata, assets, and visibility; archive complete remote Leaflet body, facets, blob references, and metadata without appending a listing entry."
+    }
+  ],
+  "publicationUri": "at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.publication/3mi3mlkepmk2q",
+  "intentionalCompatibilityChanges": [
+    "Retired About excluded from fetchAllPages. fetchPage(about) exposes only collaborate-owned collaborations for the unchanged Collaboration consumer, never historical About hero/body.",
+    "fetchAtproPosts returns no append-only extras: all three PDS documents map to existing listed repository articles; old default indexer records query fails.",
+    "CMS audit history is frozen at capture, not live; Git records new changes."
+  ],
+  "preservationBoundary": "Original public PDS records/publication/blobs and shared services were not mutated or deleted. Raw archive retains complete public record values including Leaflet bodies, facets and media CID references; it is not a binary blob or entire-account backup.",
+  "productionBaselineCrossCheck": {
+    "sourceMain": "b20267f2c915ee9433768fc150d3e6552abc1630",
+    "manifestSha256": "dcd21dfeef7d2ddf350219ec37b817d42ab9856f3a96eff560f5cfbec7ba84fc",
+    "routes": 16,
+    "nonemptyPageFieldsChecked": 68,
+    "visiblePageFieldsMatched": 67,
+    "collaborationCardsChecked": 6,
+    "economiesGovernanceDetailTextValuesChecked": 133,
+    "inactiveTabField": {
+      "route": "/team/",
+      "field": "authors/advisors-blurb/body",
+      "result": "Exact string retained in transferred React props; not in initial SSR DOM because AuthorsTabs initially selects leadership. Server-renderer props parity test covers it."
+    },
+    "method": "Compared parent-captured HTTP 200 documents after removing script/style nodes. Normalized Markdown text and parsed Collaboration cards against visible text; separately confirmed the inactive Advisors prop in the response. This is a pre-migration source check, not post-release browser verification."
+  },
+  "verification": {
+    "focusedTests": {
+      "command": "node --test scripts/site-content*.test.mjs",
+      "tests": 29,
+      "passed": 29,
+      "failed": 0,
+      "exit": 0
+    },
+    "typecheck": {
+      "command": "node_modules/.bin/tsc --noEmit --incremental false",
+      "exit": 0
+    },
+    "productionBuild": {
+      "command": "COOKIE_SECRET=<synthetic local fixture> node_modules/.bin/next build",
+      "exit": 0,
+      "staticPagesGenerated": 328,
+      "prebuildRun": false,
+      "warnings": [
+        "Existing GainForest provider TLS hostname mismatch (api.hi.gainforest.app certificate names Railway domains).",
+        "Existing Ma Earth provider reported no current round and used its closed-round snapshot.",
+        "Node module.register deprecation."
+      ],
+      "boundary": "Existing checked-in generated content used; no prebuild/content regeneration, deployment, or integrated auth-removal build."
+    },
+    "existingFullSuite": {
+      "command": "npm test",
+      "tests": 272,
+      "passed": 266,
+      "failed": 6,
+      "exit": 1,
+      "failures": [
+        "scripts/about-page.test.mjs:67 — remote fixture subset no longer controls the local page inventory",
+        "scripts/about-page.test.mjs:78 — old assertion expects one CMS fetch, now zero",
+        "scripts/fa2-flagship.test.mjs:134 — old fallback titles differ from preserved current CMS titles",
+        "scripts/radar-local.test.mjs:47 — old assertion expects a CMS fetch, now zero",
+        "scripts/radar-local.test.mjs:342 — old assertion expects a CMS fetch, now zero",
+        "scripts/velocity/impact-methodology-tabs.test.mjs:44 — unrelated Methodology wording expectation"
+      ]
+    },
+    "limits": [
+      "No merge, push, PR, deployment, external mutation, or post-release browser check.",
+      "Parent must integrate publication consumer and focused-test glob, update old CMS test assumptions, and verify the combined auth/content changes.",
+      "Archive preserves record payloads and media references, not binary media or complete external account state."
+    ]
+  }
+}
