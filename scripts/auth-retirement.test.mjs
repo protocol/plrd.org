@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { test } from 'node:test'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { JSDOM } from 'jsdom'
 import { source } from './velocity/test-source-loader.mjs'
 
 const legacyPages = {
@@ -91,6 +92,11 @@ test('source management links reject repaired or relative authority forms and pr
   ]) assert.equal(publicSourceURL(value), undefined, value)
   for (const value of ['https://example.invalid/current?record=one#details', 'HTTPS://example.invalid/current']) {
     assert.equal(publicSourceURL(value), value)
+    const dom = new JSDOM('<a>Manage at source</a>', { url: 'https://www.plrd.org/impact/current/' })
+    const link = dom.window.document.querySelector('a')
+    link.setAttribute('href', publicSourceURL(value))
+    assert.equal(link.href, new URL(value).href, 'mounted HTTPS anchor must resolve to the exact validated source')
+    dom.window.close()
   }
 })
 
