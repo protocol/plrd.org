@@ -166,7 +166,9 @@ async function getProfiles(dids: string[]): Promise<Map<string, LiveAuthor>> {
 
 /** Only expose an explicit current record URL, never an inferred editor URL. */
 export function publicSourceURL(value: unknown): string | undefined {
-  if (typeof value !== "string") return undefined;
+  // URL() repairs malformed authority forms. Reject them rather than returning a
+  // raw href that the browser may interpret relative to the current HTTPS page.
+  if (typeof value !== "string" || !/^https:\/\/[^/\\\s]/i.test(value) || /[\\\s]/.test(value)) return undefined;
   try {
     const url = new URL(value);
     return url.protocol === "https:" && !url.username && !url.password ? value : undefined;

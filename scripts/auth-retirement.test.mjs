@@ -28,10 +28,7 @@ const legacyPages = {
 test('every legacy editor renders honest GitHub PR guidance, real canonical source links, and no form or login', async (t) => {
   const fetch = t.mock.method(globalThis, 'fetch', () => { throw new Error('No CMS reads on retired editors') })
   for (const [route, path] of Object.entries(legacyPages)) {
-    // These two exact paths are supplied by the independently owned content
-    // migration lane; integration verifies the files, while this test verifies
-    // every guide points at the new authoritative source rather than fallbacks.
-    if (!path.startsWith('src/data/site-content/')) assert.ok(existsSync(path), path)
+    assert.ok(existsSync(path), path)
     const { default: Page, metadata } = source(`app/${route}/page.tsx`)
     const html = renderToStaticMarkup(await Page({ params: Promise.resolve({ slug: 'neurotech' }) }))
     assert.match(html, /pull request/i, route)
@@ -81,6 +78,21 @@ test('community comments remain visible read-only and management uses only a rec
   }
 })
 
+
+test('source management links reject repaired or relative authority forms and preserve valid exact HTTPS URLs', () => {
+  const { publicSourceURL } = source('lib/hypercerts-live.ts')
+  for (const value of [
+    'https:example.invalid/current', 'https:/example.invalid/current',
+    'https:///example.invalid/current', 'https:////example.invalid/current',
+    'https:\\example.invalid/current', 'https://example.invalid\\current',
+    ' https://example.invalid/current', 'https://example.invalid/current\n',
+    'https://user:pass@example.invalid/current', '//example.invalid/current',
+    'javascript:alert(1)', 'http://example.invalid/current',
+  ]) assert.equal(publicSourceURL(value), undefined, value)
+  for (const value of ['https://example.invalid/current?record=one#details', 'HTTPS://example.invalid/current']) {
+    assert.equal(publicSourceURL(value), value)
+  }
+})
 
 test('public community discovery preserves DID/profile/evidence reads and current sourceURL without any write', async (t) => {
   const { fetchLiveActivity } = source('lib/hypercerts-live.ts')
