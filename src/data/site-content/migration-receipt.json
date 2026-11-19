@@ -1085,7 +1085,7 @@
     },
     "limits": [
       "No merge, push, PR, deployment, external mutation, or post-release browser check.",
-      "Parent must integrate publication consumer and focused-test glob, update old CMS test assumptions, and verify the combined auth/content changes.",
+      "These recorded checks cover the initial content migration only; current repository tests verify integrated publication discovery and GitHub-only authoring separately.",
       "Archive preserves record payloads and media references, not binary media or complete external account state."
     ]
   }

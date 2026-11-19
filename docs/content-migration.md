@@ -2,7 +2,7 @@
 
 ## Editing
 
-Website content is reviewed in `protocol/plrd.org` and published through its normal PR/deployment workflow. The historical four-layer CMS instructions in `AGENTS.md` describe the retired source, not this migration's authoring path. Do not run the old PDS seed/sync/publishing scripts to edit website content.
+Website content is reviewed in `protocol/plrd.org` and published through its normal PR/deployment workflow. GitHub Markdown/JSON are the authoring source; website login and browser-based CMS publishing are retired. See `AGENTS.md` and `docs/github-editing-retirement.md` for repository and route guidance. Do not run historical PDS seed/sync/publishing commands to edit website content.
 
 | Content | Edit here |
 | --- | --- |
@@ -29,7 +29,7 @@ Keep record IDs, slugs, section IDs, and published URLs stable. Existing rendere
 - `public-records.json` retains complete parsed record envelopes and actual pagination responses, including unknown fields, original URIs/CIDs/timestamps, Leaflet bodies/facets, and media CID references. `manifest.json` pins archive bytes and per-record value hashes. It is not a wire-byte HTTP capture or a binary-media/entire-account backup.
 - Original external records, blobs, accounts, and shared services were **not** mutated or deleted. No credentials or signed-in API were used.
 
-`migration-receipt.json` inventories **85 active page-field reads**: **68** use nonempty captured values and **17** keep existing renderer fallbacks. Tests compare every retained page/opportunity field to the snapshot, and compare actual server-renderer trees/props for all **16** CMS-content routes against the archived indexer data, including four opportunity metadata/detail outputs. EG image precedence is unchanged. Historical About and superseded area content stay archived rather than silently becoming authoritative again. A separate cross-check against 16 parent-captured production HTTP baselines found 67 nonempty page fields in the visible DOM, all six parsed Collaboration cards, and 133 EG detail text values. The remaining nonempty field is the inactive Team Advisors blurb: present in transferred props, not the initially selected Leadership tab; the renderer-props test preserves it.
+`migration-receipt.json` inventories **85 active page-field reads**: **68** use nonempty captured values and **17** keep existing renderer fallbacks. The initial parity checks compared every retained page/opportunity field to the snapshot and actual server-renderer trees/props for all **16** CMS-content routes against the archived indexer data, including four opportunity metadata/detail outputs. Those checks remain reproducible against the pinned initial Git tree with the optional historical command below; ongoing tests compare runtime reads/rendering with current JSON instead. EG image precedence is unchanged. Historical About and superseded area content stay archived rather than silently becoming authoritative again. A separate cross-check against 16 captured production HTTP baselines found 67 nonempty page fields in the visible DOM, all six parsed Collaboration cards, and 133 EG detail text values. The remaining nonempty field is the inactive Team Advisors blurb: present in transferred props, not the initially selected Leadership tab; the renderer-props test preserves it.
 
 ### Blog and publication reconciliation
 
@@ -49,7 +49,7 @@ The full public publication envelope is also repository-owned. Its existing disc
 at://did:plc:pgwr6hkosgznfl5nz7egajei/site.standard.publication/3mi3mlkepmk2q
 ```
 
-The parent integration must switch the `.well-known/site.standard.publication` consumer from `NEXT_PUBLIC_PUBLICATION_URI` to `REPO_PUBLICATION_URI`; this bounded content change does not edit that route.
+The `.well-known/site.standard.publication` route reads `REPO_PUBLICATION_URI` from the repository adapter. It no longer uses a deployment environment setting or contacts the CMS.
 
 ## Contract and retained integrations
 
@@ -60,11 +60,25 @@ Public Hypercert claims/community evidence, DID/PDS/profile reads used by those 
 ## Verification
 
 ```sh
+npm test
+# Focused content contracts only:
 node --test scripts/site-content*.test.mjs
 node_modules/.bin/tsc --noEmit --incremental false
 ```
 
-The migration tests pin the initial parity decision. A later editorial PR should update its explicit expected values/receipt assertions alongside the reviewed copy, **not** regenerate or rewrite the original archive to conceal a change. To take a separate fresh public-source capture for investigation:
+The main test command includes the evergreen content contracts. They validate current authoring JSON, unique record/section identities and URI references, adapter clone isolation/order/null behavior, renderer fallbacks, offline operation, and current article visibility/no-duplicate policies. Editorial controls exercise ordinary page and opportunity prose/timestamp edits and an existing blog-body edit in memory. Malformed/duplicate data, remote fallback, and unlisted leakage are negative controls.
+
+A later editorial PR changes working Markdown/JSON and any generated outputs, not historical provenance. **Do not update the initial migration receipt**, original capture timestamps/CIDs/hashes, or archived responses to accommodate new copy. Current blog metadata/body/visibility are checked against current repository data, not against the initial remote publication.
+
+To reproduce the one-time migration parity evidence separately:
+
+```sh
+node scripts/site-content-history.mjs
+```
+
+This optional command requires the original Git object `503060e7287f3bd4c1537544fe57962f9d96b6fb` and installed dependencies. It extracts that pinned tree to a disposable directory and runs its original **29** parity/capture tests, including initial page-field hashes, all 16 renderer comparisons, and initial blog-source/HTML/metadata reconciliation. It never compares today's editable content to the initial receipt, changes a branch/ref, or contacts the live CMS. The historical command is not in the `npm test` evergreen glob.
+
+To take a separate fresh public-source capture for investigation:
 
 ```sh
 node scripts/site-content-snapshot.mjs src/data/site-content/provenance/NEW_CAPTURE_ID
@@ -72,4 +86,4 @@ node scripts/site-content-snapshot.mjs src/data/site-content/provenance/NEW_CAPT
 
 This only reads public sources, refuses existing capture directories, and does not overwrite authoring data. It is not a recurring sync or publishing command.
 
-The parent integration must add the `scripts/site-content*.test.mjs` glob to the main test command. The old full suite still has CMS-network fixture assumptions in `about-page.test.mjs` and `radar-local.test.mjs`, and an old fallback-title expectation in `fa2-flagship.test.mjs`; those need updating with the auth-removal integration rather than restoring CMS reads or old titles. A separate Methodology wording assertion also fails and is outside this content migration. No merge, deployment, or production UI verification is implied by these local checks.
+Legacy editor routes now provide GitHub contribution guidance and former authoring APIs return retired-route responses. Repository tests cover publication discovery and authoring retirement alongside the content contracts. The receipt's original test/build results remain a historical record, not a statement of the current suite's results. No merge, deployment, or production UI verification is implied by local tests.
