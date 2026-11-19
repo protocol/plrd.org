@@ -168,7 +168,7 @@ async function getProfiles(dids: string[]): Promise<Map<string, LiveAuthor>> {
 export function publicSourceURL(value: unknown): string | undefined {
   // URL() repairs malformed authority forms. Reject them rather than returning a
   // raw href that the browser may interpret relative to the current HTTPS page.
-  if (typeof value !== "string" || !/^https:\/\/[^/\\\s]/i.test(value) || /[\\\s]/.test(value)) return undefined;
+  if (typeof value !== "string" || !/^https:\/\/[^/\\\s]/i.test(value) || /[\\\s\u0000-\u001f\u007f]/.test(value)) return undefined;
   try {
     const url = new URL(value);
     return url.protocol === "https:" && !url.username && !url.password ? value : undefined;

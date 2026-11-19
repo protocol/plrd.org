@@ -82,6 +82,7 @@ test('community comments remain visible read-only and management uses only a rec
 
 test('source management links reject repaired or relative authority forms and preserve valid exact HTTPS URLs', () => {
   const { publicSourceURL } = source('lib/hypercerts-live.ts')
+  const { SourceRecordLink } = source('components/hypercerts/HypercertCommunity.tsx')
   for (const value of [
     'https:example.invalid/current', 'https:/example.invalid/current',
     'https:///example.invalid/current', 'https:////example.invalid/current',
@@ -90,6 +91,13 @@ test('source management links reject repaired or relative authority forms and pr
     'https://user:pass@example.invalid/current', '//example.invalid/current',
     'javascript:alert(1)', 'http://example.invalid/current',
   ]) assert.equal(publicSourceURL(value), undefined, value)
+  for (const code of [...Array(32).keys(), 127]) {
+    const value = `https://source.example.invalid/x${String.fromCharCode(code)}`
+    assert.equal(publicSourceURL(value), undefined, `control U+${code.toString(16)}`)
+    const dom = new JSDOM(renderToStaticMarkup(SourceRecordLink({ sourceURL: value })), { url: 'https://www.plrd.org/impact/current/' })
+    assert.equal(dom.window.document.querySelector('a'), null, 'raw control character cannot become a replacement-character source link')
+    dom.window.close()
+  }
   for (const value of ['https://example.invalid/current?record=one#details', 'HTTPS://example.invalid/current']) {
     assert.equal(publicSourceURL(value), value)
     const dom = new JSDOM('<a>Manage at source</a>', { url: 'https://www.plrd.org/impact/current/' })
