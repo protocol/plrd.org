@@ -29,7 +29,7 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = join(ROOT, 'src/data/gainforest-sites.json')
-const INDEXER = 'https://api.hi.gainforest.app/graphql'
+const INDEXER = 'https://api-hi.gainforest.app/graphql'
 
 async function gql(query, variables = {}) {
   const res = await fetch(INDEXER, {
