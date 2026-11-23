@@ -165,7 +165,7 @@ export default function ProjectsExplorer({ projects }: { projects: ProjectsData 
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 <a
-                  href={`https://directory.plnetwork.io/teams/${team.uid}`}
+                  href={`https://os.pl.xyz/teams/${team.uid}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-gray-400 hover:text-blue transition-colors"
